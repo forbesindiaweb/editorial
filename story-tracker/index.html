@@ -92,7 +92,7 @@ async function sheetsApi(action,payload={}){
 }
 
 const isOverdue=s=>{
-  if(!s.eta||["Published","Hold/Dropped"].includes(s.status))return false;
+  if(!s.eta||["Published","Hold/Dropped","Filed"].includes(s.status))return false;
   const eta=new Date(s.eta);eta.setHours(23,59,59,999);
   return eta<new Date();
 };
