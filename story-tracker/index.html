@@ -96,6 +96,13 @@ const isOverdue=s=>{
   const eta=new Date(s.eta);eta.setHours(23,59,59,999);
   return eta<new Date();
 };
+  const daysLeft=d=>{
+  if(!d)return null;
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d.trim());
+  const eta=m?new Date(+m[1],+m[2]-1,+m[3]):new Date(d);
+  eta.setHours(23,59,59,999);
+  return Math.round((eta-new Date())/(1000*60*60*24));
+};
 
 // FIX: Format date without timezone shifting — parse yyyy-mm-dd as LOCAL date
 const fmt=d=>{
