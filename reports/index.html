@@ -510,6 +510,7 @@
   <div style="display:flex;gap:8px;align-items:flex-end;">
     <button class="btn btn-primary" id="btn-fetch" onclick="startFetch()">Fetch Data</button>
     <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    <button class="btn btn-secondary" onclick="testProxy()" title="Test if the CORS proxy can reach the sitemap">Test Proxy</button>
   </div>
 </div>
 
@@ -727,22 +728,50 @@ function fmtDate(d) {
 }
 
 // ── CORS PROXY ────────────────────────────────────────────────────────
-const PROXIES = [
-  'https://api.allorigins.win/get?url=',
-  'https://corsproxy.io/?url='
+// Try each proxy in order until one works
+const PROXY_LIST = [
+  {
+    name: 'allorigins-raw',
+    build: u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+    parse: async r => r.text()
+  },
+  {
+    name: 'corsproxy.io',
+    build: u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+    parse: async r => r.text()
+  },
+  {
+    name: 'allorigins-json',
+    build: u => 'https://api.allorigins.win/get?url=' + encodeURIComponent(u),
+    parse: async r => { const j = await r.json(); return j.contents; }
+  },
+  {
+    name: 'thingproxy',
+    build: u => 'https://thingproxy.freeboard.io/fetch/' + u,
+    parse: async r => r.text()
+  }
 ];
 
-async function proxyFetch(url, proxyIndex = 0) {
-  const proxy = PROXIES[proxyIndex % PROXIES.length];
-  const isAllOrigins = proxy.includes('allorigins');
-  const res = await fetch(proxy + encodeURIComponent(url));
-  if (!res.ok) throw new Error('Proxy fetch failed for: ' + url);
-  if (isAllOrigins) {
-    const json = await res.json();
-    return json.contents;
-  } else {
-    return await res.text();
+async function proxyFetch(url) {
+  let lastErr = null;
+  for (const proxy of PROXY_LIST) {
+    try {
+      dbg('Trying [' + proxy.name + '] for: ' + url.slice(0,70));
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 14000);
+      const res = await fetch(proxy.build(url), { signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await proxy.parse(res);
+      if (!text || text.length < 30) throw new Error('Empty response');
+      dbg('  OK [' + proxy.name + '] ' + text.length + ' chars');
+      return text;
+    } catch(e) {
+      dbg('  FAIL [' + (proxy ? proxy.name : '?') + ']: ' + e.message);
+      lastErr = e;
+    }
   }
+  throw new Error('All proxies failed. Last error: ' + (lastErr ? lastErr.message : 'unknown'));
 }
 
 // ── SITEMAP MONTHS ────────────────────────────────────────────────────
@@ -778,10 +807,10 @@ function parseLocalDate(str) {
 async function fetchSitemapUrls(monthStr, fromDate, toDate) {
   let xml;
   try {
-    xml = await proxyFetch(sitemapUrl(monthStr), 0);
+    xml = await proxyFetch(sitemapUrl(monthStr));
   } catch(e) {
-    dbg(`Primary proxy failed, trying fallback for ${monthStr}`);
-    xml = await proxyFetch(sitemapUrl(monthStr), 1);
+    dbg('All proxies failed for sitemap ' + monthStr);
+    throw e;
   }
 
   const parser = new DOMParser();
@@ -813,12 +842,7 @@ async function fetchSitemapUrls(monthStr, fromDate, toDate) {
 // ── FETCH ARTICLE METADATA ────────────────────────────────────────────
 async function fetchArticleMeta(url) {
   try {
-    let html;
-    try {
-      html = await proxyFetch(url, 0);
-    } catch(e) {
-      html = await proxyFetch(url, 1);
-    }
+    const html = await proxyFetch(url);
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
@@ -1291,6 +1315,26 @@ function clearAll() {
   hideNote();
   setStatus('Ready', '');
   showToast('Cleared');
+}
+
+// ── TEST PROXY ───────────────────────────────────────────────────────
+async function testProxy() {
+  debugLines = [];
+  document.getElementById('debug-panel').style.display = 'block';
+  const testUrl = 'https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/2026-05-01.xml';
+  dbg('Testing proxy connectivity...');
+  dbg('Target URL: ' + testUrl);
+  try {
+    const result = await proxyFetch(testUrl);
+    dbg('SUCCESS! Got ' + result.length + ' characters');
+    // Count URLs in response
+    const urlCount = (result.match(/<loc>/g) || []).length;
+    dbg('URLs found in sitemap: ' + urlCount);
+    showToast('Proxy working! Found ' + urlCount + ' URLs in sitemap');
+  } catch(e) {
+    dbg('ALL PROXIES FAILED: ' + e.message);
+    showToast('All proxies failed — see debug log');
+  }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
