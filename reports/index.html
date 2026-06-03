@@ -534,25 +534,52 @@ async function fetchPVs(articleIds, startDate, endDate){
   const BATCH=50;
   for(let i=0;i<ids.length;i+=BATCH){
     const batch=ids.slice(i,i+BATCH);
+    // Query pagePath — a single CONTAINS /ID/ matches BOTH:
+    //   /article/section/slug/ID/1  (regular)
+    //   /amp/article/section/slug/ID/1  (AMP)
+    // GA4 returns one row per unique pagePath, we sum all matching rows per ID
     const body={
       dateRanges:[{startDate,endDate}],
       dimensions:[{name:'pagePath'}],
       metrics:[{name:'screenPageViews'}],
       dimensionFilter:{
-        orGroup:{ expressions: batch.map(id=>({ filter:{ fieldName:'pagePath', stringFilter:{ matchType:'CONTAINS', value:'/'+id+'/' }}})) }
+        orGroup:{ expressions: batch.map(id=>({
+          filter:{ fieldName:'pagePath', stringFilter:{ matchType:'CONTAINS', value:'/'+id+'/' }}
+        }))}
       },
-      limit:10000
+      limit:50000
     };
     try{
       const res=await fetch(ga4Base()+':runReport',{method:'POST',headers:ga4Hdr(),body:JSON.stringify(body)});
-      if(!res.ok){ dbg('GA4 PV error: '+res.status+' '+await res.text()); continue; }
+      if(!res.ok){ const errTxt=await res.text(); dbg('GA4 PV error: '+res.status+' '+errTxt); continue; }
       const d=await res.json();
+      let matchCount=0;
       (d.rows||[]).forEach(row=>{
         const path=row.dimensionValues[0].value;
-        const views=parseInt(row.metricValues[0].value,10);
-        batch.forEach(id=>{ if(path.includes('/'+id+'/')) map[id]=(map[id]||0)+views; });
+        const views=parseInt(row.metricValues[0].value,10)||0;
+        // Sum views for every ID whose number appears in this path
+        // This combines /article/.../ID/1 + /amp/article/.../ID/1 automatically
+        let matched=false;
+        batch.forEach(id=>{
+          if(path.includes('/'+id+'')){
+            map[id]=(map[id]||0)+views;
+            matched=true;
+          }
+        });
+        if(matched) matchCount++;
       });
-      dbg('GA4 batch '+(Math.floor(i/BATCH)+1)+': '+(d.rows?.length||0)+' rows');
+      dbg('GA4 batch '+(Math.floor(i/BATCH)+1)+': '+(d.rows?.length||0)+' total rows, '+matchCount+' matched paths (AMP+non-AMP combined)');
+      // Log first few matched paths for verification
+      let shown=0;
+      (d.rows||[]).forEach(row=>{
+        if(shown>=4) return;
+        const path=row.dimensionValues[0].value;
+        const views=parseInt(row.metricValues[0].value,10)||0;
+        if(batch.some(id=>path.includes('/'+id))){
+          dbg('  path: '+path+' views:'+views);
+          shown++;
+        }
+      });
     }catch(e){ dbg('GA4 error: '+e.message); }
   }
   return map;
