@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forbes India · Editorial Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C8A84B;
+    --gold-light: #E8C96B;
+    --ink: #1A1A1A;
+    --ink-mid: #3D3D3D;
+    --ink-soft: #666;
+    --rule: #D4C5A0;
+    --cream: #FAF7F2;
+    --cream-dark: #F0EBE0;
+    --white: #FFFFFF;
+    --red: #C0392B;
+    --green: #27AE60;
+    --blue: #2980B9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--ink);
+    border-bottom: 3px solid var(--gold);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .masthead-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .masthead-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+  .masthead-sep { color: var(--gold); opacity: 0.4; font-size: 18px; }
+  .masthead-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: #aaa;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .masthead-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.05em;
+  }
+  #status-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #444;
+    margin-right: 6px;
+    vertical-align: middle;
+    transition: background 0.3s;
+  }
+  #status-dot.active { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  #status-dot.error  { background: var(--red); }
+
+  /* ── CONTROL PANEL ── */
+  .control-panel {
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    padding: 20px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+  }
+  .ctrl-group { display: flex; flex-direction: column; gap: 5px; }
+  .ctrl-group label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .ctrl-group input[type="date"],
+  .ctrl-group input[type="text"],
+  .ctrl-group select {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 7px 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .ctrl-group input:focus,
+  .ctrl-group select:focus { border-color: var(--gold); }
+  .ctrl-group input[type="text"] { width: 320px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+
+  .ga-token-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 280px;
+  }
+  .ga-token-row label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .ga-token-row input {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 7px 10px;
+    outline: none;
+    width: 100%;
+  }
+  .ga-token-row input:focus { border-color: var(--gold); }
+
+  .property-id-row input {
+    width: 180px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--ink);
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-copy {
+    background: var(--ink);
+    color: var(--gold);
+    font-size: 10px;
+    padding: 5px 12px;
+  }
+  .btn-copy:hover { background: var(--ink-mid); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    padding: 0 32px;
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    display: none;
+  }
+  .progress-bar-wrap.visible { display: block; padding: 12px 32px; }
+  .progress-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--cream-dark);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    background: var(--cream-dark);
+    border-bottom: 1px solid var(--rule);
+    padding: 12px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    display: none;
+  }
+  .filter-bar.visible { display: flex; }
+  .filter-bar label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .filter-bar select, .filter-bar input {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    padding: 5px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--white);
+    color: var(--ink);
+    outline: none;
+  }
+  .filter-bar select:focus, .filter-bar input:focus { border-color: var(--gold); }
+
+  /* ── SUMMARY STATS ── */
+  .stats-strip {
+    padding: 20px 32px;
+    display: none;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .stats-strip.visible { display: flex; }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--gold);
+    padding: 14px 20px;
+    min-width: 140px;
+    flex: 1;
+  }
+  .stat-card .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .stat-card .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-card .stat-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .content { padding: 0 32px 48px; }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0 12px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 0;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .section-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── TABLES ── */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-top: none;
+    background: var(--white);
+    margin-bottom: 32px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    background: var(--ink);
+  }
+  thead th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 11px 14px;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { color: var(--gold-light); }
+  thead th.sort-asc::after { content: ' ↑'; }
+  thead th.sort-desc::after { content: ' ↓'; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--cream-dark);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: var(--cream); }
+  tbody td {
+    padding: 10px 14px;
+    color: var(--ink-mid);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tbody td.td-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  tbody td.td-url a {
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    word-break: break-all;
+  }
+  tbody td.td-url a:hover { text-decoration: underline; }
+  tbody td.td-headline {
+    max-width: 380px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  tbody td.td-byline { white-space: nowrap; }
+  tbody td.td-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .traffic-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .traffic-bar-inner {
+    height: 6px;
+    background: var(--gold);
+    border-radius: 3px;
+    opacity: 0.7;
+    min-width: 2px;
+  }
+  .traffic-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .cat-input {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    border: 1px dashed var(--rule);
+    background: transparent;
+    padding: 3px 6px;
+    border-radius: 3px;
+    width: 130px;
+    color: var(--ink);
+    outline: none;
+  }
+  .cat-input:focus { border-color: var(--gold); background: var(--cream); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    padding: 60px 32px;
+    text-align: center;
+  }
+  .empty-state-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    opacity: 0.3;
+  }
+  .empty-state h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .empty-state p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 10px 18px;
+    border-radius: 4px;
+    border-left: 3px solid var(--gold);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 1000;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── NOTE BOX ── */
+  .note-box {
+    background: #FFF8E8;
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 12px;
+    color: var(--ink-mid);
+    border-radius: 0 4px 4px 0;
+    display: none;
+  }
+  .note-box.visible { display: block; }
+  .note-box strong { color: var(--ink); }
+
+  .section-block { display: none; }
+  .section-block.visible { display: block; }
+
+  /* ── GA NOTE ── */
+  .ga-help {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .ga-help a { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-brand">
+    <span class="masthead-logo">Forbes India</span>
+    <span class="masthead-sep">|</span>
+    <span class="masthead-title">Editorial Intelligence Dashboard</span>
+  </div>
+  <div class="masthead-status">
+    <span id="status-dot"></span>
+    <span id="status-text">Ready</span>
+  </div>
+</header>
+
+<!-- CONTROL PANEL -->
+<div class="control-panel">
+  <div class="ctrl-group">
+    <label>From Date</label>
+    <input type="date" id="date-from">
+  </div>
+  <div class="ctrl-group">
+    <label>To Date</label>
+    <input type="date" id="date-to">
+  </div>
+  <div class="ctrl-group property-id-row">
+    <label>GA4 Property ID</label>
+    <input type="text" id="ga-property" placeholder="e.g. 123456789" style="width:170px;font-family:'IBM Plex Mono',monospace;font-size:13px;">
+  </div>
+  <div class="ga-token-row">
+    <label>GA4 Bearer Token (OAuth2 Access Token)</label>
+    <input type="text" id="ga-token" placeholder="Paste your access token here (ya29.xxx...)">
+    <div class="ga-help">Get from: <a href="https://developers.google.com/oauthplayground" target="_blank">OAuth Playground</a> → select Analytics Reporting API v4 scope → Exchange for token</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:flex-end;">
+    <button class="btn btn-primary" id="btn-fetch" onclick="startFetch()">Fetch Data</button>
+    <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap" id="progress-wrap">
+  <div class="progress-label" id="progress-label">Fetching sitemap...</div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<!-- NOTE BOX -->
+<div class="note-box" id="note-box">
+  <strong>Note:</strong> <span id="note-text"></span>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip" id="stats-strip">
+  <div class="stat-card">
+    <div class="stat-label">Total Articles</div>
+    <div class="stat-value" id="stat-articles">—</div>
+    <div class="stat-sub">in selected range</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Views</div>
+    <div class="stat-value" id="stat-views">—</div>
+    <div class="stat-sub">from GA4</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Unique Bylines</div>
+    <div class="stat-value" id="stat-bylines">—</div>
+    <div class="stat-sub">contributors</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Avg. Views/Article</div>
+    <div class="stat-value" id="stat-avg">—</div>
+    <div class="stat-sub">per story</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Date Range</div>
+    <div class="stat-value" style="font-size:14px;" id="stat-range">—</div>
+    <div class="stat-sub" id="stat-months">—</div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filter-bar">
+  <label>Filters:</label>
+  <select id="filter-author" onchange="applyFilters()">
+    <option value="">All Authors</option>
+  </select>
+  <input type="text" id="filter-search" placeholder="Search headline..." oninput="applyFilters()" style="width:220px;">
+  <select id="filter-sort-articles" onchange="applyFilters()">
+    <option value="date-desc">Date ↓ (newest)</option>
+    <option value="date-asc">Date ↑ (oldest)</option>
+    <option value="views-desc">Views ↓</option>
+    <option value="views-asc">Views ↑</option>
+  </select>
+  <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);" id="filter-count"></span>
+</div>
+
+<!-- CONTENT -->
+<div class="content" id="main-content">
+  <div class="empty-state" id="empty-state">
+    <div class="empty-state-icon">📰</div>
+    <h3>No Data Yet</h3>
+    <p>Select a date range, enter your GA4 credentials, and click <strong>Fetch Data</strong> to generate the editorial report.</p>
+  </div>
+
+  <!-- TABLE 1: Articles -->
+  <div class="section-block" id="section-articles">
+    <div class="section-header">
+      <span class="section-title">Article Report</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="section-count" id="articles-count"></span>
+        <button class="btn btn-copy" onclick="copyTable('tbl-articles')">Copy Table</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="tbl-articles">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-articles',0)">#</th>
+            <th onclick="sortTable('tbl-articles',1)">Headline</th>
+            <th onclick="sortTable('tbl-articles',2)">Byline</th>
+            <th onclick="sortTable('tbl-articles',3)">Published Date</th>
+            <th onclick="sortTable('tbl-articles',4)">Views</th>
+            <th>URL</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-articles-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TABLE 2: Bylines -->
+  <div class="section-block" id="section-bylines">
+    <div class="section-header">
+      <span class="section-title">Byline Performance</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="section-count" id="bylines-count"></span>
+        <button class="btn btn-copy" onclick="copyTable('tbl-bylines')">Copy Table</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="tbl-bylines">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-bylines',0)">#</th>
+            <th onclick="sortTable('tbl-bylines',1)">Author / Byline</th>
+            <th onclick="sortTable('tbl-bylines',2)">Articles</th>
+            <th onclick="sortTable('tbl-bylines',3)">Total Views</th>
+            <th onclick="sortTable('tbl-bylines',4)">Avg. Views/Article</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-bylines-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TABLE 3: Categories -->
+  <div class="section-block" id="section-categories">
+    <div class="section-header">
+      <span class="section-title">Category Report <span style="font-size:12px;font-family:'IBM Plex Sans',sans-serif;font-weight:400;color:var(--ink-soft)">(enter categories manually)</span></span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-secondary" onclick="addCategoryRow()" style="font-size:10px;padding:5px 12px;">+ Add Row</button>
+        <button class="btn btn-copy" onclick="copyTable('tbl-categories')">Copy Table</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="tbl-categories">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Category</th>
+            <th>Articles Count</th>
+            <th>Total Views</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-categories-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────
+let allArticles = [];     // full dataset after fetch
+let filteredArticles = []; // after filters
+let sortStates = {};
+
+// ── HELPERS ────────────────────────────────────────────────────────────
+function setStatus(text, state = '') {
+  document.getElementById('status-text').textContent = text;
+  const dot = document.getElementById('status-dot');
+  dot.className = state;
+}
+
+function setProgress(pct, label) {
+  const wrap = document.getElementById('progress-wrap');
+  wrap.classList.toggle('visible', pct > 0 && pct < 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = label || '';
+}
+
+function showNote(text) {
+  const el = document.getElementById('note-box');
+  document.getElementById('note-text').textContent = text;
+  el.classList.add('visible');
+}
+
+function hideNote() {
+  document.getElementById('note-box').classList.remove('visible');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  return Number(n).toLocaleString('en-IN');
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  if (isNaN(dt)) return d;
+  return dt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+// ── CORS PROXY ────────────────────────────────────────────────────────
+const PROXY = 'https://api.allorigins.win/get?url=';
+
+async function proxyFetch(url) {
+  const res = await fetch(PROXY + encodeURIComponent(url));
+  if (!res.ok) throw new Error('Proxy fetch failed for: ' + url);
+  const json = await res.json();
+  return json.contents;
+}
+
+// ── SITEMAP MONTHS ────────────────────────────────────────────────────
+function getMonthsBetween(from, to) {
+  const months = [];
+  let cur = new Date(from.getFullYear(), from.getMonth(), 1);
+  const end = new Date(to.getFullYear(), to.getMonth(), 1);
+  while (cur <= end) {
+    const y = cur.getFullYear();
+    const m = String(cur.getMonth() + 1).padStart(2, '0');
+    months.push(`${y}-${m}-01`);
+    cur.setMonth(cur.getMonth() + 1);
+  }
+  return months;
+}
+
+function sitemapUrl(monthStr) {
+  return `https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/${monthStr}.xml`;
+}
+
+// ── FETCH SITEMAP ─────────────────────────────────────────────────────
+async function fetchSitemapUrls(monthStr, fromDate, toDate) {
+  const xml = await proxyFetch(sitemapUrl(monthStr));
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xml, 'text/xml');
+  const urls = [];
+  doc.querySelectorAll('url').forEach(node => {
+    const loc = node.querySelector('loc')?.textContent?.trim();
+    const lastmod = node.querySelector('lastmod')?.textContent?.trim();
+    if (!loc) return;
+    // exclude brand-connect
+    if (loc.includes('brand-connect')) return;
+    // filter by date
+    const dt = new Date(lastmod || '');
+    if (!isNaN(dt) && (dt < fromDate || dt > toDate)) return;
+    urls.push({ url: loc, lastmod });
+  });
+  return urls;
+}
+
+// ── FETCH ARTICLE METADATA ────────────────────────────────────────────
+async function fetchArticleMeta(url) {
+  try {
+    const html = await proxyFetch(url);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Headline: h1
+    const h1 = doc.querySelector('h1')?.textContent?.trim() || '';
+
+    // Byline: try various common patterns
+    let byline = '';
+    const bylineSels = [
+      '.article-author', '.byline', '.author-name', '[class*="author"]',
+      '[rel="author"]', '.writer', '.contributor', 'meta[name="author"]',
+      '.article-byline', '.story-byline', '.reporter'
+    ];
+    for (const sel of bylineSels) {
+      const el = doc.querySelector(sel);
+      if (el) {
+        byline = (sel.startsWith('meta') ? el.getAttribute('content') : el.textContent)?.trim() || '';
+        if (byline) break;
+      }
+    }
+    // Also try og:author or article:author
+    if (!byline) {
+      byline = doc.querySelector('meta[property="article:author"]')?.getAttribute('content')?.trim() || '';
+    }
+
+    // Published date: try various
+    let pubDate = '';
+    const dateSels = [
+      'meta[property="article:published_time"]',
+      'meta[name="publish-date"]',
+      'meta[name="date"]',
+      'time[datetime]',
+      '[class*="publish"]',
+      '[class*="date"]'
+    ];
+    for (const sel of dateSels) {
+      const el = doc.querySelector(sel);
+      if (el) {
+        pubDate = (el.getAttribute('datetime') || el.getAttribute('content') || el.textContent)?.trim() || '';
+        if (pubDate) break;
+      }
+    }
+
+    return { headline: h1, byline, pubDate };
+  } catch(e) {
+    return { headline: '', byline: '', pubDate: '' };
+  }
+}
+
+// ── FETCH GA4 TRAFFIC ─────────────────────────────────────────────────
+async function fetchGA4Traffic(urls, propertyId, token, fromDate, toDate) {
+  const fmt = d => d.toISOString().slice(0,10).replace(/-/g,'');
+  // GA4 requires YYYY-MM-DD
+  const startDate = fromDate.toISOString().slice(0,10);
+  const endDate = toDate.toISOString().slice(0,10);
+
+  // Build pagePath list (strip domain from urls)
+  const pathMap = {};
+  const paths = urls.map(u => {
+    try {
+      const p = new URL(u.url).pathname;
+      pathMap[p] = u.url;
+      return p;
+    } catch { return u.url; }
+  });
+
+  // GA4 Data API: batch up to 100 at a time using dimensionFilter with inListFilter
+  const BATCH = 100;
+  const trafficMap = {};
+
+  for (let i = 0; i < paths.length; i += BATCH) {
+    const batch = paths.slice(i, i + BATCH);
+    const body = {
+      dateRanges: [{ startDate, endDate }],
+      dimensions: [{ name: 'pagePath' }],
+      metrics: [{ name: 'screenPageViews' }],
+      dimensionFilter: {
+        filter: {
+          fieldName: 'pagePath',
+          inListFilter: { values: batch }
+        }
+      },
+      limit: 10000
+    };
+
+    try {
+      const res = await fetch(
+        `https://analyticsdata.googleapis.com/v1beta/properties/${propertyId}:runReport`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        }
+      );
+      if (!res.ok) {
+        const err = await res.json();
+        console.warn('GA4 error:', err);
+        continue;
+      }
+      const data = await res.json();
+      (data.rows || []).forEach(row => {
+        const path = row.dimensionValues[0].value;
+        const views = parseInt(row.metricValues[0].value, 10);
+        // map back to full url
+        const fullUrl = pathMap[path] || path;
+        trafficMap[fullUrl] = (trafficMap[fullUrl] || 0) + views;
+        // also store by path for lookup
+        trafficMap[path] = (trafficMap[path] || 0) + views;
+      });
+    } catch(e) {
+      console.warn('GA4 fetch error:', e);
+    }
+  }
+  return trafficMap;
+}
+
+// ── MAIN FETCH ────────────────────────────────────────────────────────
+async function startFetch() {
+  const fromVal = document.getElementById('date-from').value;
+  const toVal = document.getElementById('date-to').value;
+  const token = document.getElementById('ga-token').value.trim();
+  const propId = document.getElementById('ga-property').value.trim();
+
+  if (!fromVal || !toVal) { showToast('Please select a date range'); return; }
+
+  const fromDate = new Date(fromVal);
+  const toDate = new Date(toVal);
+  toDate.setHours(23, 59, 59);
+
+  document.getElementById('btn-fetch').disabled = true;
+  document.getElementById('empty-state').style.display = 'none';
+  hideNote();
+  allArticles = [];
+
+  setStatus('Fetching...', 'active');
+
+  try {
+    // 1. Get months
+    const months = getMonthsBetween(fromDate, toDate);
+    setProgress(5, `Loading ${months.length} sitemap(s)...`);
+
+    // 2. Fetch all sitemaps
+    let rawUrls = [];
+    for (let i = 0; i < months.length; i++) {
+      setProgress(5 + (i / months.length) * 25, `Fetching sitemap ${months[i]}...`);
+      try {
+        const u = await fetchSitemapUrls(months[i], fromDate, toDate);
+        rawUrls = rawUrls.concat(u);
+      } catch(e) {
+        console.warn('Sitemap error for', months[i], e);
+      }
+    }
+
+    // Deduplicate
+    const seen = new Set();
+    rawUrls = rawUrls.filter(u => {
+      if (seen.has(u.url)) return false;
+      seen.add(u.url);
+      return true;
+    });
+
+    if (rawUrls.length === 0) {
+      showNote('No articles found in the selected date range (after excluding brand-connect URLs).');
+      setStatus('No results', 'error');
+      setProgress(0);
+      document.getElementById('btn-fetch').disabled = false;
+      return;
+    }
+
+    setProgress(30, `Found ${rawUrls.length} URLs. Fetching article metadata...`);
+
+    // 3. Fetch metadata — batch with concurrency 5
+    const CONCURRENCY = 5;
+    const articles = new Array(rawUrls.length).fill(null).map((_, i) => ({ ...rawUrls[i] }));
+
+    for (let i = 0; i < articles.length; i += CONCURRENCY) {
+      const batch = articles.slice(i, i + CONCURRENCY);
+      const results = await Promise.all(batch.map(a => fetchArticleMeta(a.url)));
+      results.forEach((meta, j) => {
+        Object.assign(articles[i + j], meta);
+      });
+      const pct = 30 + ((i + CONCURRENCY) / articles.length) * 45;
+      setProgress(Math.min(pct, 75), `Fetching metadata ${Math.min(i + CONCURRENCY, articles.length)}/${articles.length}...`);
+    }
+
+    // 4. Fetch GA4 traffic
+    let trafficMap = {};
+    if (token && propId) {
+      setProgress(78, 'Fetching GA4 traffic data...');
+      trafficMap = await fetchGA4Traffic(rawUrls, propId, token, fromDate, toDate);
+    } else {
+      showNote('GA4 credentials not provided — traffic data will show as 0. Enter your property ID and bearer token to include views.');
+    }
+
+    // 5. Merge traffic into articles
+    articles.forEach(a => {
+      let path = '';
+      try { path = new URL(a.url).pathname; } catch{}
+      a.views = trafficMap[a.url] || trafficMap[path] || 0;
+      // Use pubDate if available, fallback to lastmod
+      if (!a.pubDate && a.lastmod) a.pubDate = a.lastmod;
+    });
+
+    allArticles = articles;
+    setProgress(100);
+    setTimeout(() => setProgress(0), 800);
+    setStatus('Ready', 'active');
+
+    renderAll();
+
+  } catch(e) {
+    console.error(e);
+    setStatus('Error: ' + e.message, 'error');
+    showNote('Error fetching data: ' + e.message);
+    setProgress(0);
+  }
+
+  document.getElementById('btn-fetch').disabled = false;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────
+function renderAll() {
+  applyFilters();
+  populateAuthorFilter();
+  renderBylines();
+  renderCategories();
+  updateStats();
+
+  document.getElementById('stats-strip').classList.add('visible');
+  document.getElementById('filter-bar').classList.add('visible');
+  document.getElementById('section-articles').classList.add('visible');
+  document.getElementById('section-bylines').classList.add('visible');
+  document.getElementById('section-categories').classList.add('visible');
+}
+
+function populateAuthorFilter() {
+  const authors = [...new Set(allArticles.map(a => a.byline).filter(Boolean))].sort();
+  const sel = document.getElementById('filter-author');
+  sel.innerHTML = '<option value="">All Authors</option>';
+  authors.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a;
+    opt.textContent = a;
+    sel.appendChild(opt);
+  });
+}
+
+function applyFilters() {
+  const author = document.getElementById('filter-author').value;
+  const search = document.getElementById('filter-search').value.toLowerCase();
+  const sort = document.getElementById('filter-sort-articles').value;
+
+  filteredArticles = allArticles.filter(a => {
+    if (author && a.byline !== author) return false;
+    if (search && !(a.headline || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  // Sort
+  filteredArticles.sort((a, b) => {
+    if (sort === 'date-desc') return new Date(b.pubDate||b.lastmod||0) - new Date(a.pubDate||a.lastmod||0);
+    if (sort === 'date-asc') return new Date(a.pubDate||a.lastmod||0) - new Date(b.pubDate||b.lastmod||0);
+    if (sort === 'views-desc') return (b.views||0) - (a.views||0);
+    if (sort === 'views-asc') return (a.views||0) - (b.views||0);
+    return 0;
+  });
+
+  renderArticlesTable();
+  document.getElementById('filter-count').textContent = `${filteredArticles.length} of ${allArticles.length} articles`;
+}
+
+function renderArticlesTable() {
+  const tbody = document.getElementById('tbl-articles-body');
+  const maxViews = Math.max(...filteredArticles.map(a => a.views || 0), 1);
+
+  tbody.innerHTML = filteredArticles.map((a, i) => {
+    const barW = Math.round(((a.views || 0) / maxViews) * 80);
+    return `<tr>
+      <td class="td-num">${i + 1}</td>
+      <td class="td-headline">${escHtml(a.headline || '(fetching...)')}</td>
+      <td class="td-byline">${escHtml(a.byline || '—')}</td>
+      <td class="td-date">${fmtDate(a.pubDate || a.lastmod)}</td>
+      <td class="td-num">
+        <div class="traffic-bar">
+          <div class="traffic-bar-inner" style="width:${barW}px"></div>
+          <span class="traffic-num">${fmt(a.views)}</span>
+        </div>
+      </td>
+      <td class="td-url"><a href="${escHtml(a.url)}" target="_blank">${escHtml(shortUrl(a.url))}</a></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('articles-count').textContent = `${filteredArticles.length} articles`;
+}
+
+function renderBylines() {
+  const map = {};
+  allArticles.forEach(a => {
+    const byline = a.byline || '(Unknown)';
+    if (!map[byline]) map[byline] = { articles: 0, views: 0 };
+    map[byline].articles++;
+    map[byline].views += (a.views || 0);
+  });
+
+  const rows = Object.entries(map)
+    .map(([name, d]) => ({ name, ...d, avg: d.articles ? Math.round(d.views / d.articles) : 0 }))
+    .sort((a, b) => b.articles - a.articles);
+
+  const tbody = document.getElementById('tbl-bylines-body');
+  tbody.innerHTML = rows.map((r, i) => `<tr>
+    <td class="td-num">${i + 1}</td>
+    <td><strong>${escHtml(r.name)}</strong></td>
+    <td class="td-num">${r.articles}</td>
+    <td class="td-num">${fmt(r.views)}</td>
+    <td class="td-num">${fmt(r.avg)}</td>
+  </tr>`).join('');
+
+  document.getElementById('bylines-count').textContent = `${rows.length} contributors`;
+}
+
+function renderCategories() {
+  const tbody = document.getElementById('tbl-categories-body');
+  // Keep existing rows (manually entered categories)
+  if (tbody.children.length === 0) {
+    // Add 5 empty starter rows
+    for (let i = 0; i < 5; i++) addCategoryRow();
+  }
+}
+
+function addCategoryRow() {
+  const tbody = document.getElementById('tbl-categories-body');
+  const i = tbody.children.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="td-num">${i}</td>
+    <td><input class="cat-input" placeholder="Category name..." /></td>
+    <td class="td-num"><input class="cat-input" placeholder="0" style="width:80px;text-align:right;" /></td>
+    <td class="td-num"><input class="cat-input" placeholder="0" style="width:100px;text-align:right;" /></td>
+    <td><input class="cat-input" placeholder="Notes..." style="width:200px;" /></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function updateStats() {
+  const totalViews = allArticles.reduce((s, a) => s + (a.views || 0), 0);
+  const bylines = new Set(allArticles.map(a => a.byline).filter(Boolean)).size;
+  const avg = allArticles.length ? Math.round(totalViews / allArticles.length) : 0;
+
+  document.getElementById('stat-articles').textContent = fmt(allArticles.length);
+  document.getElementById('stat-views').textContent = totalViews > 0 ? fmt(totalViews) : 'N/A';
+  document.getElementById('stat-bylines').textContent = fmt(bylines);
+  document.getElementById('stat-avg').textContent = totalViews > 0 ? fmt(avg) : 'N/A';
+
+  const fromVal = document.getElementById('date-from').value;
+  const toVal = document.getElementById('date-to').value;
+  document.getElementById('stat-range').textContent = fromVal && toVal ? `${fromVal} → ${toVal}` : '—';
+  document.getElementById('stat-months').textContent = fromVal && toVal
+    ? `${getMonthsBetween(new Date(fromVal), new Date(toVal)).length} month(s)`
+    : '';
+}
+
+// ── COPY TABLE ────────────────────────────────────────────────────────
+function copyTable(tableId) {
+  const table = document.getElementById(tableId);
+  const rows = [];
+
+  // Header
+  const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent.replace(/[↑↓]/g,'').trim());
+  rows.push(headers.join('\t'));
+
+  // Body (get text values, handle inputs)
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const cells = [...tr.querySelectorAll('td')].map(td => {
+      const input = td.querySelector('input');
+      if (input) return input.value.trim();
+      const a = td.querySelector('a');
+      if (a) return a.href;
+      // Strip traffic bar visuals, just get the number
+      const num = td.querySelector('.traffic-num');
+      if (num) return num.textContent.trim();
+      return td.textContent.trim().replace(/\s+/g,' ');
+    });
+    rows.push(cells.join('\t'));
+  });
+
+  const text = rows.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Table copied — paste into Google Sheets');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Table copied — paste into Google Sheets');
+  });
+}
+
+// ── SORT TABLE ────────────────────────────────────────────────────────
+function sortTable(tableId, colIndex) {
+  const table = document.getElementById(tableId);
+  const tbody = table.querySelector('tbody');
+  const rows = [...tbody.querySelectorAll('tr')];
+  const key = tableId + '_' + colIndex;
+  const asc = sortStates[key] !== true;
+  sortStates[key] = asc;
+
+  // Update header indicators
+  table.querySelectorAll('thead th').forEach((th, i) => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (i === colIndex) th.classList.add(asc ? 'sort-asc' : 'sort-desc');
+  });
+
+  rows.sort((a, b) => {
+    const getVal = tr => {
+      const td = tr.querySelectorAll('td')[colIndex];
+      const num = td?.querySelector('.traffic-num');
+      if (num) return parseFloat(num.textContent.replace(/,/g,'')) || 0;
+      const input = td?.querySelector('input');
+      const txt = (input ? input.value : td?.textContent || '').trim();
+      const n = parseFloat(txt.replace(/,/g,''));
+      return isNaN(n) ? txt.toLowerCase() : n;
+    };
+    const va = getVal(a), vb = getVal(b);
+    if (typeof va === 'number' && typeof vb === 'number') return asc ? va - vb : vb - va;
+    return asc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+  });
+
+  rows.forEach(r => tbody.appendChild(r));
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function shortUrl(url) {
+  try {
+    const u = new URL(url);
+    return u.pathname;
+  } catch { return url; }
+}
+
+function clearAll() {
+  allArticles = [];
+  filteredArticles = [];
+  document.getElementById('tbl-articles-body').innerHTML = '';
+  document.getElementById('tbl-bylines-body').innerHTML = '';
+  document.getElementById('tbl-categories-body').innerHTML = '';
+  document.getElementById('stats-strip').classList.remove('visible');
+  document.getElementById('filter-bar').classList.remove('visible');
+  document.getElementById('section-articles').classList.remove('visible');
+  document.getElementById('section-bylines').classList.remove('visible');
+  document.getElementById('section-categories').classList.remove('visible');
+  document.getElementById('empty-state').style.display = '';
+  hideNote();
+  setStatus('Ready', '');
+  showToast('Cleared');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+(function init() {
+  // Default date range: current month
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('date-from').value = `${y}-${m}-01`;
+  document.getElementById('date-to').value = `${y}-${m}-${d}`;
+})();
+</script>
+</body>
+</html>
