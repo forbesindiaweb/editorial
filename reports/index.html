@@ -185,7 +185,7 @@ td.hl{max-width:300px;font-weight:600;color:var(--blk);}
   </div>
 </header>
 
-<!-- CONTROLS -->
+<!-- CONTROLS ROW 1: Source + Dates + GA4 creds -->
 <div class="ctrl">
   <div class="ctrl-in">
     <!-- Source toggle -->
@@ -196,16 +196,40 @@ td.hl{max-width:300px;font-weight:600;color:var(--blk);}
         <button class="src-btn" id="src-manual" onclick="setSource('manual')">Manual URLs</button>
       </div>
     </div>
-    <!-- Date range (sitemap only) -->
-    <div class="cg" id="dr-from-wrap">
-      <label>From Date</label>
-      <input type="date" id="date-from">
+
+    <!-- SITEMAP date range — shown only in sitemap mode -->
+    <div id="sitemap-dates" style="display:flex;gap:12px;align-items:flex-end;">
+      <div class="cg">
+        <label>Sitemap From</label>
+        <input type="date" id="date-from">
+      </div>
+      <div class="cg">
+        <label>Sitemap To</label>
+        <input type="date" id="date-to">
+      </div>
     </div>
-    <div class="cg" id="dr-to-wrap">
-      <label>To Date</label>
-      <input type="date" id="date-to">
+
+    <!-- MANUAL GA4 date range — shown only in manual mode -->
+    <div id="manual-dates" style="display:none;gap:12px;align-items:flex-end;background:#FFF8E8;border:1px solid #F59E0B;padding:8px 12px;border-radius:3px;">
+      <div style="font-size:10px;font-weight:700;color:#92400E;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;width:100%;">
+        📅 GA4 Views Date Range
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-end;">
+        <div class="cg">
+          <label style="color:#92400E;">Views From</label>
+          <input type="date" id="manual-from">
+        </div>
+        <div class="cg">
+          <label style="color:#92400E;">Views To</label>
+          <input type="date" id="manual-to">
+        </div>
+        <div style="font-size:11px;color:#92400E;padding-bottom:9px;max-width:200px;line-height:1.4;">
+          GA4 will fetch views for this date range for all URLs in the table
+        </div>
+      </div>
     </div>
-    <!-- GA4 -->
+
+    <!-- GA4 creds -->
     <div class="cg">
       <label>GA4 Property ID <span class="saved-badge" id="prop-saved"></span></label>
       <input type="text" id="ga-prop" placeholder="e.g. 360701459" style="width:160px;" oninput="saveGA()">
@@ -218,7 +242,7 @@ td.hl{max-width:300px;font-weight:600;color:var(--blk);}
       </div>
     </div>
     <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:1px;">
-      <button class="btn btn-red" id="btn-fetch" onclick="startFetch()">Fetch GA4 Data</button>
+      <button class="btn btn-red" id="btn-fetch" onclick="startFetch()">Fetch Sitemap + GA4</button>
       <button class="btn btn-danger btn-sm" style="padding:8px 16px;" onclick="clearTable()">Clear Table</button>
       <button class="btn btn-out btn-sm" style="padding:8px 16px;" onclick="testGA4()">Test GA4</button>
     </div>
@@ -421,13 +445,13 @@ function setSource(src){
   dataSource = src;
   document.getElementById('src-sitemap').classList.toggle('on', src==='sitemap');
   document.getElementById('src-manual').classList.toggle('on', src==='manual');
-  // Show/hide date range (only needed for sitemap)
-  const show = src==='sitemap';
-  document.getElementById('dr-from-wrap').style.display = show?'':'none';
-  document.getElementById('dr-to-wrap').style.display = show?'':'none';
+  // Show sitemap dates only in sitemap mode
+  document.getElementById('sitemap-dates').style.display = src==='sitemap' ? 'flex' : 'none';
+  // Show manual GA4 date range only in manual mode
+  document.getElementById('manual-dates').style.display = src==='manual' ? 'flex' : 'none';
   // Update fetch button label
-  document.getElementById('btn-fetch').textContent = src==='sitemap' ? 'Fetch Sitemap + GA4' : 'Fetch GA4 for URLs';
-  // Show/hide paste section hint
+  document.getElementById('btn-fetch').textContent = src==='sitemap' ? 'Fetch Sitemap + GA4' : 'Fetch GA4 Views';
+  // Highlight paste section in manual mode
   document.getElementById('paste-section').style.borderColor = src==='manual' ? 'var(--red)' : '';
 }
 
@@ -763,18 +787,18 @@ async function startFetch(){
       startDate=document.getElementById('date-from').value;
       endDate=document.getElementById('date-to').value;
     } else {
-      // For manual, use WP date range if set, else prompt
-      startDate=document.getElementById('wp-from').value||document.getElementById('date-from').value;
-      endDate=document.getElementById('wp-to').value||document.getElementById('date-to').value;
+      // Manual mode: use the dedicated GA4 Views Date Range fields
+      startDate=document.getElementById('manual-from').value;
+      endDate=document.getElementById('manual-to').value;
       if(!startDate||!endDate){
-        const now=new Date();
-        endDate=now.toISOString().slice(0,10);
-        const from=new Date(now); from.setDate(from.getDate()-30);
-        startDate=from.toISOString().slice(0,10);
-        dbg('Manual mode: using last 30 days '+startDate+' to '+endDate);
+        toast('Please set the GA4 Views Date Range (the orange date fields)');
+        document.getElementById('btn-fetch').disabled=false;
+        return;
       }
+      dbg('Manual mode: fetching GA4 views for '+startDate+' → '+endDate);
     }
     const ids=urlItems.map(u=>u.articleId).filter(Boolean);
+    dbg('GA4 date range: '+startDate+' → '+endDate+' | IDs to fetch: '+ids.length);
     const pvMap=await fetchPVs(ids,startDate,endDate);
 
     // Merge PVs into articles
@@ -1049,6 +1073,8 @@ async function testGA4(){
   const y=now.getFullYear(),m=String(now.getMonth()+1).padStart(2,'0'),d=String(now.getDate()).padStart(2,'0');
   document.getElementById('date-from').value=y+'-'+m+'-01';
   document.getElementById('date-to').value=y+'-'+m+'-'+d;
+  document.getElementById('manual-from').value=y+'-'+m+'-01';
+  document.getElementById('manual-to').value=y+'-'+m+'-'+d;
   document.getElementById('wp-from').value=y+'-'+m+'-01';
   document.getElementById('wp-to').value=y+'-'+m+'-'+d;
   // Paste feedback
