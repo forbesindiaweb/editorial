@@ -758,7 +758,7 @@ async function proxyFetch(url) {
     try {
       dbg('Trying [' + proxy.name + '] for: ' + url.slice(0,70));
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 14000);
+      const timer = setTimeout(() => controller.abort(), 30000);
       const res = await fetch(proxy.build(url), { signal: controller.signal });
       clearTimeout(timer);
       if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -846,48 +846,81 @@ async function fetchArticleMeta(url) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
-    // Headline: h1
-    const h1 = doc.querySelector('h1')?.textContent?.trim() || '';
+    // ── STRATEGY 1: Forbes India __NEXT_DATA__ JSON (most reliable) ──
+    try {
+      const nextDataEl = doc.getElementById('__NEXT_DATA__');
+      if (nextDataEl) {
+        const nd = JSON.parse(nextDataEl.textContent);
+        const articleData = nd?.props?.pageProps?.articleData?.data
+                         || nd?.props?.pageProps?.pageData?.articleData?.data;
+        if (articleData) {
+          const headline = articleData.display_headline || articleData.headline || '';
+          // author_byline is an array: [{english_name, ...}]
+          const bylineArr = articleData.author_byline || [];
+          const byline = bylineArr.map(a => a.english_name || a.language_name || '').filter(Boolean).join(', ');
+          // created_at: "2026-06-02 16:34:37"
+          const createdAt = articleData.created_at || '';
+          let pubDate = '';
+          if (createdAt) {
+            // Parse "YYYY-MM-DD HH:MM:SS" as local time
+            const parts = createdAt.match(/(\d{4})-(\d{2})-(\d{2})/);
+            if (parts) pubDate = `${parts[3]} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(parts[2])-1]} ${parts[1]}`;
+          }
+          if (headline || byline) {
+            dbg('  meta from __NEXT_DATA__: ' + headline.slice(0,40));
+            return { headline, byline, pubDate };
+          }
+        }
+      }
+    } catch(e) { dbg('  __NEXT_DATA__ parse failed: ' + e.message); }
 
-    // Byline: try various common patterns
+    // ── STRATEGY 2: Forbes India specific DOM selectors ──
+    const h1 = doc.querySelector('[data-testid="article-title"]')?.textContent?.trim()
+              || doc.querySelector('h1.artttl')?.textContent?.trim()
+              || doc.querySelector('h1')?.textContent?.trim() || '';
+
+    // Byline: data-testid="byline" is the exact Forbes India selector
     let byline = '';
-    const bylineSels = [
-      '.article-author', '.byline', '.author-name', '[class*="author"]',
-      '[rel="author"]', '.writer', '.contributor', 'meta[name="author"]',
-      '.article-byline', '.story-byline', '.reporter'
-    ];
-    for (const sel of bylineSels) {
-      const el = doc.querySelector(sel);
-      if (el) {
-        byline = (sel.startsWith('meta') ? el.getAttribute('content') : el.textContent)?.trim() || '';
-        if (byline) break;
-      }
+    const bylineEl = doc.querySelector('[data-testid="byline"]');
+    if (bylineEl) {
+      byline = bylineEl.textContent?.trim() || '';
     }
-    // Also try og:author or article:author
+    // Fallback selectors
     if (!byline) {
-      byline = doc.querySelector('meta[property="article:author"]')?.getAttribute('content')?.trim() || '';
-    }
-
-    // Published date: try various
-    let pubDate = '';
-    const dateSels = [
-      'meta[property="article:published_time"]',
-      'meta[name="publish-date"]',
-      'meta[name="date"]',
-      'time[datetime]',
-      '[class*="publish"]',
-      '[class*="date"]'
-    ];
-    for (const sel of dateSels) {
-      const el = doc.querySelector(sel);
-      if (el) {
-        pubDate = (el.getAttribute('datetime') || el.getAttribute('content') || el.textContent)?.trim() || '';
-        if (pubDate) break;
+      const fallbackSels = ['.authnm a', '.cp_author_name', 'meta[name="author"]',
+        'meta[property="article:author"]', '.article-author', '.byline'];
+      for (const sel of fallbackSels) {
+        const el = doc.querySelector(sel);
+        if (el) {
+          byline = (sel.startsWith('meta') ? el.getAttribute('content') : el.textContent)?.trim() || '';
+          if (byline) break;
+        }
       }
     }
 
+    // Published date: Forbes India uses <p class="created_date"><span>...</span>
+    let pubDate = '';
+    const createdDateEl = doc.querySelector('p.created_date span, [data-testid="date-time"], .artdt');
+    if (createdDateEl) pubDate = createdDateEl.textContent?.trim() || '';
+    if (!pubDate) {
+      // fallback to article:published_time meta
+      pubDate = doc.querySelector('meta[property="article:published_time"]')?.getAttribute('content')?.trim() || '';
+    }
+    if (!pubDate) {
+      // ld+json datePublished
+      try {
+        const ldScripts = doc.querySelectorAll('script[type="application/ld+json"]');
+        for (const s of ldScripts) {
+          const j = JSON.parse(s.textContent);
+          if (j.datePublished) { pubDate = j.datePublished; break; }
+        }
+      } catch(e) {}
+    }
+
+    dbg('  meta from DOM: ' + h1.slice(0,40));
     return { headline: h1, byline, pubDate };
   } catch(e) {
+    dbg('  fetchArticleMeta error: ' + e.message);
     return { headline: '', byline: '', pubDate: '' };
   }
 }
