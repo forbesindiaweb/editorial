@@ -6,662 +6,368 @@
 <title>Forbes India · Editorial Dashboard</title>
 <style>
 :root {
-  --red: #CC0000;
-  --red-dark: #990000;
-  --black: #000000;
-  --white: #FFFFFF;
-  --gray-100: #F5F5F5;
-  --gray-200: #EBEBEB;
-  --gray-300: #D4D4D4;
-  --gray-500: #888888;
-  --gray-700: #444444;
-  --gray-900: #1A1A1A;
-  --font-serif: Georgia, "Times New Roman", Times, serif;
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: "Courier New", Courier, monospace;
+  --red:#CC0000; --red-dk:#990000; --blk:#000; --wht:#fff;
+  --g1:#F5F5F5; --g2:#EBEBEB; --g3:#D4D4D4; --g5:#888; --g7:#444; --g9:#1A1A1A;
+  --serif:Georgia,"Times New Roman",Times,serif;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"Courier New",Courier,monospace;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); background: var(--gray-100); color: var(--gray-900); font-size: 13px; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--g1);color:var(--g9);font-size:13px;}
 
-/* ── HEADER ── */
-.hdr {
-  background: var(--black);
-  border-bottom: 4px solid var(--red);
-  padding: 0;
-}
-.hdr-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 52px;
-}
-.hdr-brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.hdr-logo {
-  font-family: var(--font-serif);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--white);
-  letter-spacing: 0.02em;
-}
-.hdr-logo span { color: var(--red); }
-.hdr-pipe { color: #444; font-size: 20px; }
-.hdr-title {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 600;
-  color: #999;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-.hdr-meta {
-  font-size: 11px;
-  color: #666;
-  font-family: var(--font-mono);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.status-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: #444;
-  display: inline-block;
-  transition: background 0.3s;
-}
-.status-dot.ok { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
-.status-dot.err { background: var(--red); }
-.status-dot.busy { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+/* HEADER */
+.hdr{background:var(--blk);border-bottom:4px solid var(--red);}
+.hdr-in{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:52px;}
+.logo{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--wht);letter-spacing:.02em;}
+.logo span{color:var(--red);}
+.pipe{color:#444;font-size:20px;margin:0 12px;}
+.hdr-title{font-size:11px;font-weight:600;color:#999;letter-spacing:.15em;text-transform:uppercase;}
+.hdr-meta{font-size:11px;color:#666;font-family:var(--mono);display:flex;align-items:center;gap:8px;}
+.sdot{width:7px;height:7px;border-radius:50%;background:#444;display:inline-block;transition:background .3s;}
+.sdot.ok{background:#22c55e;box-shadow:0 0 6px #22c55e;}
+.sdot.err{background:var(--red);}
+.sdot.busy{background:#f59e0b;box-shadow:0 0 6px #f59e0b;}
 
-/* ── TABS ── */
-.tabs-bar {
-  background: var(--black);
-  border-bottom: 1px solid #222;
-  padding: 0 24px;
-  display: flex;
-  gap: 0;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-.tab-btn {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #666;
-  background: none;
-  border: none;
-  border-bottom: 3px solid transparent;
-  padding: 12px 18px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.tab-btn:hover { color: #ccc; }
-.tab-btn.active { color: var(--white); border-bottom-color: var(--red); }
+/* TABS */
+.tabs{background:var(--blk);border-bottom:1px solid #222;}
+.tabs-in{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;}
+.tab{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#666;background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;cursor:pointer;transition:all .15s;}
+.tab:hover{color:#ccc;}
+.tab.on{color:var(--wht);border-bottom-color:var(--red);}
 
-/* ── CONTROL PANEL ── */
-.ctrl {
-  background: var(--white);
-  border-bottom: 1px solid var(--gray-200);
-  padding: 16px 24px;
-}
-.ctrl-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: flex-end;
-}
-.ctrl-group { display: flex; flex-direction: column; gap: 4px; }
-.ctrl-group label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--gray-500);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.ctrl-group input, .ctrl-group select {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  color: var(--gray-900);
-  background: var(--gray-100);
-  border: 1px solid var(--gray-300);
-  padding: 7px 10px;
-  outline: none;
-  border-radius: 2px;
-  transition: border-color 0.15s;
-}
-.ctrl-group input:focus, .ctrl-group select:focus { border-color: var(--red); }
-.ctrl-group input[type="text"] { min-width: 260px; font-family: var(--font-mono); font-size: 11px; }
+/* CTRL */
+.ctrl{background:var(--wht);border-bottom:1px solid var(--g2);padding:14px 24px;}
+.ctrl-in{max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;}
+.cg{display:flex;flex-direction:column;gap:4px;}
+.cg label{font-size:10px;font-weight:700;color:var(--g5);letter-spacing:.12em;text-transform:uppercase;}
+.cg input,.cg select{font-family:var(--sans);font-size:12px;color:var(--g9);background:var(--g1);border:1px solid var(--g3);padding:7px 10px;outline:none;border-radius:2px;transition:border-color .15s;}
+.cg input:focus,.cg select:focus{border-color:var(--red);}
 
-/* ── BUTTONS ── */
-.btn {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 8px 20px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s;
-  border-radius: 2px;
-}
-.btn-red { background: var(--red); color: var(--white); }
-.btn-red:hover { background: var(--red-dark); }
-.btn-red:disabled { background: var(--gray-300); color: var(--gray-500); cursor: not-allowed; }
-.btn-black { background: var(--black); color: var(--white); }
-.btn-black:hover { background: var(--gray-700); }
-.btn-outline { background: transparent; color: var(--gray-700); border: 1px solid var(--gray-300); }
-.btn-outline:hover { border-color: var(--black); color: var(--black); }
-.btn-sm { font-size: 10px; padding: 5px 12px; }
+/* SOURCE TOGGLE */
+.src-toggle{display:flex;gap:0;border:1px solid var(--g3);border-radius:2px;overflow:hidden;}
+.src-btn{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 16px;border:none;cursor:pointer;transition:all .15s;background:var(--g1);color:var(--g5);}
+.src-btn.on{background:var(--blk);color:var(--wht);}
 
-/* ── PROGRESS ── */
-.progress-wrap {
-  background: var(--white);
-  border-bottom: 1px solid var(--gray-200);
-  padding: 10px 24px;
-  display: none;
-}
-.progress-wrap.on { display: block; }
-.progress-label { font-size: 11px; color: var(--gray-500); margin-bottom: 5px; font-family: var(--font-mono); }
-.progress-track { height: 3px; background: var(--gray-200); border-radius: 2px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--red); width: 0%; transition: width 0.3s; border-radius: 2px; }
+/* BUTTONS */
+.btn{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px 20px;border:none;cursor:pointer;transition:all .15s;border-radius:2px;}
+.btn-red{background:var(--red);color:var(--wht);}
+.btn-red:hover{background:var(--red-dk);}
+.btn-red:disabled{background:var(--g3);color:var(--g5);cursor:not-allowed;}
+.btn-blk{background:var(--blk);color:var(--wht);}
+.btn-blk:hover{background:var(--g7);}
+.btn-out{background:transparent;color:var(--g7);border:1px solid var(--g3);}
+.btn-out:hover{border-color:var(--blk);color:var(--blk);}
+.btn-sm{font-size:10px;padding:5px 12px;}
+.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red);}
+.btn-danger:hover{background:var(--red);color:var(--wht);}
 
-/* ── NOTE ── */
-.note {
-  max-width: 1400px;
-  margin: 12px auto 0;
-  padding: 10px 14px;
-  background: #FFF3CD;
-  border-left: 4px solid #F59E0B;
-  font-size: 12px;
-  color: #444;
-  display: none;
-  border-radius: 0 2px 2px 0;
-}
-.note.on { display: block; }
+/* PROGRESS */
+.prog-wrap{background:var(--wht);border-bottom:1px solid var(--g2);padding:10px 24px;display:none;}
+.prog-wrap.on{display:block;}
+.prog-lbl{font-size:11px;color:var(--g5);margin-bottom:5px;font-family:var(--mono);}
+.prog-track{height:3px;background:var(--g2);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--red);width:0%;transition:width .3s;border-radius:2px;}
 
-/* ── PAGE WRAPPER ── */
-.page { max-width: 1400px; margin: 0 auto; padding: 20px 24px 60px; display: none; }
-.page.active { display: block; }
+/* NOTE */
+.note{max-width:1400px;margin:10px auto 0;padding:10px 14px;background:#FFF3CD;border-left:4px solid #F59E0B;font-size:12px;color:#444;display:none;border-radius:0 2px 2px 0;}
+.note.on{display:block;}
 
-/* ── STATS STRIP ── */
-.stats-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.stat-card {
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-top: 3px solid var(--red);
-  padding: 14px 16px;
-}
-.stat-label {
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--gray-500);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.stat-value {
-  font-family: var(--font-serif);
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--black);
-  line-height: 1;
-}
-.stat-sub { font-size: 10px; color: var(--gray-500); margin-top: 3px; }
+/* PAGE */
+.page{max-width:1400px;margin:0 auto;padding:20px 24px 60px;display:none;}
+.page.on{display:block;}
 
-/* ── SECTION ── */
-.section { margin-bottom: 32px; }
-.section-hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--black);
-  padding-bottom: 8px;
-  margin-bottom: 0;
-}
-.section-title {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--black);
-}
-.section-sub { font-size: 11px; color: var(--gray-500); margin-left: 8px; }
-.section-actions { display: flex; gap: 8px; align-items: center; }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:20px;}
+.sc{background:var(--wht);border:1px solid var(--g2);border-top:3px solid var(--red);padding:14px 16px;}
+.sc-lbl{font-size:9px;font-weight:700;color:var(--g5);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
+.sc-val{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--blk);line-height:1;}
+.sc-sub{font-size:10px;color:var(--g5);margin-top:3px;}
 
-/* ── TABLE ── */
-.tbl-wrap { overflow-x: auto; background: var(--white); border: 1px solid var(--gray-200); border-top: none; }
-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-thead tr { background: var(--black); }
-thead th {
-  font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--white);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 10px 12px;
-  text-align: left;
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-}
-thead th:hover { background: #222; }
-thead th.sort-asc::after { content: ' ↑'; color: var(--red); }
-thead th.sort-desc::after { content: ' ↓'; color: var(--red); }
-tbody tr { border-bottom: 1px solid var(--gray-200); transition: background 0.1s; }
-tbody tr:hover { background: var(--gray-100); }
-tbody td { padding: 9px 12px; color: var(--gray-700); vertical-align: top; line-height: 1.5; }
-tbody td.num { font-family: var(--font-mono); font-size: 11px; text-align: right; white-space: nowrap; }
-tbody td.url-cell a { color: #1a56db; text-decoration: none; font-family: var(--font-mono); font-size: 10px; }
-tbody td.url-cell a:hover { text-decoration: underline; }
-tbody td.headline-cell { max-width: 340px; font-weight: 600; color: var(--black); }
-tbody td.editable { min-width: 120px; }
-td input.cell-input {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  border: 1px dashed var(--gray-300);
-  background: transparent;
-  padding: 2px 5px;
-  width: 100%;
-  color: var(--gray-900);
-  outline: none;
-  border-radius: 2px;
-}
-td input.cell-input:focus { border-color: var(--red); background: #fff8f8; }
-.views-bar { display: flex; align-items: center; gap: 6px; }
-.views-track { flex: 1; height: 4px; background: var(--gray-200); border-radius: 2px; min-width: 40px; max-width: 80px; }
-.views-fill { height: 100%; background: var(--red); border-radius: 2px; }
-.views-num { font-family: var(--font-mono); font-size: 11px; white-space: nowrap; }
+/* SECTION */
+.sec{margin-bottom:28px;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--blk);padding-bottom:8px;margin-bottom:0;}
+.sec-title{font-family:var(--serif);font-size:18px;font-weight:700;}
+.sec-sub{font-size:11px;color:var(--g5);margin-left:8px;}
+.sec-acts{display:flex;gap:8px;align-items:center;}
 
-/* ── PASTE AREA ── */
-.paste-section {
-  background: var(--white);
-  border: 2px dashed var(--gray-300);
-  padding: 16px 20px;
-  margin-bottom: 20px;
-  border-radius: 2px;
-}
-.paste-section:focus-within { border-color: var(--red); }
-.paste-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--gray-500);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-.paste-hint { font-size: 11px; color: var(--gray-500); margin-bottom: 8px; }
-#paste-input {
-  width: 100%;
-  height: 80px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--gray-900);
-  border: 1px solid var(--gray-200);
-  padding: 8px;
-  resize: vertical;
-  outline: none;
-  background: var(--gray-100);
-}
-#paste-input:focus { border-color: var(--red); background: #fff; }
+/* TABLE */
+.tw{overflow-x:auto;background:var(--wht);border:1px solid var(--g2);border-top:none;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead tr{background:var(--blk);}
+thead th{font-size:10px;font-weight:700;color:var(--wht);letter-spacing:.1em;text-transform:uppercase;padding:10px 12px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;}
+thead th:hover{background:#222;}
+thead th.sa::after{content:' ↑';color:var(--red);}
+thead th.sd::after{content:' ↓';color:var(--red);}
+tbody tr{border-bottom:1px solid var(--g2);transition:background .1s;}
+tbody tr:hover{background:var(--g1);}
+tbody td{padding:9px 12px;color:var(--g7);vertical-align:middle;line-height:1.4;}
+td.num{font-family:var(--mono);font-size:11px;text-align:right;white-space:nowrap;}
+td.uc a{color:#1a56db;text-decoration:none;font-family:var(--mono);font-size:10px;}
+td.uc a:hover{text-decoration:underline;}
+td.hl{max-width:300px;font-weight:600;color:var(--blk);}
+.ci{font-family:var(--sans);font-size:12px;border:1px dashed var(--g3);background:transparent;padding:2px 5px;width:100%;color:var(--g9);outline:none;border-radius:2px;}
+.ci:focus{border-color:var(--red);background:#fff8f8;}
+.vbar{display:flex;align-items:center;gap:6px;}
+.vt{flex:1;height:4px;background:var(--g2);border-radius:2px;min-width:40px;max-width:80px;}
+.vf{height:100%;background:var(--red);border-radius:2px;}
+.vn{font-family:var(--mono);font-size:11px;white-space:nowrap;}
 
-/* ── WEBSITE PERFORMANCE ── */
-.perf-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.perf-card {
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  padding: 16px;
-}
-.perf-card .label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--gray-500);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-.perf-card .value {
-  font-family: var(--font-serif);
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--black);
-  line-height: 1;
-}
-.perf-card .delta {
-  font-size: 11px;
-  margin-top: 4px;
-  font-weight: 600;
-}
-.perf-card .delta.up { color: #16a34a; }
-.perf-card .delta.down { color: var(--red); }
+/* PASTE */
+.paste-box{background:var(--wht);border:2px dashed var(--g3);padding:14px 18px;margin-bottom:18px;border-radius:2px;}
+.paste-box:focus-within{border-color:var(--red);}
+.paste-lbl{font-size:10px;font-weight:700;color:var(--g5);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.paste-hint{font-size:11px;color:var(--g5);margin-bottom:8px;}
+#paste-ta{width:100%;height:70px;font-family:var(--mono);font-size:11px;border:1px solid var(--g2);padding:8px;resize:vertical;outline:none;background:var(--g1);}
+#paste-ta:focus{border-color:var(--red);background:#fff;}
 
-.chart-wrap {
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  padding: 20px;
-  margin-bottom: 20px;
-}
-.chart-title {
-  font-family: var(--font-serif);
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--gray-200);
-}
-.bar-chart { display: flex; flex-direction: column; gap: 8px; }
-.bar-row { display: flex; align-items: center; gap: 10px; }
-.bar-label { font-size: 11px; color: var(--gray-700); width: 160px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
-.bar-outer { flex: 1; height: 18px; background: var(--gray-100); border-radius: 2px; overflow: hidden; }
-.bar-inner { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.5s; }
-.bar-val { font-family: var(--font-mono); font-size: 10px; color: var(--gray-700); width: 70px; text-align: right; flex-shrink: 0; }
+/* PERF */
+.perf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;margin-bottom:20px;}
+.pc{background:var(--wht);border:1px solid var(--g2);padding:16px;}
+.pc-lbl{font-size:10px;font-weight:700;color:var(--g5);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.pc-val{font-family:var(--serif);font-weight:700;color:var(--blk);line-height:1;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+@media(max-width:900px){.two-col{grid-template-columns:1fr;}}
+.cw{background:var(--wht);border:1px solid var(--g2);padding:20px;}
+.ct{font-family:var(--serif);font-size:15px;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--g2);}
+.brow{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.blbl{font-size:11px;color:var(--g7);width:160px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bout{flex:1;height:16px;background:var(--g1);border-radius:2px;overflow:hidden;}
+.bin{height:100%;background:var(--red);border-radius:2px;}
+.bval{font-family:var(--mono);font-size:10px;color:var(--g7);width:70px;text-align:right;flex-shrink:0;}
 
-/* ── DEBUG ── */
-.debug-panel {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: #111; border-top: 2px solid var(--red);
-  padding: 8px 16px;
-  display: none; z-index: 999;
-}
-.debug-panel.on { display: block; }
-.debug-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-.debug-header span { font-family: var(--font-mono); font-size: 10px; color: var(--red); letter-spacing: 0.1em; }
-.debug-header button { background: none; border: none; color: #666; cursor: pointer; font-size: 16px; }
-#debug-log { font-family: var(--font-mono); font-size: 10px; color: #aaa; max-height: 110px; overflow-y: auto; white-space: pre-wrap; }
-.debug-toggle { position: fixed; bottom: 8px; right: 8px; font-family: var(--font-mono); font-size: 9px; background: #222; color: #666; border: 1px solid #444; padding: 4px 10px; cursor: pointer; border-radius: 2px; z-index: 1000; }
+/* WP DATE CTRL */
+.wp-ctrl{background:var(--wht);border:1px solid var(--g2);border-radius:2px;padding:14px 18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;}
+.wp-ctrl-lbl{font-size:11px;font-weight:700;color:var(--g5);letter-spacing:.1em;text-transform:uppercase;width:100%;margin-bottom:-4px;}
 
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: var(--black); color: var(--white);
-  font-size: 12px; padding: 10px 18px;
-  border-left: 3px solid var(--red);
-  opacity: 0; transform: translateY(8px);
-  transition: all 0.25s; pointer-events: none; z-index: 2000;
-  font-family: var(--font-mono);
-}
-.toast.show { opacity: 1; transform: translateY(0); }
+/* DEBUG */
+.dbg{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:2px solid var(--red);padding:8px 16px;display:none;z-index:999;}
+.dbg.on{display:block;}
+.dbg-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.dbg-hdr span{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:.1em;}
+.dbg-hdr button{background:none;border:none;color:#666;cursor:pointer;font-size:16px;}
+#dbg-log{font-family:var(--mono);font-size:10px;color:#aaa;max-height:110px;overflow-y:auto;white-space:pre-wrap;}
+.dbg-toggle{position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:9px;background:#222;color:#666;border:1px solid #444;padding:4px 10px;cursor:pointer;border-radius:2px;z-index:1000;}
 
-/* ── EMPTY ── */
-.empty { text-align: center; padding: 60px 20px; color: var(--gray-500); }
-.empty svg { width: 48px; height: 48px; opacity: 0.2; margin-bottom: 12px; }
-.empty h3 { font-family: var(--font-serif); font-size: 20px; color: var(--gray-500); margin-bottom: 6px; }
-.empty p { font-size: 13px; max-width: 400px; margin: 0 auto; }
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--blk);color:var(--wht);font-size:12px;padding:10px 18px;border-left:3px solid var(--red);opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;z-index:2000;font-family:var(--mono);}
+.toast.show{opacity:1;transform:translateY(0);}
 
-/* ── GA HELP ── */
-.ga-help { font-size: 10px; color: var(--gray-500); margin-top: 3px; font-family: var(--font-mono); }
-.ga-help a { color: #1a56db; }
+/* EMPTY */
+.empty{text-align:center;padding:50px 20px;color:var(--g5);}
+.empty h3{font-family:var(--serif);font-size:18px;color:var(--g5);margin-bottom:6px;}
+.empty p{font-size:12px;max-width:380px;margin:0 auto;}
 
-/* ── TWO COL ── */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-@media(max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+/* SAVED BADGE */
+.saved-badge{font-size:10px;color:#22c55e;font-family:var(--mono);margin-left:6px;}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <header class="hdr">
-  <div class="hdr-inner">
-    <div class="hdr-brand">
-      <div class="hdr-logo">Forbes <span>India</span></div>
-      <span class="hdr-pipe">|</span>
+  <div class="hdr-in">
+    <div style="display:flex;align-items:center;">
+      <div class="logo">Forbes <span>India</span></div>
+      <span class="pipe">|</span>
       <span class="hdr-title">Editorial Dashboard</span>
     </div>
     <div class="hdr-meta">
-      <span class="status-dot" id="sdot"></span>
+      <span class="sdot" id="sdot"></span>
       <span id="stext">Ready</span>
     </div>
   </div>
   <div style="max-width:1400px;margin:0 auto;">
-    <div class="tabs-bar" style="max-width:none;padding:0 24px;">
-      <button class="tab-btn active" onclick="switchTab('articles')">Article Report</button>
-      <button class="tab-btn" onclick="switchTab('bylines')">Byline Report</button>
-      <button class="tab-btn" onclick="switchTab('website')">Website Performance</button>
+    <div class="tabs-in">
+      <button class="tab on" onclick="switchTab('articles',this)">Article Report</button>
+      <button class="tab" onclick="switchTab('bylines',this)">Byline Report</button>
+      <button class="tab" onclick="switchTab('website',this)">Website Performance</button>
     </div>
   </div>
 </header>
 
 <!-- CONTROLS -->
 <div class="ctrl">
-  <div class="ctrl-inner">
-    <div class="ctrl-group">
+  <div class="ctrl-in">
+    <!-- Source toggle -->
+    <div class="cg">
+      <label>Data Source</label>
+      <div class="src-toggle">
+        <button class="src-btn on" id="src-sitemap" onclick="setSource('sitemap')">Sitemap</button>
+        <button class="src-btn" id="src-manual" onclick="setSource('manual')">Manual URLs</button>
+      </div>
+    </div>
+    <!-- Date range (sitemap only) -->
+    <div class="cg" id="dr-from-wrap">
       <label>From Date</label>
       <input type="date" id="date-from">
     </div>
-    <div class="ctrl-group">
+    <div class="cg" id="dr-to-wrap">
       <label>To Date</label>
       <input type="date" id="date-to">
     </div>
-    <div class="ctrl-group">
-      <label>GA4 Property ID</label>
-      <input type="text" id="ga-prop" placeholder="e.g. 360701459" style="min-width:160px;width:160px;">
+    <!-- GA4 -->
+    <div class="cg">
+      <label>GA4 Property ID <span class="saved-badge" id="prop-saved"></span></label>
+      <input type="text" id="ga-prop" placeholder="e.g. 360701459" style="width:160px;" oninput="saveGA()">
     </div>
-    <div class="ctrl-group" style="flex:1;min-width:240px;">
-      <label>GA4 Bearer Token</label>
-      <input type="text" id="ga-token" placeholder="ya29.xxx — paste OAuth2 access token">
-      <div class="ga-help"><a href="https://developers.google.com/oauthplayground" target="_blank">OAuth Playground</a> → Google Analytics Data API v1 → analytics.readonly → Exchange for token</div>
-    </div>
-    <div class="ctrl-group">
-      <label>CF Proxy URL</label>
-      <input type="text" id="cf-proxy" value="https://forbes-proxy.ppk9059.workers.dev" style="min-width:280px;width:280px;">
+    <div class="cg" style="flex:1;min-width:220px;">
+      <label>GA4 Bearer Token <span class="saved-badge" id="token-saved"></span></label>
+      <input type="text" id="ga-token" placeholder="ya29.xxx — OAuth2 access token" oninput="saveGA()">
+      <div style="font-size:10px;color:var(--g5);margin-top:3px;font-family:var(--mono);">
+        <a href="https://developers.google.com/oauthplayground" target="_blank" style="color:#1a56db;">OAuth Playground</a> → analytics.readonly → Exchange for token
+      </div>
     </div>
     <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:1px;">
-      <button class="btn btn-red" id="btn-fetch" onclick="startFetch()">Fetch Data</button>
-      <button class="btn btn-outline" onclick="clearAll()">Clear</button>
+      <button class="btn btn-red" id="btn-fetch" onclick="startFetch()">Fetch GA4 Data</button>
+      <button class="btn btn-danger btn-sm" style="padding:8px 16px;" onclick="clearTable()">Clear Table</button>
     </div>
   </div>
 </div>
 
 <!-- PROGRESS -->
-<div class="progress-wrap" id="prog-wrap">
+<div class="prog-wrap" id="prog-wrap">
   <div style="max-width:1400px;margin:0 auto;">
-    <div class="progress-label" id="prog-label">Loading...</div>
-    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+    <div class="prog-lbl" id="prog-lbl">Loading...</div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
   </div>
 </div>
+<div class="note" id="note-box"></div>
 
-<!-- NOTE -->
-<div class="note" id="note-box" style="max-width:1400px;margin:10px auto 0;"></div>
+<!-- ══ TAB: ARTICLES ══ -->
+<div class="page on" id="tab-articles">
 
-<!-- ═══════════════ TAB: ARTICLES ═══════════════ -->
-<div class="page active" id="tab-articles">
-
-  <!-- STATS -->
-  <div class="stats-strip" id="art-stats" style="display:none;">
-    <div class="stat-card">
-      <div class="stat-label">Total Articles</div>
-      <div class="stat-value" id="st-articles">—</div>
-      <div class="stat-sub">in date range</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total PVs</div>
-      <div class="stat-value" id="st-pvs">—</div>
-      <div class="stat-sub">from GA4</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Contributors</div>
-      <div class="stat-value" id="st-authors">—</div>
-      <div class="stat-sub">unique bylines</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Avg PVs / Article</div>
-      <div class="stat-value" id="st-avg">—</div>
-      <div class="stat-sub">per story</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Top Article PVs</div>
-      <div class="stat-value" id="st-top">—</div>
-      <div class="stat-sub" id="st-top-hl" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
-    </div>
+  <div class="stats" id="art-stats" style="display:none;">
+    <div class="sc"><div class="sc-lbl">Total Articles</div><div class="sc-val" id="st-n">—</div><div class="sc-sub">in table</div></div>
+    <div class="sc"><div class="sc-lbl">Total PVs</div><div class="sc-val" id="st-pv">—</div><div class="sc-sub">from GA4</div></div>
+    <div class="sc"><div class="sc-lbl">Contributors</div><div class="sc-val" id="st-au">—</div><div class="sc-sub">unique bylines</div></div>
+    <div class="sc"><div class="sc-lbl">Avg PVs/Article</div><div class="sc-val" id="st-avg">—</div><div class="sc-sub"></div></div>
+    <div class="sc"><div class="sc-lbl">Top Article</div><div class="sc-val" id="st-top">—</div><div class="sc-sub" id="st-top-s" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;"></div></div>
   </div>
 
-  <!-- PASTE FROM SHEETS -->
-  <div class="paste-section">
-    <div class="paste-label">📋 Paste from Google Sheets / Excel</div>
-    <div class="paste-hint">Copy cells from Sheets and paste below — tab-separated data will be imported into the table (maps to: S.No, Date, Section, Sub-Section, URL, Headline, Author, PVs)</div>
-    <textarea id="paste-input" placeholder="Paste your copied cells here (Ctrl+V / Cmd+V)..."></textarea>
+  <!-- PASTE BOX -->
+  <div class="paste-box" id="paste-section">
+    <div class="paste-lbl">📋 Paste from Google Sheets / Excel</div>
+    <div class="paste-hint">Copy cells → paste below. Columns: S.No | Date | Section | Sub-Section | URL | Headline | Author | PVs. URL column is required.</div>
+    <textarea id="paste-ta" placeholder="Paste copied cells here (Ctrl+V)..."></textarea>
     <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
-      <button class="btn btn-black btn-sm" onclick="importPaste()">Import Pasted Data</button>
-      <button class="btn btn-outline btn-sm" onclick="document.getElementById('paste-input').value=''">Clear Paste</button>
-      <span id="paste-feedback" style="font-size:11px;color:var(--gray-500);"></span>
+      <button class="btn btn-blk btn-sm" onclick="importPaste()">Import Pasted Data</button>
+      <button class="btn btn-out btn-sm" onclick="document.getElementById('paste-ta').value='';document.getElementById('paste-fb').textContent=''">Clear</button>
+      <span id="paste-fb" style="font-size:11px;color:var(--g5);"></span>
     </div>
   </div>
 
   <!-- FILTERS -->
-  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;align-items:center;" id="art-filters" style="display:none;">
-    <select id="f-author" onchange="renderArticleTable()" style="font-size:12px;padding:5px 8px;border:1px solid var(--gray-300);background:#fff;outline:none;">
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;align-items:center;" id="art-filters">
+    <select id="f-author" onchange="renderArt()" style="font-size:12px;padding:5px 8px;border:1px solid var(--g3);background:#fff;outline:none;border-radius:2px;">
       <option value="">All Authors</option>
     </select>
-    <input type="text" id="f-search" oninput="renderArticleTable()" placeholder="Search headline or URL..." style="font-size:12px;padding:5px 10px;border:1px solid var(--gray-300);width:240px;outline:none;">
-    <select id="f-sort" onchange="renderArticleTable()" style="font-size:12px;padding:5px 8px;border:1px solid var(--gray-300);background:#fff;outline:none;">
-      <option value="pvs-desc">PVs ↓ (highest)</option>
-      <option value="pvs-asc">PVs ↑ (lowest)</option>
-      <option value="date-desc">Date ↓ (newest)</option>
-      <option value="date-asc">Date ↑ (oldest)</option>
+    <input type="text" id="f-search" oninput="renderArt()" placeholder="Search headline or URL..." style="font-size:12px;padding:5px 10px;border:1px solid var(--g3);width:230px;outline:none;border-radius:2px;">
+    <select id="f-sort" onchange="renderArt()" style="font-size:12px;padding:5px 8px;border:1px solid var(--g3);background:#fff;outline:none;border-radius:2px;">
+      <option value="pvs-desc">PVs ↓ highest</option>
+      <option value="pvs-asc">PVs ↑ lowest</option>
+      <option value="date-desc">Date ↓ newest</option>
+      <option value="date-asc">Date ↑ oldest</option>
     </select>
-    <span id="f-count" style="font-size:11px;color:var(--gray-500);margin-left:auto;font-family:var(--font-mono);"></span>
+    <span id="f-count" style="font-size:11px;color:var(--g5);margin-left:auto;font-family:var(--mono);"></span>
   </div>
 
-  <!-- TABLE -->
-  <div class="section">
-    <div class="section-hdr">
-      <div>
-        <span class="section-title">Article Report</span>
-        <span class="section-sub" id="art-count"></span>
-      </div>
-      <div class="section-actions">
-        <button class="btn btn-outline btn-sm" onclick="copyTable('tbl-art')">Copy Table</button>
-        <button class="btn btn-outline btn-sm" onclick="exportCSV()">Export CSV</button>
+  <div class="sec">
+    <div class="sec-hdr">
+      <div><span class="sec-title">Article Report</span><span class="sec-sub" id="art-count"></span></div>
+      <div class="sec-acts">
+        <button class="btn btn-out btn-sm" onclick="copyTable('tbl-art')">Copy Table</button>
+        <button class="btn btn-out btn-sm" onclick="exportCSV()">Export CSV</button>
       </div>
     </div>
-    <div class="tbl-wrap">
+    <div class="tw">
       <table id="tbl-art">
-        <thead>
-          <tr>
-            <th onclick="sortTbl('tbl-art',0)" style="width:44px;">S.No</th>
-            <th onclick="sortTbl('tbl-art',1)">Published Date</th>
-            <th onclick="sortTbl('tbl-art',2)">Section</th>
-            <th onclick="sortTbl('tbl-art',3)">Sub-Section</th>
-            <th>URL</th>
-            <th onclick="sortTbl('tbl-art',5)">Headline</th>
-            <th onclick="sortTbl('tbl-art',6)">Author</th>
-            <th onclick="sortTbl('tbl-art',7)" style="width:140px;">Weekly PVs</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th onclick="srt('tbl-art',0)" style="width:44px;">S.No</th>
+          <th onclick="srt('tbl-art',1)">Published Date</th>
+          <th onclick="srt('tbl-art',2)">Section</th>
+          <th onclick="srt('tbl-art',3)">Sub-Section</th>
+          <th>URL</th>
+          <th onclick="srt('tbl-art',5)">Headline</th>
+          <th onclick="srt('tbl-art',6)">Author</th>
+          <th onclick="srt('tbl-art',7)" style="width:150px;">Weekly PVs</th>
+        </tr></thead>
         <tbody id="tbl-art-body">
-          <tr><td colspan="8">
-            <div class="empty">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-              <h3>No Data</h3>
-              <p>Set a date range and click Fetch Data, or paste data from Google Sheets above.</p>
-            </div>
-          </td></tr>
+          <tr><td colspan="8"><div class="empty"><h3>No Data</h3><p>Choose a source and click Fetch GA4 Data, or paste data from Sheets above.</p></div></td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ TAB: BYLINES ═══════════════ -->
+<!-- ══ TAB: BYLINES ══ -->
 <div class="page" id="tab-bylines">
-  <div class="section">
-    <div class="section-hdr">
-      <div>
-        <span class="section-title">Byline Performance</span>
-        <span class="section-sub" id="byl-count"></span>
-      </div>
-      <div class="section-actions">
-        <button class="btn btn-outline btn-sm" onclick="copyTable('tbl-byl')">Copy Table</button>
-      </div>
+  <div class="sec">
+    <div class="sec-hdr">
+      <div><span class="sec-title">Byline Performance</span><span class="sec-sub" id="byl-count"></span></div>
+      <div class="sec-acts"><button class="btn btn-out btn-sm" onclick="copyTable('tbl-byl')">Copy Table</button></div>
     </div>
-    <div class="tbl-wrap">
+    <div class="tw">
       <table id="tbl-byl">
-        <thead>
-          <tr>
-            <th onclick="sortTbl('tbl-byl',0)" style="width:44px;">#</th>
-            <th onclick="sortTbl('tbl-byl',1)">Author / Byline</th>
-            <th onclick="sortTbl('tbl-byl',2)">Articles</th>
-            <th onclick="sortTbl('tbl-byl',3)">Total PVs</th>
-            <th onclick="sortTbl('tbl-byl',4)">Avg PVs / Article</th>
-            <th onclick="sortTbl('tbl-byl',5)">Top Article PVs</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th onclick="srt('tbl-byl',0)" style="width:44px;">#</th>
+          <th onclick="srt('tbl-byl',1)">Author</th>
+          <th onclick="srt('tbl-byl',2)">Articles</th>
+          <th onclick="srt('tbl-byl',3)">Total PVs</th>
+          <th onclick="srt('tbl-byl',4)">Avg PVs/Article</th>
+          <th onclick="srt('tbl-byl',5)">Top Article PVs</th>
+        </tr></thead>
         <tbody id="tbl-byl-body">
-          <tr><td colspan="6"><div class="empty"><h3>No Data</h3><p>Fetch articles first.</p></div></td></tr>
+          <tr><td colspan="6"><div class="empty"><h3>No Data</h3><p>Fetch or paste article data first.</p></div></td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ TAB: WEBSITE PERFORMANCE ═══════════════ -->
+<!-- ══ TAB: WEBSITE PERFORMANCE ══ -->
 <div class="page" id="tab-website">
+  <div class="wp-ctrl">
+    <div class="wp-ctrl-lbl">Website Performance Date Range</div>
+    <div class="cg">
+      <label>From</label>
+      <input type="date" id="wp-from">
+    </div>
+    <div class="cg">
+      <label>To</label>
+      <input type="date" id="wp-to">
+    </div>
+    <button class="btn btn-red" id="btn-wp" onclick="fetchWP()">Fetch Performance</button>
+  </div>
+
   <div id="wp-empty" class="empty">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
     <h3>No Performance Data</h3>
-    <p>Enter GA4 credentials and click Fetch Data to see website performance metrics.</p>
+    <p>Set the date range above and click Fetch Performance. GA4 credentials from the top bar will be used.</p>
   </div>
   <div id="wp-content" style="display:none;">
-    <!-- KPI cards -->
     <div class="perf-grid" id="perf-kpis"></div>
-    <!-- Charts -->
     <div class="two-col">
-      <div class="chart-wrap">
-        <div class="chart-title">Top Pages by Views</div>
-        <div class="bar-chart" id="chart-pages"></div>
-      </div>
-      <div class="chart-wrap">
-        <div class="chart-title">Traffic by Device</div>
-        <div class="bar-chart" id="chart-device"></div>
-      </div>
+      <div class="cw"><div class="ct">Top Pages by Views</div><div id="ch-pages"></div></div>
+      <div class="cw"><div class="ct">Traffic by Device</div><div id="ch-device"></div></div>
     </div>
     <div class="two-col">
-      <div class="chart-wrap">
-        <div class="chart-title">Top Traffic Sources</div>
-        <div class="bar-chart" id="chart-sources"></div>
-      </div>
-      <div class="chart-wrap">
-        <div class="chart-title">Top Countries</div>
-        <div class="bar-chart" id="chart-countries"></div>
-      </div>
+      <div class="cw"><div class="ct">Traffic Sources (Channel)</div><div id="ch-src"></div></div>
+      <div class="cw"><div class="ct">Top Countries</div><div id="ch-cntry"></div></div>
     </div>
-    <div class="section">
-      <div class="section-hdr">
-        <span class="section-title">Daily Traffic</span>
-        <div class="section-actions">
-          <button class="btn btn-outline btn-sm" onclick="copyTable('tbl-daily')">Copy Table</button>
-        </div>
+    <div class="sec">
+      <div class="sec-hdr">
+        <span class="sec-title">Daily Traffic</span>
+        <div class="sec-acts"><button class="btn btn-out btn-sm" onclick="copyTable('tbl-daily')">Copy Table</button></div>
       </div>
-      <div class="tbl-wrap">
+      <div class="tw">
         <table id="tbl-daily">
           <thead><tr>
-            <th onclick="sortTbl('tbl-daily',0)">Date</th>
-            <th onclick="sortTbl('tbl-daily',1)">Views</th>
-            <th onclick="sortTbl('tbl-daily',2)">Users</th>
-            <th onclick="sortTbl('tbl-daily',3)">Sessions</th>
-            <th onclick="sortTbl('tbl-daily',4)">Engaged Sessions</th>
-            <th onclick="sortTbl('tbl-daily',5)">Engagement Rate</th>
-            <th onclick="sortTbl('tbl-daily',6)">Avg Session Duration</th>
+            <th onclick="srt('tbl-daily',0)">Date</th>
+            <th onclick="srt('tbl-daily',1)">Views</th>
+            <th onclick="srt('tbl-daily',2)">Users</th>
+            <th onclick="srt('tbl-daily',3)">Sessions</th>
+            <th onclick="srt('tbl-daily',4)">Engaged Sessions</th>
+            <th onclick="srt('tbl-daily',5)">Engagement Rate</th>
+            <th onclick="srt('tbl-daily',6)">Avg Session Duration</th>
           </tr></thead>
           <tbody id="tbl-daily-body"></tbody>
         </table>
@@ -671,756 +377,591 @@ td input.cell-input:focus { border-color: var(--red); background: #fff8f8; }
 </div>
 
 <!-- DEBUG -->
-<div class="debug-panel" id="dbg-panel">
-  <div class="debug-header">
-    <span>DEBUG LOG</span>
-    <button onclick="document.getElementById('dbg-panel').classList.remove('on')">✕</button>
-  </div>
-  <pre id="debug-log"></pre>
+<div class="dbg" id="dbg-panel">
+  <div class="dbg-hdr"><span>DEBUG LOG</span><button onclick="document.getElementById('dbg-panel').classList.remove('on')">✕</button></div>
+  <pre id="dbg-log"></pre>
 </div>
-<button class="debug-toggle" onclick="document.getElementById('dbg-panel').classList.toggle('on')">DEBUG</button>
-
-<!-- TOAST -->
+<button class="dbg-toggle" onclick="document.getElementById('dbg-panel').classList.toggle('on')">DEBUG</button>
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════════════
-let allArticles = [];
-let filteredArticles = [];
-let sortStates = {};
-let dbgLines = [];
+// ═══════════════════════════════════════════════
+let articles = [];   // master array
+let sortSt = {};
+let dataSource = 'sitemap'; // 'sitemap' | 'manual'
 
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // UTILS
-// ══════════════════════════════════════════════════
-function dbg(m) {
-  dbgLines.push('[' + new Date().toLocaleTimeString('en-IN') + '] ' + m);
-  const el = document.getElementById('debug-log');
-  if (el) el.textContent = dbgLines.slice(-50).join('\n');
-  console.log(m);
-}
-function setStatus(t, s) {
-  document.getElementById('stext').textContent = t;
-  const d = document.getElementById('sdot');
-  d.className = 'status-dot' + (s ? ' ' + s : '');
-}
-function setProgress(pct, label) {
-  const w = document.getElementById('prog-wrap');
-  w.classList.toggle('on', pct > 0 && pct < 100);
-  document.getElementById('prog-fill').style.width = pct + '%';
-  if (label) document.getElementById('prog-label').textContent = label;
-}
-function showNote(t, type) {
-  const el = document.getElementById('note-box');
-  el.textContent = t;
-  el.className = 'note on';
-  el.style.borderColor = type === 'err' ? 'var(--red)' : '#F59E0B';
-  el.style.background = type === 'err' ? '#FEE2E2' : '#FFF3CD';
-}
-function hideNote() { document.getElementById('note-box').classList.remove('on'); }
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-function fmt(n) { return (n == null || n === '') ? '—' : Number(n).toLocaleString('en-IN'); }
-function fmtDur(secs) {
-  const s = Math.round(secs || 0);
-  const m = Math.floor(s / 60), r = s % 60;
-  return m + 'm ' + r + 's';
-}
-function fmtPct(v) { return (parseFloat(v) * 100).toFixed(1) + '%'; }
-function switchTab(tab) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  event.target.classList.add('active');
+// ═══════════════════════════════════════════════
+function dbg(m){ const l=document.getElementById('dbg-log'); const lines=(l.textContent+'\n['+new Date().toLocaleTimeString('en-IN')+'] '+m).split('\n').slice(-60).join('\n'); l.textContent=lines; console.log(m); }
+function setStatus(t,s){ document.getElementById('stext').textContent=t; document.getElementById('sdot').className='sdot'+(s?' '+s:''); }
+function setProg(p,lbl){ const w=document.getElementById('prog-wrap'); w.classList.toggle('on',p>0&&p<100); document.getElementById('prog-fill').style.width=p+'%'; if(lbl)document.getElementById('prog-lbl').textContent=lbl; }
+function showNote(t,type){ const el=document.getElementById('note-box'); el.textContent=t; el.className='note on'; el.style.borderLeftColor=type==='err'?'var(--red)':'#F59E0B'; el.style.background=type==='err'?'#FEE2E2':'#FFF3CD'; }
+function hideNote(){ document.getElementById('note-box').classList.remove('on'); }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+function fmt(n){ return(n==null||n==='')?'—':Number(n).toLocaleString('en-IN'); }
+function fmtDur(s){ const ss=Math.round(s||0); return Math.floor(ss/60)+'m '+ss%60+'s'; }
+function fmtPct(v){ return(parseFloat(v)*100).toFixed(1)+'%'; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function switchTab(tab, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+tab).classList.add('on');
+  btn.classList.add('on');
 }
 
-// ══════════════════════════════════════════════════
-// PROXY FETCH
-// ══════════════════════════════════════════════════
-async function proxyFetch(url) {
-  const cfBase = document.getElementById('cf-proxy').value.trim().replace(/\/$/, '');
+// ═══════════════════════════════════════════════
+// SOURCE TOGGLE
+// ═══════════════════════════════════════════════
+function setSource(src){
+  dataSource = src;
+  document.getElementById('src-sitemap').classList.toggle('on', src==='sitemap');
+  document.getElementById('src-manual').classList.toggle('on', src==='manual');
+  // Show/hide date range (only needed for sitemap)
+  const show = src==='sitemap';
+  document.getElementById('dr-from-wrap').style.display = show?'':'none';
+  document.getElementById('dr-to-wrap').style.display = show?'':'none';
+  // Update fetch button label
+  document.getElementById('btn-fetch').textContent = src==='sitemap' ? 'Fetch Sitemap + GA4' : 'Fetch GA4 for URLs';
+  // Show/hide paste section hint
+  document.getElementById('paste-section').style.borderColor = src==='manual' ? 'var(--red)' : '';
+}
+
+// ═══════════════════════════════════════════════
+// PERSIST GA4 CREDENTIALS
+// ═══════════════════════════════════════════════
+function saveGA(){
+  const p = document.getElementById('ga-prop').value.trim();
+  const t = document.getElementById('ga-token').value.trim();
+  if(p) localStorage.setItem('fi_ga_prop', p);
+  if(t) localStorage.setItem('fi_ga_token', t);
+  document.getElementById('prop-saved').textContent = p ? '✓ saved' : '';
+  document.getElementById('token-saved').textContent = t ? '✓ saved' : '';
+}
+function loadGA(){
+  const p = localStorage.getItem('fi_ga_prop') || '';
+  const t = localStorage.getItem('fi_ga_token') || '';
+  if(p){ document.getElementById('ga-prop').value = p; document.getElementById('prop-saved').textContent='✓ saved'; }
+  if(t){ document.getElementById('ga-token').value = t; document.getElementById('token-saved').textContent='✓ saved'; }
+}
+
+// ═══════════════════════════════════════════════
+// PROXY FETCH (CF worker → allorigins fallback)
+// ═══════════════════════════════════════════════
+async function proxyFetch(url){
   const proxies = [
-    { name: 'cf-worker', build: u => cfBase + '/?url=' + encodeURIComponent(u) },
-    { name: 'allorigins', build: u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u) },
-    { name: 'corsproxy', build: u => 'https://corsproxy.io/?' + encodeURIComponent(u) }
+    { name:'cf-worker', build:u=>'https://forbes-proxy.ppk9059.workers.dev/?url='+encodeURIComponent(u) },
+    { name:'allorigins', build:u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u) },
+    { name:'corsproxy', build:u=>'https://corsproxy.io/?'+encodeURIComponent(u) }
   ];
   let lastErr;
-  for (const p of proxies) {
-    try {
-      dbg('Trying [' + p.name + '] ' + url.slice(0, 60));
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 30000);
-      const res = await fetch(p.build(url), { signal: ctrl.signal });
+  for(const p of proxies){
+    try{
+      dbg('Proxy ['+p.name+'] '+url.slice(0,60));
+      const ctrl=new AbortController();
+      const timer=setTimeout(()=>ctrl.abort(),30000);
+      const res=await fetch(p.build(url),{signal:ctrl.signal});
       clearTimeout(timer);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const txt = await res.text();
-      if (!txt || txt.length < 20) throw new Error('Empty');
-      dbg('  ✓ ' + p.name + ' (' + txt.length + ' chars)');
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const txt=await res.text();
+      if(!txt||txt.length<20) throw new Error('Empty');
+      dbg('  ✓ '+p.name+' ('+txt.length+' chars)');
       return txt;
-    } catch(e) {
-      dbg('  ✗ ' + (p ? p.name : '?') + ': ' + e.message);
-      lastErr = e;
-    }
+    }catch(e){ dbg('  ✗ '+(p?p.name:'?')+': '+e.message); lastErr=e; }
   }
-  throw new Error('All proxies failed: ' + lastErr?.message);
+  throw new Error('All proxies failed: '+lastErr?.message);
 }
 
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // SITEMAP
-// ══════════════════════════════════════════════════
-function parseLocalDate(str) {
-  if (!str) return null;
-  if (str.includes('T')) return new Date(str);
-  const p = str.slice(0, 10).split('-').map(Number);
-  return p.length === 3 ? new Date(p[0], p[1]-1, p[2]) : new Date(str);
+// ═══════════════════════════════════════════════
+function parseLocalDate(s){
+  if(!s) return null;
+  if(s.includes('T')) return new Date(s);
+  const p=s.slice(0,10).split('-').map(Number);
+  return p.length===3?new Date(p[0],p[1]-1,p[2]):new Date(s);
 }
-function getMonths(from, to) {
-  const months = [];
-  let cur = new Date(from.getFullYear(), from.getMonth(), 1);
-  const end = new Date(to.getFullYear(), to.getMonth(), 1);
-  while (cur <= end) {
-    months.push(cur.getFullYear() + '-' + String(cur.getMonth()+1).padStart(2,'0') + '-01');
-    cur.setMonth(cur.getMonth()+1);
-  }
-  return months;
+function getMonths(from,to){
+  const out=[];
+  let c=new Date(from.getFullYear(),from.getMonth(),1);
+  const e=new Date(to.getFullYear(),to.getMonth(),1);
+  while(c<=e){ out.push(c.getFullYear()+'-'+String(c.getMonth()+1).padStart(2,'0')+'-01'); c.setMonth(c.getMonth()+1); }
+  return out;
 }
-function sitemapUrl(m) {
-  return 'https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/' + m + '.xml';
+function extractId(url){ const m=url.match(/\/(\d{6,8})\//); return m?m[1]:null; }
+function extractSections(url){
+  try{
+    const p=new URL(url).pathname.split('/').filter(Boolean);
+    return { section:p[1]||'', subsection:p[2]||'' };
+  }catch{ return {section:'',subsection:''}; }
 }
-function extractArticleId(url) {
-  // Extract numeric ID from slug e.g. /article/.../2994582/1 → 2994582
-  const m = url.match(/\/(\d{6,8})\//);
-  return m ? m[1] : null;
-}
-async function fetchSitemap(monthStr, fromDate, toDate) {
-  const xml = await proxyFetch(sitemapUrl(monthStr));
-  const doc = new DOMParser().parseFromString(xml, 'text/xml');
-  const nodes = doc.querySelectorAll('url');
-  dbg('Sitemap ' + monthStr + ': ' + nodes.length + ' total URLs');
-  const urls = [];
-  let skBC = 0, skDate = 0;
-  nodes.forEach(n => {
-    const loc = n.querySelector('loc')?.textContent?.trim();
-    const lm  = n.querySelector('lastmod')?.textContent?.trim();
-    if (!loc) return;
-    if (loc.includes('brand-connect')) { skBC++; return; }
-    if (lm) {
-      const dt = parseLocalDate(lm);
-      if (dt && !isNaN(dt) && (dt < fromDate || dt > toDate)) { skDate++; return; }
+
+async function fetchSitemap(monthStr, fromDate, toDate){
+  const smUrl='https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/'+monthStr+'.xml';
+  const xml=await proxyFetch(smUrl);
+  const doc=new DOMParser().parseFromString(xml,'text/xml');
+  const nodes=doc.querySelectorAll('url');
+  dbg('Sitemap '+monthStr+': '+nodes.length+' total');
+  const out=[]; let skBC=0, skDt=0;
+  nodes.forEach(n=>{
+    const loc=n.querySelector('loc')?.textContent?.trim();
+    const lm=n.querySelector('lastmod')?.textContent?.trim();
+    if(!loc) return;
+    if(loc.includes('brand-connect')){skBC++;return;}
+    if(lm){
+      const dt=parseLocalDate(lm);
+      if(dt&&!isNaN(dt)&&(dt<fromDate||dt>toDate)){skDt++;return;}
     }
-    urls.push({ url: loc, lastmod: lm, articleId: extractArticleId(loc) });
+    out.push({url:loc, lastmod:lm, articleId:extractId(loc), ...extractSections(loc)});
   });
-  dbg('  kept:' + urls.length + ' skBC:' + skBC + ' skDate:' + skDate);
-  return urls;
+  dbg('  kept:'+out.length+' skBC:'+skBC+' skDt:'+skDt);
+  return out;
 }
 
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // GA4
-// ══════════════════════════════════════════════════
-function ga4Headers() {
-  return {
-    'Authorization': 'Bearer ' + document.getElementById('ga-token').value.trim(),
-    'Content-Type': 'application/json'
-  };
-}
-function ga4Url() {
-  return 'https://analyticsdata.googleapis.com/v1beta/properties/' +
-         document.getElementById('ga-prop').value.trim() + ':runReport';
-}
-function dateStr(d) { return d.toISOString().slice(0,10); }
+// ═══════════════════════════════════════════════
+function ga4Hdr(){ return { 'Authorization':'Bearer '+document.getElementById('ga-token').value.trim(), 'Content-Type':'application/json' }; }
+function ga4Base(){ return 'https://analyticsdata.googleapis.com/v1beta/properties/'+document.getElementById('ga-prop').value.trim(); }
 
-async function fetchArticlePVs(articleIds, startDate, endDate) {
-  // Use customEvent dimension or pagePath containing the ID
-  // Best: filter pagePath contains each ID — batch in groups of 50
-  const map = {};
-  if (!articleIds.length) return map;
-  const BATCH = 50;
-  for (let i = 0; i < articleIds.length; i += BATCH) {
-    const batch = articleIds.slice(i, i + BATCH).filter(Boolean);
-    if (!batch.length) continue;
-    const body = {
-      dateRanges: [{ startDate, endDate }],
-      dimensions: [{ name: 'pagePath' }],
-      metrics: [{ name: 'screenPageViews' }],
-      dimensionFilter: {
-        orGroup: {
-          expressions: batch.map(id => ({
-            filter: { fieldName: 'pagePath', stringFilter: { matchType: 'CONTAINS', value: '/' + id + '/' } }
-          }))
-        }
+async function fetchPVs(articleIds, startDate, endDate){
+  const map={};
+  const ids=articleIds.filter(Boolean);
+  if(!ids.length) return map;
+  const BATCH=50;
+  for(let i=0;i<ids.length;i+=BATCH){
+    const batch=ids.slice(i,i+BATCH);
+    const body={
+      dateRanges:[{startDate,endDate}],
+      dimensions:[{name:'pagePath'}],
+      metrics:[{name:'screenPageViews'}],
+      dimensionFilter:{
+        orGroup:{ expressions: batch.map(id=>({ filter:{ fieldName:'pagePath', stringFilter:{ matchType:'CONTAINS', value:'/'+id+'/' }}})) }
       },
-      limit: 10000
+      limit:10000
     };
-    try {
-      const res = await fetch(ga4Url(), { method: 'POST', headers: ga4Headers(), body: JSON.stringify(body) });
-      if (!res.ok) { dbg('GA4 article PVs error: ' + res.status); continue; }
-      const data = await res.json();
-      (data.rows || []).forEach(row => {
-        const path = row.dimensionValues[0].value;
-        const views = parseInt(row.metricValues[0].value, 10);
-        // match which article ID this path belongs to
-        batch.forEach(id => {
-          if (path.includes('/' + id + '/')) {
-            map[id] = (map[id] || 0) + views;
-          }
-        });
+    try{
+      const res=await fetch(ga4Base()+':runReport',{method:'POST',headers:ga4Hdr(),body:JSON.stringify(body)});
+      if(!res.ok){ dbg('GA4 PV error: '+res.status+' '+await res.text()); continue; }
+      const d=await res.json();
+      (d.rows||[]).forEach(row=>{
+        const path=row.dimensionValues[0].value;
+        const views=parseInt(row.metricValues[0].value,10);
+        batch.forEach(id=>{ if(path.includes('/'+id+'/')) map[id]=(map[id]||0)+views; });
       });
-      dbg('GA4 batch ' + (i/BATCH+1) + ': got ' + (data.rows?.length||0) + ' rows');
-    } catch(e) { dbg('GA4 fetch error: ' + e.message); }
+      dbg('GA4 batch '+(Math.floor(i/BATCH)+1)+': '+(d.rows?.length||0)+' rows');
+    }catch(e){ dbg('GA4 error: '+e.message); }
   }
   return map;
 }
 
-async function fetchWebsitePerformance(startDate, endDate) {
-  const prop = document.getElementById('ga-prop').value.trim();
-  const token = document.getElementById('ga-token').value.trim();
-  if (!prop || !token) return null;
+async function fetchWP(){
+  const startDate=document.getElementById('wp-from').value;
+  const endDate=document.getElementById('wp-to').value;
+  const prop=document.getElementById('ga-prop').value.trim();
+  const token=document.getElementById('ga-token').value.trim();
+  if(!startDate||!endDate){ toast('Set date range for performance'); return; }
+  if(!prop||!token){ toast('GA4 Property ID and Token required'); return; }
+  document.getElementById('btn-wp').disabled=true;
+  setStatus('Fetching performance...','busy');
+  try{
+    const base=ga4Base();
+    const h=ga4Hdr();
+    const dr=[{startDate,endDate}];
+    const results={};
 
-  const base = 'https://analyticsdata.googleapis.com/v1beta/properties/' + prop;
-  const hdrs = ga4Headers();
-  const dr = [{ startDate, endDate }];
+    // KPIs
+    const kRes=await fetch(base+':runReport',{method:'POST',headers:h,body:JSON.stringify({
+      dateRanges:dr,
+      metrics:[{name:'screenPageViews'},{name:'totalUsers'},{name:'newUsers'},
+               {name:'sessions'},{name:'engagedSessions'},{name:'engagementRate'},
+               {name:'averageSessionDuration'},{name:'bounceRate'}]
+    })});
+    if(kRes.ok){ const d=await kRes.json(); const r=d.rows?.[0]?.metricValues||[];
+      results.kpis={views:r[0]?.value,users:r[1]?.value,newUsers:r[2]?.value,sessions:r[3]?.value,
+        engSessions:r[4]?.value,engRate:r[5]?.value,avgDur:r[6]?.value,bounce:r[7]?.value}; }
 
-  const results = {};
-  try {
-    // 1. KPIs
-    const kpiRes = await fetch(base + ':runReport', {
-      method: 'POST', headers: hdrs,
-      body: JSON.stringify({
-        dateRanges: dr,
-        metrics: [
-          { name: 'screenPageViews' }, { name: 'totalUsers' }, { name: 'newUsers' },
-          { name: 'sessions' }, { name: 'engagedSessions' }, { name: 'engagementRate' },
-          { name: 'averageSessionDuration' }, { name: 'bounceRate' }
-        ]
-      })
-    });
-    if (kpiRes.ok) {
-      const d = await kpiRes.json();
-      const r = d.rows?.[0]?.metricValues || [];
-      results.kpis = {
-        views: r[0]?.value, users: r[1]?.value, newUsers: r[2]?.value,
-        sessions: r[3]?.value, engSessions: r[4]?.value,
-        engRate: r[5]?.value, avgDuration: r[6]?.value, bounceRate: r[7]?.value
-      };
-      dbg('GA4 KPIs fetched');
-    }
+    // Daily
+    const dRes=await fetch(base+':runReport',{method:'POST',headers:h,body:JSON.stringify({
+      dateRanges:dr, dimensions:[{name:'date'}],
+      metrics:[{name:'screenPageViews'},{name:'totalUsers'},{name:'sessions'},
+               {name:'engagedSessions'},{name:'engagementRate'},{name:'averageSessionDuration'}],
+      orderBys:[{dimension:{dimensionName:'date'},desc:false}], limit:100
+    })});
+    if(dRes.ok){ const d=await dRes.json(); results.daily=(d.rows||[]).map(r=>({
+      date:r.dimensionValues[0].value,views:r.metricValues[0].value,users:r.metricValues[1].value,
+      sessions:r.metricValues[2].value,engSessions:r.metricValues[3].value,
+      engRate:r.metricValues[4].value,avgDur:r.metricValues[5].value })); }
 
-    // 2. Daily trend
-    const dailyRes = await fetch(base + ':runReport', {
-      method: 'POST', headers: hdrs,
-      body: JSON.stringify({
-        dateRanges: dr,
-        dimensions: [{ name: 'date' }],
-        metrics: [
-          { name: 'screenPageViews' }, { name: 'totalUsers' }, { name: 'sessions' },
-          { name: 'engagedSessions' }, { name: 'engagementRate' }, { name: 'averageSessionDuration' }
-        ],
-        orderBys: [{ dimension: { dimensionName: 'date' }, desc: false }],
-        limit: 100
-      })
-    });
-    if (dailyRes.ok) {
-      const d = await dailyRes.json();
-      results.daily = (d.rows || []).map(row => ({
-        date: row.dimensionValues[0].value,
-        views: row.metricValues[0].value, users: row.metricValues[1].value,
-        sessions: row.metricValues[2].value, engSessions: row.metricValues[3].value,
-        engRate: row.metricValues[4].value, avgDur: row.metricValues[5].value
-      }));
-      dbg('GA4 daily: ' + results.daily.length + ' days');
-    }
+    // Top pages
+    const pRes=await fetch(base+':runReport',{method:'POST',headers:h,body:JSON.stringify({
+      dateRanges:dr, dimensions:[{name:'pageTitle'}],
+      metrics:[{name:'screenPageViews'}],
+      orderBys:[{metric:{metricName:'screenPageViews'},desc:true}], limit:10
+    })});
+    if(pRes.ok){ const d=await pRes.json(); results.pages=(d.rows||[]).map(r=>({label:r.dimensionValues[0].value,val:parseInt(r.metricValues[0].value)})); }
 
-    // 3. Top pages
-    const pagesRes = await fetch(base + ':runReport', {
-      method: 'POST', headers: hdrs,
-      body: JSON.stringify({
-        dateRanges: dr,
-        dimensions: [{ name: 'pageTitle' }],
-        metrics: [{ name: 'screenPageViews' }],
-        orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
-        limit: 10
-      })
-    });
-    if (pagesRes.ok) {
-      const d = await pagesRes.json();
-      results.topPages = (d.rows || []).map(r => ({ label: r.dimensionValues[0].value, val: parseInt(r.metricValues[0].value) }));
-    }
+    // Device
+    const devRes=await fetch(base+':runReport',{method:'POST',headers:h,body:JSON.stringify({
+      dateRanges:dr, dimensions:[{name:'deviceCategory'}], metrics:[{name:'screenPageViews'}],
+      orderBys:[{metric:{metricName:'screenPageViews'},desc:true}]
+    })});
+    if(devRes.ok){ const d=await devRes.json(); results.device=(d.rows||[]).map(r=>({label:r.dimensionValues[0].value,val:parseInt(r.metricValues[0].value)})); }
 
-    // 4. Device
-    const devRes = await fetch(base + ':runReport', {
-      method: 'POST', headers: hdrs,
-      body: JSON.stringify({
-        dateRanges: dr,
-        dimensions: [{ name: 'deviceCategory' }],
-        metrics: [{ name: 'screenPageViews' }],
-        orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }]
-      })
-    });
-    if (devRes.ok) {
-      const d = await devRes.json();
-      results.device = (d.rows || []).map(r => ({ label: r.dimensionValues[0].value, val: parseInt(r.metricValues[0].value) }));
-    }
+    // Sources
+    const sRes=await fetch(base+':runReport',{method:'POST',headers:h,body:JSON.stringify({
+      dateRanges:dr, dimensions:[{name:'sessionDefaultChannelGrouping'}], metrics:[{name:'sessions'}],
+      orderBys:[{metric:{metricName:'sessions'},desc:true}], limit:8
+    })});
+    if(sRes.ok){ const d=await sRes.json(); results.sources=(d.rows||[]).map(r=>({label:r.dimensionValues[0].value,val:parseInt(r.metricValues[0].value)})); }
 
-    // 5. Sources
-    const srcRes = await fetch(base + ':runReport', {
-      method: 'POST', headers: hdrs,
-      body: JSON.stringify({
-        dateRanges: dr,
-        dimensions: [{ name: 'sessionDefaultChannelGrouping' }],
-        metrics: [{ name: 'sessions' }],
-        orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
-        limit: 8
-      })
-    });
-    if (srcRes.ok) {
-      const d = await srcRes.json();
-      results.sources = (d.rows || []).map(r => ({ label: r.dimensionValues[0].value, val: parseInt(r.metricValues[0].value) }));
-    }
+    // Countries
+    const cRes=await fetch(base+':runReport',{method:'POST',headers:h,body:JSON.stringify({
+      dateRanges:dr, dimensions:[{name:'country'}], metrics:[{name:'totalUsers'}],
+      orderBys:[{metric:{metricName:'totalUsers'},desc:true}], limit:8
+    })});
+    if(cRes.ok){ const d=await cRes.json(); results.countries=(d.rows||[]).map(r=>({label:r.dimensionValues[0].value,val:parseInt(r.metricValues[0].value)})); }
 
-    // 6. Countries
-    const cntRes = await fetch(base + ':runReport', {
-      method: 'POST', headers: hdrs,
-      body: JSON.stringify({
-        dateRanges: dr,
-        dimensions: [{ name: 'country' }],
-        metrics: [{ name: 'totalUsers' }],
-        orderBys: [{ metric: { metricName: 'totalUsers' }, desc: true }],
-        limit: 8
-      })
-    });
-    if (cntRes.ok) {
-      const d = await cntRes.json();
-      results.countries = (d.rows || []).map(r => ({ label: r.dimensionValues[0].value, val: parseInt(r.metricValues[0].value) }));
-    }
-
-  } catch(e) { dbg('Website performance error: ' + e.message); }
-  return results;
+    renderWP(results);
+    setStatus('Done','ok');
+  }catch(e){ dbg('WP error: '+e.message); setStatus('Error','err'); showNote('Performance fetch error: '+e.message,'err'); }
+  document.getElementById('btn-wp').disabled=false;
 }
 
-// ══════════════════════════════════════════════════
+function renderWP(data){
+  document.getElementById('wp-empty').style.display='none';
+  document.getElementById('wp-content').style.display='block';
+  const k=data.kpis||{};
+  const kpiDefs=[
+    {lbl:'Page Views',val:fmt(k.views)},
+    {lbl:'Total Users',val:fmt(k.users)},
+    {lbl:'New Users',val:fmt(k.newUsers)},
+    {lbl:'Sessions',val:fmt(k.sessions)},
+    {lbl:'Engaged Sessions',val:fmt(k.engSessions)},
+    {lbl:'Engagement Rate',val:k.engRate?fmtPct(k.engRate):'—'},
+    {lbl:'Avg Session Duration',val:k.avgDur?fmtDur(k.avgDur):'—'},
+    {lbl:'Bounce Rate',val:k.bounce?fmtPct(k.bounce):'—'},
+  ];
+  document.getElementById('perf-kpis').innerHTML=kpiDefs.map(d=>`<div class="pc"><div class="pc-lbl">${d.lbl}</div><div class="pc-val" style="font-size:${d.val.length>7?'20px':'30px'}">${d.val}</div></div>`).join('');
+  renderBars('ch-pages',data.pages||[],true);
+  renderBars('ch-device',data.device||[],false);
+  renderBars('ch-src',data.sources||[],false);
+  renderBars('ch-cntry',data.countries||[],false);
+  const tbody=document.getElementById('tbl-daily-body');
+  tbody.innerHTML=(data.daily||[]).map(d=>{
+    const dt=d.date; const fd=dt.length===8?dt.slice(0,4)+'-'+dt.slice(4,6)+'-'+dt.slice(6,8):dt;
+    return `<tr><td class="num">${fd}</td><td class="num">${fmt(d.views)}</td><td class="num">${fmt(d.users)}</td><td class="num">${fmt(d.sessions)}</td><td class="num">${fmt(d.engSessions)}</td><td class="num">${fmtPct(d.engRate)}</td><td class="num">${fmtDur(d.avgDur)}</td></tr>`;
+  }).join('');
+}
+function renderBars(id,rows,trunc){
+  if(!rows.length){document.getElementById(id).innerHTML='<div style="color:var(--g5);font-size:12px;padding:10px 0;">No data</div>';return;}
+  const mx=Math.max(...rows.map(r=>r.val),1);
+  document.getElementById(id).innerHTML=rows.map(r=>{
+    const lbl=trunc&&r.label.length>38?r.label.slice(0,38)+'…':r.label;
+    return `<div class="brow"><div class="blbl" title="${esc(r.label)}">${esc(lbl)}</div><div class="bout"><div class="bin" style="width:${Math.round(r.val/mx*100)}%"></div></div><div class="bval">${fmt(r.val)}</div></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
 // MAIN FETCH
-// ══════════════════════════════════════════════════
-async function startFetch() {
-  const fromVal = document.getElementById('date-from').value;
-  const toVal   = document.getElementById('date-to').value;
-  if (!fromVal || !toVal) { toast('Please select a date range'); return; }
+// ═══════════════════════════════════════════════
+async function startFetch(){
+  const prop=document.getElementById('ga-prop').value.trim();
+  const token=document.getElementById('ga-token').value.trim();
+  if(!prop||!token){ toast('GA4 Property ID and Token required'); return; }
 
-  const [fy,fm,fd] = fromVal.split('-').map(Number);
-  const [ty,tm,td] = toVal.split('-').map(Number);
-  const fromDate = new Date(fy, fm-1, fd, 0,0,0);
-  const toDate   = new Date(ty, tm-1, td, 23,59,59);
-  const startDate = fromVal;
-  const endDate   = toVal;
-
-  dbgLines = [];
+  document.getElementById('btn-fetch').disabled=true;
+  setStatus('Fetching...','busy');
   hideNote();
-  document.getElementById('btn-fetch').disabled = true;
-  setStatus('Fetching...', 'busy');
+  dbg('=== startFetch source='+dataSource+' ===');
 
-  try {
-    // 1. Sitemaps
-    const months = getMonths(fromDate, toDate);
-    dbg('Months: ' + months.join(', '));
-    setProgress(5, 'Fetching ' + months.length + ' sitemap(s)...');
+  try{
+    let urlItems = []; // [{url, lastmod, articleId, section, subsection}]
 
-    let rawUrls = [];
-    for (let i = 0; i < months.length; i++) {
-      setProgress(5 + (i/months.length)*35, 'Sitemap ' + months[i] + '...');
-      try {
-        const u = await fetchSitemap(months[i], fromDate, toDate);
-        rawUrls = rawUrls.concat(u);
-      } catch(e) { dbg('Sitemap error ' + months[i] + ': ' + e.message); }
+    if(dataSource === 'sitemap'){
+      const fromVal=document.getElementById('date-from').value;
+      const toVal=document.getElementById('date-to').value;
+      if(!fromVal||!toVal){ toast('Select date range for sitemap'); document.getElementById('btn-fetch').disabled=false; return; }
+      const [fy,fm,fd]=fromVal.split('-').map(Number);
+      const [ty,tm,td]=toVal.split('-').map(Number);
+      const fromDate=new Date(fy,fm-1,fd,0,0,0);
+      const toDate=new Date(ty,tm-1,td,23,59,59);
+      const months=getMonths(fromDate,toDate);
+      dbg('Months: '+months.join(', '));
+      setProg(5,'Fetching '+months.length+' sitemap(s)...');
+      for(let i=0;i<months.length;i++){
+        setProg(5+(i/months.length)*40,'Sitemap '+months[i]+'...');
+        try{ const u=await fetchSitemap(months[i],fromDate,toDate); urlItems=urlItems.concat(u); }
+        catch(e){ dbg('Sitemap error '+months[i]+': '+e.message); }
+      }
+      // dedup
+      const seen=new Set();
+      urlItems=urlItems.filter(u=>{ if(seen.has(u.url))return false; seen.add(u.url); return true; });
+      dbg('After dedup: '+urlItems.length+' URLs');
+
+      if(!urlItems.length){
+        document.getElementById('dbg-panel').classList.add('on');
+        showNote('No articles found in the sitemap for this date range. Check Debug log.','err');
+        setStatus('No results','err'); setProg(0);
+        document.getElementById('btn-fetch').disabled=false; return;
+      }
+      // Merge with existing articles — preserve manually entered data
+      const existMap={};
+      articles.forEach(a=>{ existMap[a.url]=a; });
+      articles = urlItems.map((u,i)=>{
+        const ex=existMap[u.url]||{};
+        return { sno:i+1, url:u.url, lastmod:u.lastmod||'', section:ex.section||u.section||'',
+          subsection:ex.subsection||u.subsection||'', date:ex.date||u.lastmod||'',
+          headline:ex.headline||'', author:ex.author||'', pvs:0, articleId:u.articleId };
+      });
+
+    } else {
+      // MANUAL mode — use existing articles array (from paste or manual entry)
+      if(!articles.length){ toast('No URLs in table. Paste data first.'); document.getElementById('btn-fetch').disabled=false; return; }
+      urlItems = articles.map(a=>({ url:a.url, articleId:a.articleId||extractId(a.url), ...extractSections(a.url) }));
+      dbg('Manual mode: '+articles.length+' URLs');
     }
 
-    // Deduplicate
-    const seen = new Set();
-    rawUrls = rawUrls.filter(u => { if (seen.has(u.url)) return false; seen.add(u.url); return true; });
-    dbg('Total URLs after dedup: ' + rawUrls.length);
-
-    if (!rawUrls.length) {
-      document.getElementById('dbg-panel').classList.add('on');
-      showNote('No articles found. Check the Debug panel for details.', 'err');
-      setStatus('No results', 'err');
-      setProgress(0);
-      document.getElementById('btn-fetch').disabled = false;
-      return;
+    // GA4 PVs
+    setProg(65,'Fetching GA4 page views...');
+    // Use article date range if sitemap, else wp date range, else last 30 days
+    let startDate, endDate;
+    if(dataSource==='sitemap'){
+      startDate=document.getElementById('date-from').value;
+      endDate=document.getElementById('date-to').value;
+    } else {
+      // For manual, use WP date range if set, else prompt
+      startDate=document.getElementById('wp-from').value||document.getElementById('date-from').value;
+      endDate=document.getElementById('wp-to').value||document.getElementById('date-to').value;
+      if(!startDate||!endDate){
+        const now=new Date();
+        endDate=now.toISOString().slice(0,10);
+        const from=new Date(now); from.setDate(from.getDate()-30);
+        startDate=from.toISOString().slice(0,10);
+        dbg('Manual mode: using last 30 days '+startDate+' to '+endDate);
+      }
     }
+    const ids=urlItems.map(u=>u.articleId).filter(Boolean);
+    const pvMap=await fetchPVs(ids,startDate,endDate);
 
-    // 2. GA4 article PVs
-    const token = document.getElementById('ga-token').value.trim();
-    const prop  = document.getElementById('ga-prop').value.trim();
-    let pvMap = {};
-    if (token && prop) {
-      setProgress(45, 'Fetching GA4 article PVs...');
-      const ids = rawUrls.map(u => u.articleId).filter(Boolean);
-      pvMap = await fetchArticlePVs(ids, startDate, endDate);
-      dbg('PV map entries: ' + Object.keys(pvMap).length);
-    }
-
-    // 3. Build articles array
-    allArticles = rawUrls.map((u, i) => {
-      const pv = u.articleId ? (pvMap[u.articleId] || 0) : 0;
-      // Parse section/subsection from URL path
-      const path = (() => { try { return new URL(u.url).pathname; } catch { return u.url; } })();
-      const parts = path.split('/').filter(Boolean); // e.g. ['article','leadership','story-slug','id','1']
-      const section = parts[1] || '';
-      const subsection = parts[2] || '';
-      return {
-        sno: i+1, date: u.lastmod || '', section, subsection,
-        url: u.url, headline: '', author: '', pvs: pv, articleId: u.articleId
-      };
+    // Merge PVs into articles
+    articles.forEach(a=>{
+      const id=a.articleId||extractId(a.url);
+      if(id) a.pvs=pvMap[id]||0;
     });
 
-    setProgress(85, 'Fetching website performance...');
-
-    // 4. Website performance
-    let wpData = null;
-    if (token && prop) {
-      wpData = await fetchWebsitePerformance(startDate, endDate);
-    }
-
-    setProgress(100);
-    setTimeout(() => setProgress(0), 500);
-    setStatus('Done', 'ok');
-
-    renderArticleTable();
-    renderBylinesTable();
-    if (wpData) renderWebsitePerformance(wpData);
-    updateArtStats();
+    setProg(100); setTimeout(()=>setProg(0),500);
+    setStatus('Done','ok');
+    renderArt(); renderByl(); updateStats();
     populateAuthorFilter();
+    document.getElementById('art-stats').style.display='';
 
-    document.getElementById('art-stats').style.display = '';
-    document.getElementById('art-filters').style.display = '';
-
-  } catch(e) {
-    dbg('FATAL: ' + e.message);
-    setStatus('Error', 'err');
-    showNote('Error: ' + e.message, 'err');
-    setProgress(0);
+  }catch(e){
+    dbg('FATAL: '+e.message);
+    setStatus('Error','err');
+    showNote('Error: '+e.message,'err');
+    setProg(0);
     document.getElementById('dbg-panel').classList.add('on');
   }
-  document.getElementById('btn-fetch').disabled = false;
+  document.getElementById('btn-fetch').disabled=false;
 }
 
-// ══════════════════════════════════════════════════
-// RENDER: ARTICLES
-// ══════════════════════════════════════════════════
-function applyFilters() {
-  const author = document.getElementById('f-author')?.value || '';
-  const search = (document.getElementById('f-search')?.value || '').toLowerCase();
-  const sort   = document.getElementById('f-sort')?.value || 'pvs-desc';
-  filteredArticles = allArticles.filter(a => {
-    if (author && a.author !== author) return false;
-    if (search && !(a.headline+a.url).toLowerCase().includes(search)) return false;
+// ═══════════════════════════════════════════════
+// RENDER ARTICLES
+// ═══════════════════════════════════════════════
+function renderArt(){
+  const author=document.getElementById('f-author')?.value||'';
+  const search=(document.getElementById('f-search')?.value||'').toLowerCase();
+  const sort=document.getElementById('f-sort')?.value||'pvs-desc';
+  let filtered=[...articles].filter(a=>{
+    if(author&&a.author!==author) return false;
+    if(search&&!(a.headline+a.url).toLowerCase().includes(search)) return false;
     return true;
   });
-  filteredArticles.sort((a,b) => {
-    if (sort === 'pvs-desc') return (b.pvs||0) - (a.pvs||0);
-    if (sort === 'pvs-asc')  return (a.pvs||0) - (b.pvs||0);
-    if (sort === 'date-desc') return new Date(b.date||0) - new Date(a.date||0);
-    if (sort === 'date-asc')  return new Date(a.date||0) - new Date(b.date||0);
+  filtered.sort((a,b)=>{
+    if(sort==='pvs-desc') return (b.pvs||0)-(a.pvs||0);
+    if(sort==='pvs-asc') return (a.pvs||0)-(b.pvs||0);
+    if(sort==='date-desc') return new Date(b.date||0)-new Date(a.date||0);
+    if(sort==='date-asc') return new Date(a.date||0)-new Date(b.date||0);
     return 0;
   });
-}
-function renderArticleTable() {
-  applyFilters();
-  const maxPV = Math.max(...filteredArticles.map(a => a.pvs||0), 1);
-  const tbody = document.getElementById('tbl-art-body');
-  const fc = document.getElementById('f-count');
-  if (fc) fc.textContent = filteredArticles.length + ' of ' + allArticles.length + ' articles';
-  const ac = document.getElementById('art-count');
-  if (ac) ac.textContent = allArticles.length + ' articles';
-
-  tbody.innerHTML = filteredArticles.map((a, i) => {
-    const pct = Math.round(((a.pvs||0)/maxPV)*100);
-    const shortUrl = (() => { try { return new URL(a.url).pathname; } catch { return a.url; } })();
+  const maxPV=Math.max(...filtered.map(a=>a.pvs||0),1);
+  const fc=document.getElementById('f-count');
+  if(fc) fc.textContent=filtered.length+' of '+articles.length;
+  const ac=document.getElementById('art-count');
+  if(ac) ac.textContent=articles.length+' articles';
+  document.getElementById('tbl-art-body').innerHTML=filtered.map((a,i)=>{
+    const pct=Math.round(((a.pvs||0)/maxPV)*100);
+    let shortUrl=''; try{shortUrl=new URL(a.url).pathname;}catch{shortUrl=a.url;}
     return `<tr>
       <td class="num">${i+1}</td>
-      <td><input class="cell-input" value="${esc(a.date)}" onchange="allArticles[findIdx(${a.sno})].date=this.value" style="width:130px;"></td>
-      <td><input class="cell-input" value="${esc(a.section)}" onchange="allArticles[findIdx(${a.sno})].section=this.value" style="width:100px;"></td>
-      <td><input class="cell-input" value="${esc(a.subsection)}" onchange="allArticles[findIdx(${a.sno})].subsection=this.value" style="width:110px;"></td>
-      <td class="url-cell"><a href="${esc(a.url)}" target="_blank">${esc(shortUrl)}</a></td>
-      <td class="headline-cell editable"><input class="cell-input" value="${esc(a.headline)}" onchange="allArticles[findIdx(${a.sno})].headline=this.value" placeholder="Enter headline..." style="width:100%;min-width:220px;"></td>
-      <td class="editable"><input class="cell-input" value="${esc(a.author)}" onchange="allArticles[findIdx(${a.sno})].author=this.value;populateAuthorFilter();" placeholder="Author..." style="width:140px;"></td>
-      <td class="num">
-        <div class="views-bar">
-          <div class="views-track"><div class="views-fill" style="width:${pct}%"></div></div>
-          <span class="views-num">${fmt(a.pvs)}</span>
-        </div>
-      </td>
+      <td><input class="ci" value="${esc(a.date)}" onchange="upd('${esc(a.url)}','date',this.value)" style="width:130px;"></td>
+      <td><input class="ci" value="${esc(a.section)}" onchange="upd('${esc(a.url)}','section',this.value)" style="width:100px;"></td>
+      <td><input class="ci" value="${esc(a.subsection)}" onchange="upd('${esc(a.url)}','subsection',this.value)" style="width:100px;"></td>
+      <td class="uc"><a href="${esc(a.url)}" target="_blank">${esc(shortUrl)}</a></td>
+      <td class="hl"><input class="ci" value="${esc(a.headline)}" onchange="upd('${esc(a.url)}','headline',this.value)" placeholder="Enter headline..." style="width:100%;min-width:200px;"></td>
+      <td><input class="ci" value="${esc(a.author)}" onchange="upd('${esc(a.url)}','author',this.value);populateAuthorFilter();" placeholder="Author..." style="width:140px;"></td>
+      <td class="num"><div class="vbar"><div class="vt"><div class="vf" style="width:${pct}%"></div></div><span class="vn">${fmt(a.pvs)}</span></div></td>
     </tr>`;
-  }).join('') || '<tr><td colspan="8"><div class="empty"><h3>No articles match filters</h3></div></td></tr>';
+  }).join('')||'<tr><td colspan="8"><div class="empty"><h3>No articles match filters</h3></div></td></tr>';
 }
-function findIdx(sno) { return allArticles.findIndex(a => a.sno === sno); }
-
-function updateArtStats() {
-  const total = allArticles.length;
-  const pvs = allArticles.reduce((s,a) => s+(a.pvs||0), 0);
-  const authors = new Set(allArticles.map(a=>a.author).filter(Boolean)).size;
-  const avg = total ? Math.round(pvs/total) : 0;
-  const topArt = [...allArticles].sort((a,b)=>(b.pvs||0)-(a.pvs||0))[0];
-  document.getElementById('st-articles').textContent = fmt(total);
-  document.getElementById('st-pvs').textContent = pvs > 0 ? fmt(pvs) : 'N/A';
-  document.getElementById('st-authors').textContent = fmt(authors);
-  document.getElementById('st-avg').textContent = pvs > 0 ? fmt(avg) : 'N/A';
-  document.getElementById('st-top').textContent = topArt ? fmt(topArt.pvs) : '—';
-  if (document.getElementById('st-top-hl') && topArt)
-    document.getElementById('st-top-hl').textContent = topArt.headline || topArt.url;
+function upd(url, field, val){
+  const a=articles.find(x=>x.url===url);
+  if(a) a[field]=val;
 }
-
-function populateAuthorFilter() {
-  const sel = document.getElementById('f-author');
-  if (!sel) return;
-  const cur = sel.value;
-  const authors = [...new Set(allArticles.map(a=>a.author).filter(Boolean))].sort();
-  sel.innerHTML = '<option value="">All Authors</option>' + authors.map(a=>`<option value="${esc(a)}"${a===cur?' selected':''}>${esc(a)}</option>`).join('');
+function updateStats(){
+  const n=articles.length;
+  const pv=articles.reduce((s,a)=>s+(a.pvs||0),0);
+  const au=new Set(articles.map(a=>a.author).filter(Boolean)).size;
+  const top=[...articles].sort((a,b)=>(b.pvs||0)-(a.pvs||0))[0];
+  document.getElementById('st-n').textContent=fmt(n);
+  document.getElementById('st-pv').textContent=pv>0?fmt(pv):'N/A';
+  document.getElementById('st-au').textContent=fmt(au);
+  document.getElementById('st-avg').textContent=(pv&&n)?fmt(Math.round(pv/n)):'N/A';
+  document.getElementById('st-top').textContent=top?fmt(top.pvs):'—';
+  if(top) document.getElementById('st-top-s').textContent=top.headline||top.url;
+}
+function populateAuthorFilter(){
+  const sel=document.getElementById('f-author'); if(!sel)return;
+  const cur=sel.value;
+  const auths=[...new Set(articles.map(a=>a.author).filter(Boolean))].sort();
+  sel.innerHTML='<option value="">All Authors</option>'+auths.map(a=>`<option value="${esc(a)}"${a===cur?' selected':''}>${esc(a)}</option>`).join('');
 }
 
-// ══════════════════════════════════════════════════
-// RENDER: BYLINES
-// ══════════════════════════════════════════════════
-function renderBylinesTable() {
-  const map = {};
-  allArticles.forEach(a => {
-    const key = a.author || '(Unknown)';
-    if (!map[key]) map[key] = { articles:0, pvs:0, top:0 };
-    map[key].articles++;
-    map[key].pvs += (a.pvs||0);
-    if ((a.pvs||0) > map[key].top) map[key].top = a.pvs||0;
-  });
-  const rows = Object.entries(map).map(([n,d]) => ({
-    name:n, articles:d.articles, pvs:d.pvs, top:d.top, avg: d.articles ? Math.round(d.pvs/d.articles) : 0
-  })).sort((a,b) => b.articles - a.articles);
-
-  document.getElementById('tbl-byl-body').innerHTML = rows.map((r,i) => `<tr>
-    <td class="num">${i+1}</td>
-    <td><strong>${esc(r.name)}</strong></td>
-    <td class="num">${r.articles}</td>
-    <td class="num">${fmt(r.pvs)}</td>
-    <td class="num">${fmt(r.avg)}</td>
-    <td class="num">${fmt(r.top)}</td>
-  </tr>`).join('') || '<tr><td colspan="6"><div class="empty"><h3>No data</h3></div></td></tr>';
-  document.getElementById('byl-count').textContent = rows.length + ' contributors';
+// ═══════════════════════════════════════════════
+// RENDER BYLINES
+// ═══════════════════════════════════════════════
+function renderByl(){
+  const map={};
+  articles.forEach(a=>{ const k=a.author||'(Unknown)'; if(!map[k])map[k]={n:0,pv:0,top:0}; map[k].n++; map[k].pv+=(a.pvs||0); if((a.pvs||0)>map[k].top)map[k].top=a.pvs||0; });
+  const rows=Object.entries(map).map(([name,d])=>({name,n:d.n,pv:d.pv,top:d.top,avg:d.n?Math.round(d.pv/d.n):0})).sort((a,b)=>b.n-a.n);
+  document.getElementById('tbl-byl-body').innerHTML=rows.map((r,i)=>`<tr>
+    <td class="num">${i+1}</td><td><strong>${esc(r.name)}</strong></td>
+    <td class="num">${r.n}</td><td class="num">${fmt(r.pv)}</td><td class="num">${fmt(r.avg)}</td><td class="num">${fmt(r.top)}</td>
+  </tr>`).join('')||'<tr><td colspan="6"><div class="empty"><h3>No data</h3></div></td></tr>';
+  document.getElementById('byl-count').textContent=rows.length+' contributors';
 }
 
-// ══════════════════════════════════════════════════
-// RENDER: WEBSITE PERFORMANCE
-// ══════════════════════════════════════════════════
-function renderWebsitePerformance(data) {
-  if (!data) return;
-  document.getElementById('wp-empty').style.display = 'none';
-  document.getElementById('wp-content').style.display = 'block';
-
-  // KPIs
-  const k = data.kpis || {};
-  const kpiDefs = [
-    { label: 'Page Views', val: fmt(k.views), sub: 'total views' },
-    { label: 'Total Users', val: fmt(k.users), sub: 'unique users' },
-    { label: 'New Users', val: fmt(k.newUsers), sub: 'first-time visitors' },
-    { label: 'Sessions', val: fmt(k.sessions), sub: 'total sessions' },
-    { label: 'Engaged Sessions', val: fmt(k.engSessions), sub: '' },
-    { label: 'Engagement Rate', val: k.engRate ? fmtPct(k.engRate) : '—', sub: '' },
-    { label: 'Avg Session Duration', val: k.avgDuration ? fmtDur(k.avgDuration) : '—', sub: '' },
-    { label: 'Bounce Rate', val: k.bounceRate ? fmtPct(k.bounceRate) : '—', sub: '' },
-  ];
-  document.getElementById('perf-kpis').innerHTML = kpiDefs.map(d => `
-    <div class="perf-card">
-      <div class="label">${d.label}</div>
-      <div class="value" style="font-size:${d.val.length>6?'22px':'32px'}">${d.val}</div>
-      ${d.sub ? `<div class="delta">${d.sub}</div>` : ''}
-    </div>`).join('');
-
-  // Bar charts
-  renderBarChart('chart-pages', data.topPages || [], true);
-  renderBarChart('chart-device', data.device || [], false);
-  renderBarChart('chart-sources', data.sources || [], false);
-  renderBarChart('chart-countries', data.countries || [], false);
-
-  // Daily table
-  const tbody = document.getElementById('tbl-daily-body');
-  const daily = data.daily || [];
-  tbody.innerHTML = daily.map(d => {
-    const dt = d.date; // YYYYMMDD
-    const fdt = dt.length === 8 ? dt.slice(0,4)+'-'+dt.slice(4,6)+'-'+dt.slice(6,8) : dt;
-    return `<tr>
-      <td class="num">${fdt}</td>
-      <td class="num">${fmt(d.views)}</td>
-      <td class="num">${fmt(d.users)}</td>
-      <td class="num">${fmt(d.sessions)}</td>
-      <td class="num">${fmt(d.engSessions)}</td>
-      <td class="num">${fmtPct(d.engRate)}</td>
-      <td class="num">${fmtDur(d.avgDur)}</td>
-    </tr>`;
-  }).join('');
-}
-
-function renderBarChart(containerId, rows, truncateLabel) {
-  if (!rows.length) { document.getElementById(containerId).innerHTML = '<div style="color:var(--gray-500);font-size:12px;">No data</div>'; return; }
-  const max = Math.max(...rows.map(r => r.val), 1);
-  document.getElementById(containerId).innerHTML = rows.map(r => {
-    const label = truncateLabel && r.label.length > 40 ? r.label.slice(0,40)+'…' : r.label;
-    const pct = Math.round((r.val/max)*100);
-    return `<div class="bar-row">
-      <div class="bar-label" title="${esc(r.label)}">${esc(label)}</div>
-      <div class="bar-outer"><div class="bar-inner" style="width:${pct}%"></div></div>
-      <div class="bar-val">${fmt(r.val)}</div>
-    </div>`;
-  }).join('');
-}
-
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // PASTE FROM SHEETS
-// ══════════════════════════════════════════════════
-function importPaste() {
-  const raw = document.getElementById('paste-input').value.trim();
-  if (!raw) { toast('Nothing to import'); return; }
-  const lines = raw.split('\n').filter(l => l.trim());
-  let imported = 0, skipped = 0;
-  lines.forEach(line => {
-    const cols = line.split('\t');
-    if (cols.length < 1) { skipped++; return; }
-    // Map: S.No(0) Date(1) Section(2) SubSection(3) URL(4) Headline(5) Author(6) PVs(7)
-    const url = (cols[4] || '').trim();
-    if (!url) { skipped++; return; }
-    // Find existing article by URL or create new
-    let art = allArticles.find(a => a.url === url);
-    if (!art) {
-      art = {
-        sno: allArticles.length + 1,
-        date: '', section: '', subsection: '', url, headline: '', author: '', pvs: 0, articleId: extractArticleId(url)
-      };
-      allArticles.push(art);
+// ═══════════════════════════════════════════════
+function importPaste(){
+  const raw=document.getElementById('paste-ta').value.trim();
+  if(!raw){toast('Nothing to paste');return;}
+  const lines=raw.split('\n').filter(l=>l.trim());
+  let imp=0, skip=0;
+  lines.forEach(line=>{
+    const cols=line.split('\t');
+    const url=(cols[4]||'').trim();
+    if(!url||url==='URL'){skip++;return;} // skip header row
+    let art=articles.find(a=>a.url===url);
+    if(!art){
+      art={sno:articles.length+1,url,lastmod:'',date:'',section:'',subsection:'',headline:'',author:'',pvs:0,articleId:extractId(url),...extractSections(url)};
+      articles.push(art);
     }
-    if (cols[1]) art.date      = cols[1].trim();
-    if (cols[2]) art.section   = cols[2].trim();
-    if (cols[3]) art.subsection= cols[3].trim();
-    if (cols[5]) art.headline  = cols[5].trim();
-    if (cols[6]) art.author    = cols[6].trim();
-    if (cols[7]) art.pvs       = parseInt(cols[7].replace(/[^0-9]/g,''))||0;
-    imported++;
+    if(cols[1]?.trim()) art.date=cols[1].trim();
+    if(cols[2]?.trim()) art.section=cols[2].trim();
+    if(cols[3]?.trim()) art.subsection=cols[3].trim();
+    if(cols[5]?.trim()) art.headline=cols[5].trim();
+    if(cols[6]?.trim()) art.author=cols[6].trim();
+    if(cols[7]?.trim()) art.pvs=parseInt(cols[7].replace(/[^0-9]/g,''))||0;
+    imp++;
   });
-  document.getElementById('paste-feedback').textContent = imported + ' rows imported, ' + skipped + ' skipped';
-  renderArticleTable();
-  renderBylinesTable();
-  updateArtStats();
-  populateAuthorFilter();
-  document.getElementById('art-stats').style.display = '';
-  document.getElementById('art-filters').style.display = '';
-  toast(imported + ' rows imported from paste');
+  document.getElementById('paste-fb').textContent=imp+' rows imported, '+skip+' skipped';
+  renderArt(); renderByl(); updateStats(); populateAuthorFilter();
+  document.getElementById('art-stats').style.display='';
+  toast(imp+' rows imported');
 }
 
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// CLEAR TABLE
+// ═══════════════════════════════════════════════
+function clearTable(){
+  if(!confirm('Clear all articles from the table?')) return;
+  articles=[];
+  renderArt(); renderByl(); updateStats();
+  document.getElementById('art-stats').style.display='none';
+  document.getElementById('paste-fb').textContent='';
+  toast('Table cleared');
+}
+
+// ═══════════════════════════════════════════════
 // COPY / EXPORT
-// ══════════════════════════════════════════════════
-function copyTable(id) {
-  const tbl = document.getElementById(id);
-  const rows = [];
-  const headers = [...tbl.querySelectorAll('thead th')].map(th => th.textContent.replace(/[↑↓]/g,'').trim());
-  rows.push(headers.join('\t'));
-  tbl.querySelectorAll('tbody tr').forEach(tr => {
-    const cells = [...tr.querySelectorAll('td')].map(td => {
-      const inp = td.querySelector('input');
-      if (inp) return inp.value.trim();
-      const a = td.querySelector('a');
-      if (a) return a.href;
-      const vn = td.querySelector('.views-num');
-      if (vn) return vn.textContent.trim();
+// ═══════════════════════════════════════════════
+function copyTable(id){
+  const tbl=document.getElementById(id);
+  const rows=[];
+  rows.push([...tbl.querySelectorAll('thead th')].map(th=>th.textContent.replace(/[↑↓]/g,'').trim()).join('\t'));
+  tbl.querySelectorAll('tbody tr').forEach(tr=>{
+    const cells=[...tr.querySelectorAll('td')].map(td=>{
+      const inp=td.querySelector('input'); if(inp) return inp.value.trim();
+      const a=td.querySelector('a'); if(a) return a.href;
+      const vn=td.querySelector('.vn'); if(vn) return vn.textContent.trim();
       return td.textContent.trim().replace(/\s+/g,' ');
     });
     rows.push(cells.join('\t'));
   });
-  navigator.clipboard.writeText(rows.join('\n')).then(() => toast('Table copied — paste into Sheets')).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = rows.join('\n');
-    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    toast('Table copied — paste into Sheets');
-  });
+  navigator.clipboard.writeText(rows.join('\n'))
+    .then(()=>toast('Copied — paste into Sheets'))
+    .catch(()=>{ const ta=document.createElement('textarea'); ta.value=rows.join('\n'); document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); toast('Copied'); });
 }
-function exportCSV() {
-  applyFilters();
-  const rows = [['S.No','Published Date','Section','Sub-Section','URL','Headline','Author','Weekly PVs']];
-  filteredArticles.forEach((a,i) => {
-    rows.push([i+1, a.date, a.section, a.subsection, a.url, a.headline, a.author, a.pvs||0]);
-  });
-  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'forbes-india-report.csv';
+function exportCSV(){
+  const rows=[['S.No','Published Date','Section','Sub-Section','URL','Headline','Author','Weekly PVs']];
+  [...articles].sort((a,b)=>(b.pvs||0)-(a.pvs||0)).forEach((a,i)=>rows.push([i+1,a.date,a.section,a.subsection,a.url,a.headline,a.author,a.pvs||0]));
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const u=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=u; a.download='forbes-india-report.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   toast('CSV exported');
 }
 
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // TABLE SORT
-// ══════════════════════════════════════════════════
-function sortTbl(id, col) {
-  const tbl = document.getElementById(id);
-  const tbody = tbl.querySelector('tbody');
-  const rows = [...tbody.querySelectorAll('tr')];
-  const key = id + '_' + col;
-  const asc = sortStates[key] !== true;
-  sortStates[key] = asc;
-  tbl.querySelectorAll('thead th').forEach((th,i) => {
-    th.classList.remove('sort-asc','sort-desc');
-    if (i===col) th.classList.add(asc ? 'sort-asc' : 'sort-desc');
+// ═══════════════════════════════════════════════
+function srt(id,col){
+  const tbl=document.getElementById(id);
+  const tbody=tbl.querySelector('tbody');
+  const rows=[...tbody.querySelectorAll('tr')];
+  const key=id+'_'+col;
+  const asc=sortSt[key]!==true;
+  sortSt[key]=asc;
+  tbl.querySelectorAll('thead th').forEach((th,i)=>{ th.classList.remove('sa','sd'); if(i===col)th.classList.add(asc?'sa':'sd'); });
+  rows.sort((a,b)=>{
+    const gv=tr=>{ const td=tr.querySelectorAll('td')[col]; if(!td)return '';
+      const inp=td.querySelector('input'); const vn=td.querySelector('.vn');
+      const txt=inp?inp.value:vn?vn.textContent:td.textContent;
+      const n=parseFloat(txt.replace(/[,]/g,'')); return isNaN(n)?txt.trim().toLowerCase():n; };
+    const va=gv(a),vb=gv(b);
+    if(typeof va==='number'&&typeof vb==='number') return asc?va-vb:vb-va;
+    return asc?String(va).localeCompare(String(vb)):String(vb).localeCompare(String(va));
   });
-  rows.sort((a,b) => {
-    const getV = tr => {
-      const td = tr.querySelectorAll('td')[col];
-      if (!td) return '';
-      const inp = td.querySelector('input');
-      const vn  = td.querySelector('.views-num');
-      const txt = inp ? inp.value : vn ? vn.textContent : td.textContent;
-      const n = parseFloat(txt.replace(/[,]/g,''));
-      return isNaN(n) ? txt.trim().toLowerCase() : n;
-    };
-    const va = getV(a), vb = getV(b);
-    if (typeof va === 'number' && typeof vb === 'number') return asc ? va-vb : vb-va;
-    return asc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
-  });
-  rows.forEach(r => tbody.appendChild(r));
+  rows.forEach(r=>tbody.appendChild(r));
 }
 
-// ══════════════════════════════════════════════════
-// CLEAR
-// ══════════════════════════════════════════════════
-function clearAll() {
-  allArticles = []; filteredArticles = [];
-  document.getElementById('tbl-art-body').innerHTML = '<tr><td colspan="8"><div class="empty"><h3>No Data</h3><p>Set a date range and click Fetch Data.</p></div></td></tr>';
-  document.getElementById('tbl-byl-body').innerHTML = '<tr><td colspan="6"><div class="empty"><h3>No Data</h3></div></td></tr>';
-  document.getElementById('art-stats').style.display = 'none';
-  document.getElementById('art-filters').style.display = 'none';
-  document.getElementById('wp-empty').style.display = '';
-  document.getElementById('wp-content').style.display = 'none';
-  hideNote(); setStatus('Ready', ''); toast('Cleared');
-}
-
-// ══════════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════════
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // INIT
-// ══════════════════════════════════════════════════
-(function() {
-  const now = new Date();
-  const y = now.getFullYear(), m = String(now.getMonth()+1).padStart(2,'0'), d = String(now.getDate()).padStart(2,'0');
-  document.getElementById('date-from').value = y+'-'+m+'-01';
-  document.getElementById('date-to').value   = y+'-'+m+'-'+d;
-
-  // Allow paste via keyboard on paste-input
-  document.getElementById('paste-input').addEventListener('paste', () => {
-    setTimeout(() => document.getElementById('paste-feedback').textContent = 'Data pasted — click Import to load', 100);
+// ═══════════════════════════════════════════════
+(function(){
+  // Load saved GA4 creds
+  loadGA();
+  // Default dates
+  const now=new Date();
+  const y=now.getFullYear(),m=String(now.getMonth()+1).padStart(2,'0'),d=String(now.getDate()).padStart(2,'0');
+  document.getElementById('date-from').value=y+'-'+m+'-01';
+  document.getElementById('date-to').value=y+'-'+m+'-'+d;
+  document.getElementById('wp-from').value=y+'-'+m+'-01';
+  document.getElementById('wp-to').value=y+'-'+m+'-'+d;
+  // Paste feedback
+  document.getElementById('paste-ta').addEventListener('paste',()=>{
+    setTimeout(()=>document.getElementById('paste-fb').textContent='Data pasted — click Import to load',100);
   });
+  // Auto-save GA fields on blur too
+  document.getElementById('ga-prop').addEventListener('blur',saveGA);
+  document.getElementById('ga-token').addEventListener('blur',saveGA);
 })();
 </script>
 </body>
