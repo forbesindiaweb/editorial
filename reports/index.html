@@ -529,73 +529,60 @@ function ga4Hdr(){ return { 'Authorization':'Bearer '+document.getElementById('g
 function ga4Base(){ return 'https://analyticsdata.googleapis.com/v1beta/properties/'+document.getElementById('ga-prop').value.trim(); }
 
 async function fetchPVs(articleIds, startDate, endDate){
-  // Strategy: fetch ALL pagePaths for the date range (no ID filter),
-  // then match client-side. This guarantees every /ID/1, /ID/2, /ID/3,
-  // /amp/ID/1 row is counted — GA4 orGroup filters can miss multi-page rows.
+  // Strategy: query each article ID individually with CONTAINS filter.
+  // This ensures GA4 returns ALL pagePath rows for that ID (all photo pages,
+  // AMP variants etc.) without row-limit competition from other articles.
+  // We batch API calls 5 at a time (concurrent) to keep it fast.
   const map={};
   const ids=articleIds.filter(Boolean);
   if(!ids.length) return map;
 
-  // Build a Set for fast lookup
-  const idSet = new Set(ids);
+  dbg('Fetching PVs for '+ids.length+' article IDs (one GA4 call per ID)');
 
-  // Fetch all paths in pages of 50000
-  let offset = 0;
-  let totalFetched = 0;
-  let totalMatched = 0;
+  const CONCURRENCY = 5;
+  let done = 0;
 
-  dbg('Fetching ALL pagePaths for '+startDate+' to '+endDate+' (no filter, client-side match)');
-
-  while(true){
+  async function fetchOneId(id){
     const body={
       dateRanges:[{startDate,endDate}],
       dimensions:[{name:'pagePath'}],
       metrics:[{name:'screenPageViews'}],
-      limit:50000,
-      offset:offset
+      dimensionFilter:{
+        filter:{ fieldName:'pagePath', stringFilter:{ matchType:'CONTAINS', value:'/'+id+'/' }}
+      },
+      orderBys:[{metric:{metricName:'screenPageViews'},desc:true}],
+      limit:500  // one article can have at most ~500 photo pages
     };
-    let d;
     try{
       const res=await fetch(ga4Base()+':runReport',{method:'POST',headers:ga4Hdr(),body:JSON.stringify(body)});
-      if(!res.ok){ dbg('GA4 error: '+res.status+' '+await res.text()); break; }
-      d=await res.json();
-    }catch(e){ dbg('GA4 fetch error: '+e.message); break; }
-
-    const rows=d.rows||[];
-    totalFetched+=rows.length;
-    let pageMatched=0;
-
-    rows.forEach(row=>{
-      const path=row.dimensionValues[0].value;
-      const views=parseInt(row.metricValues[0].value,10)||0;
-      // Extract numeric ID from path — matches /DIGITS/ anywhere in path
-      // e.g. /photogallery/news/slug/2994454/3 → 2994454
-      //      /amp/article/section/slug/2994454/1 → 2994454
-      const m=path.match(/\/([0-9]{6,8})\//);
-      if(m){
-        const id=m[1];
-        if(idSet.has(id)){
-          map[id]=(map[id]||0)+views;
-          pageMatched++;
-          totalMatched++;
+      if(!res.ok){ dbg('GA4 error for ID '+id+': '+res.status); return; }
+      const d=await res.json();
+      let total=0;
+      (d.rows||[]).forEach(row=>{
+        total+=parseInt(row.metricValues[0].value,10)||0;
+      });
+      if(total>0){
+        map[id]=total;
+        // Log if multiple rows (photo gallery or AMP variants)
+        if((d.rows||[]).length>1){
+          dbg('ID '+id+': '+d.rows.length+' paths summed = '+total+' views');
+          (d.rows||[]).slice(0,4).forEach(r=>dbg('  '+r.dimensionValues[0].value+' → '+r.metricValues[0].value));
         }
       }
-    });
-
-    dbg('Page offset='+offset+': '+rows.length+' paths, '+pageMatched+' matched this page');
-
-    // Check if more pages exist
-    const rowCount=parseInt(d.rowCount||0,10);
-    offset+=rows.length;
-    if(rows.length<50000 || offset>=rowCount) break;
-    if(offset>500000){ dbg('Safety stop at 500k paths'); break; }
+    }catch(e){ dbg('fetchOneId error '+id+': '+e.message); }
+    done++;
   }
 
-  dbg('Total fetched: '+totalFetched+' paths, '+totalMatched+' matches, '+Object.keys(map).length+' unique article IDs with views');
+  // Run in batches of CONCURRENCY
+  for(let i=0;i<ids.length;i+=CONCURRENCY){
+    const batch=ids.slice(i,i+CONCURRENCY);
+    await Promise.all(batch.map(id=>fetchOneId(id)));
+    const pct=Math.round((done/ids.length)*100);
+    setProg(65+Math.round(pct*0.25), 'Fetching GA4 views: '+done+'/'+ids.length+' articles...');
+  }
 
-  // Debug: show top 5 matched IDs
-  Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,5).forEach(([id,v])=>dbg('  ID '+id+' → '+v+' views'));
-
+  dbg('Done: '+Object.keys(map).length+'/'+ids.length+' articles have views');
+  Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,5).forEach(([id,v])=>dbg('  TOP: ID '+id+' = '+v+' views'));
   return map;
 }
 
