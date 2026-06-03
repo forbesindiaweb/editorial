@@ -654,6 +654,18 @@
   </div>
 </div>
 
+<!-- DEBUG PANEL -->
+<div id="debug-panel" style="position:fixed;bottom:0;left:0;right:0;background:#111;border-top:2px solid #C8A84B;padding:8px 16px;display:none;z-index:999;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#C8A84B;letter-spacing:0.1em;">DEBUG LOG</span>
+    <button onclick="document.getElementById('debug-panel').style.display='none'" style="background:transparent;border:none;color:#666;cursor:pointer;font-size:14px;">✕</button>
+  </div>
+  <pre id="debug-log" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#aaa;max-height:120px;overflow-y:auto;white-space:pre-wrap;"></pre>
+</div>
+<div style="position:fixed;bottom:8px;right:80px;">
+  <button onclick="const p=document.getElementById('debug-panel');p.style.display=p.style.display==='none'?'block':'none';" style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:#222;color:#666;border:1px solid #444;padding:4px 10px;border-radius:3px;cursor:pointer;letter-spacing:0.08em;">DEBUG</button>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -662,6 +674,14 @@
 let allArticles = [];     // full dataset after fetch
 let filteredArticles = []; // after filters
 let sortStates = {};
+let debugLines = [];
+
+function dbg(msg) {
+  debugLines.push('[' + new Date().toLocaleTimeString('en-IN') + '] ' + msg);
+  const el = document.getElementById('debug-log');
+  if (el) el.textContent = debugLines.slice(-40).join('\n');
+  console.log(msg);
+}
 
 // ── HELPERS ────────────────────────────────────────────────────────────
 function setStatus(text, state = '') {
@@ -707,13 +727,22 @@ function fmtDate(d) {
 }
 
 // ── CORS PROXY ────────────────────────────────────────────────────────
-const PROXY = 'https://api.allorigins.win/get?url=';
+const PROXIES = [
+  'https://api.allorigins.win/get?url=',
+  'https://corsproxy.io/?url='
+];
 
-async function proxyFetch(url) {
-  const res = await fetch(PROXY + encodeURIComponent(url));
+async function proxyFetch(url, proxyIndex = 0) {
+  const proxy = PROXIES[proxyIndex % PROXIES.length];
+  const isAllOrigins = proxy.includes('allorigins');
+  const res = await fetch(proxy + encodeURIComponent(url));
   if (!res.ok) throw new Error('Proxy fetch failed for: ' + url);
-  const json = await res.json();
-  return json.contents;
+  if (isAllOrigins) {
+    const json = await res.json();
+    return json.contents;
+  } else {
+    return await res.text();
+  }
 }
 
 // ── SITEMAP MONTHS ────────────────────────────────────────────────────
@@ -734,30 +763,62 @@ function sitemapUrl(monthStr) {
   return `https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/${monthStr}.xml`;
 }
 
+// Parse a date string as LOCAL time (handles YYYY-MM-DD and ISO strings)
+function parseLocalDate(str) {
+  if (!str) return null;
+  // ISO with time component — just use normal parsing
+  if (str.includes('T')) return new Date(str);
+  // YYYY-MM-DD — parse as local to avoid UTC offset shifting
+  const parts = str.slice(0, 10).split('-').map(Number);
+  if (parts.length === 3) return new Date(parts[0], parts[1] - 1, parts[2]);
+  return new Date(str);
+}
+
 // ── FETCH SITEMAP ─────────────────────────────────────────────────────
 async function fetchSitemapUrls(monthStr, fromDate, toDate) {
-  const xml = await proxyFetch(sitemapUrl(monthStr));
+  let xml;
+  try {
+    xml = await proxyFetch(sitemapUrl(monthStr), 0);
+  } catch(e) {
+    dbg(`Primary proxy failed, trying fallback for ${monthStr}`);
+    xml = await proxyFetch(sitemapUrl(monthStr), 1);
+  }
+
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, 'text/xml');
+  const allNodes = doc.querySelectorAll('url');
+  dbg(`Sitemap ${monthStr}: ${allNodes.length} total URLs in XML`);
+
   const urls = [];
-  doc.querySelectorAll('url').forEach(node => {
+  let skippedBrandConnect = 0, skippedDate = 0;
+
+  allNodes.forEach(node => {
     const loc = node.querySelector('loc')?.textContent?.trim();
     const lastmod = node.querySelector('lastmod')?.textContent?.trim();
     if (!loc) return;
     // exclude brand-connect
-    if (loc.includes('brand-connect')) return;
-    // filter by date
-    const dt = new Date(lastmod || '');
-    if (!isNaN(dt) && (dt < fromDate || dt > toDate)) return;
+    if (loc.includes('brand-connect')) { skippedBrandConnect++; return; }
+    // filter by date using local-time parsing
+    if (lastmod) {
+      const dt = parseLocalDate(lastmod);
+      if (dt && !isNaN(dt) && (dt < fromDate || dt > toDate)) { skippedDate++; return; }
+    }
     urls.push({ url: loc, lastmod });
   });
+
+  dbg(`  → kept: ${urls.length}, skipped brand-connect: ${skippedBrandConnect}, skipped date: ${skippedDate}`);
   return urls;
 }
 
 // ── FETCH ARTICLE METADATA ────────────────────────────────────────────
 async function fetchArticleMeta(url) {
   try {
-    const html = await proxyFetch(url);
+    let html;
+    try {
+      html = await proxyFetch(url, 0);
+    } catch(e) {
+      html = await proxyFetch(url, 1);
+    }
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
@@ -886,9 +947,13 @@ async function startFetch() {
 
   if (!fromVal || !toVal) { showToast('Please select a date range'); return; }
 
-  const fromDate = new Date(fromVal);
-  const toDate = new Date(toVal);
-  toDate.setHours(23, 59, 59);
+  // Parse as LOCAL time (not UTC) to avoid IST timezone shifting date back by a day
+  const [fy, fm, fd] = fromVal.split('-').map(Number);
+  const [ty, tm, td] = toVal.split('-').map(Number);
+  const fromDate = new Date(fy, fm - 1, fd, 0, 0, 0);
+  const toDate   = new Date(ty, tm - 1, td, 23, 59, 59);
+  debugLines = [];
+  dbg(`Date range: ${fromDate.toDateString()} → ${toDate.toDateString()}`);
 
   document.getElementById('btn-fetch').disabled = true;
   document.getElementById('empty-state').style.display = 'none';
@@ -900,6 +965,7 @@ async function startFetch() {
   try {
     // 1. Get months
     const months = getMonthsBetween(fromDate, toDate);
+    dbg(`Months to fetch: ${months.join(', ')}`);
     setProgress(5, `Loading ${months.length} sitemap(s)...`);
 
     // 2. Fetch all sitemaps
@@ -908,8 +974,10 @@ async function startFetch() {
       setProgress(5 + (i / months.length) * 25, `Fetching sitemap ${months[i]}...`);
       try {
         const u = await fetchSitemapUrls(months[i], fromDate, toDate);
+        dbg(`Sitemap ${months[i]}: ${u.length} URLs after filtering`);
         rawUrls = rawUrls.concat(u);
       } catch(e) {
+        dbg(`ERROR fetching sitemap ${months[i]}: ${e.message}`);
         console.warn('Sitemap error for', months[i], e);
       }
     }
@@ -923,7 +991,9 @@ async function startFetch() {
     });
 
     if (rawUrls.length === 0) {
-      showNote('No articles found in the selected date range (after excluding brand-connect URLs).');
+      dbg('No URLs found after all filtering. Check debug log for per-sitemap counts.');
+      document.getElementById('debug-panel').style.display = 'block';
+      showNote('No articles found in the selected date range (after excluding brand-connect URLs). See the DEBUG panel at the bottom for details.');
       setStatus('No results', 'error');
       setProgress(0);
       document.getElementById('btn-fetch').disabled = false;
