@@ -554,32 +554,28 @@ async function fetchPVs(articleIds, startDate, endDate){
       if(!res.ok){ const errTxt=await res.text(); dbg('GA4 PV error: '+res.status+' '+errTxt); continue; }
       const d=await res.json();
       let matchCount=0;
+      let shownPaths=[];
       (d.rows||[]).forEach(row=>{
         const path=row.dimensionValues[0].value;
         const views=parseInt(row.metricValues[0].value,10)||0;
-        // Sum views for every ID whose number appears in this path
-        // This combines /article/.../ID/1 + /amp/article/.../ID/1 automatically
-        let matched=false;
+        // Use /ID/ boundary to avoid false matches between similar IDs
+        // This correctly sums ALL page variants:
+        //   /photogallery/.../2994454/1  (photo page 1)
+        //   /photogallery/.../2994454/2  (photo page 2)
+        //   /photogallery/.../2994454/3  (photo page 3)
+        //   /amp/photogallery/.../2994454/1  (AMP variant)
+        //   /article/.../2994454/1  (article)
+        //   /amp/article/.../2994454/1  (AMP article)
         batch.forEach(id=>{
-          if(path.includes('/'+id+'')){
+          if(path.includes('/'+id+'/')){
             map[id]=(map[id]||0)+views;
-            matched=true;
+            matchCount++;
+            if(shownPaths.length<6) shownPaths.push(path+' ('+views+')');
           }
         });
-        if(matched) matchCount++;
       });
-      dbg('GA4 batch '+(Math.floor(i/BATCH)+1)+': '+(d.rows?.length||0)+' total rows, '+matchCount+' matched paths (AMP+non-AMP combined)');
-      // Log first few matched paths for verification
-      let shown=0;
-      (d.rows||[]).forEach(row=>{
-        if(shown>=4) return;
-        const path=row.dimensionValues[0].value;
-        const views=parseInt(row.metricValues[0].value,10)||0;
-        if(batch.some(id=>path.includes('/'+id))){
-          dbg('  path: '+path+' views:'+views);
-          shown++;
-        }
-      });
+      dbg('GA4 batch '+(Math.floor(i/BATCH)+1)+': '+(d.rows?.length||0)+' rows returned, '+matchCount+' path-matches summed');
+      shownPaths.forEach(p=>dbg('  matched: '+p));
     }catch(e){ dbg('GA4 error: '+e.message); }
   }
   return map;
@@ -727,6 +723,8 @@ async function startFetch(){
       // dedup
       const seen=new Set();
       urlItems=urlItems.filter(u=>{ if(seen.has(u.url))return false; seen.add(u.url); return true; });
+      // Ensure all URLs have full domain
+      urlItems.forEach(u=>{ if(!u.url.startsWith('http')) u.url='https://www.forbesindia.com'+u.url; });
       dbg('After dedup: '+urlItems.length+' URLs');
 
       if(!urlItems.length){
@@ -822,13 +820,14 @@ function renderArt(){
   if(ac) ac.textContent=articles.length+' articles';
   document.getElementById('tbl-art-body').innerHTML=filtered.map((a,i)=>{
     const pct=Math.round(((a.pvs||0)/maxPV)*100);
-    let shortUrl=''; try{shortUrl=new URL(a.url).pathname;}catch{shortUrl=a.url;}
+    // Always show full URL including domain
+    const fullUrl = a.url.startsWith('http') ? a.url : 'https://www.forbesindia.com' + a.url;
     return `<tr>
       <td class="num">${i+1}</td>
       <td><input class="ci" value="${esc(a.date)}" onchange="upd('${esc(a.url)}','date',this.value)" style="width:130px;"></td>
       <td><input class="ci" value="${esc(a.section)}" onchange="upd('${esc(a.url)}','section',this.value)" style="width:100px;"></td>
       <td><input class="ci" value="${esc(a.subsection)}" onchange="upd('${esc(a.url)}','subsection',this.value)" style="width:100px;"></td>
-      <td class="uc"><a href="${esc(a.url)}" target="_blank">${esc(shortUrl)}</a></td>
+      <td class="uc"><a href="${esc(fullUrl)}" target="_blank">${esc(fullUrl)}</a></td>
       <td class="hl"><input class="ci" value="${esc(a.headline)}" onchange="upd('${esc(a.url)}','headline',this.value)" placeholder="Enter headline..." style="width:100%;min-width:200px;"></td>
       <td><input class="ci" value="${esc(a.author)}" onchange="upd('${esc(a.url)}','author',this.value);populateAuthorFilter();" placeholder="Author..." style="width:140px;"></td>
       <td class="num"><div class="vbar"><div class="vt"><div class="vf" style="width:${pct}%"></div></div><span class="vn">${fmt(a.pvs)}</span></div></td>
