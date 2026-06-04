@@ -158,8 +158,8 @@ tbody tr:hover{background:#FAFAF8;}
 tbody tr.selected{background:#FFF8F8;}
 tbody td{padding:9px 12px;color:var(--ink2);vertical-align:middle;}
 td.num{font-family:var(--mono);font-size:11px;text-align:right;white-space:nowrap;color:var(--ink);}
-td.url-cell{max-width:280px;}
-td.url-cell a{color:var(--blue);font-family:var(--mono);font-size:10px;word-break:break-all;line-height:1.4;}
+td.url-cell{width:220px;min-width:220px;max-width:220px;}
+td.url-cell a{color:var(--blue);font-family:var(--mono);font-size:10px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
 td.url-cell a:hover{text-decoration:underline;}
 td.hl-cell{max-width:320px;font-weight:500;color:var(--ink);}
 .cell-inp{font-size:12px;border:1px dashed transparent;background:transparent;padding:2px 6px;width:100%;color:var(--ink);outline:none;border-radius:var(--r2);transition:all .15s;font-family:var(--sans);}
@@ -651,23 +651,40 @@ const ALWAYS_UPPER = new Set(['jsw','rbi','bjp','ipo','ceo','cfo','coo','cto','a
 const ALWAYS_LOWER = new Set(['a','an','the','and','but','or','nor','for','so','yet',
   'at','by','in','of','on','to','up','as','is','it','be','if','vs']);
 
-function slugToHeadline(slug){
-  if(!slug) return '';
-  // Remove trailing /1, /2, /ID etc from slug
-  let s = slug.replace(/\/\d+$/g,'').replace(/^\/+|\/+$/g,'');
-  // Take only the last path segment (the actual story slug)
-  const parts = s.split('/');
-  s = parts[parts.length - 1] || parts[parts.length - 2] || s;
-  // Remove numeric ID if it ended up in the slug
-  s = s.replace(/^\d+$/, '');
-  const words = s.split('-').filter(Boolean);
+function slugToHeadline(urlPath){
+  // urlPath: /article/leadership/how-jsw-scion-parth-jindal-is-giving.../2994582/1
+  // We want the story-slug segment — the one with hyphens and words, not a number
+  if(!urlPath) return '';
+  const segments = urlPath.split('/').filter(Boolean);
+  // Find the segment that looks like a story slug: has hyphens, not purely numeric
+  // Forbes India URL structure: /type/section/subsection/story-slug/ID/page
+  // The story slug is typically the longest hyphenated segment before a numeric ID
+  let storySlug = '';
+  for(let i = segments.length - 1; i >= 0; i--){
+    const seg = segments[i];
+    if(/^\d+$/.test(seg)) continue; // skip pure numbers (ID, page)
+    if(seg.includes('-')){ storySlug = seg; break; } // first hyphenated segment from end
+    if(!storySlug) storySlug = seg; // fallback: take it anyway
+  }
+  if(!storySlug) return '';
+  const words = storySlug.split('-').filter(Boolean);
   return words.map((w, i) => {
     const lo = w.toLowerCase();
-    if (ALWAYS_UPPER.has(lo)) return w.toUpperCase();
-    if (i === 0) return lo.charAt(0).toUpperCase() + lo.slice(1); // always capitalise first word
-    if (ALWAYS_LOWER.has(lo)) return lo; // lowercase connectives mid-sentence
-    // Proper nouns heuristic: if original slug word starts uppercase keep it
-    // For sentence case: only first word capitalised, rest lowercase unless acronym
+    if(ALWAYS_UPPER.has(lo)) return w.toUpperCase();
+    if(i === 0) return lo.charAt(0).toUpperCase() + lo.slice(1); // capitalise first word only
+    if(ALWAYS_LOWER.has(lo)) return lo; // keep connectives lowercase
+    return lo; // sentence case: everything else lowercase
+  }).join(' ');
+}
+
+// Convert section/subsection slug to sentence case display
+// e.g. "deep-dive" -> "Deep dive", "billionaires" -> "Billionaires"
+function slugToSection(s){
+  if(!s) return '';
+  return s.split('-').map((w,i) => {
+    const lo = w.toLowerCase();
+    if(ALWAYS_UPPER.has(lo)) return w.toUpperCase();
+    if(i === 0) return lo.charAt(0).toUpperCase() + lo.slice(1);
     return lo;
   }).join(' ');
 }
@@ -685,7 +702,11 @@ function parseSitemapXml(xml, fromDate, toDate){
     const fullUrl=loc.startsWith('http')?loc:'https://www.forbesindia.com'+loc;
     const path=new URL(fullUrl).pathname;
     const headline=slugToHeadline(path);
-    out.push({url:fullUrl,lastmod:lm,headline,articleId:extractId(fullUrl),...extractSections(fullUrl)});
+    const secs = extractSections(fullUrl);
+    out.push({url:fullUrl,lastmod:lm,headline,
+      section:slugToSection(secs.section),
+      subsection:slugToSection(secs.subsection),
+      articleId:extractId(fullUrl)});
   });
   dbg('  parsed: kept='+out.length+' skBC='+skBC+' skDt='+skDt);
   return out;
@@ -792,8 +813,9 @@ async function startFetch(){
       articles=urlItems.map((u,i)=>{
         const ex=existMap[u.url]||{};
         return{sno:i+1,url:u.url,lastmod:u.lastmod||'',date:ex.date||u.lastmod||'',
-          section:ex.section||u.section||'',subsection:ex.subsection||u.subsection||'',
-          headline:ex.headline||u.headline||'',  // use slug-generated headline as default
+          section:ex.section||u.section||'',
+          subsection:ex.subsection||u.subsection||'',
+          headline:ex.headline||u.headline||'',
           author:ex.author||'',pvs:0,articleId:u.articleId};
       });
     } else {
@@ -855,14 +877,13 @@ function renderArt(){
     const pct=Math.round(((a.pvs||0)/maxPV)*100);
     const isTop=i<3&&sort==='pvs-desc';
     const rankBadge=i===0?'<span class="rank-badge rank-1">1</span>':i===1?'<span class="rank-badge rank-2">2</span>':i===2?'<span class="rank-badge rank-3">3</span>':'';
-    const shortPath=a.url.replace('https://www.forbesindia.com','');
     const share=totalPV?(((a.pvs||0)/totalPV)*100).toFixed(1):'0';
     return`<tr>
       <td class="num">${i<3&&sort==='pvs-desc'?rankBadge:i+1}</td>
       <td style="white-space:nowrap"><input class="cell-inp" value="${esc(a.date)}" onchange="upd('${esc(a.url)}','date',this.value)" style="width:150px;"></td>
       <td><input class="cell-inp" value="${esc(a.section)}" onchange="upd('${esc(a.url)}','section',this.value)" style="width:90px;"></td>
       <td><input class="cell-inp" value="${esc(a.subsection)}" onchange="upd('${esc(a.url)}','subsection',this.value)" style="width:110px;"></td>
-      <td class="url-cell"><a href="${esc(a.url)}" target="_blank" title="${esc(a.url)}">${esc(shortPath)}</a></td>
+      <td class="url-cell"><a href="${esc(a.url)}" target="_blank" title="${esc(a.url)}">${esc(a.url)}</a></td>
       <td class="hl-cell"><input class="cell-inp" value="${esc(a.headline)}" onchange="upd('${esc(a.url)}','headline',this.value)" placeholder="Add headline…" style="min-width:200px;width:100%;"></td>
       <td><input class="cell-inp" value="${esc(a.author)}" onchange="upd('${esc(a.url)}','author',this.value);populateFilters();" placeholder="Author…" style="width:140px;"></td>
       <td class="num">
