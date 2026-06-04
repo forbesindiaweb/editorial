@@ -529,6 +529,40 @@ td.hl-cell{max-width:320px;font-weight:500;color:var(--ink);}
   </div>
 </div>
 
+<!-- ════ SITEMAP UPLOAD MODAL ════ -->
+<div id="upload-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:center;justify-content:center;">
+  <div style="background:var(--wht);border-radius:8px;padding:32px;max-width:520px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+      <div style="width:4px;height:32px;background:var(--red);border-radius:2px;flex-shrink:0;"></div>
+      <div>
+        <div style="font-family:var(--serif);font-size:20px;font-weight:700;">Sitemap Upload Required</div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:2px;">The sitemap can't be fetched directly due to browser CORS restrictions</div>
+      </div>
+    </div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:16px;margin:20px 0;">
+      <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:10px;">📋 How to get the sitemap XML file:</div>
+      <ol style="font-size:12px;color:var(--ink2);line-height:1.9;padding-left:18px;">
+        <li>Open this URL in a new tab: <span id="upload-sm-url" style="font-family:var(--mono);font-size:10px;color:var(--blue);word-break:break-all;"></span></li>
+        <li>Press <kbd style="background:#eee;padding:1px 5px;border-radius:3px;font-family:var(--mono);font-size:10px;">Ctrl+S</kbd> (or right-click → Save As) to download the XML</li>
+        <li>Upload the downloaded file below</li>
+        <li>Repeat for each month if needed</li>
+      </ol>
+    </div>
+    <div id="upload-months-list" style="margin-bottom:16px;"></div>
+    <label style="display:block;border:2px dashed var(--border);border-radius:6px;padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;" id="upload-drop-zone">
+      <input type="file" id="sitemap-file-input" accept=".xml" multiple style="display:none;" onchange="handleSitemapFiles(event)">
+      <div style="font-size:24px;margin-bottom:8px;">📂</div>
+      <div style="font-size:13px;font-weight:600;color:var(--ink);">Click to select XML file(s)</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:4px;">You can select multiple XML files at once</div>
+    </label>
+    <div id="upload-feedback" style="margin-top:12px;font-size:12px;color:var(--ink3);min-height:20px;font-family:var(--mono);"></div>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button class="btn btn-primary" onclick="processUploadedSitemaps()">Process Files</button>
+      <button class="btn btn-ghost" onclick="closeUploadModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- ════ DEBUG ════ -->
 <div class="dbg-panel" id="dbg-panel">
   <div class="dbg-hdr"><span>DEBUG LOG</span><button onclick="document.getElementById('dbg-panel').classList.remove('on')">×</button></div>
@@ -638,30 +672,38 @@ function slugToHeadline(slug){
   }).join(' ');
 }
 
-async function fetchSitemap(monthStr,fromDate,toDate){
-  const smUrl='https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/'+monthStr+'.xml';
-  dbg('Fetching sitemap: '+smUrl);
-  const res=await fetch(smUrl);
-  if(!res.ok) throw new Error('Sitemap HTTP '+res.status+' for '+monthStr);
-  const xml=await res.text();
+function parseSitemapXml(xml, fromDate, toDate){
   const doc=new DOMParser().parseFromString(xml,'text/xml');
   const nodes=doc.querySelectorAll('url');
-  dbg('Sitemap '+monthStr+': '+nodes.length+' total');
   const out=[]; let skBC=0,skDt=0;
   nodes.forEach(n=>{
     const loc=n.querySelector('loc')?.textContent?.trim();
     const lm=n.querySelector('lastmod')?.textContent?.trim();
     if(!loc) return;
     if(loc.includes('brand-connect')){skBC++;return;}
-    if(lm){ const dt=parseLocalDate(lm); if(dt&&!isNaN(dt)&&(dt<fromDate||dt>toDate)){skDt++;return;} }
+    if(lm&&fromDate&&toDate){ const dt=parseLocalDate(lm); if(dt&&!isNaN(dt)&&(dt<fromDate||dt>toDate)){skDt++;return;} }
     const fullUrl=loc.startsWith('http')?loc:'https://www.forbesindia.com'+loc;
-    // Generate headline from slug
     const path=new URL(fullUrl).pathname;
     const headline=slugToHeadline(path);
     out.push({url:fullUrl,lastmod:lm,headline,articleId:extractId(fullUrl),...extractSections(fullUrl)});
   });
-  dbg('  kept:'+out.length+' skBC:'+skBC+' skDt:'+skDt);
+  dbg('  parsed: kept='+out.length+' skBC='+skBC+' skDt='+skDt);
   return out;
+}
+
+async function fetchSitemap(monthStr,fromDate,toDate){
+  const smUrl='https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/'+monthStr+'.xml';
+  dbg('Fetching sitemap directly: '+smUrl);
+  try{
+    const res=await fetch(smUrl,{mode:'cors'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const xml=await res.text();
+    dbg('Sitemap '+monthStr+': '+xml.length+' chars');
+    return parseSitemapXml(xml,fromDate,toDate);
+  }catch(e){
+    dbg('Direct fetch failed: '+e.message);
+    throw new Error('CORS_BLOCKED:'+monthStr);
+  }
 }
 
 // ══════════════════════════════════════════
@@ -723,15 +765,28 @@ async function startFetch(){
       const months=getMonths(fromDate,toDate);
       dbg('Months: '+months.join(', '));
       setProg(5,'Fetching '+months.length+' sitemap(s)…');
+      let corsBlocked=[];
       for(let i=0;i<months.length;i++){
         setProg(5+(i/months.length)*55,'Sitemap '+months[i]+'…');
         try{ urlItems=urlItems.concat(await fetchSitemap(months[i],fromDate,toDate)); }
-        catch(e){ dbg('Sitemap err '+months[i]+': '+e.message); }
+        catch(e){
+          if(e.message.startsWith('CORS_BLOCKED:')){
+            corsBlocked.push(months[i]);
+            dbg('CORS blocked for '+months[i]+' — will need manual upload');
+          } else {
+            dbg('Sitemap err '+months[i]+': '+e.message);
+          }
+        }
       }
       const seen=new Set();
       urlItems=urlItems.filter(u=>{ if(seen.has(u.url))return false; seen.add(u.url); return true; });
       dbg('After dedup: '+urlItems.length+' URLs');
-      if(!urlItems.length){ $('dbg-panel').classList.add('on'); showAlert('No articles found for this date range. Check Debug log.','err'); setStatus('No results','err'); setProg(0); $('btn-fetch').disabled=false; return; }
+      if(corsBlocked.length>0){
+        showSitemapUploadUI(corsBlocked,fromDate,toDate);
+        setStatus('Upload needed','busy'); setProg(0);
+        $('btn-fetch').disabled=false; return;
+      }
+      if(!urlItems.length){ showAlert('No articles found for this date range. Check Debug log.','err'); setStatus('No results','err'); setProg(0); $('btn-fetch').disabled=false; return; }
       const existMap={};
       articles.forEach(a=>{ existMap[a.url]=a; });
       articles=urlItems.map((u,i)=>{
@@ -1075,6 +1130,130 @@ async function testGA4(){
     dbg('TOTAL: '+total+' ('+((d.rows||[]).length)+' paths)');
     if(!total) dbg('⚠ No views found — check date range / article ID');
   }catch(e){ dbg('TEST ERR: '+e.message); }
+}
+
+// ══════════════════════════════════════════
+// SITEMAP UPLOAD FALLBACK
+// ══════════════════════════════════════════
+let pendingUploadState = null; // stores {months, fromDate, toDate} while waiting for upload
+
+function showSitemapUploadUI(blockedMonths, fromDate, toDate){
+  pendingUploadState = {blockedMonths, fromDate, toDate, uploadedXmls: {}};
+  // Show first blocked URL as example
+  const exUrl = 'https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/'+blockedMonths[0]+'.xml';
+  $('upload-sm-url').textContent = exUrl;
+  // List all months needed
+  $('upload-months-list').innerHTML = '<div style="font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase;">Months needed:</div>'
+    + blockedMonths.map(m=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;" id="month-row-${m}">
+        <span style="font-family:var(--mono);font-size:12px;color:var(--ink);">${m}</span>
+        <a href="https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/${m}.xml" target="_blank" 
+           style="font-size:10px;color:var(--blue);text-decoration:underline;">Open sitemap ↗</a>
+        <span id="month-status-${m}" style="font-size:10px;color:var(--ink4);">not uploaded</span>
+      </div>`).join('');
+  const modal = $('upload-modal');
+  modal.style.display = 'flex';
+  // Drag and drop
+  const dz = $('upload-drop-zone');
+  dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.style.borderColor='var(--red)'; });
+  dz.addEventListener('dragleave', ()=>{ dz.style.borderColor='var(--border)'; });
+  dz.addEventListener('drop', e=>{ e.preventDefault(); dz.style.borderColor='var(--border)'; handleSitemapFiles({target:{files:e.dataTransfer.files}}); });
+}
+
+function closeUploadModal(){
+  $('upload-modal').style.display='none';
+  pendingUploadState=null;
+  setStatus('Ready','');
+}
+
+function handleSitemapFiles(event){
+  const files=[...event.target.files];
+  if(!files.length||!pendingUploadState) return;
+  const fb=$('upload-feedback');
+  fb.textContent='Reading '+files.length+' file(s)...';
+  let loaded=0;
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const xml=e.target.result;
+      // Try to match filename to a month (e.g. 2026-05-01.xml)
+      const mMatch=file.name.match(/(\d{4}-\d{2}-\d{2})/);
+      if(mMatch){
+        const month=mMatch[1];
+        pendingUploadState.uploadedXmls[month]=xml;
+        const statusEl=$('month-status-'+month);
+        if(statusEl){ statusEl.textContent='✓ loaded ('+Math.round(xml.length/1024)+'KB)'; statusEl.style.color='var(--green)'; }
+        dbg('Loaded XML for '+month+': '+xml.length+' chars');
+      } else {
+        // Try to detect month from XML content
+        const locMatch=xml.match(/monthly-sitemap\/(\d{4}-\d{2}-\d{2})/);
+        if(locMatch){
+          const month=locMatch[1];
+          pendingUploadState.uploadedXmls[month]=xml;
+          const statusEl=$('month-status-'+month);
+          if(statusEl){ statusEl.textContent='✓ loaded'; statusEl.style.color='var(--green)'; }
+        } else {
+          // Just use file as-is for all pending months if only one
+          if(pendingUploadState.blockedMonths.length===1){
+            const month=pendingUploadState.blockedMonths[0];
+            pendingUploadState.uploadedXmls[month]=xml;
+            const statusEl=$('month-status-'+month);
+            if(statusEl){ statusEl.textContent='✓ loaded'; statusEl.style.color='var(--green)'; }
+          }
+        }
+        dbg('Loaded file: '+file.name+' ('+xml.length+' chars)');
+      }
+      loaded++;
+      const allLoaded=pendingUploadState.blockedMonths.every(m=>pendingUploadState.uploadedXmls[m]);
+      fb.textContent=loaded+'/'+files.length+' files read. '+(allLoaded?'All months loaded — click Process Files.':'Some months still missing.');
+      fb.style.color=allLoaded?'var(--green)':'var(--amber)';
+    };
+    reader.readAsText(file);
+  });
+}
+
+async function processUploadedSitemaps(){
+  if(!pendingUploadState) return;
+  const {blockedMonths,fromDate,toDate,uploadedXmls}=pendingUploadState;
+  const missing=blockedMonths.filter(m=>!uploadedXmls[m]);
+  if(missing.length>0){ $('upload-feedback').textContent='⚠ Still missing: '+missing.join(', '); $('upload-feedback').style.color='var(--red)'; return; }
+  $('upload-modal').style.display='none';
+  setStatus('Processing sitemaps…','busy');
+  let urlItems=[];
+  for(const month of blockedMonths){
+    const xml=uploadedXmls[month];
+    const items=parseSitemapXml(xml,fromDate,toDate);
+    dbg('Parsed '+month+': '+items.length+' URLs');
+    urlItems=urlItems.concat(items);
+  }
+  // Dedup
+  const seen=new Set();
+  urlItems=urlItems.filter(u=>{ if(seen.has(u.url))return false; seen.add(u.url); return true; });
+  dbg('Total after dedup: '+urlItems.length+' URLs');
+  if(!urlItems.length){ showAlert('No articles found in the uploaded sitemaps.','err'); setStatus('No results','err'); return; }
+  // Merge with existing
+  const existMap={};
+  articles.forEach(a=>{ existMap[a.url]=a; });
+  articles=urlItems.map((u,i)=>{
+    const ex=existMap[u.url]||{};
+    return{sno:i+1,url:u.url,lastmod:u.lastmod||'',date:ex.date||u.lastmod||'',
+      section:ex.section||u.section||'',subsection:ex.subsection||u.subsection||'',
+      headline:ex.headline||u.headline||'',author:ex.author||'',pvs:0,articleId:u.articleId};
+  });
+  // Now fetch GA4 PVs
+  const prop=$('ga-prop').value.trim(), token=$('ga-token').value.trim();
+  if(prop&&token){
+    setProg(65,'Fetching GA4 views for '+urlItems.length+' articles…');
+    const sd=fromDate.toISOString().slice(0,10);
+    const ed=new Date(toDate.getTime()-1).toISOString().slice(0,10);
+    const ids=urlItems.map(u=>u.articleId).filter(Boolean);
+    const pvMap=await fetchPVs(ids,sd,ed);
+    articles.forEach(a=>{ const id=a.articleId||extractId(a.url); if(id) a.pvs=pvMap[id]||0; });
+  }
+  setProg(100); setTimeout(()=>setProg(0),600);
+  setStatus('Done — '+articles.length+' articles','ok');
+  $('last-updated').textContent='Updated '+new Date().toLocaleTimeString('en-IN');
+  renderAll();
+  pendingUploadState=null;
 }
 
 // ══════════════════════════════════════════
