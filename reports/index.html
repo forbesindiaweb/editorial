@@ -602,39 +602,48 @@ function loadGA(){
 }
 
 // ══════════════════════════════════════════
-// PROXY FETCH
-// ══════════════════════════════════════════
-async function proxyFetch(url){
-  const proxies=[
-    {name:'cf',    build:u=>'https://forbes-proxy.ppk9059.workers.dev/?url='+encodeURIComponent(u)},
-    {name:'ao',    build:u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u)},
-    {name:'cp',    build:u=>'https://corsproxy.io/?'+encodeURIComponent(u)}
-  ];
-  let lastErr;
-  for(const p of proxies){
-    try{
-      const ctrl=new AbortController();
-      const t=setTimeout(()=>ctrl.abort(),32000);
-      const res=await fetch(p.build(url),{signal:ctrl.signal});
-      clearTimeout(t);
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      const txt=await res.text();
-      if(!txt||txt.length<30) throw new Error('Empty response');
-      dbg('✓ proxy ['+p.name+'] '+txt.length+'ch');
-      return txt;
-    }catch(e){ dbg('✗ ['+p.name+']: '+e.message); lastErr=e; }
-  }
-  throw new Error('All proxies failed: '+(lastErr?.message||'unknown'));
-}
-
-// ══════════════════════════════════════════
-// SITEMAP
+// SITEMAP — direct fetch, no proxy
 // ══════════════════════════════════════════
 function parseLocalDate(s){ if(!s)return null; if(s.includes('T'))return new Date(s); const p=s.slice(0,10).split('-').map(Number); return p.length===3?new Date(p[0],p[1]-1,p[2]):new Date(s); }
 function getMonths(from,to){ const o=[]; let c=new Date(from.getFullYear(),from.getMonth(),1); const e=new Date(to.getFullYear(),to.getMonth(),1); while(c<=e){ o.push(c.getFullYear()+'-'+String(c.getMonth()+1).padStart(2,'0')+'-01'); c.setMonth(c.getMonth()+1); } return o; }
 
+// Convert URL slug to a readable headline in sentence case
+// e.g. "how-jsw-scion-parth-jindal-is-giving-the-industrial-group-a-human-face" 
+//   -> "How JSW scion Parth Jindal is giving the industrial group a human face"
+const ALWAYS_UPPER = new Set(['jsw','rbi','bjp','ipo','ceo','cfo','coo','cto','ai','it',
+  'us','uk','eu','pm','vc','pe','fy','q1','q2','q3','q4','gst','sez','npa','hni',
+  'sebi','irdai','nifty','sensex','imf','wto','ngo','llp','llc','ltd','pvt',
+  'iit','iim','nit','mba','phd','md','ed','pmo','nclt','nclat','sc','hc']);
+const ALWAYS_LOWER = new Set(['a','an','the','and','but','or','nor','for','so','yet',
+  'at','by','in','of','on','to','up','as','is','it','be','if','vs']);
+
+function slugToHeadline(slug){
+  if(!slug) return '';
+  // Remove trailing /1, /2, /ID etc from slug
+  let s = slug.replace(/\/\d+$/g,'').replace(/^\/+|\/+$/g,'');
+  // Take only the last path segment (the actual story slug)
+  const parts = s.split('/');
+  s = parts[parts.length - 1] || parts[parts.length - 2] || s;
+  // Remove numeric ID if it ended up in the slug
+  s = s.replace(/^\d+$/, '');
+  const words = s.split('-').filter(Boolean);
+  return words.map((w, i) => {
+    const lo = w.toLowerCase();
+    if (ALWAYS_UPPER.has(lo)) return w.toUpperCase();
+    if (i === 0) return lo.charAt(0).toUpperCase() + lo.slice(1); // always capitalise first word
+    if (ALWAYS_LOWER.has(lo)) return lo; // lowercase connectives mid-sentence
+    // Proper nouns heuristic: if original slug word starts uppercase keep it
+    // For sentence case: only first word capitalised, rest lowercase unless acronym
+    return lo;
+  }).join(' ');
+}
+
 async function fetchSitemap(monthStr,fromDate,toDate){
-  const xml=await proxyFetch('https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/'+monthStr+'.xml');
+  const smUrl='https://www.forbesindia.com/commonfeeds/v1/frb/sitemap/monthly-sitemap/'+monthStr+'.xml';
+  dbg('Fetching sitemap: '+smUrl);
+  const res=await fetch(smUrl);
+  if(!res.ok) throw new Error('Sitemap HTTP '+res.status+' for '+monthStr);
+  const xml=await res.text();
   const doc=new DOMParser().parseFromString(xml,'text/xml');
   const nodes=doc.querySelectorAll('url');
   dbg('Sitemap '+monthStr+': '+nodes.length+' total');
@@ -646,7 +655,10 @@ async function fetchSitemap(monthStr,fromDate,toDate){
     if(loc.includes('brand-connect')){skBC++;return;}
     if(lm){ const dt=parseLocalDate(lm); if(dt&&!isNaN(dt)&&(dt<fromDate||dt>toDate)){skDt++;return;} }
     const fullUrl=loc.startsWith('http')?loc:'https://www.forbesindia.com'+loc;
-    out.push({url:fullUrl,lastmod:lm,articleId:extractId(fullUrl),...extractSections(fullUrl)});
+    // Generate headline from slug
+    const path=new URL(fullUrl).pathname;
+    const headline=slugToHeadline(path);
+    out.push({url:fullUrl,lastmod:lm,headline,articleId:extractId(fullUrl),...extractSections(fullUrl)});
   });
   dbg('  kept:'+out.length+' skBC:'+skBC+' skDt:'+skDt);
   return out;
@@ -726,7 +738,8 @@ async function startFetch(){
         const ex=existMap[u.url]||{};
         return{sno:i+1,url:u.url,lastmod:u.lastmod||'',date:ex.date||u.lastmod||'',
           section:ex.section||u.section||'',subsection:ex.subsection||u.subsection||'',
-          headline:ex.headline||'',author:ex.author||'',pvs:0,articleId:u.articleId};
+          headline:ex.headline||u.headline||'',  // use slug-generated headline as default
+          author:ex.author||'',pvs:0,articleId:u.articleId};
       });
     } else {
       if(!articles.length){ toast('⚠ No URLs in table. Paste data first.'); $('btn-fetch').disabled=false; return; }
