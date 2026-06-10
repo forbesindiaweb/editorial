@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Broadcast — Post Everywhere</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+  :root {
+    --bg: #0f0f11;
+    --surface: #17171a;
+    --surface2: #1e1e23;
+    --border: #2a2a32;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --accent: #7c6aff;
+    --accent-glow: rgba(124,106,255,0.18);
+    --success: #22c98a;
+    --error: #ff5c5c;
+    --warning: #f5a623;
+
+    --x-color: #e7e9ea;
+    --li-color: #0a66c2;
+    --fb-color: #1877f2;
+    --ig-color: #e1306c;
+    --th-color: #000000;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  .header-nav {
+    display: flex;
+    gap: 8px;
+  }
+
+  .tab-btn {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tab-btn:hover { color: var(--text); background: var(--surface); }
+  .tab-btn.active {
+    background: var(--surface2);
+    border-color: var(--border);
+    color: var(--text);
+  }
+
+  /* ── Main layout ── */
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 32px 24px;
+    gap: 32px;
+  }
+
+  /* ── Compose panel ── */
+  .compose-panel { display: flex; flex-direction: column; gap: 20px; }
+
+  .panel-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  /* Platform toggles */
+  .platform-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .platform-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .platform-toggle .p-icon { font-size: 16px; }
+
+  .platform-toggle.active-x      { border-color: var(--x-color); background: rgba(231,233,234,0.07); color: var(--x-color); }
+  .platform-toggle.active-li     { border-color: var(--li-color); background: rgba(10,102,194,0.1); color: #5ba3f5; }
+  .platform-toggle.active-fb     { border-color: var(--fb-color); background: rgba(24,119,242,0.1); color: #6aadff; }
+  .platform-toggle.active-ig     { border-color: var(--ig-color); background: rgba(225,48,108,0.1); color: #f07fa4; }
+  .platform-toggle.active-th     { border-color: #aaa; background: rgba(255,255,255,0.06); color: #ccc; }
+
+  .platform-toggle:not([class*="active"]) { opacity: 0.5; }
+
+  /* Composer */
+  .composer-box {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .composer-box:focus-within { border-color: var(--accent); }
+
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 18px 20px;
+    color: var(--text);
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    resize: none;
+  }
+
+  textarea::placeholder { color: var(--muted); }
+
+  .composer-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .composer-actions { display: flex; gap: 6px; }
+
+  .icon-btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .icon-btn:hover { background: var(--surface2); color: var(--text); }
+
+  .char-count {
+    font-size: 12px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .char-count.warn { color: var(--warning); }
+  .char-count.over { color: var(--error); }
+
+  /* Media preview */
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+    padding: 0 16px 14px;
+  }
+
+  .media-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--surface2);
+  }
+
+  .media-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .media-remove {
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .media-item:hover .media-remove { opacity: 1; }
+
+  /* Post button */
+  .post-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 0 24px rgba(124,106,255,0.3);
+  }
+
+  .post-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 32px rgba(124,106,255,0.45); }
+  .post-btn:active { transform: translateY(0); }
+  .post-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* Results */
+  .results-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .result-item {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .result-item.ok   { border-color: rgba(34,201,138,0.3); background: rgba(34,201,138,0.07); }
+  .result-item.fail { border-color: rgba(255,92,92,0.3);  background: rgba(255,92,92,0.07); }
+  .result-item.pending { opacity: 0.6; }
+
+  .result-icon { font-size: 16px; flex-shrink: 0; }
+  .result-info { flex: 1; }
+  .result-name { font-weight: 600; }
+  .result-msg  { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  /* ── Settings sidebar ── */
+  .settings-panel { display: flex; flex-direction: column; gap: 24px; }
+
+  .settings-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .settings-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .token-field-group { display: flex; flex-direction: column; gap: 12px; }
+
+  .token-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .token-field label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .token-field label span { font-size: 13px; }
+
+  .token-field input {
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .token-field input:focus { border-color: var(--accent); }
+  .token-field input::placeholder { color: #444; }
+
+  .save-tokens-btn {
+    width: 100%;
+    padding: 9px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .save-tokens-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .tokens-saved-msg {
+    font-size: 12px;
+    color: var(--success);
+    text-align: center;
+    margin-top: 6px;
+    display: none;
+  }
+
+  /* Limits info */
+  .limits-grid { display: flex; flex-direction: column; gap: 8px; }
+
+  .limit-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .limit-platform { color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .limit-val { font-variant-numeric: tabular-nums; color: var(--text); font-weight: 500; }
+
+  /* Tabs for settings vs history */
+  .view-compose { display: block; }
+  .view-settings { display: none; }
+  .view-compose.hidden { display: none; }
+  .view-settings.active { display: block; }
+
+  /* History */
+  .history-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .history-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .history-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .history-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+  }
+
+  .history-platforms {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .history-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .badge-ok   { background: rgba(34,201,138,0.15); color: var(--success); }
+  .badge-fail { background: rgba(255,92,92,0.15);  color: var(--error); }
+
+  /* Status bar */
+  .status-bar {
+    border-top: 1px solid var(--border);
+    padding: 10px 32px;
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .status-item { display: flex; align-items: center; gap: 6px; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dot-green  { background: var(--success); }
+  .dot-yellow { background: var(--warning); }
+  .dot-grey   { background: var(--muted); }
+
+  /* File input */
+  #fileInput { display: none; }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    main { grid-template-columns: 1fr; padding: 16px; gap: 20px; }
+    header { padding: 14px 16px; }
+    .status-bar { padding: 10px 16px; flex-wrap: wrap; gap: 12px; }
+  }
+
+  /* Empty state */
+  .empty-history {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .empty-history .big { font-size: 32px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Broadcast
+  </div>
+  <div class="header-nav">
+    <button class="tab-btn active" onclick="showView('compose', this)">Compose</button>
+    <button class="tab-btn" onclick="showView('history', this)">History</button>
+    <button class="tab-btn" onclick="showView('settings', this)">Tokens</button>
+  </div>
+</header>
+
+<!-- COMPOSE VIEW -->
+<div class="view-compose" id="view-compose">
+<main>
+  <!-- Left: Compose -->
+  <div class="compose-panel">
+
+    <div>
+      <div class="panel-label">Post to</div>
+      <div class="platform-row" id="platformRow">
+        <div class="platform-toggle active-x" data-platform="x" onclick="togglePlatform(this)">
+          <span class="p-icon">𝕏</span> X
+        </div>
+        <div class="platform-toggle active-li" data-platform="linkedin" onclick="togglePlatform(this)">
+          <span class="p-icon">in</span> LinkedIn
+        </div>
+        <div class="platform-toggle active-fb" data-platform="facebook" onclick="togglePlatform(this)">
+          <span class="p-icon">f</span> Facebook
+        </div>
+        <div class="platform-toggle active-ig" data-platform="instagram" onclick="togglePlatform(this)">
+          <span class="p-icon">◈</span> Instagram
+        </div>
+        <div class="platform-toggle active-th" data-platform="threads" onclick="togglePlatform(this)">
+          <span class="p-icon">@</span> Threads
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel-label">Message</div>
+      <div class="composer-box">
+        <textarea id="postText" placeholder="What do you want to share today?" oninput="updateCharCount()"></textarea>
+        <div id="mediaGrid" class="media-grid" style="display:none;"></div>
+        <div class="composer-footer">
+          <div class="composer-actions">
+            <button class="icon-btn" title="Add photo" onclick="document.getElementById('fileInput').click()">📷</button>
+            <button class="icon-btn" title="Add emoji" onclick="insertEmoji()">😊</button>
+          </div>
+          <span class="char-count" id="charCount">0 / 280</span>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(this.files)">
+    </div>
+
+    <button class="post-btn" id="postBtn" onclick="postToAll()">
+      <span>Broadcast</span>
+    </button>
+
+    <div id="resultsList" class="results-list" style="display:none;"></div>
+
+  </div>
+
+  <!-- Right: Settings sidebar -->
+  <div class="settings-panel">
+
+    <div class="settings-card">
+      <h3>⚡ Character limits</h3>
+      <div class="limits-grid">
+        <div class="limit-row">
+          <span class="limit-platform"><span>𝕏</span> X / Twitter</span>
+          <span class="limit-val">280</span>
+        </div>
+        <div class="limit-row">
+          <span class="limit-platform"><span style="font-size:11px;font-weight:700;">in</span> LinkedIn</span>
+          <span class="limit-val">3,000</span>
+        </div>
+        <div class="limit-row">
+          <span class="limit-platform"><span>f</span> Facebook</span>
+          <span class="limit-val">63,206</span>
+        </div>
+        <div class="limit-row">
+          <span class="limit-platform"><span>◈</span> Instagram</span>
+          <span class="limit-val">2,200</span>
+        </div>
+        <div class="limit-row">
+          <span class="limit-platform"><span>@</span> Threads</span>
+          <span class="limit-val">500</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <h3>🔑 API tokens</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;">Tokens are saved in your browser only. Go to <strong>Tokens</strong> tab to configure all platforms.</p>
+      <button class="save-tokens-btn" onclick="showView('settings', document.querySelector('.tab-btn:last-child'))">Configure tokens →</button>
+    </div>
+
+    <div class="settings-card">
+      <h3>📌 Tips</h3>
+      <ul style="font-size:12px;color:var(--muted);line-height:1.8;padding-left:16px;">
+        <li>Instagram requires a Business/Creator account</li>
+        <li>Facebook posts to Pages, not personal profiles</li>
+        <li>X free tier: 1,500 writes/month</li>
+        <li>Threads API is open and generous</li>
+        <li>LinkedIn needs OAuth app approval</li>
+      </ul>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<!-- HISTORY VIEW -->
+<div class="view-compose hidden" id="view-history">
+<main style="grid-template-columns:1fr;">
+  <div>
+    <div class="panel-label" style="margin-bottom:16px;">Recent posts</div>
+    <div id="historyList" class="history-list"></div>
+  </div>
+</main>
+</div>
+
+<!-- SETTINGS VIEW -->
+<div class="view-compose hidden" id="view-settings">
+<main style="grid-template-columns:1fr 1fr;gap:24px;">
+
+  <!-- X / Twitter -->
+  <div class="settings-card">
+    <h3>𝕏 &nbsp;X / Twitter</h3>
+    <div class="token-field-group">
+      <div class="token-field">
+        <label>API Key</label>
+        <input type="password" id="x_api_key" placeholder="xxxxxxxxxxxxxxxxxxxxxx">
+      </div>
+      <div class="token-field">
+        <label>API Secret</label>
+        <input type="password" id="x_api_secret" placeholder="xxxxxxxxxxxxxxxxxxxxxx">
+      </div>
+      <div class="token-field">
+        <label>Access Token</label>
+        <input type="password" id="x_access_token" placeholder="xxxxxxxxxxxxxxxxxxxxxx">
+      </div>
+      <div class="token-field">
+        <label>Access Token Secret</label>
+        <input type="password" id="x_access_secret" placeholder="xxxxxxxxxxxxxxxxxxxxxx">
+      </div>
+      <div class="token-field">
+        <label>Bearer Token</label>
+        <input type="password" id="x_bearer_token" placeholder="AAAAAAAAAA...">
+      </div>
+    </div>
+    <button class="save-tokens-btn" onclick="saveTokens('x')">Save X tokens</button>
+    <div class="tokens-saved-msg" id="saved_x">✓ Saved</div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Get tokens at <a href="https://developer.twitter.com/en/portal/dashboard" target="_blank" style="color:var(--accent);">developer.twitter.com</a></p>
+  </div>
+
+  <!-- LinkedIn -->
+  <div class="settings-card">
+    <h3 style="color:#5ba3f5;">in &nbsp;LinkedIn</h3>
+    <div class="token-field-group">
+      <div class="token-field">
+        <label>Access Token</label>
+        <input type="password" id="li_access_token" placeholder="AQV...">
+      </div>
+      <div class="token-field">
+        <label>Person URN (urn:li:person:XXXX)</label>
+        <input type="text" id="li_person_urn" placeholder="urn:li:person:xxxxxxxx">
+      </div>
+    </div>
+    <button class="save-tokens-btn" onclick="saveTokens('li')">Save LinkedIn tokens</button>
+    <div class="tokens-saved-msg" id="saved_li">✓ Saved</div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Get OAuth token at <a href="https://www.linkedin.com/developers/apps" target="_blank" style="color:var(--accent);">linkedin.com/developers</a></p>
+  </div>
+
+  <!-- Facebook -->
+  <div class="settings-card">
+    <h3 style="color:#6aadff;">f &nbsp;Facebook</h3>
+    <div class="token-field-group">
+      <div class="token-field">
+        <label>Page Access Token</label>
+        <input type="password" id="fb_page_token" placeholder="EAAxxxx...">
+      </div>
+      <div class="token-field">
+        <label>Page ID</label>
+        <input type="text" id="fb_page_id" placeholder="123456789012345">
+      </div>
+    </div>
+    <button class="save-tokens-btn" onclick="saveTokens('fb')">Save Facebook tokens</button>
+    <div class="tokens-saved-msg" id="saved_fb">✓ Saved</div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Get token at <a href="https://developers.facebook.com/tools/explorer/" target="_blank" style="color:var(--accent);">Graph API Explorer</a></p>
+  </div>
+
+  <!-- Instagram -->
+  <div class="settings-card">
+    <h3 style="color:#f07fa4;">◈ &nbsp;Instagram</h3>
+    <div class="token-field-group">
+      <div class="token-field">
+        <label>Access Token (same as Facebook Page token)</label>
+        <input type="password" id="ig_access_token" placeholder="EAAxxxx...">
+      </div>
+      <div class="token-field">
+        <label>Instagram Business Account ID</label>
+        <input type="text" id="ig_account_id" placeholder="17841400000000000">
+      </div>
+    </div>
+    <button class="save-tokens-btn" onclick="saveTokens('ig')">Save Instagram tokens</button>
+    <div class="tokens-saved-msg" id="saved_ig">✓ Saved</div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Requires Business/Creator account connected to a Facebook Page.</p>
+  </div>
+
+  <!-- Threads -->
+  <div class="settings-card">
+    <h3>@ &nbsp;Threads</h3>
+    <div class="token-field-group">
+      <div class="token-field">
+        <label>Access Token</label>
+        <input type="password" id="th_access_token" placeholder="THR...">
+      </div>
+      <div class="token-field">
+        <label>Threads User ID</label>
+        <input type="text" id="th_user_id" placeholder="1234567890">
+      </div>
+    </div>
+    <button class="save-tokens-btn" onclick="saveTokens('th')">Save Threads tokens</button>
+    <div class="tokens-saved-msg" id="saved_th">✓ Saved</div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Get token at <a href="https://developers.facebook.com/docs/threads" target="_blank" style="color:var(--accent);">developers.facebook.com/docs/threads</a></p>
+  </div>
+
+  <!-- CORS note -->
+  <div class="settings-card" style="grid-column:1/-1;border-color:rgba(245,166,35,0.3);background:rgba(245,166,35,0.05);">
+    <h3>⚠️ Important: CORS & browser limits</h3>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;">
+      Most social media APIs block direct browser requests due to <strong style="color:var(--text);">CORS</strong> restrictions. 
+      This tool will attempt direct calls — which works for some APIs (LinkedIn, Threads) but may fail for others (X, Facebook, Instagram).<br><br>
+      <strong style="color:var(--text);">For full functionality:</strong> Deploy a small Google Apps Script proxy 
+      (one function per platform) and enter its URL below. This is the same pattern as your other Forbes India tools.
+    </p>
+    <div class="token-field" style="margin-top:14px;">
+      <label>Google Apps Script Proxy URL (optional)</label>
+      <input type="text" id="proxy_url" placeholder="https://script.google.com/macros/s/XXXXXXX/exec">
+    </div>
+    <button class="save-tokens-btn" onclick="saveProxyUrl()">Save proxy URL</button>
+    <div class="tokens-saved-msg" id="saved_proxy">✓ Saved</div>
+  </div>
+
+</main>
+</div>
+
+<footer class="status-bar" id="statusBar">
+  <div class="status-item"><div class="status-dot dot-grey" id="dot-x"></div>X</div>
+  <div class="status-item"><div class="status-dot dot-grey" id="dot-linkedin"></div>LinkedIn</div>
+  <div class="status-item"><div class="status-dot dot-grey" id="dot-facebook"></div>Facebook</div>
+  <div class="status-item"><div class="status-dot dot-grey" id="dot-instagram"></div>Instagram</div>
+  <div class="status-item"><div class="status-dot dot-grey" id="dot-threads"></div>Threads</div>
+  <div style="margin-left:auto;color:var(--muted);font-size:11px;">Tokens stored in localStorage</div>
+</footer>
+
+<script>
+// ── State ──
+const PLATFORMS = ['x','linkedin','facebook','instagram','threads'];
+let activePlatforms = new Set(['x','linkedin','facebook','instagram','threads']);
+let mediaFiles = [];
+let postHistory = [];
+
+// ── On load ──
+window.addEventListener('load', () => {
+  loadTokens();
+  loadHistory();
+  updateStatusDots();
+});
+
+// ── View switching ──
+function showView(view, btn) {
+  document.querySelectorAll('.view-compose').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + view).classList.remove('hidden');
+  if (btn) btn.classList.add('active');
+}
+
+// ── Platform toggle ──
+function togglePlatform(el) {
+  const p = el.dataset.platform;
+  if (activePlatforms.has(p)) {
+    activePlatforms.delete(p);
+    el.className = 'platform-toggle';
+  } else {
+    activePlatforms.add(p);
+    el.className = `platform-toggle active-${p === 'linkedin' ? 'li' : p === 'facebook' ? 'fb' : p === 'instagram' ? 'ig' : p === 'threads' ? 'th' : 'x'}`;
+  }
+  updateCharCount();
+}
+
+// ── Char count ──
+const LIMITS = { x: 280, linkedin: 3000, facebook: 63206, instagram: 2200, threads: 500 };
+
+function updateCharCount() {
+  const text = document.getElementById('postText').value;
+  const len = text.length;
+  // Use the smallest limit of active platforms
+  const limits = [...activePlatforms].map(p => LIMITS[p]).filter(Boolean);
+  const minLimit = limits.length ? Math.min(...limits) : 280;
+  const el = document.getElementById('charCount');
+  el.textContent = `${len} / ${minLimit.toLocaleString()}`;
+  el.className = 'char-count' + (len > minLimit ? ' over' : len > minLimit * 0.9 ? ' warn' : '');
+}
+
+// ── Media ──
+function handleFiles(files) {
+  [...files].forEach(f => {
+    if (!f.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      mediaFiles.push({ file: f, dataUrl: e.target.result });
+      renderMediaGrid();
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+function renderMediaGrid() {
+  const grid = document.getElementById('mediaGrid');
+  if (mediaFiles.length === 0) { grid.style.display = 'none'; grid.innerHTML = ''; return; }
+  grid.style.display = 'grid';
+  grid.innerHTML = mediaFiles.map((m, i) => `
+    <div class="media-item">
+      <img src="${m.dataUrl}" alt="">
+      <button class="media-remove" onclick="removeMedia(${i})">×</button>
+    </div>
+  `).join('');
+}
+
+function removeMedia(i) {
+  mediaFiles.splice(i, 1);
+  renderMediaGrid();
+}
+
+function insertEmoji() {
+  const ta = document.getElementById('postText');
+  const emojis = ['🚀','✨','💡','🔥','📢','🎯','👏','💪','🌟','📌'];
+  ta.value += emojis[Math.floor(Math.random() * emojis.length)];
+  updateCharCount();
+  ta.focus();
+}
+
+// ── Tokens ──
+function getTokens(platform) {
+  try { return JSON.parse(localStorage.getItem(`broadcast_${platform}`) || '{}'); }
+  catch { return {}; }
+}
+
+function saveTokens(platform) {
+  const ids = {
+    x: ['x_api_key','x_api_secret','x_access_token','x_access_secret','x_bearer_token'],
+    li: ['li_access_token','li_person_urn'],
+    fb: ['fb_page_token','fb_page_id'],
+    ig: ['ig_access_token','ig_account_id'],
+    th: ['th_access_token','th_user_id'],
+  };
+  const data = {};
+  (ids[platform] || []).forEach(id => {
+    data[id] = document.getElementById(id)?.value || '';
+  });
+  localStorage.setItem(`broadcast_${platform}`, JSON.stringify(data));
+  const msg = document.getElementById(`saved_${platform}`);
+  if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 2500); }
+  updateStatusDots();
+}
+
+function saveProxyUrl() {
+  const url = document.getElementById('proxy_url').value;
+  localStorage.setItem('broadcast_proxy_url', url);
+  const msg = document.getElementById('saved_proxy');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 2500);
+}
+
+function loadTokens() {
+  const platforms = [
+    { key: 'x', fields: ['x_api_key','x_api_secret','x_access_token','x_access_secret','x_bearer_token'] },
+    { key: 'li', fields: ['li_access_token','li_person_urn'] },
+    { key: 'fb', fields: ['fb_page_token','fb_page_id'] },
+    { key: 'ig', fields: ['ig_access_token','ig_account_id'] },
+    { key: 'th', fields: ['th_access_token','th_user_id'] },
+  ];
+  platforms.forEach(({ key, fields }) => {
+    const data = getTokens(key);
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id]) el.value = data[id];
+    });
+  });
+  const proxyEl = document.getElementById('proxy_url');
+  if (proxyEl) proxyEl.value = localStorage.getItem('broadcast_proxy_url') || '';
+}
+
+function hasToken(platform) {
+  const keyMap = { x: 'x', linkedin: 'li', facebook: 'fb', instagram: 'ig', threads: 'th' };
+  const data = getTokens(keyMap[platform]);
+  return Object.values(data).some(v => v && v.length > 0);
+}
+
+function updateStatusDots() {
+  PLATFORMS.forEach(p => {
+    const dot = document.getElementById(`dot-${p}`);
+    if (!dot) return;
+    dot.className = 'status-dot ' + (hasToken(p) ? 'dot-green' : 'dot-grey');
+  });
+}
+
+// ── Posting ──
+async function postToAll() {
+  const text = document.getElementById('postText').value.trim();
+  if (!text) { alert('Write something first!'); return; }
+  if (activePlatforms.size === 0) { alert('Select at least one platform.'); return; }
+
+  const btn = document.getElementById('postBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div><span>Broadcasting…</span>';
+
+  const resultsList = document.getElementById('resultsList');
+  resultsList.style.display = 'flex';
+  resultsList.innerHTML = [...activePlatforms].map(p => `
+    <div class="result-item pending" id="result-${p}">
+      <span class="result-icon">⏳</span>
+      <div class="result-info">
+        <div class="result-name">${platformLabel(p)}</div>
+        <div class="result-msg">Sending…</div>
+      </div>
+    </div>
+  `).join('');
+
+  const historyEntry = {
+    id: Date.now(),
+    text,
+    date: new Date().toISOString(),
+    platforms: {},
+  };
+
+  const promises = [...activePlatforms].map(p => postToPlatform(p, text));
+  const results = await Promise.allSettled(promises);
+
+  [...activePlatforms].forEach((p, i) => {
+    const r = results[i];
+    const ok = r.status === 'fulfilled' && r.value?.ok;
+    const msg = ok ? 'Posted successfully' : (r.reason?.message || r.value?.error || 'Failed');
+    updateResultItem(p, ok, msg);
+    historyEntry.platforms[p] = { ok, msg };
+  });
+
+  // save history
+  postHistory.unshift(historyEntry);
+  if (postHistory.length > 50) postHistory.pop();
+  localStorage.setItem('broadcast_history', JSON.stringify(postHistory));
+
+  btn.disabled = false;
+  btn.innerHTML = '<span>Broadcast</span>';
+}
+
+async function postToPlatform(platform, text) {
+  const proxyUrl = localStorage.getItem('broadcast_proxy_url');
+  if (proxyUrl) {
+    return postViaProxy(platform, text, proxyUrl);
+  }
+  // Direct API calls (CORS may block some)
+  switch (platform) {
+    case 'x':         return postToX(text);
+    case 'linkedin':  return postToLinkedIn(text);
+    case 'facebook':  return postToFacebook(text);
+    case 'instagram': return postToInstagram(text);
+    case 'threads':   return postToThreads(text);
+    default:          throw new Error('Unknown platform');
+  }
+}
+
+// ── Platform API implementations ──
+
+async function postToX(text) {
+  const t = getTokens('x');
+  if (!t.x_bearer_token && !t.x_access_token) throw new Error('X tokens not configured. Go to Tokens tab.');
+
+  // X API v2 requires OAuth 1.0a for user context — full OAuth signing is needed
+  // For a static site, this requires the proxy or a server-side component
+  // Here we attempt the call and let the proxy handle signing
+  throw new Error('X requires server-side OAuth signing. Set up the proxy URL in the Tokens tab.');
+}
+
+async function postToLinkedIn(text) {
+  const t = getTokens('li');
+  if (!t.li_access_token) throw new Error('LinkedIn token not configured. Go to Tokens tab.');
+  if (!t.li_person_urn)   throw new Error('LinkedIn Person URN not configured.');
+
+  const resp = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${t.li_access_token}`,
+      'Content-Type': 'application/json',
+      'X-Restli-Protocol-Version': '2.0.0',
+    },
+    body: JSON.stringify({
+      author: t.li_person_urn,
+      lifecycleState: 'PUBLISHED',
+      specificContent: {
+        'com.linkedin.ugc.ShareContent': {
+          shareCommentary: { text },
+          shareMediaCategory: 'NONE',
+        }
+      },
+      visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' }
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.message || `LinkedIn error ${resp.status}`);
+  }
+  return { ok: true };
+}
+
+async function postToFacebook(text) {
+  const t = getTokens('fb');
+  if (!t.fb_page_token) throw new Error('Facebook token not configured. Go to Tokens tab.');
+  if (!t.fb_page_id)    throw new Error('Facebook Page ID not configured.');
+
+  const url = `https://graph.facebook.com/v19.0/${t.fb_page_id}/feed`;
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: text, access_token: t.fb_page_token })
+  });
+  const data = await resp.json();
+  if (!resp.ok || data.error) throw new Error(data.error?.message || `Facebook error ${resp.status}`);
+  return { ok: true };
+}
+
+async function postToInstagram(text) {
+  const t = getTokens('ig');
+  if (!t.ig_access_token) throw new Error('Instagram token not configured. Go to Tokens tab.');
+  if (!t.ig_account_id)   throw new Error('Instagram Account ID not configured.');
+
+  // Instagram text-only posts require a container + publish step
+  // Step 1: Create container
+  const containerResp = await fetch(
+    `https://graph.facebook.com/v19.0/${t.ig_account_id}/media`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ caption: text, media_type: 'TEXT', access_token: t.ig_access_token })
+  });
+  const container = await containerResp.json();
+  if (!containerResp.ok || container.error) throw new Error(container.error?.message || 'Instagram container error');
+
+  // Step 2: Publish
+  const publishResp = await fetch(
+    `https://graph.facebook.com/v19.0/${t.ig_account_id}/media_publish`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ creation_id: container.id, access_token: t.ig_access_token })
+  });
+  const pub = await publishResp.json();
+  if (!publishResp.ok || pub.error) throw new Error(pub.error?.message || 'Instagram publish error');
+  return { ok: true };
+}
+
+async function postToThreads(text) {
+  const t = getTokens('th');
+  if (!t.th_access_token) throw new Error('Threads token not configured. Go to Tokens tab.');
+  if (!t.th_user_id)      throw new Error('Threads User ID not configured.');
+
+  // Step 1: Create container
+  const containerResp = await fetch(
+    `https://graph.threads.net/v1.0/${t.th_user_id}/threads`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, media_type: 'TEXT', access_token: t.th_access_token })
+  });
+  const container = await containerResp.json();
+  if (!containerResp.ok || container.error) throw new Error(container.error?.message || 'Threads container error');
+
+  // Step 2: Publish
+  const publishResp = await fetch(
+    `https://graph.threads.net/v1.0/${t.th_user_id}/threads_publish`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ creation_id: container.id, access_token: t.th_access_token })
+  });
+  const pub = await publishResp.json();
+  if (!publishResp.ok || pub.error) throw new Error(pub.error?.message || 'Threads publish error');
+  return { ok: true };
+}
+
+async function postViaProxy(platform, text, proxyUrl) {
+  const keyMap = { x: 'x', linkedin: 'li', facebook: 'fb', instagram: 'ig', threads: 'th' };
+  const tokens = getTokens(keyMap[platform]);
+  const resp = await fetch(proxyUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ platform, text, tokens })
+  });
+  const data = await resp.json();
+  if (!data.ok) throw new Error(data.error || 'Proxy error');
+  return { ok: true };
+}
+
+// ── UI helpers ──
+function updateResultItem(platform, ok, msg) {
+  const el = document.getElementById(`result-${platform}`);
+  if (!el) return;
+  el.className = `result-item ${ok ? 'ok' : 'fail'}`;
+  el.querySelector('.result-icon').textContent = ok ? '✅' : '❌';
+  el.querySelector('.result-name').textContent = platformLabel(platform);
+  el.querySelector('.result-msg').textContent = msg;
+}
+
+function platformLabel(p) {
+  return { x: 'X / Twitter', linkedin: 'LinkedIn', facebook: 'Facebook', instagram: 'Instagram', threads: 'Threads' }[p] || p;
+}
+
+// ── History ──
+function loadHistory() {
+  try { postHistory = JSON.parse(localStorage.getItem('broadcast_history') || '[]'); }
+  catch { postHistory = []; }
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (!list) return;
+  if (postHistory.length === 0) {
+    list.innerHTML = `<div class="empty-history"><div class="big">📭</div>No posts yet. Go compose something!</div>`;
+    return;
+  }
+  list.innerHTML = postHistory.map(h => {
+    const date = new Date(h.id).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+    const badges = Object.entries(h.platforms || {}).map(([p, r]) =>
+      `<span class="history-badge ${r.ok ? 'badge-ok' : 'badge-fail'}">${platformLabel(p)}</span>`
+    ).join('');
+    return `
+      <div class="history-item">
+        <div class="history-meta">
+          <span>${date}</span>
+          <span>${Object.values(h.platforms || {}).filter(r => r.ok).length} / ${Object.keys(h.platforms || {}).length} posted</span>
+        </div>
+        <div class="history-text">${escapeHtml(h.text.slice(0, 280))}${h.text.length > 280 ? '…' : ''}</div>
+        <div class="history-platforms">${badges}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Update history when switching to history view
+const origShowView = showView;
+window.showView = function(view, btn) {
+  origShowView(view, btn);
+  if (view === 'history') renderHistory();
+};
+</script>
+</body>
+</html>
