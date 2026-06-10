@@ -228,6 +228,17 @@ td.hl-cell{max-width:320px;font-weight:500;color:var(--ink);}
 .skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
 @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 
+/* ═══════════ LEADERSHIP REPORT TABLES ═══════════ */
+.report-group td:first-child { font-weight:700; color:var(--ink); padding-left:12px; }
+.report-subrow td:first-child { font-weight:400; color:var(--ink2); padding-left:28px; font-size:11px; }
+.report-group td { background:#FAFAF8; border-bottom:1px solid var(--bg3); }
+.report-subrow td { border-bottom:1px solid var(--bg2); }
+.report-total td { background:var(--ink) !important; color:var(--wht) !important; font-weight:700 !important; }
+.report-total td:first-child { color:var(--wht) !important; }
+.report-section-hdr td { background:var(--bg3); font-size:10px; font-weight:700; color:var(--ink3); letter-spacing:.12em; text-transform:uppercase; padding:8px 12px; border-bottom:1px solid var(--border); }
+td.r-num { font-family:var(--mono); font-size:12px; text-align:right; padding-right:20px; white-space:nowrap; }
+td.r-total { font-family:var(--mono); font-size:12px; text-align:right; padding-right:20px; background:#F0ECEC; font-weight:600; white-space:nowrap; }
+
 /* ═══════════ MISC ═══════════ */
 .divider{height:1px;background:var(--border);margin:20px 0;}
 .tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.06em;}
@@ -501,13 +512,53 @@ td.hl-cell{max-width:320px;font-weight:500;color:var(--ink);}
   </div>
 
   <div id="wp-content" style="display:none;">
+
+    <!-- ── LEADERSHIP REPORT TABLE 1: Device Breakdown ── -->
+    <div class="sec-hdr" style="margin-bottom:0;">
+      <div><span class="sec-title">Device Breakdown Report</span></div>
+      <div class="sec-actions"><button class="btn btn-ghost btn-sm" onclick="copyTable('tbl-device-report')">📋 Copy</button></div>
+    </div>
+    <div class="tbl-shell" style="margin-bottom:28px;">
+      <table id="tbl-device-report">
+        <thead><tr>
+          <th class="no-sort" style="width:200px;">Metric</th>
+          <th class="no-sort" style="text-align:right;">Mobile</th>
+          <th class="no-sort" style="text-align:right;">Desktop</th>
+          <th class="no-sort" style="text-align:right;">Tablet</th>
+          <th class="no-sort" style="text-align:right;background:#1a1a1a;">Total</th>
+        </tr></thead>
+        <tbody id="tbl-device-body"></tbody>
+      </table>
+    </div>
+
+    <!-- ── LEADERSHIP REPORT TABLE 2: Channel Breakdown ── -->
+    <div class="sec-hdr" style="margin-bottom:0;">
+      <div><span class="sec-title">Traffic Channel Report</span></div>
+      <div class="sec-actions"><button class="btn btn-ghost btn-sm" onclick="copyTable('tbl-channel-report')">📋 Copy</button></div>
+    </div>
+    <div class="tbl-shell" style="margin-bottom:28px;">
+      <table id="tbl-channel-report">
+        <thead><tr>
+          <th class="no-sort" style="width:200px;">Channel</th>
+          <th class="no-sort" style="text-align:right;">Users</th>
+          <th class="no-sort" style="text-align:right;">Sessions</th>
+        </tr></thead>
+        <tbody id="tbl-channel-body"></tbody>
+      </table>
+    </div>
+
+    <!-- ── KPI SUMMARY CARDS ── -->
     <div class="kpi-row" id="wp-kpis"></div>
+
+    <!-- ── CHARTS ── -->
     <div class="chart-grid">
       <div class="chart-card"><div class="chart-title">📄 Top Pages by Views</div><div id="ch-pages"></div></div>
       <div class="chart-card"><div class="chart-title">📱 Traffic by Device</div><div id="ch-device"></div></div>
       <div class="chart-card"><div class="chart-title">🔗 Traffic Channels</div><div id="ch-src"></div></div>
       <div class="chart-card"><div class="chart-title">🌍 Top Countries</div><div id="ch-cntry"></div></div>
     </div>
+
+    <!-- ── DAILY TABLE ── -->
     <div class="sec-hdr" style="margin-bottom:0;">
       <div><span class="sec-title">Daily Traffic Breakdown</span></div>
       <div class="sec-actions"><button class="btn btn-ghost btn-sm" onclick="copyTable('tbl-daily')">📋 Copy</button></div>
@@ -964,17 +1015,45 @@ async function fetchWP(){
     const base=ga4Base(), h=ga4Hdr(), dr=[{startDate:sd,endDate:ed}];
     const R={};
     const queries=[
+      // Existing queries
       ['kpis',{dateRanges:dr,metrics:[{name:'screenPageViews'},{name:'totalUsers'},{name:'newUsers'},{name:'sessions'},{name:'engagedSessions'},{name:'engagementRate'},{name:'averageSessionDuration'},{name:'bounceRate'}]}],
       ['daily',{dateRanges:dr,dimensions:[{name:'date'}],metrics:[{name:'screenPageViews'},{name:'totalUsers'},{name:'sessions'},{name:'engagedSessions'},{name:'engagementRate'},{name:'averageSessionDuration'}],orderBys:[{dimension:{dimensionName:'date'},desc:false}],limit:100}],
       ['pages',{dateRanges:dr,dimensions:[{name:'pageTitle'}],metrics:[{name:'screenPageViews'}],orderBys:[{metric:{metricName:'screenPageViews'},desc:true}],limit:10}],
-      ['device',{dateRanges:dr,dimensions:[{name:'deviceCategory'}],metrics:[{name:'screenPageViews'}],orderBys:[{metric:{metricName:'screenPageViews'},desc:true}]}],
+      ['countries',{dateRanges:dr,dimensions:[{name:'country'}],metrics:[{name:'totalUsers'}],orderBys:[{metric:{metricName:'totalUsers'},desc:true}],limit:8}],
+
+      // Device breakdown: Users, Views, Sessions, PagesPerSession, AvgDuration, BounceRate by deviceCategory
+      ['device_detail',{dateRanges:dr,
+        dimensions:[{name:'deviceCategory'}],
+        metrics:[
+          {name:'totalUsers'},
+          {name:'screenPageViews'},
+          {name:'sessions'},
+          {name:'screenPageViewsPerSession'},
+          {name:'averageSessionDuration'},
+          {name:'bounceRate'}
+        ]
+      }],
+
+      // Channel breakdown: Users + Sessions by sessionDefaultChannelGrouping
+      ['channel_detail',{dateRanges:dr,
+        dimensions:[{name:'sessionDefaultChannelGrouping'}],
+        metrics:[
+          {name:'totalUsers'},
+          {name:'sessions'}
+        ],
+        orderBys:[{metric:{metricName:'sessions'},desc:true}],
+        limit:50
+      }],
+
+      // For chart bars (device views, sources sessions)
+      ['device',{dateRanges:dr,dimensions:[{name:'deviceCategory'}],metrics:[{name:'screenPageViews'}]}],
       ['sources',{dateRanges:dr,dimensions:[{name:'sessionDefaultChannelGrouping'}],metrics:[{name:'sessions'}],orderBys:[{metric:{metricName:'sessions'},desc:true}],limit:8}],
-      ['countries',{dateRanges:dr,dimensions:[{name:'country'}],metrics:[{name:'totalUsers'}],orderBys:[{metric:{metricName:'totalUsers'},desc:true}],limit:8}]
     ];
     await Promise.all(queries.map(async([key,body])=>{
       try{
         const res=await fetch(base+':runReport',{method:'POST',headers:h,body:JSON.stringify(body)});
         if(res.ok) R[key]=await res.json();
+        else dbg('WP '+key+' HTTP '+res.status);
       }catch(e){ dbg('WP '+key+' err: '+e.message); }
     }));
     renderWP(R); setStatus('Done','ok');
@@ -985,7 +1064,144 @@ async function fetchWP(){
 function renderWP(R){
   $('wp-empty').style.display='none';
   $('wp-content').style.display='block';
-  // KPIs
+
+  // ── DEVICE BREAKDOWN TABLE ───────────────────────────────────────
+  const devRows = R.device_detail?.rows || [];
+  // Build lookup: deviceCategory -> metric values
+  const devMap = {};
+  devRows.forEach(r=>{
+    const dev = r.dimensionValues[0].value.toLowerCase(); // mobile, desktop, tablet
+    devMap[dev] = {
+      users:    parseInt(r.metricValues[0].value)||0,
+      views:    parseInt(r.metricValues[1].value)||0,
+      sessions: parseInt(r.metricValues[2].value)||0,
+      pps:      parseFloat(r.metricValues[3].value)||0,
+      dur:      parseFloat(r.metricValues[4].value)||0,
+      bounce:   parseFloat(r.metricValues[5].value)||0
+    };
+  });
+  const mob=devMap['mobile']||{}, dsk=devMap['desktop']||{}, tab=devMap['tablet']||{};
+  const devTotal=(key)=>(mob[key]||0)+(dsk[key]||0)+(tab[key]||0);
+  const avgPPS = devTotal('sessions')>0
+    ? ((mob.pps||0)*(mob.sessions||0)+(dsk.pps||0)*(dsk.sessions||0)+(tab.pps||0)*(tab.sessions||0)) / devTotal('sessions')
+    : 0;
+  const avgDur = devTotal('sessions')>0
+    ? ((mob.dur||0)*(mob.sessions||0)+(dsk.dur||0)*(dsk.sessions||0)+(tab.dur||0)*(tab.sessions||0)) / devTotal('sessions')
+    : 0;
+  const avgBounce = devTotal('sessions')>0
+    ? ((mob.bounce||0)*(mob.sessions||0)+(dsk.bounce||0)*(dsk.sessions||0)+(tab.bounce||0)*(tab.sessions||0)) / devTotal('sessions')
+    : 0;
+
+  function devRow(label, key, fmt_fn, cls){
+    const fn = fmt_fn || fmt;
+    const mV=mob[key]||0, dV=dsk[key]||0, tV=tab[key]||0;
+    let tot;
+    if(key==='pps') tot=avgPPS;
+    else if(key==='dur') tot=avgDur;
+    else if(key==='bounce') tot=avgBounce;
+    else tot=mV+dV+tV;
+    return `<tr class="${cls||'report-subrow'}">
+      <td>${label}</td>
+      <td class="r-num">${fn(mV)}</td>
+      <td class="r-num">${fn(dV)}</td>
+      <td class="r-num">${fn(tV)}</td>
+      <td class="r-total">${fn(tot)}</td>
+    </tr>`;
+  }
+
+  $('tbl-device-body').innerHTML =
+    // Users
+    `<tr class="report-section-hdr"><td colspan="5">Users</td></tr>` +
+    devRow('Mobile',  'users', fmt) +
+    devRow('Desktop', 'users', fmt) +
+    devRow('Tablet',  'users', fmt) +
+    `<tr class="report-total"><td>Total Users</td><td class="r-num">${fmt(mob.users||0)}</td><td class="r-num">${fmt(dsk.users||0)}</td><td class="r-num">${fmt(tab.users||0)}</td><td class="r-num">${fmt(devTotal('users'))}</td></tr>` +
+    // Views
+    `<tr class="report-section-hdr"><td colspan="5">Views (Page Views)</td></tr>` +
+    devRow('Mobile',  'views', fmt) +
+    devRow('Desktop', 'views', fmt) +
+    devRow('Tablet',  'views', fmt) +
+    `<tr class="report-total"><td>Total Views</td><td class="r-num">${fmt(mob.views||0)}</td><td class="r-num">${fmt(dsk.views||0)}</td><td class="r-num">${fmt(tab.views||0)}</td><td class="r-num">${fmt(devTotal('views'))}</td></tr>` +
+    // Sessions
+    `<tr class="report-section-hdr"><td colspan="5">Sessions</td></tr>` +
+    devRow('Mobile',  'sessions', fmt) +
+    devRow('Desktop', 'sessions', fmt) +
+    devRow('Tablet',  'sessions', fmt) +
+    `<tr class="report-total"><td>Total Sessions</td><td class="r-num">${fmt(mob.sessions||0)}</td><td class="r-num">${fmt(dsk.sessions||0)}</td><td class="r-num">${fmt(tab.sessions||0)}</td><td class="r-num">${fmt(devTotal('sessions'))}</td></tr>` +
+    // Pages per Session
+    `<tr class="report-section-hdr"><td colspan="5">Pages per Session</td></tr>` +
+    devRow('Mobile',  'pps', v=>(v||0).toFixed(2)) +
+    devRow('Desktop', 'pps', v=>(v||0).toFixed(2)) +
+    `<tr class="report-total"><td>Average</td><td class="r-num">${(mob.pps||0).toFixed(2)}</td><td class="r-num">${(dsk.pps||0).toFixed(2)}</td><td class="r-num">${(tab.pps||0).toFixed(2)}</td><td class="r-num">${avgPPS.toFixed(2)}</td></tr>` +
+    // Avg Session Duration
+    `<tr class="report-section-hdr"><td colspan="5">Average Session Duration</td></tr>` +
+    devRow('Mobile',  'dur', fmtDur) +
+    devRow('Desktop', 'dur', fmtDur) +
+    `<tr class="report-total"><td>Average</td><td class="r-num">${fmtDur(mob.dur||0)}</td><td class="r-num">${fmtDur(dsk.dur||0)}</td><td class="r-num">${fmtDur(tab.dur||0)}</td><td class="r-num">${fmtDur(avgDur)}</td></tr>` +
+    // Bounce Rate
+    `<tr class="report-section-hdr"><td colspan="5">Bounce Rate</td></tr>` +
+    devRow('Mobile',  'bounce', v=>fmtPct(v)) +
+    devRow('Desktop', 'bounce', v=>fmtPct(v)) +
+    `<tr class="report-total"><td>Average</td><td class="r-num">${fmtPct(mob.bounce||0)}</td><td class="r-num">${fmtPct(dsk.bounce||0)}</td><td class="r-num">${fmtPct(tab.bounce||0)}</td><td class="r-num">${fmtPct(avgBounce)}</td></tr>`;
+
+  // ── CHANNEL BREAKDOWN TABLE ──────────────────────────────────────
+  // GA4 channel grouping values:
+  // Organic Search, Direct, Organic Social, Referral, Paid Search,
+  // Display, Other Advertising, Affiliates, Email, (not set), etc.
+  const chRows = R.channel_detail?.rows || [];
+  const chMap = {};
+  chRows.forEach(r=>{
+    const ch = r.dimensionValues[0].value;
+    chMap[ch] = {
+      users:    parseInt(r.metricValues[0].value)||0,
+      sessions: parseInt(r.metricValues[1].value)||0
+    };
+  });
+
+  // Organic group
+  const organicKeys = ['Organic Search','Direct','Organic Social','Referral'];
+  // Paid group
+  const paidKeys = ['Paid Search','Other Advertising','Display','Paid Social','Paid Shopping'];
+  // Collect "Others" = anything not in above
+  const allKnown = new Set([...organicKeys,...paidKeys]);
+  const otherKeys = Object.keys(chMap).filter(k=>!allKnown.has(k)&&k!=='(not set)');
+
+  function chSum(keys, metric){ return keys.reduce((s,k)=>s+(chMap[k]?.[metric]||0),0); }
+  function chRowHtml(label, users, sessions, cls){
+    return `<tr class="${cls||'report-subrow'}">
+      <td>${label}</td>
+      <td class="r-num">${fmt(users)}</td>
+      <td class="r-num">${fmt(sessions)}</td>
+    </tr>`;
+  }
+
+  const orgUsers=chSum(organicKeys,'users'), orgSess=chSum(organicKeys,'sessions');
+  const paidUsers=chSum(paidKeys,'users'), paidSess=chSum(paidKeys,'sessions');
+  const otherUsers=chSum(otherKeys,'users'), otherSess=chSum(otherKeys,'sessions');
+  const totalUsers=orgUsers+paidUsers+otherUsers;
+  const totalSess=orgSess+paidSess+otherSess;
+
+  $('tbl-channel-body').innerHTML =
+    // Organic
+    `<tr class="report-section-hdr"><td colspan="3">Organic</td></tr>` +
+    chRowHtml('Search',          chMap['Organic Search']?.users||0, chMap['Organic Search']?.sessions||0) +
+    chRowHtml('Direct',          chMap['Direct']?.users||0,         chMap['Direct']?.sessions||0) +
+    chRowHtml('Social',          chMap['Organic Social']?.users||0, chMap['Organic Social']?.sessions||0) +
+    chRowHtml('Referral',        chMap['Referral']?.users||0,       chMap['Referral']?.sessions||0) +
+    `<tr class="report-group"><td>Organic Total</td><td class="r-num">${fmt(orgUsers)}</td><td class="r-num">${fmt(orgSess)}</td></tr>` +
+    // Paid
+    `<tr class="report-section-hdr"><td colspan="3">Paid</td></tr>` +
+    chRowHtml('Paid Search',        chMap['Paid Search']?.users||0,        chMap['Paid Search']?.sessions||0) +
+    chRowHtml('Other Advertising',  chMap['Other Advertising']?.users||0,  chMap['Other Advertising']?.sessions||0) +
+    chRowHtml('Display',            chMap['Display']?.users||0,            chMap['Display']?.sessions||0) +
+    chRowHtml('Paid Social',        chMap['Paid Social']?.users||0,        chMap['Paid Social']?.sessions||0) +
+    `<tr class="report-group"><td>Paid Total</td><td class="r-num">${fmt(paidUsers)}</td><td class="r-num">${fmt(paidSess)}</td></tr>` +
+    // Others
+    (otherKeys.length ? `<tr class="report-section-hdr"><td colspan="3">Others</td></tr>` + otherKeys.map(k=>chRowHtml(k,chMap[k]?.users||0,chMap[k]?.sessions||0)).join('') : '') +
+    // Grand Total
+    `<tr class="report-total"><td>Total</td><td class="r-num">${fmt(totalUsers)}</td><td class="r-num">${fmt(totalSess)}</td></tr>`;
+
+  // ── KPI SUMMARY CARDS ───────────────────────────────────────────
   const kRow=R.kpis?.rows?.[0]?.metricValues||[];
   const kpiDefs=[
     {lbl:'Page Views',val:fmt(kRow[0]?.value)},
@@ -998,13 +1214,15 @@ function renderWP(R){
     {lbl:'Bounce Rate',val:kRow[7]?.value?fmtPct(kRow[7].value):'—'},
   ];
   $('wp-kpis').innerHTML=kpiDefs.map(d=>`<div class="kpi"><div class="kpi-label">${d.lbl}</div><div class="kpi-value" style="font-size:${d.val.length>7?'20px':'26px'}">${d.val}</div></div>`).join('');
-  // Charts
+
+  // ── CHARTS ──────────────────────────────────────────────────────
   const toRows=(key,dimIdx,metIdx)=>(R[key]?.rows||[]).map(r=>({label:r.dimensionValues[dimIdx].value,val:parseInt(r.metricValues[metIdx].value)||0}));
   renderBars('ch-pages',toRows('pages',0,0),true);
   renderBars('ch-device',toRows('device',0,0),false);
   renderBars('ch-src',toRows('sources',0,0),false);
   renderBars('ch-cntry',toRows('countries',0,0),false);
-  // Daily table
+
+  // ── DAILY TABLE ─────────────────────────────────────────────────
   $('tbl-daily-body').innerHTML=(R.daily?.rows||[]).map(r=>{
     const dt=r.dimensionValues[0].value;
     const fd=dt.length===8?dt.slice(0,4)+'-'+dt.slice(4,6)+'-'+dt.slice(6,8):dt;
