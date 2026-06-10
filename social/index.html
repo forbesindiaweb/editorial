@@ -987,7 +987,7 @@ let session       = '';
 
 // ── INIT ─────────────────────────────────────────────────────
 window.addEventListener('load', () => {
-  proxyUrl = localStorage.getItem('broadcast_proxy') || '';
+  proxyUrl = (localStorage.getItem('broadcast_proxy') || '').replace(/\/macros\/u\/\d+\/s\//, '/macros/s/');
   session  = localStorage.getItem('broadcast_session') || '';
   postHistory = JSON.parse(localStorage.getItem('broadcast_history') || '[]');
 
@@ -1024,8 +1024,11 @@ window.addEventListener('load', () => {
 
 // ── PROXY URL ────────────────────────────────────────────────
 function saveProxyUrl() {
-  const val = document.getElementById('proxyUrlInput').value.trim();
+  let val = document.getElementById('proxyUrlInput').value.trim();
   if (!val) { showToast('Paste your GAS URL first', 'error'); return; }
+  // Fix common issue: /macros/u/N/s/ → /macros/s/
+  val = val.replace(/\/macros\/u\/\d+\/s\//, '/macros/s/');
+  document.getElementById('proxyUrlInput').value = val;
   proxyUrl = val;
   localStorage.setItem('broadcast_proxy', val);
   document.getElementById('setupBanner').style.display = 'none';
@@ -1074,13 +1077,18 @@ function renderConnectButtons() {
   wrap.innerHTML = Object.keys(PLATFORM_META).map(p => {
     const info = connected[p] || {};
     if (info.connected) {
-      return `<button class="disconnect-btn" onclick="showDisconnect('${p}')">Disconnect ${PLATFORM_META[p].label}</button>`;
+      return '<button class="disconnect-btn" data-p="' + p + '" onclick="showDisconnect(this.dataset.p)">Disconnect ' + PLATFORM_META[p].label + '</button>';
     } else {
-      return `<button class="connect-btn ${!proxyUrl ? 'disabled' : ''}" onclick="${proxyUrl ? `showConnectModal('${p}')` : `showToast('Save proxy URL first','error')`}">
-        Connect ${PLATFORM_META[p].label} →
-      </button>`;
+      const cls = !proxyUrl ? 'disabled' : '';
+      return '<button class="connect-btn ' + cls + '" data-p="' + p + '" onclick="handleConnectClick(this)">Connect ' + PLATFORM_META[p].label + ' →</button>';
     }
   }).join('');
+}
+
+function handleConnectClick(btn) {
+  const p = btn.dataset.p;
+  if (!proxyUrl) { showToast('Save proxy URL first', 'error'); return; }
+  showConnectModal(p);
 }
 
 // ── TARGET ROW (post-to chips) ────────────────────────────────
@@ -1269,6 +1277,7 @@ function showConnectModal(platform) {
       <div class="step-text">${s.text}</div>
     </div>
   `).join('');
+  document.getElementById('modalConnectBtn').dataset.platform = platform;
   document.getElementById('connectModal').classList.add('open');
 }
 
@@ -1278,10 +1287,13 @@ function closeModal() {
 }
 
 function startOAuth() {
-  if (!currentModal) return;
+  // Read platform from the modal's data attribute — avoids currentModal=null race condition
+  const platform = document.getElementById('modalConnectBtn').dataset.platform || currentModal;
+  if (!platform) { showToast('No platform selected', 'error'); return; }
   closeModal();
-  // Open connect URL in same window (GAS redirect handles callback)
-  window.location.href = proxyUrl + '?action=connect&platform=' + currentModal;
+  // Strip /u/N/ from proxyUrl just in case
+  const cleanProxy = proxyUrl.replace(/\/macros\/u\/\d+\/s\//, '/macros/s/');
+  window.location.href = cleanProxy + '?action=connect&platform=' + platform;
 }
 
 // ── DISCONNECT ────────────────────────────────────────────────
