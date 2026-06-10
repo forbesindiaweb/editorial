@@ -3,1153 +3,1379 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Broadcast — Post Everywhere</title>
+<title>Broadcast</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
-
-  :root {
-    --bg: #0f0f11;
-    --surface: #17171a;
-    --surface2: #1e1e23;
-    --border: #2a2a32;
-    --text: #e8e8f0;
-    --muted: #6b6b80;
-    --accent: #7c6aff;
-    --accent-glow: rgba(124,106,255,0.18);
-    --success: #22c98a;
-    --error: #ff5c5c;
-    --warning: #f5a623;
-
-    --x-color: #e7e9ea;
-    --li-color: #0a66c2;
-    --fb-color: #1877f2;
-    --ig-color: #e1306c;
-    --th-color: #000000;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ── Header ── */
-  header {
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 100;
-  }
-
-  .logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .logo-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 10px var(--accent);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(0.85); }
-  }
-
-  .header-nav {
-    display: flex;
-    gap: 8px;
-  }
-
-  .tab-btn {
-    padding: 7px 16px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: var(--muted);
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .tab-btn:hover { color: var(--text); background: var(--surface); }
-  .tab-btn.active {
-    background: var(--surface2);
-    border-color: var(--border);
-    color: var(--text);
-  }
-
-  /* ── Main layout ── */
-  main {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 0;
-    max-width: 1100px;
-    margin: 0 auto;
-    width: 100%;
-    padding: 32px 24px;
-    gap: 32px;
-  }
-
-  /* ── Compose panel ── */
-  .compose-panel { display: flex; flex-direction: column; gap: 20px; }
-
-  .panel-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-
-  /* Platform toggles */
-  .platform-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .platform-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 10px;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-    font-size: 13px;
-    font-weight: 500;
-  }
-
-  .platform-toggle .p-icon { font-size: 16px; }
-
-  .platform-toggle.active-x      { border-color: var(--x-color); background: rgba(231,233,234,0.07); color: var(--x-color); }
-  .platform-toggle.active-li     { border-color: var(--li-color); background: rgba(10,102,194,0.1); color: #5ba3f5; }
-  .platform-toggle.active-fb     { border-color: var(--fb-color); background: rgba(24,119,242,0.1); color: #6aadff; }
-  .platform-toggle.active-ig     { border-color: var(--ig-color); background: rgba(225,48,108,0.1); color: #f07fa4; }
-  .platform-toggle.active-th     { border-color: #aaa; background: rgba(255,255,255,0.06); color: #ccc; }
-
-  .platform-toggle:not([class*="active"]) { opacity: 0.5; }
-
-  /* Composer */
-  .composer-box {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-
-  .composer-box:focus-within { border-color: var(--accent); }
-
-  textarea {
-    width: 100%;
-    min-height: 160px;
-    background: transparent;
-    border: none;
-    outline: none;
-    padding: 18px 20px;
-    color: var(--text);
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
-    resize: none;
-  }
-
-  textarea::placeholder { color: var(--muted); }
-
-  .composer-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 16px;
-    border-top: 1px solid var(--border);
-  }
-
-  .composer-actions { display: flex; gap: 6px; }
-
-  .icon-btn {
-    width: 34px; height: 34px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 8px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .icon-btn:hover { background: var(--surface2); color: var(--text); }
-
-  .char-count {
-    font-size: 12px;
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .char-count.warn { color: var(--warning); }
-  .char-count.over { color: var(--error); }
-
-  /* Media preview */
-  .media-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 8px;
-    padding: 0 16px 14px;
-  }
-
-  .media-item {
-    position: relative;
-    aspect-ratio: 1;
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--surface2);
-  }
-
-  .media-item img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-  }
-
-  .media-remove {
-    position: absolute;
-    top: 4px; right: 4px;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.7);
-    border: none;
-    color: #fff;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-
-  .media-item:hover .media-remove { opacity: 1; }
-
-  /* Post button */
-  .post-btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-    background: var(--accent);
-    color: #fff;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: 0 0 24px rgba(124,106,255,0.3);
-  }
-
-  .post-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 32px rgba(124,106,255,0.45); }
-  .post-btn:active { transform: translateY(0); }
-  .post-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-
-  /* Results */
-  .results-list { display: flex; flex-direction: column; gap: 10px; }
-
-  .result-item {
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-  }
-
-  .result-item.ok   { border-color: rgba(34,201,138,0.3); background: rgba(34,201,138,0.07); }
-  .result-item.fail { border-color: rgba(255,92,92,0.3);  background: rgba(255,92,92,0.07); }
-  .result-item.pending { opacity: 0.6; }
-
-  .result-icon { font-size: 16px; flex-shrink: 0; }
-  .result-info { flex: 1; }
-  .result-name { font-weight: 600; }
-  .result-msg  { color: var(--muted); font-size: 12px; margin-top: 2px; }
-
-  /* ── Settings sidebar ── */
-  .settings-panel { display: flex; flex-direction: column; gap: 24px; }
-
-  .settings-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-  }
-
-  .settings-card h3 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .token-field-group { display: flex; flex-direction: column; gap: 12px; }
-
-  .token-field {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .token-field label {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .token-field label span { font-size: 13px; }
-
-  .token-field input {
-    width: 100%;
-    padding: 8px 10px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 12px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  .token-field input:focus { border-color: var(--accent); }
-  .token-field input::placeholder { color: #444; }
-
-  .save-tokens-btn {
-    width: 100%;
-    padding: 9px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: var(--text);
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: all 0.15s;
-    margin-top: 4px;
-  }
-
-  .save-tokens-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  .tokens-saved-msg {
-    font-size: 12px;
-    color: var(--success);
-    text-align: center;
-    margin-top: 6px;
-    display: none;
-  }
-
-  /* Limits info */
-  .limits-grid { display: flex; flex-direction: column; gap: 8px; }
-
-  .limit-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-  }
-
-  .limit-platform { color: var(--muted); display: flex; align-items: center; gap: 6px; }
-  .limit-val { font-variant-numeric: tabular-nums; color: var(--text); font-weight: 500; }
-
-  /* Tabs for settings vs history */
-  .view-compose { display: block; }
-  .view-settings { display: none; }
-  .view-compose.hidden { display: none; }
-  .view-settings.active { display: block; }
-
-  /* History */
-  .history-list { display: flex; flex-direction: column; gap: 16px; }
-
-  .history-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-  }
-
-  .history-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .history-text {
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--text);
-    margin-bottom: 10px;
-    white-space: pre-wrap;
-  }
-
-  .history-platforms {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .history-badge {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    font-weight: 500;
-  }
-
-  .badge-ok   { background: rgba(34,201,138,0.15); color: var(--success); }
-  .badge-fail { background: rgba(255,92,92,0.15);  color: var(--error); }
-
-  /* Status bar */
-  .status-bar {
-    border-top: 1px solid var(--border);
-    padding: 10px 32px;
-    display: flex;
-    gap: 20px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .status-item { display: flex; align-items: center; gap: 6px; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; }
-  .dot-green  { background: var(--success); }
-  .dot-yellow { background: var(--warning); }
-  .dot-grey   { background: var(--muted); }
-
-  /* File input */
-  #fileInput { display: none; }
-
-  /* Spinner */
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    main { grid-template-columns: 1fr; padding: 16px; gap: 20px; }
-    header { padding: 14px 16px; }
-    .status-bar { padding: 10px 16px; flex-wrap: wrap; gap: 12px; }
-  }
-
-  /* Empty state */
-  .empty-history {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--muted);
-    font-size: 13px;
-  }
-
-  .empty-history .big { font-size: 32px; margin-bottom: 10px; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  --bg:       #0c0c0e;
+  --surface:  #141416;
+  --surface2: #1c1c20;
+  --surface3: #232328;
+  --border:   #26262e;
+  --border2:  #32323c;
+  --text:     #ededf5;
+  --muted:    #64647a;
+  --muted2:   #48485a;
+  --accent:   #6c5ce7;
+  --accent2:  #a29bfe;
+  --success:  #00b894;
+  --error:    #e17055;
+  --warn:     #fdcb6e;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  height: 56px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(12,12,14,0.92);
+  backdrop-filter: blur(12px);
+  z-index: 200;
+}
+
+.logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.logo-signal {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.logo-bar {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent2);
+  animation: signal 1.4s ease-in-out infinite;
+}
+.logo-bar:nth-child(1) { height: 6px;  animation-delay: 0s; }
+.logo-bar:nth-child(2) { height: 10px; animation-delay: 0.2s; }
+.logo-bar:nth-child(3) { height: 14px; animation-delay: 0.4s; }
+.logo-bar:nth-child(4) { height: 10px; animation-delay: 0.6s; }
+
+@keyframes signal {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1; }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.nav-btn:hover  { color: var(--text); background: var(--surface2); }
+.nav-btn.active { color: var(--text); background: var(--surface3); }
+
+/* ── PROXY SETUP BANNER ── */
+.setup-banner {
+  background: linear-gradient(90deg, rgba(108,92,231,0.12), rgba(108,92,231,0.04));
+  border-bottom: 1px solid rgba(108,92,231,0.2);
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 13px;
+}
+
+.setup-banner-text { color: var(--muted); }
+.setup-banner-text strong { color: var(--accent2); }
+
+.setup-input-row { display: flex; align-items: center; gap: 8px; }
+
+.setup-input {
+  width: 380px;
+  padding: 7px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  color: var(--text);
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+}
+
+.setup-input:focus { border-color: var(--accent); }
+.setup-input::placeholder { color: var(--muted2); }
+
+.setup-save-btn {
+  padding: 7px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent2);
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.setup-save-btn:hover { background: rgba(108,92,231,0.15); }
+
+/* ── APP LAYOUT ── */
+.app {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 240px 1fr 300px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 28px 20px;
+  gap: 24px;
+}
+
+/* ── LEFT: CONNECTIONS ── */
+.connections-panel { display: flex; flex-direction: column; gap: 8px; }
+
+.panel-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 4px;
+  margin-bottom: 4px;
+}
+
+.connection-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: default;
+  transition: border-color 0.15s;
+  position: relative;
+}
+
+.connection-item.connected { border-color: var(--border2); }
+
+.conn-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.conn-info { flex: 1; min-width: 0; }
+
+.conn-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.conn-sub {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conn-badge {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badge-connected    { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.badge-disconnected { background: var(--muted2); }
+
+.connect-btn {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.connect-btn:hover  { border-color: var(--accent); color: var(--accent2); }
+.connect-btn.active { border-color: rgba(108,92,231,0.5); color: var(--accent2); background: rgba(108,92,231,0.1); }
+
+.disconnect-btn {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted2);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+}
+
+.disconnect-btn:hover { color: var(--error); border-color: rgba(225,112,85,0.3); }
+
+/* Platform colors */
+.icon-x    { background: rgba(231,233,234,0.08); color: #e7e9ea; }
+.icon-li   { background: rgba(10,102,194,0.15);  color: #5ba3f5; }
+.icon-fb   { background: rgba(24,119,242,0.15);  color: #6aadff; }
+.icon-ig   { background: rgba(225,48,108,0.15);  color: #f07fa4; }
+.icon-th   { background: rgba(255,255,255,0.06); color: #ccc; }
+
+/* ── CENTER: COMPOSE ── */
+.compose-panel { display: flex; flex-direction: column; gap: 16px; }
+
+.target-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.target-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 5px 8px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.target-chip .chip-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--muted2);
+  transition: background 0.15s;
+}
+
+.target-chip.on { color: var(--text); }
+.target-chip.on.chip-x  { border-color: rgba(231,233,234,0.3); }
+.target-chip.on.chip-li { border-color: rgba(10,102,194,0.5); }
+.target-chip.on.chip-fb { border-color: rgba(24,119,242,0.5); }
+.target-chip.on.chip-ig { border-color: rgba(225,48,108,0.5); }
+.target-chip.on.chip-th { border-color: rgba(255,255,255,0.2); }
+.target-chip.on .chip-dot { background: var(--success); }
+.target-chip.disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Composer */
+.composer {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.composer:focus-within { border-color: rgba(108,92,231,0.5); }
+
+.composer textarea {
+  width: 100%;
+  min-height: 180px;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 20px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.65;
+  resize: none;
+}
+
+.composer textarea::placeholder { color: var(--muted2); }
+
+.composer-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 6px;
+  padding: 0 16px 12px;
+}
+
+.media-thumb {
+  aspect-ratio: 1;
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--surface2);
+  position: relative;
+}
+
+.media-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.media-remove {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 18px;
+}
+
+.media-thumb:hover .media-remove { opacity: 1; }
+
+.composer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+}
+
+.toolbar-left { display: flex; gap: 2px; }
+
+.tool-btn {
+  width: 32px; height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+
+.tool-btn:hover { background: var(--surface2); color: var(--text); }
+
+.char-meters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.char-pill {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--surface2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+
+.char-pill.warn { color: var(--warn); border-color: rgba(253,203,110,0.3); }
+.char-pill.over { color: var(--error); border-color: rgba(225,112,85,0.3); background: rgba(225,112,85,0.08); }
+
+/* Post button */
+.post-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 11px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 20px rgba(108,92,231,0.35);
+  letter-spacing: 0.01em;
+}
+
+.post-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 28px rgba(108,92,231,0.5);
+}
+
+.post-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Results */
+.results { display: flex; flex-direction: column; gap: 8px; }
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  animation: fadeUp 0.2s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result.ok   { border-color: rgba(0,184,148,0.25); background: rgba(0,184,148,0.06); }
+.result.fail { border-color: rgba(225,112,85,0.25); background: rgba(225,112,85,0.06); }
+.result.pending { opacity: 0.6; }
+
+.result-icon { font-size: 15px; flex-shrink: 0; }
+.result-body { flex: 1; }
+.result-name { font-weight: 600; font-size: 12px; }
+.result-msg  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* ── RIGHT: LIMITS + INFO ── */
+.info-panel { display: flex; flex-direction: column; gap: 16px; }
+
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.info-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.limit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.limit-row:last-child { border-bottom: none; }
+.limit-platform { color: var(--muted); }
+.limit-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+.limit-bar-wrap { width: 60px; height: 3px; background: var(--surface2); border-radius: 2px; margin-left: 8px; }
+.limit-bar { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.3s; }
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* History */
+.history-wrap { max-width: 720px; margin: 0 auto; padding: 28px 20px; }
+
+.history-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.history-date { font-size: 11px; color: var(--muted); }
+
+.history-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}
+
+.history-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.history-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tag-ok   { background: rgba(0,184,148,0.12); color: var(--success); }
+.tag-fail { background: rgba(225,112,85,0.12); color: var(--error); }
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-text { font-size: 14px; }
+
+/* ── MODALS ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 28px;
+  width: 480px;
+  max-width: 90vw;
+  transform: translateY(8px);
+  transition: transform 0.2s;
+}
+
+.modal-overlay.open .modal { transform: translateY(0); }
+
+.modal h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+
+.modal-steps { margin-bottom: 20px; }
+
+.step {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(108,92,231,0.2);
+  color: var(--accent2);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-text { color: var(--muted); }
+.step-text strong { color: var(--text); }
+
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+.btn-primary {
+  padding: 9px 20px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-primary:hover { filter: brightness(1.1); }
+
+.btn-ghost {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-ghost:hover { color: var(--text); border-color: var(--border2); }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: rgba(0,184,148,0.4); color: var(--success); }
+.toast.error   { border-color: rgba(225,112,85,0.4); color: var(--error); }
+
+/* Spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 15px; height: 15px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Hidden file input */
+#fileInput { display: none; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .info-panel { display: none; }
+  .connections-panel { flex-direction: row; flex-wrap: wrap; }
+  .connection-item { flex: 1 1 45%; }
+}
+
+@media (max-width: 600px) {
+  .app { padding: 16px; }
+  .header { padding: 0 16px; }
+  .setup-banner { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .setup-input { width: 100%; }
+  .connection-item { flex: 1 1 100%; }
+}
 </style>
 </head>
 <body>
 
-<header>
+<!-- HEADER -->
+<header class="header">
   <div class="logo">
-    <div class="logo-dot"></div>
+    <div class="logo-signal">
+      <div class="logo-bar"></div>
+      <div class="logo-bar"></div>
+      <div class="logo-bar"></div>
+      <div class="logo-bar"></div>
+    </div>
     Broadcast
   </div>
-  <div class="header-nav">
-    <button class="tab-btn active" onclick="showView('compose', this)">Compose</button>
-    <button class="tab-btn" onclick="showView('history', this)">History</button>
-    <button class="tab-btn" onclick="showView('settings', this)">Tokens</button>
-  </div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showView('compose', this)">Compose</button>
+    <button class="nav-btn" onclick="showView('history', this)">History</button>
+  </nav>
 </header>
 
+<!-- PROXY SETUP BANNER -->
+<div class="setup-banner" id="setupBanner">
+  <div class="setup-banner-text">
+    <strong>Step 1:</strong> Paste your Google Apps Script proxy URL to enable platform connections.
+  </div>
+  <div class="setup-input-row">
+    <input class="setup-input" type="text" id="proxyUrlInput"
+      placeholder="https://script.google.com/macros/s/XXXXXXX/exec">
+    <button class="setup-save-btn" onclick="saveProxyUrl()">Save URL</button>
+  </div>
+</div>
+
 <!-- COMPOSE VIEW -->
-<div class="view-compose" id="view-compose">
-<main>
-  <!-- Left: Compose -->
-  <div class="compose-panel">
+<div class="view active" id="view-compose">
+  <div class="app">
 
-    <div>
-      <div class="panel-label">Post to</div>
-      <div class="platform-row" id="platformRow">
-        <div class="platform-toggle active-x" data-platform="x" onclick="togglePlatform(this)">
-          <span class="p-icon">𝕏</span> X
+    <!-- LEFT: Connections -->
+    <aside class="connections-panel">
+      <div class="panel-title">Connected accounts</div>
+
+      <div class="connection-item" id="conn-x">
+        <div class="conn-icon icon-x">𝕏</div>
+        <div class="conn-info">
+          <div class="conn-name">X / Twitter</div>
+          <div class="conn-sub" id="sub-x">Not connected</div>
         </div>
-        <div class="platform-toggle active-li" data-platform="linkedin" onclick="togglePlatform(this)">
-          <span class="p-icon">in</span> LinkedIn
-        </div>
-        <div class="platform-toggle active-fb" data-platform="facebook" onclick="togglePlatform(this)">
-          <span class="p-icon">f</span> Facebook
-        </div>
-        <div class="platform-toggle active-ig" data-platform="instagram" onclick="togglePlatform(this)">
-          <span class="p-icon">◈</span> Instagram
-        </div>
-        <div class="platform-toggle active-th" data-platform="threads" onclick="togglePlatform(this)">
-          <span class="p-icon">@</span> Threads
-        </div>
+        <div class="conn-badge badge-disconnected" id="badge-x"></div>
       </div>
-    </div>
 
-    <div>
-      <div class="panel-label">Message</div>
-      <div class="composer-box">
-        <textarea id="postText" placeholder="What do you want to share today?" oninput="updateCharCount()"></textarea>
-        <div id="mediaGrid" class="media-grid" style="display:none;"></div>
-        <div class="composer-footer">
-          <div class="composer-actions">
-            <button class="icon-btn" title="Add photo" onclick="document.getElementById('fileInput').click()">📷</button>
-            <button class="icon-btn" title="Add emoji" onclick="insertEmoji()">😊</button>
+      <div class="connection-item" id="conn-linkedin">
+        <div class="conn-icon icon-li" style="font-size:12px;font-weight:800;">in</div>
+        <div class="conn-info">
+          <div class="conn-name">LinkedIn</div>
+          <div class="conn-sub" id="sub-linkedin">Not connected</div>
+        </div>
+        <div class="conn-badge badge-disconnected" id="badge-linkedin"></div>
+      </div>
+
+      <div class="connection-item" id="conn-facebook">
+        <div class="conn-icon icon-fb">f</div>
+        <div class="conn-info">
+          <div class="conn-name">Facebook</div>
+          <div class="conn-sub" id="sub-facebook">Not connected</div>
+        </div>
+        <div class="conn-badge badge-disconnected" id="badge-facebook"></div>
+      </div>
+
+      <div class="connection-item" id="conn-instagram">
+        <div class="conn-icon icon-ig">◈</div>
+        <div class="conn-info">
+          <div class="conn-name">Instagram</div>
+          <div class="conn-sub" id="sub-instagram">Not connected</div>
+        </div>
+        <div class="conn-badge badge-disconnected" id="badge-instagram"></div>
+      </div>
+
+      <div class="connection-item" id="conn-threads">
+        <div class="conn-icon icon-th">@</div>
+        <div class="conn-info">
+          <div class="conn-name">Threads</div>
+          <div class="conn-sub" id="sub-threads">Not connected</div>
+        </div>
+        <div class="conn-badge badge-disconnected" id="badge-threads"></div>
+      </div>
+
+      <!-- Connect buttons rendered separately below cards -->
+      <div id="connectButtons" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;"></div>
+    </aside>
+
+    <!-- CENTER: Compose -->
+    <div class="compose-panel">
+
+      <div>
+        <div class="panel-title" style="margin-bottom:8px;">Post to</div>
+        <div class="target-row" id="targetRow"></div>
+      </div>
+
+      <div class="composer">
+        <textarea id="postText" placeholder="What do you want to share?"
+          oninput="onTextInput()"></textarea>
+        <div class="composer-media" id="mediaGrid" style="display:none;"></div>
+        <div class="composer-toolbar">
+          <div class="toolbar-left">
+            <button class="tool-btn" title="Add photo"
+              onclick="document.getElementById('fileInput').click()">🖼</button>
+            <button class="tool-btn" title="Emoji" onclick="pickEmoji()">🙂</button>
+            <button class="tool-btn" title="Clear" onclick="clearComposer()">🗑</button>
           </div>
-          <span class="char-count" id="charCount">0 / 280</span>
+          <div class="char-meters" id="charMeters"></div>
         </div>
       </div>
+
       <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(this.files)">
+
+      <button class="post-btn" id="postBtn" onclick="broadcastPost()">
+        <span id="postBtnLabel">Broadcast</span>
+      </button>
+
+      <div class="results" id="results" style="display:none;"></div>
     </div>
 
-    <button class="post-btn" id="postBtn" onclick="postToAll()">
-      <span>Broadcast</span>
-    </button>
-
-    <div id="resultsList" class="results-list" style="display:none;"></div>
-
-  </div>
-
-  <!-- Right: Settings sidebar -->
-  <div class="settings-panel">
-
-    <div class="settings-card">
-      <h3>⚡ Character limits</h3>
-      <div class="limits-grid">
+    <!-- RIGHT: Info -->
+    <aside class="info-panel">
+      <div class="info-card">
+        <h3>Character limits</h3>
         <div class="limit-row">
-          <span class="limit-platform"><span>𝕏</span> X / Twitter</span>
-          <span class="limit-val">280</span>
+          <span class="limit-platform">𝕏 Twitter</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="limit-bar-wrap"><div class="limit-bar" id="bar-x" style="width:4%;"></div></div>
+            <span class="limit-val" id="cnt-x">0</span>
+          </div>
         </div>
         <div class="limit-row">
-          <span class="limit-platform"><span style="font-size:11px;font-weight:700;">in</span> LinkedIn</span>
-          <span class="limit-val">3,000</span>
+          <span class="limit-platform">in LinkedIn</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="limit-bar-wrap"><div class="limit-bar" id="bar-linkedin" style="width:0%;"></div></div>
+            <span class="limit-val" id="cnt-linkedin">0</span>
+          </div>
         </div>
         <div class="limit-row">
-          <span class="limit-platform"><span>f</span> Facebook</span>
-          <span class="limit-val">63,206</span>
+          <span class="limit-platform">f Facebook</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="limit-bar-wrap"><div class="limit-bar" id="bar-facebook" style="width:0%;"></div></div>
+            <span class="limit-val" id="cnt-facebook">0</span>
+          </div>
         </div>
         <div class="limit-row">
-          <span class="limit-platform"><span>◈</span> Instagram</span>
-          <span class="limit-val">2,200</span>
+          <span class="limit-platform">◈ Instagram</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="limit-bar-wrap"><div class="limit-bar" id="bar-instagram" style="width:0%;"></div></div>
+            <span class="limit-val" id="cnt-instagram">0</span>
+          </div>
         </div>
         <div class="limit-row">
-          <span class="limit-platform"><span>@</span> Threads</span>
-          <span class="limit-val">500</span>
+          <span class="limit-platform">@ Threads</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="limit-bar-wrap"><div class="limit-bar" id="bar-threads" style="width:0%;"></div></div>
+            <span class="limit-val" id="cnt-threads">0</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="settings-card">
-      <h3>🔑 API tokens</h3>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;">Tokens are saved in your browser only. Go to <strong>Tokens</strong> tab to configure all platforms.</p>
-      <button class="save-tokens-btn" onclick="showView('settings', document.querySelector('.tab-btn:last-child'))">Configure tokens →</button>
-    </div>
-
-    <div class="settings-card">
-      <h3>📌 Tips</h3>
-      <ul style="font-size:12px;color:var(--muted);line-height:1.8;padding-left:16px;">
-        <li>Instagram requires a Business/Creator account</li>
-        <li>Facebook posts to Pages, not personal profiles</li>
-        <li>X free tier: 1,500 writes/month</li>
-        <li>Threads API is open and generous</li>
-        <li>LinkedIn needs OAuth app approval</li>
-      </ul>
-    </div>
+      <div class="info-card">
+        <h3>Token expiry</h3>
+        <div class="limit-row"><span class="limit-platform">𝕏 Twitter</span><span class="limit-val" style="font-size:11px;color:var(--muted);">2 hrs (auto-refreshes)</span></div>
+        <div class="limit-row"><span class="limit-platform">LinkedIn</span><span class="limit-val" style="font-size:11px;color:var(--muted);">60 days</span></div>
+        <div class="limit-row"><span class="limit-platform">Facebook</span><span class="limit-val" style="font-size:11px;color:var(--muted);">Never</span></div>
+        <div class="limit-row"><span class="limit-platform">Instagram</span><span class="limit-val" style="font-size:11px;color:var(--muted);">Never</span></div>
+        <div class="limit-row"><span class="limit-platform">Threads</span><span class="limit-val" style="font-size:11px;color:var(--muted);">60 days</span></div>
+      </div>
+    </aside>
 
   </div>
-</main>
 </div>
 
 <!-- HISTORY VIEW -->
-<div class="view-compose hidden" id="view-history">
-<main style="grid-template-columns:1fr;">
-  <div>
-    <div class="panel-label" style="margin-bottom:16px;">Recent posts</div>
-    <div id="historyList" class="history-list"></div>
+<div class="view" id="view-history">
+  <div class="history-wrap">
+    <div class="panel-title" style="margin-bottom:16px;">Post history</div>
+    <div id="historyList"></div>
   </div>
-</main>
 </div>
 
-<!-- SETTINGS VIEW -->
-<div class="view-compose hidden" id="view-settings">
-<main style="grid-template-columns:1fr 1fr;gap:24px;">
-
-  <!-- X / Twitter -->
-  <div class="settings-card">
-    <h3>𝕏 &nbsp;X / Twitter</h3>
-    <div class="token-field-group">
-      <div class="token-field">
-        <label>API Key</label>
-        <input type="password" id="x_api_key" placeholder="xxxxxxxxxxxxxxxxxxxxxx">
-      </div>
-      <div class="token-field">
-        <label>API Secret</label>
-        <input type="password" id="x_api_secret" placeholder="xxxxxxxxxxxxxxxxxxxxxx">
-      </div>
-      <div class="token-field">
-        <label>Access Token</label>
-        <input type="password" id="x_access_token" placeholder="xxxxxxxxxxxxxxxxxxxxxx">
-      </div>
-      <div class="token-field">
-        <label>Access Token Secret</label>
-        <input type="password" id="x_access_secret" placeholder="xxxxxxxxxxxxxxxxxxxxxx">
-      </div>
-      <div class="token-field">
-        <label>Bearer Token</label>
-        <input type="password" id="x_bearer_token" placeholder="AAAAAAAAAA...">
-      </div>
+<!-- CONNECT MODAL -->
+<div class="modal-overlay" id="connectModal">
+  <div class="modal">
+    <h2 id="modalTitle">Connect Platform</h2>
+    <p class="modal-sub" id="modalSub"></p>
+    <div class="modal-steps" id="modalSteps"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" id="modalConnectBtn" onclick="startOAuth()">Connect →</button>
     </div>
-    <button class="save-tokens-btn" onclick="saveTokens('x')">Save X tokens</button>
-    <div class="tokens-saved-msg" id="saved_x">✓ Saved</div>
-    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Get tokens at <a href="https://developer.twitter.com/en/portal/dashboard" target="_blank" style="color:var(--accent);">developer.twitter.com</a></p>
   </div>
-
-  <!-- LinkedIn -->
-  <div class="settings-card">
-    <h3 style="color:#5ba3f5;">in &nbsp;LinkedIn</h3>
-    <div class="token-field-group">
-      <div class="token-field">
-        <label>Access Token</label>
-        <input type="password" id="li_access_token" placeholder="AQV...">
-      </div>
-      <div class="token-field">
-        <label>Person URN (urn:li:person:XXXX)</label>
-        <input type="text" id="li_person_urn" placeholder="urn:li:person:xxxxxxxx">
-      </div>
-    </div>
-    <button class="save-tokens-btn" onclick="saveTokens('li')">Save LinkedIn tokens</button>
-    <div class="tokens-saved-msg" id="saved_li">✓ Saved</div>
-    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Get OAuth token at <a href="https://www.linkedin.com/developers/apps" target="_blank" style="color:var(--accent);">linkedin.com/developers</a></p>
-  </div>
-
-  <!-- Facebook -->
-  <div class="settings-card">
-    <h3 style="color:#6aadff;">f &nbsp;Facebook</h3>
-    <div class="token-field-group">
-      <div class="token-field">
-        <label>Page Access Token</label>
-        <input type="password" id="fb_page_token" placeholder="EAAxxxx...">
-      </div>
-      <div class="token-field">
-        <label>Page ID</label>
-        <input type="text" id="fb_page_id" placeholder="123456789012345">
-      </div>
-    </div>
-    <button class="save-tokens-btn" onclick="saveTokens('fb')">Save Facebook tokens</button>
-    <div class="tokens-saved-msg" id="saved_fb">✓ Saved</div>
-    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Get token at <a href="https://developers.facebook.com/tools/explorer/" target="_blank" style="color:var(--accent);">Graph API Explorer</a></p>
-  </div>
-
-  <!-- Instagram -->
-  <div class="settings-card">
-    <h3 style="color:#f07fa4;">◈ &nbsp;Instagram</h3>
-    <div class="token-field-group">
-      <div class="token-field">
-        <label>Access Token (same as Facebook Page token)</label>
-        <input type="password" id="ig_access_token" placeholder="EAAxxxx...">
-      </div>
-      <div class="token-field">
-        <label>Instagram Business Account ID</label>
-        <input type="text" id="ig_account_id" placeholder="17841400000000000">
-      </div>
-    </div>
-    <button class="save-tokens-btn" onclick="saveTokens('ig')">Save Instagram tokens</button>
-    <div class="tokens-saved-msg" id="saved_ig">✓ Saved</div>
-    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Requires Business/Creator account connected to a Facebook Page.</p>
-  </div>
-
-  <!-- Threads -->
-  <div class="settings-card">
-    <h3>@ &nbsp;Threads</h3>
-    <div class="token-field-group">
-      <div class="token-field">
-        <label>Access Token</label>
-        <input type="password" id="th_access_token" placeholder="THR...">
-      </div>
-      <div class="token-field">
-        <label>Threads User ID</label>
-        <input type="text" id="th_user_id" placeholder="1234567890">
-      </div>
-    </div>
-    <button class="save-tokens-btn" onclick="saveTokens('th')">Save Threads tokens</button>
-    <div class="tokens-saved-msg" id="saved_th">✓ Saved</div>
-    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">Get token at <a href="https://developers.facebook.com/docs/threads" target="_blank" style="color:var(--accent);">developers.facebook.com/docs/threads</a></p>
-  </div>
-
-  <!-- CORS note -->
-  <div class="settings-card" style="grid-column:1/-1;border-color:rgba(245,166,35,0.3);background:rgba(245,166,35,0.05);">
-    <h3>⚠️ Important: CORS & browser limits</h3>
-    <p style="font-size:13px;color:var(--muted);line-height:1.7;">
-      Most social media APIs block direct browser requests due to <strong style="color:var(--text);">CORS</strong> restrictions. 
-      This tool will attempt direct calls — which works for some APIs (LinkedIn, Threads) but may fail for others (X, Facebook, Instagram).<br><br>
-      <strong style="color:var(--text);">For full functionality:</strong> Deploy a small Google Apps Script proxy 
-      (one function per platform) and enter its URL below. This is the same pattern as your other Forbes India tools.
-    </p>
-    <div class="token-field" style="margin-top:14px;">
-      <label>Google Apps Script Proxy URL (optional)</label>
-      <input type="text" id="proxy_url" placeholder="https://script.google.com/macros/s/XXXXXXX/exec">
-    </div>
-    <button class="save-tokens-btn" onclick="saveProxyUrl()">Save proxy URL</button>
-    <div class="tokens-saved-msg" id="saved_proxy">✓ Saved</div>
-  </div>
-
-</main>
 </div>
 
-<footer class="status-bar" id="statusBar">
-  <div class="status-item"><div class="status-dot dot-grey" id="dot-x"></div>X</div>
-  <div class="status-item"><div class="status-dot dot-grey" id="dot-linkedin"></div>LinkedIn</div>
-  <div class="status-item"><div class="status-dot dot-grey" id="dot-facebook"></div>Facebook</div>
-  <div class="status-item"><div class="status-dot dot-grey" id="dot-instagram"></div>Instagram</div>
-  <div class="status-item"><div class="status-dot dot-grey" id="dot-threads"></div>Threads</div>
-  <div style="margin-left:auto;color:var(--muted);font-size:11px;">Tokens stored in localStorage</div>
-</footer>
+<!-- DISCONNECT MODAL -->
+<div class="modal-overlay" id="disconnectModal">
+  <div class="modal">
+    <h2>Disconnect account?</h2>
+    <p class="modal-sub" id="disconnectSub"></p>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeDisconnectModal()">Keep connected</button>
+      <button class="btn-primary" style="background:var(--error);" onclick="confirmDisconnect()">Disconnect</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
-// ── State ──
-const PLATFORMS = ['x','linkedin','facebook','instagram','threads'];
-let activePlatforms = new Set(['x','linkedin','facebook','instagram','threads']);
-let mediaFiles = [];
-let postHistory = [];
-
-// ── On load ──
-window.addEventListener('load', () => {
-  loadTokens();
-  loadHistory();
-  updateStatusDots();
-});
-
-// ── View switching ──
-function showView(view, btn) {
-  document.querySelectorAll('.view-compose').forEach(el => el.classList.add('hidden'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('view-' + view).classList.remove('hidden');
-  if (btn) btn.classList.add('active');
-}
-
-// ── Platform toggle ──
-function togglePlatform(el) {
-  const p = el.dataset.platform;
-  if (activePlatforms.has(p)) {
-    activePlatforms.delete(p);
-    el.className = 'platform-toggle';
-  } else {
-    activePlatforms.add(p);
-    el.className = `platform-toggle active-${p === 'linkedin' ? 'li' : p === 'facebook' ? 'fb' : p === 'instagram' ? 'ig' : p === 'threads' ? 'th' : 'x'}`;
-  }
-  updateCharCount();
-}
-
-// ── Char count ──
+// ── CONFIG ──────────────────────────────────────────────────
 const LIMITS = { x: 280, linkedin: 3000, facebook: 63206, instagram: 2200, threads: 500 };
 
-function updateCharCount() {
-  const text = document.getElementById('postText').value;
-  const len = text.length;
-  // Use the smallest limit of active platforms
-  const limits = [...activePlatforms].map(p => LIMITS[p]).filter(Boolean);
-  const minLimit = limits.length ? Math.min(...limits) : 280;
-  const el = document.getElementById('charCount');
-  el.textContent = `${len} / ${minLimit.toLocaleString()}`;
-  el.className = 'char-count' + (len > minLimit ? ' over' : len > minLimit * 0.9 ? ' warn' : '');
+const PLATFORM_META = {
+  x:         { label: 'X / Twitter', icon: '𝕏',  chipClass: 'chip-x' },
+  linkedin:  { label: 'LinkedIn',    icon: 'in', chipClass: 'chip-li' },
+  facebook:  { label: 'Facebook',    icon: 'f',  chipClass: 'chip-fb' },
+  instagram: { label: 'Instagram',   icon: '◈',  chipClass: 'chip-ig' },
+  threads:   { label: 'Threads',     icon: '@',  chipClass: 'chip-th' },
+};
+
+const PLATFORM_STEPS = {
+  x: {
+    title: 'Connect X / Twitter',
+    sub: 'You\'ll be taken to X to approve access. Make sure you have a developer app set up at developer.twitter.com with OAuth 2.0 enabled.',
+    steps: [
+      { text: 'Go to <strong>developer.twitter.com</strong> → create an app' },
+      { text: 'Enable <strong>OAuth 2.0</strong>, set callback URL to your GAS proxy URL + <code>?platform=x</code>' },
+      { text: 'Add Client ID & Secret to <code>CONFIG</code> in proxy.gs' },
+      { text: 'Click Connect below — you\'ll log in to X and approve' },
+    ]
+  },
+  linkedin: {
+    title: 'Connect LinkedIn',
+    sub: 'You\'ll be taken to LinkedIn to approve access. Requires a LinkedIn developer app with Share on LinkedIn product enabled.',
+    steps: [
+      { text: 'Go to <strong>linkedin.com/developers/apps</strong> → create an app' },
+      { text: 'Enable <strong>Share on LinkedIn</strong> product' },
+      { text: 'Set redirect URL to your GAS proxy URL + <code>?platform=linkedin</code>' },
+      { text: 'Add Client ID & Secret to proxy.gs CONFIG, then click Connect' },
+    ]
+  },
+  facebook: {
+    title: 'Connect Facebook',
+    sub: 'Posts to your Facebook Page (not personal profile). Requires a Facebook developer app.',
+    steps: [
+      { text: 'Go to <strong>developers.facebook.com</strong> → create an app' },
+      { text: 'Add <strong>Facebook Login</strong> + <strong>Pages API</strong> products' },
+      { text: 'Set redirect URL to your GAS proxy URL + <code>?platform=facebook</code>' },
+      { text: 'Add App ID & Secret to proxy.gs CONFIG, then click Connect' },
+    ]
+  },
+  instagram: {
+    title: 'Connect Instagram',
+    sub: 'Requires an Instagram Business/Creator account linked to a Facebook Page.',
+    steps: [
+      { text: 'Same Facebook app as above — uses identical credentials' },
+      { text: 'Link your <strong>Instagram Business account</strong> to your Facebook Page' },
+      { text: 'Set redirect URL to your GAS proxy URL + <code>?platform=instagram</code>' },
+      { text: 'Add App ID & Secret to proxy.gs CONFIG, then click Connect' },
+    ]
+  },
+  threads: {
+    title: 'Connect Threads',
+    sub: 'Uses the Threads API via Meta\'s developer platform.',
+    steps: [
+      { text: 'Go to <strong>developers.facebook.com</strong> → add <strong>Threads API</strong> to your app' },
+      { text: 'Set redirect URL to your GAS proxy URL + <code>?platform=threads</code>' },
+      { text: 'Add Threads App ID & Secret to proxy.gs CONFIG' },
+      { text: 'Click Connect — you\'ll approve access on threads.net' },
+    ]
+  },
+};
+
+// ── STATE ────────────────────────────────────────────────────
+let proxyUrl      = '';
+let connected     = {};         // { platform: { connected, name } }
+let activePlatforms = new Set();
+let mediaFiles    = [];
+let postHistory   = [];
+let currentModal  = null;
+let disconnectTarget = null;
+let session       = '';
+
+// ── INIT ─────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  proxyUrl = localStorage.getItem('broadcast_proxy') || '';
+  session  = localStorage.getItem('broadcast_session') || '';
+  postHistory = JSON.parse(localStorage.getItem('broadcast_history') || '[]');
+
+  if (proxyUrl) {
+    document.getElementById('proxyUrlInput').value = proxyUrl;
+    document.getElementById('setupBanner').style.display = 'none';
+    fetchConnectedStatus();
+  }
+
+  // Handle OAuth callback params
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('connected')) {
+    const p    = params.get('connected');
+    const name = params.get('name') || p;
+    const sess = params.get('session') || '';
+    if (sess) { session = sess; localStorage.setItem('broadcast_session', sess); }
+    // Clean URL
+    window.history.replaceState({}, '', window.location.pathname);
+    showToast(PLATFORM_META[p]?.label + ' connected!', 'success');
+    fetchConnectedStatus();
+  }
+
+  if (params.get('error')) {
+    const err = params.get('error');
+    const p   = params.get('platform') || '';
+    window.history.replaceState({}, '', window.location.pathname);
+    showToast('Failed to connect ' + (p || '') + ': ' + err, 'error');
+  }
+
+  renderConnectButtons();
+  renderTargetRow();
+  updateCharMeters();
+});
+
+// ── PROXY URL ────────────────────────────────────────────────
+function saveProxyUrl() {
+  const val = document.getElementById('proxyUrlInput').value.trim();
+  if (!val) { showToast('Paste your GAS URL first', 'error'); return; }
+  proxyUrl = val;
+  localStorage.setItem('broadcast_proxy', val);
+  document.getElementById('setupBanner').style.display = 'none';
+  showToast('Proxy URL saved', 'success');
+  fetchConnectedStatus();
 }
 
-// ── Media ──
+// ── FETCH CONNECTION STATUS ───────────────────────────────────
+async function fetchConnectedStatus() {
+  if (!proxyUrl) return;
+  try {
+    const resp = await fetch(proxyUrl + '?action=connected');
+    const data = await resp.json();
+    if (data.ok) {
+      connected = data.connected;
+      updateConnectionUI();
+      renderTargetRow();
+    }
+  } catch (e) {
+    showToast('Cannot reach proxy. Check the URL.', 'error');
+  }
+}
+
+function updateConnectionUI() {
+  Object.keys(PLATFORM_META).forEach(p => {
+    const info   = connected[p] || {};
+    const badge  = document.getElementById('badge-' + p);
+    const sub    = document.getElementById('sub-' + p);
+    const item   = document.getElementById('conn-' + p);
+
+    if (info.connected) {
+      badge.className = 'conn-badge badge-connected';
+      sub.textContent  = info.name || 'Connected';
+      item.classList.add('connected');
+    } else {
+      badge.className = 'conn-badge badge-disconnected';
+      sub.textContent  = 'Not connected';
+      item.classList.remove('connected');
+    }
+  });
+  renderConnectButtons();
+}
+
+function renderConnectButtons() {
+  const wrap = document.getElementById('connectButtons');
+  wrap.innerHTML = Object.keys(PLATFORM_META).map(p => {
+    const info = connected[p] || {};
+    if (info.connected) {
+      return `<button class="disconnect-btn" onclick="showDisconnect('${p}')">Disconnect ${PLATFORM_META[p].label}</button>`;
+    } else {
+      return `<button class="connect-btn ${!proxyUrl ? 'disabled' : ''}" onclick="${proxyUrl ? `showConnectModal('${p}')` : `showToast('Save proxy URL first','error')`}">
+        Connect ${PLATFORM_META[p].label} →
+      </button>`;
+    }
+  }).join('');
+}
+
+// ── TARGET ROW (post-to chips) ────────────────────────────────
+function renderTargetRow() {
+  const row = document.getElementById('targetRow');
+  row.innerHTML = Object.keys(PLATFORM_META).map(p => {
+    const info       = connected[p] || {};
+    const isOn       = activePlatforms.has(p) && info.connected;
+    const isDisabled = !info.connected;
+    return `
+      <div class="target-chip ${isOn ? 'on ' + PLATFORM_META[p].chipClass : ''} ${isDisabled ? 'disabled' : ''}"
+           id="chip-${p}"
+           onclick="${isDisabled ? '' : `toggleTarget('${p}')`}">
+        <div class="chip-dot"></div>
+        ${PLATFORM_META[p].label}
+        ${isDisabled ? '<span style="font-size:10px;margin-left:2px;opacity:0.6;">·</span>' : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleTarget(p) {
+  if (!(connected[p]?.connected)) return;
+  if (activePlatforms.has(p)) {
+    activePlatforms.delete(p);
+  } else {
+    activePlatforms.add(p);
+  }
+  renderTargetRow();
+  updateCharMeters();
+}
+
+// Auto-select all newly connected platforms
+function autoSelectConnected() {
+  Object.keys(PLATFORM_META).forEach(p => {
+    if (connected[p]?.connected) activePlatforms.add(p);
+  });
+}
+
+// ── CHAR METERS ───────────────────────────────────────────────
+function onTextInput() { updateCharMeters(); }
+
+function updateCharMeters() {
+  const len = document.getElementById('postText').value.length;
+
+  // Sidebar bars
+  Object.keys(LIMITS).forEach(p => {
+    const lim = LIMITS[p];
+    const pct = Math.min(100, (len / lim) * 100);
+    const bar = document.getElementById('bar-' + p);
+    const cnt = document.getElementById('cnt-' + p);
+    if (bar) bar.style.width = pct + '%';
+    if (bar) bar.style.background = pct > 95 ? 'var(--error)' : pct > 80 ? 'var(--warn)' : 'var(--accent)';
+    if (cnt) cnt.textContent = len.toLocaleString();
+  });
+
+  // Char pills in toolbar — show only active platforms
+  const meters = document.getElementById('charMeters');
+  if (activePlatforms.size === 0) { meters.innerHTML = ''; return; }
+
+  meters.innerHTML = [...activePlatforms].map(p => {
+    const lim = LIMITS[p];
+    const cls = len > lim ? 'over' : len > lim * 0.9 ? 'warn' : '';
+    return `<span class="char-pill ${cls}" title="${PLATFORM_META[p].label}">${PLATFORM_META[p].icon} ${len}/${lim}</span>`;
+  }).join('');
+}
+
+// ── MEDIA ─────────────────────────────────────────────────────
 function handleFiles(files) {
   [...files].forEach(f => {
-    if (!f.type.startsWith('image/')) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      mediaFiles.push({ file: f, dataUrl: e.target.result });
-      renderMediaGrid();
-    };
+    reader.onload = e => { mediaFiles.push({ file: f, dataUrl: e.target.result }); renderMedia(); };
     reader.readAsDataURL(f);
   });
 }
 
-function renderMediaGrid() {
+function renderMedia() {
   const grid = document.getElementById('mediaGrid');
   if (mediaFiles.length === 0) { grid.style.display = 'none'; grid.innerHTML = ''; return; }
   grid.style.display = 'grid';
   grid.innerHTML = mediaFiles.map((m, i) => `
-    <div class="media-item">
+    <div class="media-thumb">
       <img src="${m.dataUrl}" alt="">
       <button class="media-remove" onclick="removeMedia(${i})">×</button>
     </div>
   `).join('');
 }
 
-function removeMedia(i) {
-  mediaFiles.splice(i, 1);
-  renderMediaGrid();
+function removeMedia(i) { mediaFiles.splice(i, 1); renderMedia(); }
+
+function pickEmoji() {
+  const emojis = ['🚀','✨','💡','🔥','📢','🎯','👏','💪','🌟','📌','🙏','❤️','👀','🎉','💯'];
+  document.getElementById('postText').value += emojis[Math.floor(Math.random() * emojis.length)];
+  updateCharMeters();
 }
 
-function insertEmoji() {
-  const ta = document.getElementById('postText');
-  const emojis = ['🚀','✨','💡','🔥','📢','🎯','👏','💪','🌟','📌'];
-  ta.value += emojis[Math.floor(Math.random() * emojis.length)];
-  updateCharCount();
-  ta.focus();
+function clearComposer() {
+  document.getElementById('postText').value = '';
+  mediaFiles = [];
+  renderMedia();
+  updateCharMeters();
+  document.getElementById('results').style.display = 'none';
 }
 
-// ── Tokens ──
-function getTokens(platform) {
-  try { return JSON.parse(localStorage.getItem(`broadcast_${platform}`) || '{}'); }
-  catch { return {}; }
-}
-
-function saveTokens(platform) {
-  const ids = {
-    x: ['x_api_key','x_api_secret','x_access_token','x_access_secret','x_bearer_token'],
-    li: ['li_access_token','li_person_urn'],
-    fb: ['fb_page_token','fb_page_id'],
-    ig: ['ig_access_token','ig_account_id'],
-    th: ['th_access_token','th_user_id'],
-  };
-  const data = {};
-  (ids[platform] || []).forEach(id => {
-    data[id] = document.getElementById(id)?.value || '';
-  });
-  localStorage.setItem(`broadcast_${platform}`, JSON.stringify(data));
-  const msg = document.getElementById(`saved_${platform}`);
-  if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 2500); }
-  updateStatusDots();
-}
-
-function saveProxyUrl() {
-  const url = document.getElementById('proxy_url').value;
-  localStorage.setItem('broadcast_proxy_url', url);
-  const msg = document.getElementById('saved_proxy');
-  msg.style.display = 'block';
-  setTimeout(() => msg.style.display = 'none', 2500);
-}
-
-function loadTokens() {
-  const platforms = [
-    { key: 'x', fields: ['x_api_key','x_api_secret','x_access_token','x_access_secret','x_bearer_token'] },
-    { key: 'li', fields: ['li_access_token','li_person_urn'] },
-    { key: 'fb', fields: ['fb_page_token','fb_page_id'] },
-    { key: 'ig', fields: ['ig_access_token','ig_account_id'] },
-    { key: 'th', fields: ['th_access_token','th_user_id'] },
-  ];
-  platforms.forEach(({ key, fields }) => {
-    const data = getTokens(key);
-    fields.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && data[id]) el.value = data[id];
-    });
-  });
-  const proxyEl = document.getElementById('proxy_url');
-  if (proxyEl) proxyEl.value = localStorage.getItem('broadcast_proxy_url') || '';
-}
-
-function hasToken(platform) {
-  const keyMap = { x: 'x', linkedin: 'li', facebook: 'fb', instagram: 'ig', threads: 'th' };
-  const data = getTokens(keyMap[platform]);
-  return Object.values(data).some(v => v && v.length > 0);
-}
-
-function updateStatusDots() {
-  PLATFORMS.forEach(p => {
-    const dot = document.getElementById(`dot-${p}`);
-    if (!dot) return;
-    dot.className = 'status-dot ' + (hasToken(p) ? 'dot-green' : 'dot-grey');
-  });
-}
-
-// ── Posting ──
-async function postToAll() {
+// ── BROADCAST ────────────────────────────────────────────────
+async function broadcastPost() {
   const text = document.getElementById('postText').value.trim();
-  if (!text) { alert('Write something first!'); return; }
-  if (activePlatforms.size === 0) { alert('Select at least one platform.'); return; }
+  if (!text)                    { showToast('Write something first', 'error'); return; }
+  if (!proxyUrl)                { showToast('Set your proxy URL first', 'error'); return; }
+  if (!session)                 { showToast('No session found. Reconnect a platform.', 'error'); return; }
+  if (activePlatforms.size === 0) { showToast('Select at least one platform', 'error'); return; }
 
+  const platforms = [...activePlatforms];
   const btn = document.getElementById('postBtn');
+  const label = document.getElementById('postBtnLabel');
   btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div><span>Broadcasting…</span>';
+  label.innerHTML = '<div class="spinner"></div> Broadcasting…';
 
-  const resultsList = document.getElementById('resultsList');
-  resultsList.style.display = 'flex';
-  resultsList.innerHTML = [...activePlatforms].map(p => `
-    <div class="result-item pending" id="result-${p}">
+  // Show pending results
+  const resultsEl = document.getElementById('results');
+  resultsEl.style.display = 'flex';
+  resultsEl.innerHTML = platforms.map(p => `
+    <div class="result pending" id="result-${p}">
       <span class="result-icon">⏳</span>
-      <div class="result-info">
-        <div class="result-name">${platformLabel(p)}</div>
+      <div class="result-body">
+        <div class="result-name">${PLATFORM_META[p].label}</div>
         <div class="result-msg">Sending…</div>
       </div>
     </div>
   `).join('');
 
-  const historyEntry = {
-    id: Date.now(),
-    text,
-    date: new Date().toISOString(),
-    platforms: {},
-  };
+  // Post all via proxy
+  let allOk = true;
+  const histEntry = { id: Date.now(), text, platforms: {} };
 
-  const promises = [...activePlatforms].map(p => postToPlatform(p, text));
-  const results = await Promise.allSettled(promises);
+  await Promise.all(platforms.map(async p => {
+    try {
+      const resp = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'post', platform: p, text, session }),
+      });
+      const data = await resp.json();
+      if (data.ok) {
+        updateResult(p, true, 'Posted successfully');
+        histEntry.platforms[p] = { ok: true };
+      } else {
+        throw new Error(data.error || 'Unknown error');
+      }
+    } catch (err) {
+      updateResult(p, false, err.message);
+      histEntry.platforms[p] = { ok: false, error: err.message };
+      allOk = false;
+    }
+  }));
 
-  [...activePlatforms].forEach((p, i) => {
-    const r = results[i];
-    const ok = r.status === 'fulfilled' && r.value?.ok;
-    const msg = ok ? 'Posted successfully' : (r.reason?.message || r.value?.error || 'Failed');
-    updateResultItem(p, ok, msg);
-    historyEntry.platforms[p] = { ok, msg };
-  });
-
-  // save history
-  postHistory.unshift(historyEntry);
-  if (postHistory.length > 50) postHistory.pop();
+  // Save history
+  postHistory.unshift(histEntry);
+  if (postHistory.length > 100) postHistory.pop();
   localStorage.setItem('broadcast_history', JSON.stringify(postHistory));
 
   btn.disabled = false;
-  btn.innerHTML = '<span>Broadcast</span>';
+  label.textContent = 'Broadcast';
+  showToast(allOk ? 'All posts sent ✓' : 'Some posts failed', allOk ? 'success' : 'error');
 }
 
-async function postToPlatform(platform, text) {
-  const proxyUrl = localStorage.getItem('broadcast_proxy_url');
-  if (proxyUrl) {
-    return postViaProxy(platform, text, proxyUrl);
-  }
-  // Direct API calls (CORS may block some)
-  switch (platform) {
-    case 'x':         return postToX(text);
-    case 'linkedin':  return postToLinkedIn(text);
-    case 'facebook':  return postToFacebook(text);
-    case 'instagram': return postToInstagram(text);
-    case 'threads':   return postToThreads(text);
-    default:          throw new Error('Unknown platform');
-  }
-}
-
-// ── Platform API implementations ──
-
-async function postToX(text) {
-  const t = getTokens('x');
-  if (!t.x_bearer_token && !t.x_access_token) throw new Error('X tokens not configured. Go to Tokens tab.');
-
-  // X API v2 requires OAuth 1.0a for user context — full OAuth signing is needed
-  // For a static site, this requires the proxy or a server-side component
-  // Here we attempt the call and let the proxy handle signing
-  throw new Error('X requires server-side OAuth signing. Set up the proxy URL in the Tokens tab.');
-}
-
-async function postToLinkedIn(text) {
-  const t = getTokens('li');
-  if (!t.li_access_token) throw new Error('LinkedIn token not configured. Go to Tokens tab.');
-  if (!t.li_person_urn)   throw new Error('LinkedIn Person URN not configured.');
-
-  const resp = await fetch('https://api.linkedin.com/v2/ugcPosts', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${t.li_access_token}`,
-      'Content-Type': 'application/json',
-      'X-Restli-Protocol-Version': '2.0.0',
-    },
-    body: JSON.stringify({
-      author: t.li_person_urn,
-      lifecycleState: 'PUBLISHED',
-      specificContent: {
-        'com.linkedin.ugc.ShareContent': {
-          shareCommentary: { text },
-          shareMediaCategory: 'NONE',
-        }
-      },
-      visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' }
-    })
-  });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.message || `LinkedIn error ${resp.status}`);
-  }
-  return { ok: true };
-}
-
-async function postToFacebook(text) {
-  const t = getTokens('fb');
-  if (!t.fb_page_token) throw new Error('Facebook token not configured. Go to Tokens tab.');
-  if (!t.fb_page_id)    throw new Error('Facebook Page ID not configured.');
-
-  const url = `https://graph.facebook.com/v19.0/${t.fb_page_id}/feed`;
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: text, access_token: t.fb_page_token })
-  });
-  const data = await resp.json();
-  if (!resp.ok || data.error) throw new Error(data.error?.message || `Facebook error ${resp.status}`);
-  return { ok: true };
-}
-
-async function postToInstagram(text) {
-  const t = getTokens('ig');
-  if (!t.ig_access_token) throw new Error('Instagram token not configured. Go to Tokens tab.');
-  if (!t.ig_account_id)   throw new Error('Instagram Account ID not configured.');
-
-  // Instagram text-only posts require a container + publish step
-  // Step 1: Create container
-  const containerResp = await fetch(
-    `https://graph.facebook.com/v19.0/${t.ig_account_id}/media`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ caption: text, media_type: 'TEXT', access_token: t.ig_access_token })
-  });
-  const container = await containerResp.json();
-  if (!containerResp.ok || container.error) throw new Error(container.error?.message || 'Instagram container error');
-
-  // Step 2: Publish
-  const publishResp = await fetch(
-    `https://graph.facebook.com/v19.0/${t.ig_account_id}/media_publish`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ creation_id: container.id, access_token: t.ig_access_token })
-  });
-  const pub = await publishResp.json();
-  if (!publishResp.ok || pub.error) throw new Error(pub.error?.message || 'Instagram publish error');
-  return { ok: true };
-}
-
-async function postToThreads(text) {
-  const t = getTokens('th');
-  if (!t.th_access_token) throw new Error('Threads token not configured. Go to Tokens tab.');
-  if (!t.th_user_id)      throw new Error('Threads User ID not configured.');
-
-  // Step 1: Create container
-  const containerResp = await fetch(
-    `https://graph.threads.net/v1.0/${t.th_user_id}/threads`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text, media_type: 'TEXT', access_token: t.th_access_token })
-  });
-  const container = await containerResp.json();
-  if (!containerResp.ok || container.error) throw new Error(container.error?.message || 'Threads container error');
-
-  // Step 2: Publish
-  const publishResp = await fetch(
-    `https://graph.threads.net/v1.0/${t.th_user_id}/threads_publish`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ creation_id: container.id, access_token: t.th_access_token })
-  });
-  const pub = await publishResp.json();
-  if (!publishResp.ok || pub.error) throw new Error(pub.error?.message || 'Threads publish error');
-  return { ok: true };
-}
-
-async function postViaProxy(platform, text, proxyUrl) {
-  const keyMap = { x: 'x', linkedin: 'li', facebook: 'fb', instagram: 'ig', threads: 'th' };
-  const tokens = getTokens(keyMap[platform]);
-  const resp = await fetch(proxyUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ platform, text, tokens })
-  });
-  const data = await resp.json();
-  if (!data.ok) throw new Error(data.error || 'Proxy error');
-  return { ok: true };
-}
-
-// ── UI helpers ──
-function updateResultItem(platform, ok, msg) {
-  const el = document.getElementById(`result-${platform}`);
+function updateResult(platform, ok, msg) {
+  const el = document.getElementById('result-' + platform);
   if (!el) return;
-  el.className = `result-item ${ok ? 'ok' : 'fail'}`;
+  el.className = 'result ' + (ok ? 'ok' : 'fail');
   el.querySelector('.result-icon').textContent = ok ? '✅' : '❌';
-  el.querySelector('.result-name').textContent = platformLabel(platform);
-  el.querySelector('.result-msg').textContent = msg;
+  el.querySelector('.result-name').textContent = PLATFORM_META[platform]?.label || platform;
+  el.querySelector('.result-msg').textContent  = msg;
 }
 
-function platformLabel(p) {
-  return { x: 'X / Twitter', linkedin: 'LinkedIn', facebook: 'Facebook', instagram: 'Instagram', threads: 'Threads' }[p] || p;
+// ── CONNECT MODAL ─────────────────────────────────────────────
+function showConnectModal(platform) {
+  if (!proxyUrl) { showToast('Save proxy URL first', 'error'); return; }
+  currentModal = platform;
+  const meta = PLATFORM_STEPS[platform];
+  document.getElementById('modalTitle').textContent = meta.title;
+  document.getElementById('modalSub').textContent   = meta.sub;
+  document.getElementById('modalSteps').innerHTML = meta.steps.map((s, i) => `
+    <div class="step">
+      <div class="step-num">${i + 1}</div>
+      <div class="step-text">${s.text}</div>
+    </div>
+  `).join('');
+  document.getElementById('connectModal').classList.add('open');
 }
 
-// ── History ──
-function loadHistory() {
-  try { postHistory = JSON.parse(localStorage.getItem('broadcast_history') || '[]'); }
-  catch { postHistory = []; }
-  renderHistory();
+function closeModal() {
+  document.getElementById('connectModal').classList.remove('open');
+  currentModal = null;
 }
 
+function startOAuth() {
+  if (!currentModal) return;
+  closeModal();
+  // Open connect URL in same window (GAS redirect handles callback)
+  window.location.href = proxyUrl + '?action=connect&platform=' + currentModal;
+}
+
+// ── DISCONNECT ────────────────────────────────────────────────
+function showDisconnect(platform) {
+  disconnectTarget = platform;
+  document.getElementById('disconnectSub').textContent =
+    `This will remove ${PLATFORM_META[platform].label} from Broadcast. You can reconnect anytime.`;
+  document.getElementById('disconnectModal').classList.add('open');
+}
+
+function closeDisconnectModal() {
+  document.getElementById('disconnectModal').classList.remove('open');
+  disconnectTarget = null;
+}
+
+async function confirmDisconnect() {
+  if (!disconnectTarget) return;
+  closeDisconnectModal();
+  try {
+    await fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'disconnect', platform: disconnectTarget, session }),
+    });
+    connected[disconnectTarget] = { connected: false };
+    activePlatforms.delete(disconnectTarget);
+    updateConnectionUI();
+    renderTargetRow();
+    showToast(PLATFORM_META[disconnectTarget].label + ' disconnected', 'success');
+  } catch (e) {
+    showToast('Failed to disconnect', 'error');
+  }
+  disconnectTarget = null;
+}
+
+// ── VIEWS ─────────────────────────────────────────────────────
+function showView(view, btn) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (view === 'history') renderHistory();
+}
+
+// ── HISTORY ───────────────────────────────────────────────────
 function renderHistory() {
   const list = document.getElementById('historyList');
-  if (!list) return;
   if (postHistory.length === 0) {
-    list.innerHTML = `<div class="empty-history"><div class="big">📭</div>No posts yet. Go compose something!</div>`;
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <div class="empty-text">No posts yet — go broadcast something</div>
+    </div>`;
     return;
   }
   list.innerHTML = postHistory.map(h => {
     const date = new Date(h.id).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
-    const badges = Object.entries(h.platforms || {}).map(([p, r]) =>
-      `<span class="history-badge ${r.ok ? 'badge-ok' : 'badge-fail'}">${platformLabel(p)}</span>`
+    const tags = Object.entries(h.platforms || {}).map(([p, r]) =>
+      `<span class="history-tag ${r.ok ? 'tag-ok' : 'tag-fail'}">${PLATFORM_META[p]?.label || p}</span>`
     ).join('');
+    const preview = h.text.length > 300 ? h.text.slice(0, 300) + '…' : h.text;
     return `
       <div class="history-item">
-        <div class="history-meta">
-          <span>${date}</span>
-          <span>${Object.values(h.platforms || {}).filter(r => r.ok).length} / ${Object.keys(h.platforms || {}).length} posted</span>
+        <div class="history-header">
+          <span class="history-date">${date}</span>
         </div>
-        <div class="history-text">${escapeHtml(h.text.slice(0, 280))}${h.text.length > 280 ? '…' : ''}</div>
-        <div class="history-platforms">${badges}</div>
+        <div class="history-body">${escHtml(preview)}</div>
+        <div class="history-tags">${tags}</div>
       </div>
     `;
   }).join('');
 }
 
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// ── TOAST ─────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
 }
 
-// Update history when switching to history view
-const origShowView = showView;
-window.showView = function(view, btn) {
-  origShowView(view, btn);
-  if (view === 'history') renderHistory();
-};
+// ── UTILS ─────────────────────────────────────────────────────
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Close modals on overlay click
+document.getElementById('connectModal').addEventListener('click', e => {
+  if (e.target.id === 'connectModal') closeModal();
+});
+document.getElementById('disconnectModal').addEventListener('click', e => {
+  if (e.target.id === 'disconnectModal') closeDisconnectModal();
+});
 </script>
 </body>
 </html>
