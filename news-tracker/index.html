@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Forbes India Newsroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #111110;
+    --ink2: #3d3d3a;
+    --ink3: #6b6b67;
+    --ink4: #9c9a92;
+    --rule: #e2dfd8;
+    --rule-light: #f0ede8;
+    --paper: #fafaf8;
+    --paper2: #f3f0eb;
+    --red: #cc2027;
+    --red-light: #f9eded;
+    --green: #1a6b3a;
+    --green-light: #e8f4ee;
+    --amber: #8b5e00;
+    --amber-light: #fef3db;
+    --blue: #1a4a7a;
+    --blue-light: #e8f0f9;
+    --shadow: 0 1px 3px rgba(17,17,16,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--ink);
+    color: #fff;
+    padding: 0 24px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fff;
+  }
+  .brand span { color: var(--red); }
+  .topbar-date {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+    border-left: 1px solid rgba(255,255,255,0.15);
+    padding-left: 20px;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .refresh-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.8);
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+  }
+  .refresh-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .refresh-btn.spinning svg { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .last-updated {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* ── STATS BAR ── */
+  .statsbar {
+    background: var(--paper2);
+    border-bottom: 1px solid var(--rule);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .stat-num {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .stat-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--rule);
+  }
+  .gap-pill {
+    background: var(--red-light);
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid #f0c0c0;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 88px);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    border-right: 1px solid var(--rule);
+    background: var(--paper);
+    padding: 16px 0;
+    position: sticky;
+    top: 48px;
+    height: calc(100vh - 48px);
+    overflow-y: auto;
+  }
+  .sidebar-section {
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+  .sidebar-heading {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink4);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule-light);
+  }
+
+  .pub-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.1s;
+    margin-bottom: 1px;
+  }
+  .pub-item:hover { background: var(--paper2); }
+  .pub-item.active { background: var(--ink); }
+  .pub-item.active .pub-name { color: #fff; }
+  .pub-item.active .pub-count { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); }
+  .pub-item-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pub-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .pub-name {
+    font-size: 13px;
+    color: var(--ink2);
+    font-weight: 400;
+  }
+  .pub-count {
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--paper2);
+    color: var(--ink3);
+    padding: 1px 7px;
+    border-radius: 10px;
+    min-width: 22px;
+    text-align: center;
+  }
+  .pub-loading { opacity: 0.4; }
+  .pub-error .pub-name { color: var(--ink4); }
+
+  /* Status dots */
+  .dot-ok { background: #22c55e; }
+  .dot-loading { background: var(--ink4); animation: pulse 1.2s ease-in-out infinite; }
+  .dot-error { background: #ef4444; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* Filter pills */
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .filter-pill {
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--ink2);
+    transition: background 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .filter-pill:hover { background: var(--paper2); }
+  .filter-pill.active { background: var(--ink); color: #fff; }
+  .filter-pill .fi { font-size: 13px; }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    padding: 0;
+    overflow-y: auto;
+  }
+
+  /* Search + controls */
+  .controls {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--paper);
+    position: sticky;
+    top: 48px;
+    z-index: 50;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink4);
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    padding: 8px 12px 8px 34px;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    background: var(--paper2);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus { border-color: var(--ink3); background: #fff; }
+  .search-input::placeholder { color: var(--ink4); }
+
+  .view-toggle {
+    display: flex;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .view-btn {
+    background: none;
+    border: none;
+    padding: 7px 11px;
+    cursor: pointer;
+    color: var(--ink4);
+    transition: all 0.1s;
+  }
+  .view-btn.active { background: var(--ink); color: #fff; }
+  .view-btn:hover:not(.active) { background: var(--paper2); color: var(--ink2); }
+
+  .sort-select {
+    padding: 7px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    background: var(--paper2);
+    color: var(--ink2);
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* ── STORY FEED ── */
+  .feed {
+    padding: 16px 24px;
+  }
+
+  /* Section divider */
+  .feed-section {
+    margin-bottom: 8px;
+  }
+  .feed-section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-top: 8px;
+  }
+  .feed-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .feed-section-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--rule-light);
+  }
+
+  /* Story card */
+  .story-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    position: relative;
+  }
+  .story-card:hover {
+    border-color: var(--ink3);
+    box-shadow: var(--shadow);
+  }
+  .story-card.gap-story {
+    border-left: 3px solid var(--red);
+  }
+  .story-card.covered-story {
+    border-left: 3px solid #22c55e;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .pub-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .time-badge {
+    font-size: 11px;
+    color: var(--ink4);
+    white-space: nowrap;
+  }
+
+  .story-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.4;
+    text-decoration: none;
+  }
+  .story-title:hover { color: var(--red); }
+
+  .story-snippet {
+    font-size: 13px;
+    color: var(--ink3);
+    line-height: 1.5;
+    margin-top: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule-light);
+  }
+  .gap-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .gap-indicator.gap {
+    color: var(--red);
+  }
+  .gap-indicator.covered {
+    color: var(--green);
+  }
+  .gap-indicator.unknown {
+    color: var(--ink4);
+  }
+  .gap-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .gap .gap-dot { background: var(--red); }
+  .covered .gap-dot { background: #22c55e; }
+  .unknown .gap-dot { background: var(--ink4); }
+
+  .card-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .action-btn {
+    background: none;
+    border: 1px solid var(--rule);
+    color: var(--ink3);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.1s;
+    white-space: nowrap;
+  }
+  .action-btn:hover { background: var(--paper2); border-color: var(--ink3); color: var(--ink); }
+  .action-btn.assign-btn:hover { background: var(--red-light); border-color: var(--red); color: var(--red); }
+
+  /* Assigned state */
+  .story-card.assigned {
+    background: #fffdf0;
+    border-color: #e8d88a;
+  }
+  .assigned-tag {
+    font-size: 11px;
+    background: var(--amber-light);
+    color: var(--amber);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+    border: 1px solid #f0d070;
+  }
+
+  /* Tags */
+  .story-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .tag {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: var(--paper2);
+    color: var(--ink3);
+    border: 1px solid var(--rule);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+
+  /* ── GRID VIEW ── */
+  .feed.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 10px;
+  }
+  .feed.grid-view .feed-section {
+    grid-column: 1 / -1;
+  }
+  .feed.grid-view .story-card {
+    margin-bottom: 0;
+  }
+
+  /* ── EMPTY / LOADING STATES ── */
+  .loading-state {
+    padding: 48px 24px;
+    text-align: center;
+  }
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--rule);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  .loading-text {
+    font-size: 13px;
+    color: var(--ink3);
+  }
+  .loading-pub {
+    font-size: 12px;
+    color: var(--ink4);
+    margin-top: 4px;
+  }
+
+  .empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--ink3);
+    font-size: 14px;
+  }
+  .empty-state svg { margin-bottom: 12px; opacity: 0.3; }
+
+  /* Skeleton cards */
+  .skeleton {
+    background: var(--paper2);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .skel-line { background: var(--rule); border-radius: 3px; margin-bottom: 6px; }
+
+  /* ── ASSIGN MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(17,17,16,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    width: 380px;
+    max-width: 95vw;
+    box-shadow: 0 8px 32px rgba(17,17,16,0.2);
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .modal-story-title {
+    font-size: 13px;
+    color: var(--ink3);
+    margin-bottom: 20px;
+    line-height: 1.4;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule-light);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .modal-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink3);
+    margin-bottom: 6px;
+  }
+  .modal-select, .modal-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--paper2);
+    outline: none;
+    margin-bottom: 14px;
+  }
+  .modal-select:focus, .modal-input:focus { border-color: var(--ink); background: #fff; }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 4px;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: var(--red); }
+  .btn-cancel {
+    background: none;
+    color: var(--ink3);
+    border: 1px solid var(--rule);
+    padding: 9px 20px;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-cancel:hover { border-color: var(--ink3); color: var(--ink); }
+
+  /* ── TOPIC CLUSTERS ── */
+  .clusters-bar {
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper2);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cluster-label {
+    font-size: 11px;
+    color: var(--ink4);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-right: 4px;
+  }
+  .cluster-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--ink2);
+    cursor: pointer;
+    transition: all 0.1s;
+    white-space: nowrap;
+  }
+  .cluster-chip:hover { border-color: var(--ink3); background: var(--paper2); }
+  .cluster-chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .cluster-chip .chip-count {
+    font-size: 10px;
+    opacity: 0.6;
+    margin-left: 3px;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--ink4); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+      padding: 12px 0;
+    }
+    .sidebar-section { padding: 0 12px; }
+    .pub-items-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+    }
+    .controls { padding: 10px 16px; gap: 8px; }
+    .feed { padding: 12px 16px; }
+    .statsbar { padding: 8px 16px; gap: 16px; }
+    .topbar { padding: 0 16px; }
+    .story-title { font-size: 14px; }
+    .clusters-bar { padding: 8px 16px; }
+  }
+
+  @media (max-width: 480px) {
+    .controls { flex-wrap: wrap; }
+    .search-wrap { order: -1; width: 100%; }
+  }
+
+  /* ── ERROR TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--ink);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    z-index: 300;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.25s;
+    pointer-events: none;
+    max-width: 320px;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.error { background: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand">Forbes<span>India</span> Morning Brief</div>
+    <div class="topbar-date" id="topbar-date"></div>
+  </div>
+  <div class="topbar-right">
+    <div class="last-updated" id="last-updated">Not yet refreshed</div>
+    <button class="refresh-btn" id="refresh-btn" onclick="refreshAll()">
+      <svg id="refresh-icon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 4s1-2 5-2a6 6 0 010 12c-3 0-5-2-5-2"/>
+        <polyline points="1 4 1 1 4 1"/>
+      </svg>
+      Refresh feeds
+    </button>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="statsbar" id="statsbar">
+  <div class="stat-item">
+    <span class="stat-num" id="stat-total">—</span>
+    <span class="stat-label">stories today</span>
+  </div>
+  <div class="stat-sep"></div>
+  <div class="stat-item">
+    <span class="stat-num" id="stat-pubs">0</span>
+    <span class="stat-label">publications</span>
+  </div>
+  <div class="stat-sep"></div>
+  <div class="stat-item">
+    <span class="stat-num" id="stat-gaps">—</span>
+    <span class="stat-label">coverage gaps</span>
+  </div>
+  <div class="stat-sep"></div>
+  <div class="stat-item">
+    <span class="stat-num" id="stat-assigned">0</span>
+    <span class="stat-label">assigned</span>
+  </div>
+  <div class="stat-sep"></div>
+  <span class="gap-pill" id="gap-pill" style="display:none">⚡ Stories to chase</span>
+</div>
+
+<!-- TOPIC CLUSTERS BAR -->
+<div class="clusters-bar" id="clusters-bar">
+  <span class="cluster-label">Topics:</span>
+  <span class="cluster-chip active" data-topic="all" onclick="filterTopic('all')">All stories</span>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">View</div>
+      <div class="filter-group">
+        <div class="filter-pill active" id="filter-all" onclick="setFilter('all')">
+          <span class="fi">📋</span> All stories
+        </div>
+        <div class="filter-pill" id="filter-gaps" onclick="setFilter('gaps')">
+          <span class="fi">🔴</span> Coverage gaps
+        </div>
+        <div class="filter-pill" id="filter-assigned" onclick="setFilter('assigned')">
+          <span class="fi">📌</span> Assigned
+        </div>
+        <div class="filter-pill" id="filter-saved" onclick="setFilter('saved')">
+          <span class="fi">🔖</span> Saved
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Publications</div>
+      <div id="pub-list"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="controls">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/>
+        </svg>
+        <input type="text" class="search-input" id="search-input" placeholder="Search stories…" oninput="filterStories()">
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn active" id="view-list" onclick="setView('list')" title="List view">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="2" y1="5" x2="14" y2="5"/><line x1="2" y1="9" x2="14" y2="9"/><line x1="2" y1="13" x2="14" y2="13"/>
+          </svg>
+        </button>
+        <button class="view-btn" id="view-grid" onclick="setView('grid')" title="Grid view">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/>
+            <rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/>
+          </svg>
+        </button>
+      </div>
+      <select class="sort-select" id="sort-select" onchange="filterStories()">
+        <option value="time">Newest first</option>
+        <option value="pub">By publication</option>
+        <option value="gap">Gaps first</option>
+      </select>
+    </div>
+
+    <div class="feed list-view" id="feed"></div>
+  </main>
+</div>
+
+<!-- ASSIGN MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">Assign story</div>
+    <div class="modal-story-title" id="modal-story-title"></div>
+    <div class="modal-label">Reporter</div>
+    <input type="text" class="modal-input" id="modal-reporter" placeholder="Reporter name…" list="reporters-list">
+    <datalist id="reporters-list"></datalist>
+    <div class="modal-label">Note (optional)</div>
+    <input type="text" class="modal-input" id="modal-note" placeholder="Add a note for the reporter…">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="confirmAssign()">Assign</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIGURATION ──────────────────────────────────────────────────────────
+
+const PUBLICATIONS = [
+  { id: 'et',   name: 'Economic Times',    color: '#e63900', url: 'https://economictimes.indiatimes.com/rssfeedstopstories.cms' },
+  { id: 'bs',   name: 'Business Standard', color: '#00529b', url: 'https://www.business-standard.com/rss/home_page_top_stories.rss' },
+  { id: 'mint', name: 'Mint',              color: '#eb6200', url: 'https://www.livemint.com/rss/homepage' },
+  { id: 'mc',   name: 'Morning Context',   color: '#1a1a1a', url: 'https://news.google.com/rss/search?q=site:themorningcontext.com&hl=en-IN&gl=IN&ceid=IN:en' },
+  { id: 'ken',  name: 'The Ken',           color: '#5b2d8e', url: 'https://the-ken.com/feed/' },
+  { id: 'reu',  name: 'Reuters',           color: '#ff8000', url: 'https://feeds.reuters.com/reuters/INtopNews' },
+  { id: 'ft',   name: 'Financial Times',   color: '#fff1e0', textColor: '#333', url: 'https://news.google.com/rss/search?q=site:ft.com+india&hl=en-IN&gl=IN&ceid=IN:en' },
+  { id: 'bloom',name: 'Bloomberg',         color: '#1c1c1c', url: 'https://feeds.bloomberg.com/markets/news.rss' },
+  { id: 'fe',   name: 'Financial Express', color: '#c00000', url: 'https://www.financialexpress.com/feed/' },
+  { id: 'fi',   name: 'Fortune India',     color: '#003087', url: 'https://www.fortuneindia.com/feed' },
+  { id: 'bl',   name: 'Business Line',     color: '#004225', url: 'https://www.thehindubusinessline.com/feeder/default.rss' },
+  { id: 'bt',   name: 'Business Today',    color: '#e20612', url: 'https://www.businesstoday.in/rss/home' },
+];
+
+// Forbes India RSS for gap detection
+const FORBES_INDIA_RSS = 'https://www.forbesindia.com/feed/';
+
+// CORS proxies — tried in order
+const CORS_PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+// Team reporters — customise this list
+const REPORTERS = [
+  'Divya Shekhar', 'Naandika Tripathi', 'Pankti Mehta Kadakia',
+  'Jasodhara Banerjee', 'Salil Panchal', 'Neha Bothra',
+  'Mansvini Kaushik', 'Manu Balachandran', 'Varsha Meghani',
+];
+
+// Keywords for topic clustering
+const TOPIC_KEYWORDS = {
+  'Markets': ['sensex', 'nifty', 'stock', 'market', 'shares', 'equit', 'sebi', 'ipo', 'trading', 'bse', 'nse'],
+  'Startups': ['startup', 'unicorn', 'funding', 'venture', 'series a', 'series b', 'seed round', 'valuation'],
+  'Economy': ['gdp', 'inflation', 'rbi', 'repo rate', 'rupee', 'fiscal', 'budget', 'imf', 'economy', 'growth'],
+  'Tech': ['ai', 'artificial intelligence', 'technology', 'digital', 'software', 'cloud', 'data', 'cyber'],
+  'Corporate': ['quarterly', 'results', 'revenue', 'profit', 'merger', 'acquisition', 'ceo', 'board', 'ipo'],
+  'Politics': ['government', 'minister', 'policy', 'parliament', 'modi', 'bjp', 'congress', 'election'],
+  'Global': ['us ', 'china', 'global', 'world', 'international', 'federal reserve', 'dollar', 'europe'],
+  'Real Estate': ['real estate', 'property', 'realty', 'housing', 'mortgage', 'reit'],
+};
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let allStories = [];
+let forbesTopics = [];
+let currentFilter = 'all';
+let currentTopic = 'all';
+let currentView = 'list';
+let selectedStoryId = null;
+let assignedStories = JSON.parse(localStorage.getItem('fi_assigned') || '{}');
+let savedStories = JSON.parse(localStorage.getItem('fi_saved') || '{}');
+let pubStatus = {};
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  setDate();
+  buildReportersList();
+  refreshAll();
+});
+
+function setDate() {
+  const now = new Date();
+  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('topbar-date').textContent = now.toLocaleDateString('en-IN', opts);
+}
+
+function buildReportersList() {
+  const dl = document.getElementById('reporters-list');
+  REPORTERS.forEach(r => {
+    const opt = document.createElement('option');
+    opt.value = r;
+    dl.appendChild(opt);
+  });
+}
+
+// ── FETCH ──────────────────────────────────────────────────────────────────
+async function fetchWithProxy(url) {
+  for (const proxyFn of CORS_PROXIES) {
+    try {
+      const proxyUrl = proxyFn(url);
+      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(12000) });
+      if (res.ok) {
+        const text = await res.text();
+        if (text && text.trim().startsWith('<')) return text;
+      }
+    } catch(e) { /* try next */ }
+  }
+  throw new Error('All proxies failed');
+}
+
+function parseRSS(xmlText, pubId) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xmlText, 'application/xml');
+  const items = Array.from(doc.querySelectorAll('item'));
+  return items.slice(0, 20).map((item, i) => {
+    const title = item.querySelector('title')?.textContent?.trim() || '';
+    const link = item.querySelector('link')?.textContent?.trim()
+      || item.querySelector('link')?.getAttribute('href') || '#';
+    const description = item.querySelector('description')?.textContent?.replace(/<[^>]+>/g, '').trim() || '';
+    const pubDate = item.querySelector('pubDate')?.textContent?.trim()
+      || item.querySelector('updated')?.textContent?.trim() || '';
+    const categories = Array.from(item.querySelectorAll('category')).map(c => c.textContent.trim());
+    return {
+      id: `${pubId}_${i}_${Date.now()}`,
+      pubId,
+      title: cleanText(title),
+      link,
+      snippet: description.slice(0, 180),
+      pubDate: pubDate ? new Date(pubDate) : new Date(),
+      categories,
+      topic: detectTopic(title + ' ' + description),
+      gap: null,
+      assigned: assignedStories[`${pubId}_${title.slice(0,30)}`] || null,
+      saved: savedStories[`${pubId}_${title.slice(0,30)}`] || false,
+    };
+  });
+}
+
+function cleanText(text) {
+  return text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim();
+}
+
+function detectTopic(text) {
+  const lower = text.toLowerCase();
+  for (const [topic, keywords] of Object.entries(TOPIC_KEYWORDS)) {
+    if (keywords.some(kw => lower.includes(kw))) return topic;
+  }
+  return null;
+}
+
+async function fetchForbesTopics() {
+  try {
+    const xml = await fetchWithProxy(FORBES_INDIA_RSS);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xml, 'application/xml');
+    const items = Array.from(doc.querySelectorAll('item'));
+    const titles = items.map(i => (i.querySelector('title')?.textContent || '').toLowerCase());
+    const keywords = [];
+    titles.forEach(title => {
+      const words = title.split(/\s+/).filter(w => w.length > 4 && !['about','their','there','which','would'].includes(w));
+      keywords.push(...words.slice(0, 5));
+    });
+    return keywords;
+  } catch(e) { return []; }
+}
+
+function checkGap(story, forbesKeywords) {
+  if (!forbesKeywords.length) return 'unknown';
+  const storyWords = (story.title + ' ' + story.snippet).toLowerCase().split(/\s+/).filter(w => w.length > 4);
+  const matches = storyWords.filter(w => forbesKeywords.includes(w));
+  return matches.length >= 2 ? 'covered' : 'gap';
+}
+
+// ── MAIN REFRESH ───────────────────────────────────────────────────────────
+async function refreshAll() {
+  const btn = document.getElementById('refresh-btn');
+  const icon = document.getElementById('refresh-icon');
+  btn.classList.add('spinning');
+  btn.disabled = true;
+
+  allStories = [];
+  pubStatus = {};
+
+  // Show skeleton
+  showSkeleton();
+  buildPubList();
+
+  // Fetch Forbes India topics first (for gap detection)
+  forbesTopics = await fetchForbesTopics();
+
+  // Fetch all publications concurrently
+  const promises = PUBLICATIONS.map(pub => fetchPub(pub));
+  await Promise.allSettled(promises);
+
+  // Mark gaps
+  allStories.forEach(s => {
+    s.gap = checkGap(s, forbesTopics);
+  });
+
+  // Build topic clusters
+  buildTopicClusters();
+
+  // Render
+  renderFeed();
+  updateStats();
+  buildPubList();
+
+  btn.classList.remove('spinning');
+  btn.disabled = false;
+
+  const now = new Date();
+  document.getElementById('last-updated').textContent = `Updated ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+async function fetchPub(pub) {
+  pubStatus[pub.id] = 'loading';
+  buildPubList();
+  try {
+    const xml = await fetchWithProxy(pub.url);
+    const stories = parseRSS(xml, pub.id);
+    allStories.push(...stories);
+    pubStatus[pub.id] = 'ok';
+  } catch(e) {
+    pubStatus[pub.id] = 'error';
+    console.warn(`Failed: ${pub.name}`, e.message);
+  }
+  buildPubList();
+  renderFeed();
+  updateStats();
+}
+
+// ── SIDEBAR ────────────────────────────────────────────────────────────────
+function buildPubList() {
+  const container = document.getElementById('pub-list');
+  container.innerHTML = PUBLICATIONS.map(pub => {
+    const status = pubStatus[pub.id] || 'loading';
+    const count = allStories.filter(s => s.pubId === pub.id).length;
+    const dotClass = status === 'ok' ? 'dot-ok' : status === 'error' ? 'dot-error' : 'dot-loading';
+    const itemClass = status === 'error' ? 'pub-error' : '';
+    return `
+      <div class="pub-item ${itemClass}" onclick="filterByPub('${pub.id}')">
+        <div class="pub-item-left">
+          <div class="pub-dot ${dotClass}"></div>
+          <span class="pub-name">${pub.name}</span>
+        </div>
+        ${status !== 'loading' ? `<span class="pub-count">${count}</span>` : '<span class="pub-count" style="opacity:.3">…</span>'}
+      </div>`;
+  }).join('');
+}
+
+let activePubFilter = null;
+function filterByPub(pubId) {
+  activePubFilter = activePubFilter === pubId ? null : pubId;
+  document.querySelectorAll('.pub-item').forEach((el, i) => {
+    el.classList.toggle('active', PUBLICATIONS[i]?.id === activePubFilter);
+  });
+  renderFeed();
+}
+
+// ── TOPIC CLUSTERS ─────────────────────────────────────────────────────────
+function buildTopicClusters() {
+  const topicCounts = {};
+  allStories.forEach(s => { if (s.topic) topicCounts[s.topic] = (topicCounts[s.topic]||0) + 1; });
+  const sorted = Object.entries(topicCounts).sort((a,b) => b[1]-a[1]);
+
+  const bar = document.getElementById('clusters-bar');
+  bar.innerHTML = `<span class="cluster-label">Topics:</span>
+    <span class="cluster-chip active" data-topic="all" onclick="filterTopic('all')">All stories</span>` +
+    sorted.map(([topic, count]) =>
+      `<span class="cluster-chip" data-topic="${topic}" onclick="filterTopic('${topic}')">${topic} <span class="chip-count">${count}</span></span>`
+    ).join('');
+}
+
+function filterTopic(topic) {
+  currentTopic = topic;
+  document.querySelectorAll('.cluster-chip').forEach(el => {
+    el.classList.toggle('active', el.dataset.topic === topic);
+  });
+  renderFeed();
+}
+
+// ── FILTERS ────────────────────────────────────────────────────────────────
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(el => el.classList.remove('active'));
+  document.getElementById('filter-' + f)?.classList.add('active');
+  renderFeed();
+}
+
+function filterStories() { renderFeed(); }
+
+function getFilteredStories() {
+  let stories = [...allStories];
+
+  // Publication filter
+  if (activePubFilter) stories = stories.filter(s => s.pubId === activePubFilter);
+
+  // Topic filter
+  if (currentTopic !== 'all') stories = stories.filter(s => s.topic === currentTopic);
+
+  // Main filter
+  if (currentFilter === 'gaps') stories = stories.filter(s => s.gap === 'gap');
+  if (currentFilter === 'assigned') stories = stories.filter(s => s.assigned);
+  if (currentFilter === 'saved') stories = stories.filter(s => s.saved);
+
+  // Search
+  const q = document.getElementById('search-input')?.value?.toLowerCase() || '';
+  if (q) stories = stories.filter(s => s.title.toLowerCase().includes(q) || s.snippet.toLowerCase().includes(q));
+
+  // Sort
+  const sort = document.getElementById('sort-select')?.value || 'time';
+  if (sort === 'time') stories.sort((a,b) => b.pubDate - a.pubDate);
+  if (sort === 'pub') stories.sort((a,b) => a.pubId.localeCompare(b.pubId));
+  if (sort === 'gap') stories.sort((a,b) => {
+    const order = { gap: 0, unknown: 1, covered: 2 };
+    return (order[a.gap]||1) - (order[b.gap]||1);
+  });
+
+  return stories;
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function showSkeleton() {
+  const feed = document.getElementById('feed');
+  feed.innerHTML = Array(8).fill(0).map(() => `
+    <div class="skeleton">
+      <div class="skel-line" style="width:${60+Math.random()*30}%;height:14px"></div>
+      <div class="skel-line" style="width:${40+Math.random()*40}%;height:11px;margin-top:8px"></div>
+      <div class="skel-line" style="width:30%;height:11px;margin-top:16px"></div>
+    </div>`).join('');
+}
+
+function renderFeed() {
+  const stories = getFilteredStories();
+  const feed = document.getElementById('feed');
+
+  if (pubStatus && Object.keys(pubStatus).length === 0) return; // Still initializing
+
+  if (!stories.length) {
+    feed.innerHTML = `<div class="empty-state">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6M9 16h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z"/></svg>
+      <div>No stories match this filter</div>
+      <div style="font-size:12px;margin-top:4px;color:var(--ink4)">Try adjusting the filters or refreshing</div>
+    </div>`;
+    return;
+  }
+
+  const sort = document.getElementById('sort-select')?.value || 'time';
+
+  if (sort === 'pub') {
+    // Group by publication
+    const byPub = {};
+    stories.forEach(s => { (byPub[s.pubId] = byPub[s.pubId]||[]).push(s); });
+    feed.innerHTML = Object.entries(byPub).map(([pubId, pubStories]) => {
+      const pub = PUBLICATIONS.find(p => p.id === pubId);
+      return `<div class="feed-section">
+        <div class="feed-section-head">
+          <span class="feed-section-title">${pub?.name || pubId}</span>
+          <div class="feed-section-rule"></div>
+        </div>
+        ${pubStories.map(renderCard).join('')}
+      </div>`;
+    }).join('');
+  } else {
+    // Flat list — with gap stories first highlighted
+    const gapStories = stories.filter(s => s.gap === 'gap');
+    const otherStories = stories.filter(s => s.gap !== 'gap');
+
+    let html = '';
+    if (currentFilter === 'all' && gapStories.length && sort !== 'time') {
+      html += `<div class="feed-section">
+        <div class="feed-section-head">
+          <span class="feed-section-title" style="color:var(--red)">Coverage gaps — stories to chase</span>
+          <div class="feed-section-rule"></div>
+        </div>
+        ${gapStories.map(renderCard).join('')}
+      </div>
+      <div class="feed-section">
+        <div class="feed-section-head">
+          <span class="feed-section-title">All other stories</span>
+          <div class="feed-section-rule"></div>
+        </div>
+        ${otherStories.map(renderCard).join('')}
+      </div>`;
+    } else {
+      html = stories.map(renderCard).join('');
+    }
+    feed.innerHTML = html;
+  }
+}
+
+function renderCard(story) {
+  const pub = PUBLICATIONS.find(p => p.id === story.pubId);
+  if (!pub) return '';
+
+  const timeAgo = getTimeAgo(story.pubDate);
+  const gapClass = story.gap === 'gap' ? 'gap-story' : story.gap === 'covered' ? 'covered-story' : '';
+  const assignedClass = story.assigned ? 'assigned' : '';
+
+  const gapText = story.gap === 'gap'
+    ? 'Coverage gap — not on Forbes India'
+    : story.gap === 'covered'
+    ? 'Covered by Forbes India'
+    : 'Coverage status unknown';
+
+  const gapIndicatorClass = story.gap === 'gap' ? 'gap' : story.gap === 'covered' ? 'covered' : 'unknown';
+
+  const badgeStyle = `background:${pub.color};color:${pub.id === 'ft' ? '#1a1a1a' : '#fff'};`;
+
+  const topicTag = story.topic ? `<span class="tag">${story.topic}</span>` : '';
+  const assignedTag = story.assigned
+    ? `<span class="assigned-tag">📌 ${story.assigned.reporter}</span>`
+    : '';
+
+  return `<div class="story-card ${gapClass} ${assignedClass}" id="card-${story.id}">
+    <div class="card-header">
+      <a href="${story.link}" target="_blank" rel="noopener" class="story-title" onclick="event.stopPropagation()">${story.title}</a>
+      <div class="card-meta">
+        <span class="pub-badge" style="${badgeStyle}">${pub.name}</span>
+        <span class="time-badge">${timeAgo}</span>
+      </div>
+    </div>
+    ${story.snippet ? `<div class="story-snippet">${story.snippet}</div>` : ''}
+    ${(story.topic || story.assigned) ? `<div class="story-tags">${topicTag}${assignedTag}</div>` : ''}
+    <div class="card-footer">
+      <div class="gap-indicator ${gapIndicatorClass}">
+        <div class="gap-dot"></div>
+        ${gapText}
+      </div>
+      <div class="card-actions">
+        <button class="action-btn" onclick="toggleSave('${story.id}')" title="${story.saved ? 'Unsave' : 'Save'}">${story.saved ? '🔖' : '☆'} ${story.saved ? 'Saved' : 'Save'}</button>
+        ${!story.assigned
+          ? `<button class="action-btn assign-btn" onclick="openAssign('${story.id}')">+ Assign</button>`
+          : `<button class="action-btn" onclick="clearAssign('${story.id}')">✓ Assigned</button>`
+        }
+        <a href="${story.link}" target="_blank" rel="noopener" class="action-btn" onclick="event.stopPropagation()">Read ↗</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function getTimeAgo(date) {
+  if (!date || isNaN(date)) return '';
+  const diff = Date.now() - date.getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs/24)}d ago`;
+}
+
+// ── STATS ──────────────────────────────────────────────────────────────────
+function updateStats() {
+  const total = allStories.length;
+  const gapCount = allStories.filter(s => s.gap === 'gap').length;
+  const assignedCount = Object.values(assignedStories).length;
+  const pubsLoaded = Object.values(pubStatus).filter(s => s === 'ok').length;
+
+  document.getElementById('stat-total').textContent = total || '—';
+  document.getElementById('stat-pubs').textContent = pubsLoaded;
+  document.getElementById('stat-gaps').textContent = gapCount || '—';
+  document.getElementById('stat-assigned').textContent = assignedCount;
+
+  const pill = document.getElementById('gap-pill');
+  if (gapCount > 0) {
+    pill.style.display = '';
+    pill.textContent = `⚡ ${gapCount} stories to chase`;
+  }
+}
+
+// ── ASSIGN / SAVE ──────────────────────────────────────────────────────────
+function openAssign(storyId) {
+  selectedStoryId = storyId;
+  const story = allStories.find(s => s.id === storyId);
+  if (!story) return;
+  document.getElementById('modal-story-title').textContent = story.title;
+  document.getElementById('modal-reporter').value = '';
+  document.getElementById('modal-note').value = '';
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('modal-reporter').focus(), 50);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  selectedStoryId = null;
+}
+
+function confirmAssign() {
+  if (!selectedStoryId) return;
+  const reporter = document.getElementById('modal-reporter').value.trim();
+  const note = document.getElementById('modal-note').value.trim();
+  if (!reporter) { showToast('Please enter a reporter name', 'error'); return; }
+
+  const story = allStories.find(s => s.id === selectedStoryId);
+  if (!story) return;
+
+  const key = `${story.pubId}_${story.title.slice(0,30)}`;
+  const assignment = { reporter, note, time: new Date().toISOString() };
+  assignedStories[key] = assignment;
+  story.assigned = assignment;
+
+  localStorage.setItem('fi_assigned', JSON.stringify(assignedStories));
+  closeModal();
+  renderFeed();
+  updateStats();
+  showToast(`Assigned to ${reporter}`);
+}
+
+function clearAssign(storyId) {
+  const story = allStories.find(s => s.id === storyId);
+  if (!story) return;
+  const key = `${story.pubId}_${story.title.slice(0,30)}`;
+  delete assignedStories[key];
+  story.assigned = null;
+  localStorage.setItem('fi_assigned', JSON.stringify(assignedStories));
+  renderFeed();
+  updateStats();
+}
+
+function toggleSave(storyId) {
+  const story = allStories.find(s => s.id === storyId);
+  if (!story) return;
+  const key = `${story.pubId}_${story.title.slice(0,30)}`;
+  story.saved = !story.saved;
+  if (story.saved) savedStories[key] = true;
+  else delete savedStories[key];
+  localStorage.setItem('fi_saved', JSON.stringify(savedStories));
+  renderFeed();
+}
+
+// ── VIEW ───────────────────────────────────────────────────────────────────
+function setView(v) {
+  currentView = v;
+  const feed = document.getElementById('feed');
+  feed.className = `feed ${v}-view`;
+  document.getElementById('view-list').classList.toggle('active', v === 'list');
+  document.getElementById('view-grid').classList.toggle('active', v === 'grid');
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type === 'error' ? ' error' : '');
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Close modal on overlay click
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// Keyboard: Escape closes modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
