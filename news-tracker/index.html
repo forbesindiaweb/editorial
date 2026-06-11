@@ -8,195 +8,195 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ink: #111110;
-  --ink2: #3d3d3a;
-  --ink3: #6b6b67;
-  --ink4: #9c9a92;
-  --rule: #e2dfd8;
-  --rule-light: #f0ede8;
-  --paper: #fafaf8;
-  --paper2: #f3f0eb;
-  --red: #cc2027;
-  --red-bg: #f9edec;
-  --green: #1a6b3a;
-  --green-bg: #e8f4ee;
-  --amber: #7a5100;
-  --amber-bg: #fef3db;
+:root{
+  --ink:#111110;--ink2:#3d3d3a;--ink3:#6b6b67;--ink4:#9c9a92;
+  --rule:#e2dfd8;--rule-light:#f0ede8;
+  --paper:#fafaf8;--paper2:#f3f0eb;
+  --red:#cc2027;--red-bg:#f9edec;
+  --green:#1a6b3a;--green-bg:#e8f4ee;
+  --amber:#7a5100;--amber-bg:#fef3db;
+  --topbar-h:52px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.5;min-height:100vh}
 
-/* TOP BAR */
-.topbar{background:var(--ink);color:#fff;padding:0 24px;height:48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.topbar-left{display:flex;align-items:center;gap:20px}
-.brand{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;letter-spacing:.02em;color:#fff}
-.brand span{color:#e05555}
-.topbar-date{font-size:12px;color:rgba(255,255,255,.45);border-left:1px solid rgba(255,255,255,.15);padding-left:20px}
-.topbar-right{display:flex;align-items:center;gap:12px}
-.refresh-btn{background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.85);padding:5px 14px;border-radius:4px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:all .15s}
-.refresh-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.5)}
-.refresh-btn:disabled{opacity:.5;cursor:not-allowed}
+/* ── TOP BAR ── */
+.topbar{background:#0a0a09;color:#fff;padding:0 20px;height:var(--topbar-h);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;border-bottom:1px solid #2a2a28}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.brand-logo{height:26px;width:auto;display:block;flex-shrink:0}
+.brand-divider{width:1px;height:20px;background:rgba(255,255,255,.2)}
+.brand-text{font-family:'Playfair Display',serif;font-size:14px;font-weight:400;color:rgba(255,255,255,.75);letter-spacing:.03em;white-space:nowrap}
+.topbar-date{font-size:11px;color:rgba(255,255,255,.35);border-left:1px solid rgba(255,255,255,.12);padding-left:14px;white-space:nowrap}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.refresh-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);padding:5px 13px;border-radius:4px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap}
+.refresh-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4)}
+.refresh-btn:disabled{opacity:.4;cursor:not-allowed}
 .refresh-btn.spinning svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.last-updated{font-size:11px;color:rgba(255,255,255,.3)}
+.last-updated{font-size:11px;color:rgba(255,255,255,.28)}
 
-/* SETUP BANNER */
-.setup-banner{background:#1a3a5c;color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+/* ── SETUP BANNER ── */
+.setup-banner{background:#103354;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #1a4a70}
 .setup-banner.hidden{display:none}
-.setup-text{font-size:13px;line-height:1.5}
-.setup-text strong{color:#7ec8e3}
-.setup-text code{background:rgba(255,255,255,.15);padding:1px 6px;border-radius:3px;font-size:12px;font-family:monospace}
+.setup-text{font-size:12.5px;line-height:1.5;flex:1;min-width:200px}
+.setup-text strong{color:#7ecde8}
+.setup-text code{background:rgba(255,255,255,.15);padding:1px 5px;border-radius:3px;font-size:11.5px;font-family:monospace}
 .setup-input-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.setup-url-input{padding:7px 12px;border:1px solid rgba(255,255,255,.3);border-radius:4px;font-size:13px;font-family:'Inter',sans-serif;background:rgba(255,255,255,.1);color:#fff;width:420px;max-width:100%;outline:none}
-.setup-url-input::placeholder{color:rgba(255,255,255,.4)}
-.setup-url-input:focus{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.15)}
-.setup-save-btn{background:#fff;color:#1a3a5c;border:none;padding:7px 16px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
-.setup-save-btn:hover{background:#e8f4fc}
-.setup-dismiss{background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:13px;padding:4px 8px;border-radius:3px}
-.setup-dismiss:hover{color:#fff;background:rgba(255,255,255,.1)}
+.setup-url-input{padding:6px 11px;border:1px solid rgba(255,255,255,.3);border-radius:4px;font-size:12.5px;font-family:'Inter',sans-serif;background:rgba(255,255,255,.08);color:#fff;width:400px;max-width:100%;outline:none}
+.setup-url-input::placeholder{color:rgba(255,255,255,.35)}
+.setup-url-input:focus{border-color:rgba(255,255,255,.65);background:rgba(255,255,255,.12)}
+.setup-save-btn{background:#fff;color:#103354;border:none;padding:6px 14px;border-radius:4px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+.setup-save-btn:hover{background:#def0fa}
+.setup-dismiss{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px}
+.setup-dismiss:hover{color:#fff}
 
-/* STATS BAR */
-.statsbar{background:var(--paper2);border-bottom:1px solid var(--rule);padding:10px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+/* ── STATS BAR ── */
+.statsbar{background:var(--paper2);border-bottom:1px solid var(--rule);padding:9px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .stat-item{display:flex;align-items:baseline;gap:5px}
-.stat-num{font-size:19px;font-weight:600;font-family:'Playfair Display',serif;color:var(--ink);line-height:1}
-.stat-label{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
-.stat-sep{width:1px;height:22px;background:var(--rule)}
-.gap-pill{background:var(--red-bg);color:var(--red);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid #f0c0c0;display:none}
+.stat-num{font-size:18px;font-weight:600;font-family:'Playfair Display',serif;color:var(--ink);line-height:1}
+.stat-label{font-size:10.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em}
+.stat-sep{width:1px;height:20px;background:var(--rule)}
+.gap-pill{background:var(--red-bg);color:var(--red);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid #f0b8b8;display:none}
+.shortlist-pill{background:#fffaeb;color:#7a5100;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid #e8d060;display:none;cursor:pointer}
+.shortlist-pill:hover{background:#fff4c2}
 
-/* TOPIC CLUSTERS */
-.clusters-bar{padding:9px 24px;border-bottom:1px solid var(--rule);background:var(--paper2);display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-.cluster-label{font-size:10px;color:var(--ink4);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-right:2px}
-.chip{padding:4px 11px;border-radius:20px;background:#fff;border:1px solid var(--rule);font-size:12px;color:var(--ink2);cursor:pointer;transition:all .1s;white-space:nowrap;user-select:none}
+/* ── TOPIC CLUSTERS ── */
+.clusters-bar{padding:8px 20px;border-bottom:1px solid var(--rule);background:var(--paper2);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.cluster-label{font-size:10px;color:var(--ink4);font-weight:600;text-transform:uppercase;letter-spacing:.09em;margin-right:2px;white-space:nowrap}
+.chip{padding:3px 10px;border-radius:20px;background:#fff;border:1px solid var(--rule);font-size:12px;color:var(--ink2);cursor:pointer;transition:all .1s;white-space:nowrap;user-select:none}
 .chip:hover{border-color:var(--ink3)}
 .chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-.chip .cn{font-size:10px;opacity:.55;margin-left:2px}
+.chip .cn{font-size:10px;opacity:.5;margin-left:2px}
 
-/* LAYOUT */
-.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 48px)}
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - var(--topbar-h))}
 
-/* SIDEBAR */
-.sidebar{border-right:1px solid var(--rule);background:var(--paper);padding:16px 0;position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto}
-.sb-section{padding:0 14px;margin-bottom:20px}
-.sb-head{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--ink4);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--rule-light)}
+/* ── SIDEBAR ── */
+.sidebar{border-right:1px solid var(--rule);background:var(--paper);padding:14px 0;position:sticky;top:var(--topbar-h);height:calc(100vh - var(--topbar-h));overflow-y:auto;flex-shrink:0}
+.sb-section{padding:0 12px;margin-bottom:18px}
+.sb-head{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--ink4);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--rule-light)}
 .filter-row{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:5px;cursor:pointer;font-size:13px;color:var(--ink2);transition:background .1s;margin-bottom:1px;user-select:none}
 .filter-row:hover{background:var(--paper2)}
 .filter-row.active{background:var(--ink);color:#fff}
-.filter-icon{font-size:12px;width:16px;text-align:center}
-
-.pub-row{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:5px;cursor:pointer;transition:background .1s;margin-bottom:1px;user-select:none}
+.filter-icon{font-size:12px;width:15px;text-align:center;flex-shrink:0}
+.pub-row{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border-radius:5px;cursor:pointer;transition:background .1s;margin-bottom:1px;user-select:none}
 .pub-row:hover{background:var(--paper2)}
 .pub-row.active{background:var(--ink)}
 .pub-row.active .pub-rname{color:#fff}
-.pub-row.active .pub-cnt{background:rgba(255,255,255,.15);color:rgba(255,255,255,.7)}
-.pub-left{display:flex;align-items:center;gap:8px}
-.pub-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dot-ok{background:#22c55e}
-.dot-loading{background:var(--ink4);animation:pulse 1.2s ease-in-out infinite}
-.dot-error{background:#ef4444}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.pub-row.active .pub-cnt{background:rgba(255,255,255,.15);color:rgba(255,255,255,.65)}
+.pub-row.all-pubs-row .pub-rname{font-weight:500}
+.pub-left{display:flex;align-items:center;gap:7px}
+.pub-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-ok{background:#22c55e}.dot-loading{background:var(--ink4);animation:pulse 1.2s ease-in-out infinite}.dot-error{background:#ef4444}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
 .pub-rname{font-size:12.5px;color:var(--ink2)}
-.pub-cnt{font-size:11px;font-weight:500;background:var(--paper2);color:var(--ink3);padding:1px 7px;border-radius:10px;min-width:22px;text-align:center}
+.pub-cnt{font-size:10.5px;font-weight:500;background:var(--paper2);color:var(--ink3);padding:1px 6px;border-radius:10px;min-width:20px;text-align:center}
 
-/* MAIN */
-.main{overflow-y:auto}
-.controls{padding:12px 24px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:10px;background:var(--paper);position:sticky;top:48px;z-index:50}
-.search-wrap{position:relative;flex:1}
-.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ink4);pointer-events:none}
-.search-input{width:100%;padding:7px 12px 7px 32px;border:1px solid var(--rule);border-radius:5px;font-family:'Inter',sans-serif;font-size:13px;background:var(--paper2);color:var(--ink);outline:none;transition:border-color .15s}
+/* ── MAIN ── */
+.main{min-width:0;display:flex;flex-direction:column}
+.controls{padding:10px 20px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:9px;background:var(--paper);position:sticky;top:var(--topbar-h);z-index:100}
+.search-wrap{position:relative;flex:1;min-width:0}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--ink4);pointer-events:none;flex-shrink:0}
+.search-input{width:100%;padding:7px 11px 7px 30px;border:1px solid var(--rule);border-radius:5px;font-family:'Inter',sans-serif;font-size:13px;background:var(--paper2);color:var(--ink);outline:none;transition:border-color .15s}
 .search-input:focus{border-color:var(--ink3);background:#fff}
 .search-input::placeholder{color:var(--ink4)}
-.view-toggle{display:flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
-.vbtn{background:none;border:none;padding:7px 10px;cursor:pointer;color:var(--ink4);transition:all .1s}
+.view-toggle{display:flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden;flex-shrink:0}
+.vbtn{background:none;border:none;padding:6px 9px;cursor:pointer;color:var(--ink4);transition:all .1s;display:flex;align-items:center}
 .vbtn.active{background:var(--ink);color:#fff}
 .vbtn:hover:not(.active){background:var(--paper2);color:var(--ink2)}
-.sort-sel{padding:7px 10px;border:1px solid var(--rule);border-radius:5px;font-family:'Inter',sans-serif;font-size:12px;background:var(--paper2);color:var(--ink2);outline:none;cursor:pointer}
+.sort-sel{padding:6px 9px;border:1px solid var(--rule);border-radius:5px;font-family:'Inter',sans-serif;font-size:12px;background:var(--paper2);color:var(--ink2);outline:none;cursor:pointer;flex-shrink:0}
 
-/* FEED */
-.feed{padding:16px 24px}
-.feed.grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:10px;align-items:start}
-.feed.grid-view .section-head{grid-column:1/-1}
+/* ── FEED ── */
+.feed{padding:14px 20px;flex:1}
+.feed.grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;align-items:start}
+.feed.grid-view .sec-divider{grid-column:1/-1}
 .feed.grid-view .story-card{margin-bottom:0}
+.sec-divider{margin-bottom:4px;padding-top:4px}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-top:4px}
+.sec-title{font-family:'Playfair Display',serif;font-size:11.5px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.sec-rule{flex:1;height:1px;background:var(--rule-light)}
 
-.section-divider{margin-bottom:6px;padding-top:6px}
-.section-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.section-title{font-family:'Playfair Display',serif;font-size:12px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;white-space:nowrap}
-.section-rule{flex:1;height:1px;background:var(--rule-light)}
+/* ── STORY CARD ── */
+.story-card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:13px 14px;margin-bottom:8px;transition:border-color .15s,box-shadow .15s;position:relative;overflow:hidden}
+.story-card:hover{border-color:#c2bfb8;box-shadow:0 1px 5px rgba(17,17,16,.06)}
+.story-card.gap-story{border-left:3px solid var(--red)}
+.story-card.covered-story{border-left:3px solid #22c55e}
+.story-card.shortlisted-card{background:#fffdf4;border-color:#e8d870}
 
-/* STORY CARD */
-.story-card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:13px 15px;margin-bottom:8px;transition:border-color .15s,box-shadow .15s;position:relative}
-.story-card:hover{border-color:#c0bdb5;box-shadow:0 1px 4px rgba(17,17,16,.07)}
-.story-card.gap-story{border-left:3px solid var(--red);padding-left:13px}
-.story-card.covered-story{border-left:3px solid #22c55e;padding-left:13px}
-.story-card.assigned-card{background:#fffdf5}
+/* Card with thumbnail */
+.card-inner{display:flex;gap:12px;align-items:flex-start}
+.card-thumb{width:80px;height:60px;object-fit:cover;border-radius:4px;flex-shrink:0;background:var(--paper2)}
+.card-body{flex:1;min-width:0}
 
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
-.story-title{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.4;text-decoration:none;display:block}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.story-title{font-size:14px;font-weight:500;color:var(--ink);line-height:1.4;text-decoration:none;display:block}
 .story-title:hover{color:var(--red)}
-.card-meta{display:flex;align-items:center;gap:7px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
-.pub-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.card-meta{display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.pub-badge{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
 .time-ago{font-size:11px;color:var(--ink4);white-space:nowrap}
+.snippet{font-size:12.5px;color:var(--ink3);line-height:1.5;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:10px;padding:2px 6px;border-radius:3px;background:var(--paper2);color:var(--ink3);border:1px solid var(--rule);text-transform:uppercase;letter-spacing:.04em;font-weight:500}
+.shortlisted-tag{background:#fffaeb;color:var(--amber);border-color:#dfc040}
 
-.snippet{font-size:12.5px;color:var(--ink3);line-height:1.5;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
-.card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.tag{font-size:10px;padding:2px 7px;border-radius:3px;background:var(--paper2);color:var(--ink3);border:1px solid var(--rule);text-transform:uppercase;letter-spacing:.04em;font-weight:500}
-.assigned-tag{background:var(--amber-bg);color:var(--amber);border-color:#e8c860}
-
-.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:8px;border-top:1px solid var(--rule-light)}
-.gap-ind{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500}
-.gap-ind.gap{color:var(--red)}
-.gap-ind.covered{color:var(--green)}
-.gap-ind.unknown{color:var(--ink4)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:8px;border-top:1px solid var(--rule-light);gap:8px}
+.gap-ind{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;flex-shrink:0}
+.gap-ind.gap{color:var(--red)}.gap-ind.covered{color:var(--green)}.gap-ind.unknown{color:var(--ink4)}
 .gap-ind .gd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.gap .gd{background:var(--red)}
-.covered .gd{background:#22c55e}
-.unknown .gd{background:var(--ink4)}
-
-.card-actions{display:flex;gap:5px}
-.act-btn{background:none;border:1px solid var(--rule);color:var(--ink3);padding:3px 9px;border-radius:4px;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .1s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+.gap .gd{background:var(--red)}.covered .gd{background:#22c55e}.unknown .gd{background:var(--ink4)}
+.card-actions{display:flex;gap:4px;flex-shrink:0}
+.act-btn{background:none;border:1px solid var(--rule);color:var(--ink3);padding:3px 8px;border-radius:4px;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .1s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
 .act-btn:hover{background:var(--paper2);border-color:var(--ink3);color:var(--ink)}
-.act-btn.red:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.act-btn.shortlist-active{background:#fffaeb;border-color:#d4b800;color:var(--amber)}
+.act-btn.shortlist-active:hover{background:#fff3b0;border-color:#b89800}
 
-/* SKELETON */
-.skeleton{background:var(--paper2);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin-bottom:8px}
+/* ── SHORTLIST PAGE ── */
+.shortlist-page{display:none;padding:20px}
+.shortlist-page.open{display:block}
+.shortlist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--rule)}
+.shortlist-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink)}
+.shortlist-subtitle{font-size:12px;color:var(--ink3);margin-top:3px}
+.close-shortlist{background:none;border:1px solid var(--rule);color:var(--ink3);padding:6px 14px;border-radius:5px;font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;transition:all .1s}
+.close-shortlist:hover{background:var(--paper2);border-color:var(--ink3);color:var(--ink)}
+.print-btn{background:var(--ink);color:#fff;border:none;padding:6px 14px;border-radius:5px;font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;margin-left:8px}
+.print-btn:hover{background:var(--red)}
+.shortlist-by-pub{margin-bottom:24px}
+.shortlist-pub-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.shortlist-pub-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.04em}
+.shortlist-pub-rule{flex:1;height:1px;background:var(--rule-light)}
+
+/* ── SKELETON ── */
+.skeleton{background:var(--paper2);border:1px solid var(--rule);border-radius:6px;padding:13px 14px;margin-bottom:8px}
 .sk{background:var(--rule);border-radius:3px;margin-bottom:6px;animation:shimmer 1.4s ease-in-out infinite}
-@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* EMPTY */
-.empty-state{padding:48px 24px;text-align:center;color:var(--ink3);font-size:14px}
-.empty-state p{margin-top:8px;font-size:12px;color:var(--ink4)}
+/* ── EMPTY ── */
+.empty-state{padding:48px 20px;text-align:center;color:var(--ink3)}
+.empty-state svg{margin-bottom:12px;opacity:.35;display:block;margin-left:auto;margin-right:auto}
+.empty-state strong{font-size:15px;display:block;margin-bottom:6px}
+.empty-state p{font-size:12px;color:var(--ink4)}
 
-/* MODAL */
-.overlay{display:none;position:fixed;inset:0;background:rgba(17,17,16,.5);z-index:200;align-items:center;justify-content:center}
-.overlay.open{display:flex}
-.modal{background:#fff;border-radius:8px;padding:24px;width:380px;max-width:95vw;box-shadow:0 8px 32px rgba(17,17,16,.2)}
-.modal-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin-bottom:4px}
-.modal-sub{font-size:13px;color:var(--ink3);margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--rule-light);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
-.modal-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:5px}
-.modal-inp{width:100%;padding:8px 12px;border:1px solid var(--rule);border-radius:5px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);background:var(--paper2);outline:none;margin-bottom:14px}
-.modal-inp:focus{border-color:var(--ink);background:#fff}
-.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
-.btn-ok{background:var(--ink);color:#fff;border:none;padding:8px 20px;border-radius:5px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s}
-.btn-ok:hover{background:var(--red)}
-.btn-no{background:none;color:var(--ink3);border:1px solid var(--rule);padding:8px 20px;border-radius:5px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer}
-.btn-no:hover{border-color:var(--ink3);color:var(--ink)}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:6px;font-size:13px;z-index:300;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;max-width:300px}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:9px 15px;border-radius:5px;font-size:13px;z-index:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;max-width:280px}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.err{background:var(--red)}
 
-/* RESPONSIVE */
+/* ── RESPONSIVE ── */
 @media(max-width:768px){
   .layout{grid-template-columns:1fr}
-  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--rule)}
-  .controls{flex-wrap:wrap;padding:10px 16px}
-  .search-wrap{order:-1;width:100%}
-  .feed{padding:12px 16px}
-  .statsbar,.clusters-bar{padding:8px 16px}
-  .topbar{padding:0 16px}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--rule);top:0}
+  .controls,.feed{padding:10px 14px}
+  .statsbar,.clusters-bar{padding:8px 14px}
+  .topbar{padding:0 14px}
+  .topbar-date{display:none}
   .setup-url-input{width:100%}
+}
+@media print{
+  .topbar,.sidebar,.controls,.statsbar,.clusters-bar,.setup-banner,.toast{display:none!important}
+  .layout{display:block}
+  .shortlist-page{display:block!important}
+  .main > .feed{display:none}
+  .shortlist-header .close-shortlist,.shortlist-header .print-btn{display:none}
 }
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -206,61 +206,68 @@ body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);fon
 </head>
 <body>
 
+<!-- TOP BAR -->
 <header class="topbar">
   <div class="topbar-left">
-    <div class="brand">Forbes<span>India</span> Morning Brief</div>
+    <img src="https://images.forbesindia.com/blog/wp-content/uploads/2025/10/forbeslogo-1-2025-10-8c82c269e82b0027d98922ffd47a4f98.png"
+         alt="Forbes India" class="brand-logo"
+         onerror="this.style.display='none';document.getElementById('brand-fallback').style.display='block'">
+    <div id="brand-fallback" style="display:none;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#fff">Forbes<span style="color:#e05555">India</span></div>
+    <div class="brand-divider"></div>
+    <div class="brand-text">Morning Brief</div>
     <div class="topbar-date" id="topbar-date"></div>
   </div>
   <div class="topbar-right">
     <div class="last-updated" id="last-updated"></div>
     <button class="refresh-btn" id="refresh-btn" onclick="refreshAll()">
       <svg id="refresh-icon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M1 4s1-2 5-2a6 6 0 010 12c-3 0-5-2-5-2"/>
-        <polyline points="1 4 1 1 4 1"/>
+        <path d="M1 4s1-2 5-2a6 6 0 010 12c-3 0-5-2-5-2"/><polyline points="1 4 1 1 4 1"/>
       </svg>
       Refresh
     </button>
   </div>
 </header>
 
-<!-- SETUP BANNER — shown until proxy URL is saved -->
+<!-- SETUP BANNER -->
 <div class="setup-banner" id="setup-banner">
   <div class="setup-text">
-    <strong>One-time setup:</strong> Paste your Google Apps Script Web App URL below.
-    Deploy <code>Code.gs</code> from the repo → <em>Deploy → New deployment → Web app → Anyone</em> → copy the URL.
+    <strong>One-time setup:</strong> Deploy <code>Code.gs</code> as a Google Apps Script Web App (Execute as: Me · Anyone can access) and paste the URL here.
   </div>
   <div class="setup-input-row">
     <input type="text" class="setup-url-input" id="proxy-url-input" placeholder="https://script.google.com/macros/s/…/exec">
-    <button class="setup-save-btn" onclick="saveProxyUrl()">Save &amp; load</button>
+    <button class="setup-save-btn" onclick="saveProxyUrl()">Save &amp; Load</button>
     <button class="setup-dismiss" onclick="dismissSetup()" title="Dismiss">✕</button>
   </div>
 </div>
 
+<!-- STATS BAR -->
 <div class="statsbar">
   <div class="stat-item"><span class="stat-num" id="stat-total">—</span><span class="stat-label">stories</span></div>
   <div class="stat-sep"></div>
   <div class="stat-item"><span class="stat-num" id="stat-pubs">—</span><span class="stat-label">sources live</span></div>
   <div class="stat-sep"></div>
-  <div class="stat-item"><span class="stat-num" id="stat-gaps">—</span><span class="stat-label">coverage gaps</span></div>
+  <div class="stat-item"><span class="stat-num" id="stat-gaps">—</span><span class="stat-label">gaps</span></div>
   <div class="stat-sep"></div>
-  <div class="stat-item"><span class="stat-num" id="stat-assigned">0</span><span class="stat-label">assigned</span></div>
+  <div class="stat-item"><span class="stat-num" id="stat-shortlisted">0</span><span class="stat-label">shortlisted</span></div>
   <div class="stat-sep"></div>
   <span class="gap-pill" id="gap-pill"></span>
+  <span class="shortlist-pill" id="shortlist-pill" onclick="openShortlist()"></span>
 </div>
 
+<!-- TOPIC CLUSTERS -->
 <div class="clusters-bar" id="clusters-bar">
   <span class="cluster-label">Topics:</span>
   <span class="chip active" data-topic="all" onclick="filterTopic('all')">All</span>
 </div>
 
 <div class="layout">
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sb-section">
       <div class="sb-head">View</div>
       <div class="filter-row active" id="fil-all" onclick="setFilter('all')"><span class="filter-icon">📋</span>All stories</div>
       <div class="filter-row" id="fil-gaps" onclick="setFilter('gaps')"><span class="filter-icon">🔴</span>Coverage gaps</div>
-      <div class="filter-row" id="fil-assigned" onclick="setFilter('assigned')"><span class="filter-icon">📌</span>Assigned</div>
-      <div class="filter-row" id="fil-saved" onclick="setFilter('saved')"><span class="filter-icon">🔖</span>Saved</div>
+      <div class="filter-row" id="fil-shortlisted" onclick="openShortlist()"><span class="filter-icon">⭐</span>Shortlisted</div>
     </div>
     <div class="sb-section">
       <div class="sb-head">Publications</div>
@@ -268,237 +275,209 @@ body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);fon
     </div>
   </aside>
 
+  <!-- MAIN -->
   <main class="main">
-    <div class="controls">
-      <div class="search-wrap">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
-        <input type="text" class="search-input" id="search-input" placeholder="Search stories…" oninput="renderFeed()">
+    <!-- Feed view -->
+    <div id="feed-view">
+      <div class="controls">
+        <div class="search-wrap">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+          <input type="text" class="search-input" id="search-input" placeholder="Search stories…" oninput="renderFeed()">
+        </div>
+        <div class="view-toggle">
+          <button class="vbtn active" id="vbtn-list" onclick="setView('list')" title="List">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="5" x2="14" y2="5"/><line x1="2" y1="9" x2="14" y2="9"/><line x1="2" y1="13" x2="14" y2="13"/></svg>
+          </button>
+          <button class="vbtn" id="vbtn-grid" onclick="setView('grid')" title="Grid">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+          </button>
+        </div>
+        <select class="sort-sel" id="sort-sel" onchange="renderFeed()">
+          <option value="time">Newest first</option>
+          <option value="pub">By publication</option>
+          <option value="gap">Gaps first</option>
+        </select>
       </div>
-      <div class="view-toggle">
-        <button class="vbtn active" id="vbtn-list" onclick="setView('list')" title="List">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="5" x2="14" y2="5"/><line x1="2" y1="9" x2="14" y2="9"/><line x1="2" y1="13" x2="14" y2="13"/></svg>
-        </button>
-        <button class="vbtn" id="vbtn-grid" onclick="setView('grid')" title="Grid">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
-        </button>
-      </div>
-      <select class="sort-sel" id="sort-sel" onchange="renderFeed()">
-        <option value="time">Newest first</option>
-        <option value="pub">By publication</option>
-        <option value="gap">Gaps first</option>
-      </select>
+      <div class="feed list-view" id="feed"></div>
     </div>
-    <div class="feed list-view" id="feed"></div>
-  </main>
-</div>
 
-<div class="overlay" id="modal">
-  <div class="modal">
-    <div class="modal-title">Assign story</div>
-    <div class="modal-sub" id="modal-story"></div>
-    <div class="modal-lbl">Reporter</div>
-    <input type="text" class="modal-inp" id="modal-reporter" placeholder="Reporter name…" list="dl-reporters">
-    <datalist id="dl-reporters"></datalist>
-    <div class="modal-lbl">Note (optional)</div>
-    <input type="text" class="modal-inp" id="modal-note" placeholder="Angle, deadline, context…">
-    <div class="modal-btns">
-      <button class="btn-no" onclick="closeModal()">Cancel</button>
-      <button class="btn-ok" onclick="confirmAssign()">Assign</button>
+    <!-- Shortlist page -->
+    <div class="shortlist-page" id="shortlist-page">
+      <div class="shortlist-header">
+        <div>
+          <div class="shortlist-title">Shortlisted stories</div>
+          <div class="shortlist-subtitle" id="shortlist-subtitle"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0">
+          <button class="close-shortlist" onclick="closeShortlist()">← Back to feed</button>
+          <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+        </div>
+      </div>
+      <div id="shortlist-feed"></div>
     </div>
-  </div>
+  </main>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 // ── CONFIG ─────────────────────────────────────────────────────────────────
-
-// After you deploy Code.gs, save the URL via the setup banner.
-// It gets stored in localStorage so you only do this once.
 const PROXY_URL_KEY = 'fi_morning_brief_proxy_url';
 
 const PUBLICATIONS = [
   { id:'et',    name:'Economic Times',    color:'#e63900' },
   { id:'bs',    name:'Business Standard', color:'#00529b' },
   { id:'mint',  name:'Mint',              color:'#eb6200' },
-  { id:'mc',    name:'Morning Context',   color:'#1a1a1a' },
+  { id:'mc',    name:'Morning Context',   color:'#222222' },
   { id:'ken',   name:'The Ken',           color:'#5b2d8e' },
   { id:'reu',   name:'Reuters',           color:'#ff8000' },
-  { id:'ft',    name:'Financial Times',   color:'#c8a96e', textDark:true },
-  { id:'bloom', name:'Bloomberg',         color:'#1c1c1c' },
+  { id:'ft',    name:'Financial Times',   color:'#b8860b', textDark:true },
+  { id:'bloom', name:'Bloomberg',         color:'#222222' },
   { id:'fe',    name:'Financial Express', color:'#c00000' },
   { id:'fi',    name:'Fortune India',     color:'#003087' },
   { id:'bl',    name:'Business Line',     color:'#004225' },
   { id:'bt',    name:'Business Today',    color:'#e20612' },
-];
-
-const REPORTERS = [
-  'Divya Shekhar','Naandika Tripathi','Pankti Mehta Kadakia',
-  'Jasodhara Banerjee','Salil Panchal','Neha Bothra',
-  'Mansvini Kaushik','Manu Balachandran','Varsha Meghani',
+  { id:'forbesindia', name:'Forbes India', color:'#cc2027' },
 ];
 
 const TOPICS = {
-  'Markets':    ['sensex','nifty','stock','share','equit','sebi','ipo','bse','nse','trading','index'],
+  'Markets':    ['sensex','nifty','stock','share','equit','sebi','ipo','bse','nse','trading','index','futures'],
   'Startups':   ['startup','unicorn','funding','venture','series a','series b','seed round','valuation','founder'],
   'Economy':    ['gdp','inflation','rbi','repo rate','rupee','fiscal','budget','imf','economy','growth','wpi','cpi'],
-  'Tech & AI':  ['artificial intelligence',' ai ','technology','digital','software','cloud','cyber','data center','chip'],
-  'Corporate':  ['quarterly','results','revenue','profit','merger','acquisition','ceo','board','chairman','listed'],
-  'Politics':   ['government','minister','policy','parliament','modi','bjp','congress','election','lok sabha'],
-  'Global':     ['us ','china','global','world','federal reserve','dollar','europe','yuan','geopolitical'],
-  'Real Estate':['real estate','property','realty','housing','mortgage','reit','infrastructure'],
-  'Energy':     ['oil','gas','energy','petroleum','solar','renewable','coal','power','electricity'],
+  'Tech & AI':  ['artificial intelligence',' ai ','technology','digital','software','cloud','cyber','data center','chip','semiconductor'],
+  'Corporate':  ['quarterly','results','revenue','profit','merger','acquisition','ceo','board','chairman','listed','earnings'],
+  'Politics':   ['government','minister','policy','parliament','modi','bjp','congress','election','lok sabha','rajya'],
+  'Global':     ['us ','china','global','world','federal reserve','dollar','europe','yuan','geopolitical','trump','tariff'],
+  'Real Estate':['real estate','property','realty','housing','mortgage','reit','infrastructure','construction'],
+  'Energy':     ['oil','gas','energy','petroleum','solar','renewable','coal','power','electricity','nuclear'],
+  'Finance':    ['bank','nbfc','insurance','mutual fund','sip','nps','credit','loan','interest rate','rupee'],
 };
 
 // ── STATE ──────────────────────────────────────────────────────────────────
-let allStories = [];
-let forbesKeywords = [];
+let allStories    = [];
+let forbesKeywords= [];
 let currentFilter = 'all';
 let currentTopic  = 'all';
 let currentView   = 'list';
 let activePub     = null;
-let assignMap     = JSON.parse(localStorage.getItem('fi_assigns') || '{}');
-let saveMap       = JSON.parse(localStorage.getItem('fi_saves')   || '{}');
-let pendingAssign = null;
+let shortlistMap  = JSON.parse(localStorage.getItem('fi_shortlist') || '{}');
+let pubStatusCache= {};
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  // Date
   document.getElementById('topbar-date').textContent =
-    new Date().toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
-  // Reporters datalist
-  const dl = document.getElementById('dl-reporters');
-  REPORTERS.forEach(r => { const o = document.createElement('option'); o.value = r; dl.appendChild(o); });
-
-  // Setup banner
+    new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   const saved = localStorage.getItem(PROXY_URL_KEY);
-  if (saved) {
-    hideBanner();
-    document.getElementById('proxy-url-input').value = saved;
-    refreshAll();
-  } else {
-    showSkeletons();
-    buildPubList();
-  }
+  if (saved) { hideBanner(); document.getElementById('proxy-url-input').value = saved; refreshAll(); }
+  else { showSkeletons(); buildPubList({}); }
 });
 
-// ── SETUP BANNER ───────────────────────────────────────────────────────────
-function saveProxyUrl() {
-  const v = document.getElementById('proxy-url-input').value.trim();
-  if (!v.startsWith('https://script.google.com')) {
-    showToast('That doesn\'t look like an Apps Script URL', 'err'); return;
-  }
-  localStorage.setItem(PROXY_URL_KEY, v);
-  hideBanner();
-  refreshAll();
+// ── SETUP ──────────────────────────────────────────────────────────────────
+function saveProxyUrl(){
+  const v=document.getElementById('proxy-url-input').value.trim();
+  if(!v.startsWith('https://script.google.com')){showToast('Paste a valid Apps Script URL','err');return;}
+  localStorage.setItem(PROXY_URL_KEY,v);hideBanner();refreshAll();
 }
-function hideBanner() { document.getElementById('setup-banner').classList.add('hidden'); }
-function dismissSetup() { hideBanner(); }
+function hideBanner(){document.getElementById('setup-banner').classList.add('hidden');}
+function dismissSetup(){hideBanner();}
 
 // ── REFRESH ────────────────────────────────────────────────────────────────
-async function refreshAll() {
-  const proxyUrl = localStorage.getItem(PROXY_URL_KEY);
-  if (!proxyUrl) {
-    showToast('Add your Apps Script URL first', 'err'); return;
-  }
-
-  const btn = document.getElementById('refresh-btn');
-  btn.disabled = true;
-  btn.classList.add('spinning');
-  document.getElementById('last-updated').textContent = 'Fetching…';
-
-  showSkeletons();
-  buildPubList({});
-
-  try {
-    const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(60000) });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+async function refreshAll(){
+  const proxyUrl=localStorage.getItem(PROXY_URL_KEY);
+  if(!proxyUrl){showToast('Add your Apps Script URL first','err');return;}
+  const btn=document.getElementById('refresh-btn');
+  btn.disabled=true;btn.classList.add('spinning');
+  document.getElementById('last-updated').textContent='Fetching…';
+  showSkeletons();buildPubList({});
+  try{
+    const res=await fetch(proxyUrl,{signal:AbortSignal.timeout(90000)});
+    if(!res.ok)throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
     processData(data);
-  } catch(e) {
-    showToast('Could not reach Apps Script proxy. Check the URL and redeploy.', 'err');
-    document.getElementById('feed').innerHTML = `<div class="empty-state">
+  }catch(e){
+    showToast('Could not reach Apps Script. Check URL or redeploy.','err');
+    document.getElementById('feed').innerHTML=`<div class="empty-state">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <strong>Could not load feeds</strong>
-      <p>Check your Apps Script URL in the setup banner above, or re-deploy the script.</p>
+      <p>Check your Apps Script URL in the setup banner, or re-deploy the script.</p>
     </div>`;
   }
-
-  btn.disabled = false;
-  btn.classList.remove('spinning');
+  btn.disabled=false;btn.classList.remove('spinning');
 }
 
-function processData(data) {
-  allStories = [];
-  const pubStatusMap = {};
+function processData(data){
+  allStories=[];
+  pubStatusCache={};
 
-  // Extract Forbes India keywords for gap detection
-  if (data.results.forbesindia?.ok) {
-    const fi = data.results.forbesindia.items || [];
-    forbesKeywords = fi.flatMap(item =>
-      (item.title || '').toLowerCase().split(/\s+/).filter(w => w.length > 4 && !/^(about|their|there|which|would|could|after|india|india's)$/.test(w))
+  // Forbes India keywords for gap detection
+  const fi=data.results['forbesindia'];
+  if(fi?.ok){
+    forbesKeywords=fi.items.flatMap(item=>
+      (item.title||'').toLowerCase().split(/\s+/)
+        .filter(w=>w.length>4&&!/^(about|their|there|which|would|could|after|india|india's|with|from|that|this|have|been|will|were|more|than|also|into|when|over|they|says|said|its)$/.test(w))
     );
   }
 
-  PUBLICATIONS.forEach(pub => {
-    const res = data.results[pub.id];
-    if (!res) { pubStatusMap[pub.id] = 'error'; return; }
-    pubStatusMap[pub.id] = res.ok ? 'ok' : 'error';
-
-    if (res.items) {
-      res.items.forEach((item, i) => {
-        const key = storyKey(pub.id, item.title);
+  PUBLICATIONS.forEach(pub=>{
+    const res=data.results[pub.id];
+    if(!res){pubStatusCache[pub.id]='error';return;}
+    pubStatusCache[pub.id]=res.ok?'ok':'error';
+    if(res.items){
+      res.items.forEach((item,i)=>{
+        const key=storyKey(pub.id,item.title);
         allStories.push({
-          id:      `${pub.id}_${i}`,
-          pubId:   pub.id,
-          title:   item.title || '',
-          link:    item.link  || '#',
-          snippet: item.snippet || '',
-          pubDate: item.pubDate ? new Date(item.pubDate) : new Date(),
-          topic:   detectTopic(item.title + ' ' + item.snippet),
-          gap:     checkGap(item.title + ' ' + item.snippet),
-          assigned: assignMap[key] || null,
-          saved:    saveMap[key]   || false,
+          id:`${pub.id}_${i}`,pubId:pub.id,
+          title:item.title||'',
+          link:item.link||'#',
+          snippet:item.snippet||'',
+          image:item.image||null,
+          pubDate:item.pubDate?new Date(item.pubDate):new Date(),
+          topic:detectTopic(item.title+' '+item.snippet),
+          gap:checkGap(item.title+' '+item.snippet),
+          shortlisted:shortlistMap[key]||false,
         });
       });
     }
   });
 
-  buildPubList(pubStatusMap);
+  buildPubList(pubStatusCache);
   buildClusters();
   renderFeed();
   updateStats();
-
-  const now = new Date();
-  document.getElementById('last-updated').textContent =
+  const now=new Date();
+  document.getElementById('last-updated').textContent=
     `Updated ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
 }
 
-// ── GAP DETECTION ──────────────────────────────────────────────────────────
-function checkGap(text) {
-  if (!forbesKeywords.length) return 'unknown';
-  const words = text.toLowerCase().split(/\s+/).filter(w => w.length > 4);
-  const hits = words.filter(w => forbesKeywords.includes(w));
-  return hits.length >= 2 ? 'covered' : 'gap';
+// ── GAP & TOPIC ────────────────────────────────────────────────────────────
+function checkGap(text){
+  if(!forbesKeywords.length)return 'unknown';
+  const words=text.toLowerCase().split(/\s+/).filter(w=>w.length>4);
+  return words.filter(w=>forbesKeywords.includes(w)).length>=2?'covered':'gap';
 }
-
-// ── TOPIC ──────────────────────────────────────────────────────────────────
-function detectTopic(text) {
-  const lower = text.toLowerCase();
-  for (const [t, kws] of Object.entries(TOPICS)) {
-    if (kws.some(k => lower.includes(k))) return t;
-  }
+function detectTopic(text){
+  const lower=text.toLowerCase();
+  for(const[t,kws]of Object.entries(TOPICS))if(kws.some(k=>lower.includes(k)))return t;
   return null;
 }
 
 // ── SIDEBAR ────────────────────────────────────────────────────────────────
-function buildPubList(statusMap) {
-  statusMap = statusMap || {};
-  document.getElementById('pub-list').innerHTML = PUBLICATIONS.map(pub => {
-    const st = statusMap[pub.id] || 'loading';
-    const cnt = allStories.filter(s => s.pubId === pub.id).length;
-    const dotCls = st === 'ok' ? 'dot-ok' : st === 'error' ? 'dot-error' : 'dot-loading';
+function buildPubList(statusMap){
+  statusMap=statusMap||{};
+  // All Publications row first
+  const allActive=activePub===null;
+  const allCount=allStories.length;
+  let html=`<div class="pub-row all-pubs-row ${allActive?'active':''}" onclick="togglePub(null)">
+    <div class="pub-left">
+      <div class="pub-dot" style="background:${allActive?'rgba(255,255,255,.5)':'var(--ink4)'}"></div>
+      <span class="pub-rname">All Publications</span>
+    </div>
+    ${allCount?`<span class="pub-cnt">${allCount}</span>`:''}
+  </div>`;
+  html+=PUBLICATIONS.map(pub=>{
+    const st=statusMap[pub.id]||'loading';
+    const cnt=allStories.filter(s=>s.pubId===pub.id).length;
+    const dotCls=st==='ok'?'dot-ok':st==='error'?'dot-error':'dot-loading';
     return `<div class="pub-row ${activePub===pub.id?'active':''}" onclick="togglePub('${pub.id}')">
       <div class="pub-left">
         <div class="pub-dot ${dotCls}"></div>
@@ -507,232 +486,274 @@ function buildPubList(statusMap) {
       ${st!=='loading'?`<span class="pub-cnt">${cnt}</span>`:`<span class="pub-cnt" style="opacity:.3">…</span>`}
     </div>`;
   }).join('');
+  document.getElementById('pub-list').innerHTML=html;
 }
 
-function togglePub(id) {
-  activePub = activePub === id ? null : id;
-  buildPubList(Object.fromEntries(PUBLICATIONS.map(p => [p.id, 'ok'])));
+function togglePub(id){
+  activePub=id;
+  buildPubList(pubStatusCache);
   renderFeed();
 }
 
 // ── CLUSTERS ───────────────────────────────────────────────────────────────
-function buildClusters() {
-  const counts = {};
-  allStories.forEach(s => { if (s.topic) counts[s.topic] = (counts[s.topic]||0)+1; });
-  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-  document.getElementById('clusters-bar').innerHTML =
+function buildClusters(){
+  const counts={};
+  allStories.forEach(s=>{if(s.topic)counts[s.topic]=(counts[s.topic]||0)+1;});
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('clusters-bar').innerHTML=
     `<span class="cluster-label">Topics:</span>
-     <span class="chip active" data-topic="all" onclick="filterTopic('all')">All</span>` +
-    sorted.map(([t,n]) =>
-      `<span class="chip" data-topic="${t}" onclick="filterTopic('${t}')">${t} <span class="cn">${n}</span></span>`
-    ).join('');
+     <span class="chip active" data-topic="all" onclick="filterTopic('all')">All</span>`+
+    sorted.map(([t,n])=>`<span class="chip" data-topic="${t}" onclick="filterTopic('${t}')">${t}<span class="cn">${n}</span></span>`).join('');
 }
-
-function filterTopic(t) {
-  currentTopic = t;
-  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.topic===t));
+function filterTopic(t){
+  currentTopic=t;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.topic===t));
   renderFeed();
 }
 
 // ── FILTER / SORT ──────────────────────────────────────────────────────────
-function setFilter(f) {
-  currentFilter = f;
-  ['all','gaps','assigned','saved'].forEach(x => document.getElementById('fil-'+x).classList.toggle('active', x===f));
+function setFilter(f){
+  currentFilter=f;
+  ['all','gaps'].forEach(x=>document.getElementById('fil-'+x)?.classList.toggle('active',x===f));
+  document.getElementById('fil-shortlisted')?.classList.remove('active');
   renderFeed();
 }
 
-function getFiltered() {
-  let s = [...allStories];
-  if (activePub)           s = s.filter(x => x.pubId === activePub);
-  if (currentTopic!=='all') s = s.filter(x => x.topic === currentTopic);
-  if (currentFilter==='gaps')     s = s.filter(x => x.gap==='gap');
-  if (currentFilter==='assigned') s = s.filter(x => x.assigned);
-  if (currentFilter==='saved')    s = s.filter(x => x.saved);
-  const q = (document.getElementById('search-input')?.value||'').toLowerCase();
-  if (q) s = s.filter(x => x.title.toLowerCase().includes(q) || x.snippet.toLowerCase().includes(q));
-  const sort = document.getElementById('sort-sel')?.value || 'time';
-  if (sort==='time') s.sort((a,b)=>b.pubDate-a.pubDate);
-  if (sort==='pub')  s.sort((a,b)=>a.pubId.localeCompare(b.pubId));
-  if (sort==='gap')  s.sort((a,b)=>{const o={gap:0,unknown:1,covered:2};return (o[a.gap]||1)-(o[b.gap]||1);});
+function getFiltered(){
+  let s=[...allStories];
+  if(activePub!==null)s=s.filter(x=>x.pubId===activePub);
+  if(currentTopic!=='all')s=s.filter(x=>x.topic===currentTopic);
+  if(currentFilter==='gaps')s=s.filter(x=>x.gap==='gap');
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  if(q)s=s.filter(x=>x.title.toLowerCase().includes(q)||x.snippet.toLowerCase().includes(q));
+  const sort=document.getElementById('sort-sel')?.value||'time';
+  if(sort==='time')s.sort((a,b)=>b.pubDate-a.pubDate);
+  if(sort==='pub')s.sort((a,b)=>a.pubId.localeCompare(b.pubId));
+  if(sort==='gap')s.sort((a,b)=>{const o={gap:0,unknown:1,covered:2};return(o[a.gap]||1)-(o[b.gap]||1);});
   return s;
 }
 
-// ── RENDER ─────────────────────────────────────────────────────────────────
-function showSkeletons() {
-  document.getElementById('feed').innerHTML = Array(7).fill(0).map(()=>`
+// ── RENDER FEED ────────────────────────────────────────────────────────────
+function showSkeletons(){
+  document.getElementById('feed').innerHTML=Array(6).fill(0).map(()=>`
     <div class="skeleton">
       <div class="sk" style="width:${55+Math.random()*35}%;height:13px"></div>
       <div class="sk" style="width:${35+Math.random()*40}%;height:11px;margin-top:7px"></div>
-      <div class="sk" style="width:28%;height:11px;margin-top:14px"></div>
+      <div class="sk" style="width:28%;height:10px;margin-top:14px"></div>
     </div>`).join('');
 }
 
-function renderFeed() {
-  const stories = getFiltered();
-  const feed = document.getElementById('feed');
-
-  if (!stories.length) {
-    feed.innerHTML = `<div class="empty-state">
+function renderFeed(){
+  const stories=getFiltered();
+  const feed=document.getElementById('feed');
+  if(!stories.length){
+    feed.innerHTML=`<div class="empty-state">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6M9 16h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z"/></svg>
       <strong>No stories match</strong>
-      <p>Try a different filter or refresh the feeds</p>
-    </div>`;
-    return;
+      <p>Try a different filter or refresh</p>
+    </div>`;return;
   }
-
-  const sort = document.getElementById('sort-sel')?.value || 'time';
-
-  if (sort === 'pub') {
-    const grouped = {};
-    stories.forEach(s => { (grouped[s.pubId]=grouped[s.pubId]||[]).push(s); });
-    feed.innerHTML = Object.entries(grouped).map(([pid, ps]) => {
-      const pub = PUBLICATIONS.find(p=>p.id===pid);
-      return `<div class="section-divider">
-        <div class="section-head"><span class="section-title">${pub?.name||pid}</span><div class="section-rule"></div></div>
+  const sort=document.getElementById('sort-sel')?.value||'time';
+  if(sort==='pub'){
+    const grouped={};
+    stories.forEach(s=>{(grouped[s.pubId]=grouped[s.pubId]||[]).push(s);});
+    feed.innerHTML=Object.entries(grouped).map(([pid,ps])=>{
+      const pub=PUBLICATIONS.find(p=>p.id===pid);
+      return `<div class="sec-divider">
+        <div class="sec-head"><span class="sec-title">${pub?.name||pid}</span><div class="sec-rule"></div></div>
         ${ps.map(renderCard).join('')}
       </div>`;
-    }).join('');
-    return;
+    }).join('');return;
   }
-
-  if (sort === 'gap' && currentFilter === 'all') {
-    const gaps = stories.filter(s=>s.gap==='gap');
-    const rest = stories.filter(s=>s.gap!=='gap');
-    feed.innerHTML = (gaps.length ? `
-      <div class="section-divider">
-        <div class="section-head"><span class="section-title" style="color:var(--red)">Coverage gaps — stories to chase</span><div class="section-rule"></div></div>
+  if(sort==='gap'&&currentFilter==='all'){
+    const gaps=stories.filter(s=>s.gap==='gap');
+    const rest=stories.filter(s=>s.gap!=='gap');
+    feed.innerHTML=(gaps.length?`
+      <div class="sec-divider">
+        <div class="sec-head"><span class="sec-title" style="color:var(--red)">Coverage gaps — stories to chase</span><div class="sec-rule"></div></div>
         ${gaps.map(renderCard).join('')}
       </div>
-      <div class="section-divider">
-        <div class="section-head"><span class="section-title">Already covered / rest</span><div class="section-rule"></div></div>
+      <div class="sec-divider">
+        <div class="sec-head"><span class="sec-title">Covered / rest</span><div class="sec-rule"></div></div>
         ${rest.map(renderCard).join('')}
-      </div>` : stories.map(renderCard).join(''));
-    return;
+      </div>`:stories.map(renderCard).join(''));return;
   }
-
-  feed.innerHTML = stories.map(renderCard).join('');
+  feed.innerHTML=stories.map(renderCard).join('');
 }
 
-function renderCard(s) {
-  const pub = PUBLICATIONS.find(p=>p.id===s.pubId);
-  if (!pub) return '';
-  const ago = timeAgo(s.pubDate);
-  const gapCls = s.gap==='gap'?'gap-story':s.gap==='covered'?'covered-story':'';
-  const gapLabel = s.gap==='gap'
-    ? '<div class="gap-ind gap"><div class="gd"></div>Not on Forbes India</div>'
-    : s.gap==='covered'
-    ? '<div class="gap-ind covered"><div class="gd"></div>Covered by Forbes India</div>'
-    : '<div class="gap-ind unknown"><div class="gd"></div>Coverage unknown</div>';
-  const badgeStyle = `background:${pub.color};color:${pub.textDark?'#2a1a00':'#fff'};`;
-  const topicTag = s.topic ? `<span class="tag">${s.topic}</span>` : '';
-  const assignedTag = s.assigned ? `<span class="tag assigned-tag">📌 ${s.assigned.reporter}</span>` : '';
-  const tags = (topicTag||assignedTag) ? `<div class="card-tags">${topicTag}${assignedTag}</div>` : '';
-  return `<div class="story-card ${gapCls} ${s.assigned?'assigned-card':''}">
-    <div class="card-top">
-      <a href="${s.link}" target="_blank" rel="noopener" class="story-title">${s.title}</a>
-      <div class="card-meta">
-        <span class="pub-badge" style="${badgeStyle}">${pub.name}</span>
-        <span class="time-ago">${ago}</span>
-      </div>
-    </div>
-    ${s.snippet?`<div class="snippet">${s.snippet}</div>`:''}
-    ${tags}
-    <div class="card-footer">
-      ${gapLabel}
-      <div class="card-actions">
-        <button class="act-btn" onclick="toggleSave('${s.id}')">${s.saved?'🔖 Saved':'☆ Save'}</button>
-        ${s.assigned
-          ?`<button class="act-btn" onclick="clearAssign('${s.id}')">✓ ${s.assigned.reporter}</button>`
-          :`<button class="act-btn red" onclick="openAssign('${s.id}')">+ Assign</button>`}
-        <a href="${s.link}" target="_blank" rel="noopener" class="act-btn">Open ↗</a>
+function renderCard(s,compact){
+  const pub=PUBLICATIONS.find(p=>p.id===s.pubId);if(!pub)return'';
+  const ago=timeAgo(s.pubDate);
+  const gapCls=s.gap==='gap'?'gap-story':s.gap==='covered'?'covered-story':'';
+  const slCls=s.shortlisted?'shortlisted-card':'';
+  const gapLabel=s.gap==='gap'
+    ?'<div class="gap-ind gap"><div class="gd"></div>Not on Forbes India</div>'
+    :s.gap==='covered'
+    ?'<div class="gap-ind covered"><div class="gd"></div>Covered</div>'
+    :'<div class="gap-ind unknown"><div class="gd"></div>Unknown</div>';
+  const badgeStyle=`background:${pub.color};color:${pub.textDark?'#2a1800':'#fff'};`;
+  const topicTag=s.topic?`<span class="tag">${s.topic}</span>`:'';
+  const slTag=s.shortlisted?`<span class="tag shortlisted-tag">⭐ Shortlisted</span>`:'';
+  const tags=(topicTag||slTag)?`<div class="card-tags">${topicTag}${slTag}</div>`:'';
+  const thumb=s.image?`<img class="card-thumb" src="${s.image}" alt="" loading="lazy" onerror="this.style.display='none'">`:'';
+  const slBtnCls=s.shortlisted?'act-btn shortlist-active':'act-btn';
+  const slBtnTxt=s.shortlisted?'⭐ Shortlisted':'☆ Shortlist';
+  return `<div class="story-card ${gapCls} ${slCls}" id="card-${s.id}">
+    <div class="card-inner">
+      ${thumb}
+      <div class="card-body">
+        <div class="card-top">
+          <a href="${s.link}" target="_blank" rel="noopener" class="story-title">${s.title}</a>
+          <div class="card-meta">
+            <span class="pub-badge" style="${badgeStyle}">${pub.name}</span>
+            <span class="time-ago">${ago}</span>
+          </div>
+        </div>
+        ${s.snippet?`<div class="snippet">${s.snippet}</div>`:''}
+        ${tags}
+        <div class="card-footer">
+          ${gapLabel}
+          <div class="card-actions">
+            <button class="${slBtnCls}" onclick="toggleShortlist('${s.id}')">${slBtnTxt}</button>
+            <a href="${s.link}" target="_blank" rel="noopener" class="act-btn">Open ↗</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>`;
 }
 
-function timeAgo(d) {
-  if (!d||isNaN(d)) return '';
-  const m = Math.floor((Date.now()-d)/60000);
-  if (m<1) return 'Just now';
-  if (m<60) return `${m}m ago`;
-  const h = Math.floor(m/60);
-  if (h<24) return `${h}h ago`;
-  return `${Math.floor(h/24)}d ago`;
+// ── SHORTLIST ──────────────────────────────────────────────────────────────
+function storyKey(pubId,title){return `${pubId}__${(title||'').slice(0,50)}`;}
+
+function toggleShortlist(id){
+  const s=allStories.find(x=>x.id===id);if(!s)return;
+  const key=storyKey(s.pubId,s.title);
+  s.shortlisted=!s.shortlisted;
+  if(s.shortlisted)shortlistMap[key]=true;else delete shortlistMap[key];
+  localStorage.setItem('fi_shortlist',JSON.stringify(shortlistMap));
+  renderFeed();updateStats();
+  showToast(s.shortlisted?'Added to shortlist':'Removed from shortlist');
+}
+
+function openShortlist(){
+  document.getElementById('feed-view').style.display='none';
+  document.getElementById('shortlist-page').classList.add('open');
+  document.getElementById('fil-shortlisted').classList.add('active');
+  ['all','gaps'].forEach(x=>document.getElementById('fil-'+x)?.classList.remove('active'));
+  renderShortlistPage();
+}
+
+function closeShortlist(){
+  document.getElementById('feed-view').style.display='';
+  document.getElementById('shortlist-page').classList.remove('open');
+  document.getElementById('fil-shortlisted').classList.remove('active');
+  document.getElementById('fil-all').classList.add('active');
+  currentFilter='all';
+}
+
+function renderShortlistPage(){
+  const items=allStories.filter(s=>s.shortlisted);
+  const sub=document.getElementById('shortlist-subtitle');
+  sub.textContent=`${items.length} ${items.length===1?'story':'stories'} shortlisted for today's meeting · ${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})}`;
+
+  const sfeed=document.getElementById('shortlist-feed');
+  if(!items.length){
+    sfeed.innerHTML=`<div class="empty-state">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <strong>No shortlisted stories</strong>
+      <p>Click ☆ Shortlist on any story in the feed to add it here</p>
+    </div>`;return;
+  }
+
+  // Group by publication, sorted by pub order then time
+  const grouped={};
+  items.forEach(s=>{(grouped[s.pubId]=grouped[s.pubId]||[]).push(s);});
+  // Sort each pub's stories newest first
+  Object.values(grouped).forEach(arr=>arr.sort((a,b)=>b.pubDate-a.pubDate));
+  // Order pubs by PUBLICATIONS array order
+  const orderedPubs=PUBLICATIONS.filter(p=>grouped[p.id]);
+
+  sfeed.innerHTML=orderedPubs.map(pub=>{
+    const pubs=grouped[pub.id];
+    const badgeStyle=`background:${pub.color};color:${pub.textDark?'#2a1800':'#fff'};`;
+    return `<div class="shortlist-by-pub">
+      <div class="shortlist-pub-head">
+        <span class="shortlist-pub-badge" style="${badgeStyle}">${pub.name}</span>
+        <div class="shortlist-pub-rule"></div>
+        <span style="font-size:11px;color:var(--ink4);white-space:nowrap">${pubs.length} ${pubs.length===1?'story':'stories'}</span>
+      </div>
+      ${pubs.map(s=>{
+        const thumb=s.image?`<img class="card-thumb" src="${s.image}" alt="" loading="lazy" onerror="this.style.display='none'">`:'';
+        const gapCls=s.gap==='gap'?'gap-story':s.gap==='covered'?'covered-story':'';
+        const gapLabel=s.gap==='gap'
+          ?'<div class="gap-ind gap"><div class="gd"></div>Not on Forbes India</div>'
+          :s.gap==='covered'?'<div class="gap-ind covered"><div class="gd"></div>Covered</div>'
+          :'<div class="gap-ind unknown"><div class="gd"></div>Unknown</div>';
+        return `<div class="story-card ${gapCls} shortlisted-card">
+          <div class="card-inner">
+            ${thumb}
+            <div class="card-body">
+              <div class="card-top">
+                <a href="${s.link}" target="_blank" rel="noopener" class="story-title">${s.title}</a>
+                <div class="card-meta">
+                  <span class="time-ago">${timeAgo(s.pubDate)}</span>
+                </div>
+              </div>
+              ${s.snippet?`<div class="snippet">${s.snippet}</div>`:''}
+              <div class="card-footer">
+                ${gapLabel}
+                <div class="card-actions">
+                  <button class="act-btn shortlist-active" onclick="toggleShortlist('${s.id}');renderShortlistPage();updateStats()">✕ Remove</button>
+                  <a href="${s.link}" target="_blank" rel="noopener" class="act-btn">Open ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
 }
 
 // ── STATS ──────────────────────────────────────────────────────────────────
-function updateStats() {
-  const total  = allStories.length;
-  const gaps   = allStories.filter(s=>s.gap==='gap').length;
-  const pubs   = new Set(allStories.map(s=>s.pubId)).size;
-  const asgnd  = allStories.filter(s=>s.assigned).length;
-  document.getElementById('stat-total').textContent    = total||'—';
-  document.getElementById('stat-pubs').textContent     = pubs||'—';
-  document.getElementById('stat-gaps').textContent     = gaps||'—';
-  document.getElementById('stat-assigned').textContent = asgnd;
-  const pill = document.getElementById('gap-pill');
-  if (gaps>0) { pill.style.display=''; pill.textContent=`⚡ ${gaps} to chase`; }
+function updateStats(){
+  const total=allStories.length;
+  const gaps=allStories.filter(s=>s.gap==='gap').length;
+  const pubs=new Set(allStories.map(s=>s.pubId)).size;
+  const sl=allStories.filter(s=>s.shortlisted).length;
+  document.getElementById('stat-total').textContent=total||'—';
+  document.getElementById('stat-pubs').textContent=pubs||'—';
+  document.getElementById('stat-gaps').textContent=gaps||'—';
+  document.getElementById('stat-shortlisted').textContent=sl;
+  const gpill=document.getElementById('gap-pill');
+  if(gaps>0){gpill.style.display='';gpill.textContent=`⚡ ${gaps} to chase`;}
+  const spill=document.getElementById('shortlist-pill');
+  if(sl>0){spill.style.display='';spill.textContent=`⭐ ${sl} shortlisted — view`;}else{spill.style.display='none';}
 }
 
-// ── ASSIGN ─────────────────────────────────────────────────────────────────
-function storyKey(pubId, title) { return `${pubId}__${(title||'').slice(0,40)}`; }
-
-function openAssign(id) {
-  pendingAssign = id;
-  const s = allStories.find(x=>x.id===id); if (!s) return;
-  document.getElementById('modal-story').textContent = s.title;
-  document.getElementById('modal-reporter').value = '';
-  document.getElementById('modal-note').value = '';
-  document.getElementById('modal').classList.add('open');
-  setTimeout(()=>document.getElementById('modal-reporter').focus(),50);
-}
-function closeModal() { document.getElementById('modal').classList.remove('open'); pendingAssign=null; }
-
-function confirmAssign() {
-  const reporter = document.getElementById('modal-reporter').value.trim();
-  if (!reporter) { showToast('Enter a reporter name','err'); return; }
-  const s = allStories.find(x=>x.id===pendingAssign); if (!s) return;
-  const key = storyKey(s.pubId, s.title);
-  const asgn = { reporter, note: document.getElementById('modal-note').value.trim(), at: new Date().toISOString() };
-  assignMap[key] = asgn; s.assigned = asgn;
-  localStorage.setItem('fi_assigns', JSON.stringify(assignMap));
-  closeModal(); renderFeed(); updateStats();
-  showToast(`Assigned to ${reporter}`);
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function timeAgo(d){
+  if(!d||isNaN(d))return'';
+  const m=Math.floor((Date.now()-d)/60000);
+  if(m<1)return'Just now';if(m<60)return`${m}m ago`;
+  const h=Math.floor(m/60);
+  if(h<24)return`${h}h ago`;
+  return`${Math.floor(h/24)}d ago`;
 }
 
-function clearAssign(id) {
-  const s = allStories.find(x=>x.id===id); if (!s) return;
-  delete assignMap[storyKey(s.pubId,s.title)]; s.assigned=null;
-  localStorage.setItem('fi_assigns', JSON.stringify(assignMap));
-  renderFeed(); updateStats();
-}
-
-function toggleSave(id) {
-  const s = allStories.find(x=>x.id===id); if (!s) return;
-  const key = storyKey(s.pubId,s.title);
-  s.saved = !s.saved;
-  if (s.saved) saveMap[key]=true; else delete saveMap[key];
-  localStorage.setItem('fi_saves', JSON.stringify(saveMap));
-  renderFeed();
-}
-
-// ── VIEW ───────────────────────────────────────────────────────────────────
-function setView(v) {
+function setView(v){
   currentView=v;
   document.getElementById('feed').className=`feed ${v}-view`;
   document.getElementById('vbtn-list').classList.toggle('active',v==='list');
   document.getElementById('vbtn-grid').classList.toggle('active',v==='grid');
 }
 
-// ── TOAST ──────────────────────────────────────────────────────────────────
-function showToast(msg,type) {
+function showToast(msg,type){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast show'+(type==='err'?' err':'');
-  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2800);
+  t.textContent=msg;t.className='toast show'+(type==='err'?' err':'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
 }
-
-document.getElementById('modal').addEventListener('click',e=>{ if(e.target===document.getElementById('modal')) closeModal(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
