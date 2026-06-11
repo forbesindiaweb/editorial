@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Economic Calendar — Forbes India</title>
+<style>
+  /* ── Tokens ─────────────────────────────────────────────── */
+  :root {
+    --navy:       #0a1628;
+    --navy-mid:   #122040;
+    --red:        #c8102e;
+    --red-light:  #e8192c;
+    --gold:       #c9a84c;
+    --silver:     #8a8f9a;
+    --bg:         #f5f5f0;
+    --surface:    #ffffff;
+    --border:     #e0ddd6;
+    --text:       #1a1a1a;
+    --text-muted: #666666;
+    --high:       #c8102e;
+    --medium:     #e07a10;
+    --low:        #2a7a3b;
+    --font-display: 'Georgia', 'Times New Roman', serif;
+    --font-body:    'Inter', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  .site-header {
+    background: var(--navy);
+    border-bottom: 3px solid var(--red);
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .logo img { height: 28px; display: block; filter: brightness(0) invert(1); }
+  .header-label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-style: italic;
+  }
+  .header-date {
+    font-size: 11px;
+    color: var(--silver);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Page title bar ─────────────────────────────────────── */
+  .title-bar {
+    background: var(--navy-mid);
+    padding: 20px 24px 18px;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+  .title-bar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .page-title span { color: var(--gold); }
+  .page-subtitle {
+    font-size: 12px;
+    color: var(--silver);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding-bottom: 4px;
+  }
+
+  /* ── Controls bar ───────────────────────────────────────── */
+  .controls-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .controls-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .control-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--silver);
+    white-space: nowrap;
+  }
+  input[type="date"], select {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--bg);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input[type="date"]:focus, select:focus {
+    border-color: var(--navy);
+  }
+  .btn {
+    padding: 7px 18px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--red);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--red-light); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--bg); }
+  .btn-ghost.active {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .separator { width: 1px; height: 28px; background: var(--border); margin: 0 4px; }
+
+  /* Quick date buttons */
+  .quick-dates { display: flex; gap: 4px; }
+  .qbtn {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .qbtn:hover, .qbtn.active {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+
+  /* Search */
+  .search-wrap { position: relative; flex: 1; min-width: 160px; max-width: 260px; }
+  .search-wrap input[type="text"] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px 6px 30px;
+    font-size: 13px;
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-wrap input[type="text"]:focus { border-color: var(--navy); }
+  .search-icon {
+    position: absolute;
+    left: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--silver);
+    font-size: 13px;
+    pointer-events: none;
+  }
+
+  /* ── Stats row ──────────────────────────────────────────── */
+  .stats-row {
+    max-width: 1200px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .stat-chip .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .dot-high   { background: var(--high); }
+  .dot-medium { background: var(--medium); }
+  .dot-low    { background: var(--low); }
+  .dot-all    { background: var(--navy); }
+  .stat-chip strong { color: var(--text); }
+
+  /* ── Table container ────────────────────────────────────── */
+  .table-wrap {
+    max-width: 1200px;
+    margin: 16px auto 40px;
+    padding: 0 24px;
+  }
+  .table-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  /* ── Loading / error / empty states ────────────────────── */
+  .state-box {
+    padding: 60px 24px;
+    text-align: center;
+    color: var(--text-muted);
+  }
+  .state-box .icon { font-size: 36px; margin-bottom: 12px; }
+  .state-box h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .state-box p  { font-size: 13px; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Calendar table ─────────────────────────────────────── */
+  table.cal {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table.cal thead tr {
+    background: var(--navy);
+    color: #fff;
+  }
+  table.cal thead th {
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  table.cal thead th:hover { background: var(--navy-mid); }
+  table.cal thead th .sort-arrow { margin-left: 4px; opacity: 0.5; font-size: 10px; }
+  table.cal thead th.sorted .sort-arrow { opacity: 1; color: var(--gold); }
+
+  table.cal tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  table.cal tbody tr:last-child { border-bottom: none; }
+  table.cal tbody tr:hover { background: #f8f7f4; }
+  table.cal tbody tr.highlight-high { border-left: 3px solid var(--high); }
+  table.cal tbody tr.highlight-medium { border-left: 3px solid var(--medium); }
+  table.cal tbody tr.highlight-low { border-left: 3px solid var(--low); }
+
+  table.cal td {
+    padding: 12px 14px;
+    font-size: 13px;
+    vertical-align: middle;
+  }
+  .td-time {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    white-space: nowrap;
+    min-width: 70px;
+  }
+  .td-event {
+    font-weight: 600;
+    color: var(--text);
+    min-width: 200px;
+  }
+  .td-event small {
+    display: block;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .td-country {
+    color: var(--text-muted);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .td-impact { text-align: center; }
+  .impact-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .impact-high   { background: #fde8ec; color: var(--high); }
+  .impact-medium { background: #fef3e2; color: var(--medium); }
+  .impact-low    { background: #e8f5eb; color: var(--low); }
+  .impact-na     { background: #f0f0f0; color: var(--silver); }
+
+  .td-number {
+    text-align: right;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+  .val-positive { color: var(--low); font-weight: 700; }
+  .val-negative { color: var(--high); font-weight: 700; }
+  .val-neutral  { color: var(--text-muted); }
+  .val-pending  { color: var(--silver); font-style: italic; }
+
+  /* ── Date group header ──────────────────────────────────── */
+  .date-group-row td {
+    background: #f0ede6;
+    padding: 7px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Footer ─────────────────────────────────────────────── */
+  .page-footer {
+    background: var(--navy);
+    border-top: 3px solid var(--red);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .page-footer p {
+    font-size: 11px;
+    color: var(--silver);
+    letter-spacing: 0.04em;
+  }
+  .page-footer a { color: var(--gold); text-decoration: none; }
+  .page-footer a:hover { text-decoration: underline; }
+
+  /* ── Responsive ─────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .header-inner { padding: 0 16px; }
+    .title-bar { padding: 16px; }
+    .page-title { font-size: 22px; }
+    .controls-inner { padding: 10px 16px; gap: 8px; }
+    .table-wrap { padding: 0 12px; margin-bottom: 24px; }
+    .stats-row { padding: 0 12px; }
+    table.cal td, table.cal th { padding: 9px 10px; }
+    .td-country { display: none; }
+    .header-date { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="https://www.forbesindia.com" target="_blank">
+      <img src="https://images.forbesindia.com/blog/wp-content/uploads/2025/10/forbeslogo-1-2025-10-8c82c269e82b0027d98922ffd47a4f98.png" alt="Forbes India">
+    </a>
+    <span class="header-label">Markets Intelligence</span>
+    <span class="header-date" id="headerDate"></span>
+  </div>
+</header>
+
+<!-- ── Title bar ─────────────────────────────────────────── -->
+<div class="title-bar">
+  <div class="title-bar-inner">
+    <div>
+      <div class="page-title">India <span>Economic Calendar</span></div>
+    </div>
+    <div class="page-subtitle">Macro events &amp; data releases</div>
+  </div>
+</div>
+
+<!-- ── Controls ──────────────────────────────────────────── -->
+<div class="controls-bar">
+  <div class="controls-inner">
+
+    <!-- Quick date -->
+    <div class="control-group">
+      <span class="control-label">Period</span>
+      <div class="quick-dates">
+        <button class="qbtn" data-range="yesterday">Yesterday</button>
+        <button class="qbtn active" data-range="today">Today</button>
+        <button class="qbtn" data-range="tomorrow">Tomorrow</button>
+        <button class="qbtn" data-range="week">This Week</button>
+        <button class="qbtn" data-range="month">This Month</button>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <!-- Custom date range -->
+    <div class="control-group">
+      <span class="control-label">From</span>
+      <input type="date" id="startDate">
+    </div>
+    <div class="control-group">
+      <span class="control-label">To</span>
+      <input type="date" id="endDate">
+    </div>
+    <button class="btn btn-primary" id="fetchBtn" onclick="fetchCalendar()">Fetch</button>
+
+    <div class="separator"></div>
+
+    <!-- Impact filter -->
+    <div class="control-group">
+      <span class="control-label">Impact</span>
+      <select id="impactFilter" onchange="applyFilters()">
+        <option value="">All</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" placeholder="Search events…" oninput="applyFilters()">
+    </div>
+
+    <div class="separator"></div>
+
+    <!-- View toggles -->
+    <div class="control-group">
+      <button class="btn btn-ghost active" id="viewTable" onclick="setView('table')">Table</button>
+      <button class="btn btn-ghost" id="viewGroup" onclick="setView('group')">By Date</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Stats row ─────────────────────────────────────────── -->
+<div class="stats-row" id="statsRow" style="display:none">
+  <div class="stat-chip"><span class="dot dot-all"></span>Total <strong id="statTotal">0</strong></div>
+  <div class="stat-chip"><span class="dot dot-high"></span>High <strong id="statHigh">0</strong></div>
+  <div class="stat-chip"><span class="dot dot-medium"></span>Medium <strong id="statMedium">0</strong></div>
+  <div class="stat-chip"><span class="dot dot-low"></span>Low <strong id="statLow">0</strong></div>
+</div>
+
+<!-- ── Table ──────────────────────────────────────────────── -->
+<div class="table-wrap">
+  <div class="table-container" id="tableContainer">
+    <div class="state-box" id="stateBox">
+      <div class="spinner"></div>
+      <h3>Loading calendar…</h3>
+      <p>Fetching today's India economic events</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ─────────────────────────────────────────────── -->
+<footer class="page-footer">
+  <p>Data sourced from <a href="https://www.moneycontrol.com/economic-calendar" target="_blank">Moneycontrol Economic Calendar</a> via CORS proxy &nbsp;·&nbsp;
+  <a href="https://www.forbesindia.com" target="_blank">Forbes India</a> &nbsp;·&nbsp;
+  All times in IST &nbsp;·&nbsp; Auto-refreshes every 5 minutes</p>
+</footer>
+
+<script>
+// ── State ────────────────────────────────────────────────────
+let allEvents   = [];
+let currentView = 'table';
+const PROXY     = 'https://api.allorigins.win/get?url=';
+
+// ── Helpers ──────────────────────────────────────────────────
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function formatDate(d){
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+
+function today(){ return new Date(); }
+
+function addDays(d,n){
+  const r = new Date(d);
+  r.setDate(r.getDate()+n);
+  return r;
+}
+
+function startOfWeek(d){
+  const r = new Date(d);
+  const day = r.getDay();
+  r.setDate(r.getDate() - (day === 0 ? 6 : day - 1));
+  return r;
+}
+
+function endOfWeek(d){
+  return addDays(startOfWeek(d), 6);
+}
+
+function startOfMonth(d){
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
+function endOfMonth(d){
+  return new Date(d.getFullYear(), d.getMonth()+1, 0);
+}
+
+function fmtDisplay(dateStr){
+  if(!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+
+// ── Header date ──────────────────────────────────────────────
+(function(){
+  const d = new Date();
+  document.getElementById('headerDate').textContent =
+    d.toLocaleDateString('en-IN',{ weekday:'long', day:'numeric', month:'long', year:'numeric' });
+})();
+
+// ── Date inputs init ─────────────────────────────────────────
+(function(){
+  const t = formatDate(today());
+  document.getElementById('startDate').value = t;
+  document.getElementById('endDate').value   = t;
+})();
+
+// ── Quick date buttons ───────────────────────────────────────
+document.querySelectorAll('.qbtn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const r = this.dataset.range;
+    const t = today();
+    let s, e;
+    if(r === 'yesterday'){ s = e = formatDate(addDays(t,-1)); }
+    else if(r === 'today'){ s = e = formatDate(t); }
+    else if(r === 'tomorrow'){ s = e = formatDate(addDays(t,1)); }
+    else if(r === 'week'){ s = formatDate(startOfWeek(t)); e = formatDate(endOfWeek(t)); }
+    else if(r === 'month'){ s = formatDate(startOfMonth(t)); e = formatDate(endOfMonth(t)); }
+    document.getElementById('startDate').value = s;
+    document.getElementById('endDate').value   = e;
+    fetchCalendar();
+  });
+});
+
+// ── View toggle ──────────────────────────────────────────────
+function setView(v){
+  currentView = v;
+  document.getElementById('viewTable').classList.toggle('active', v === 'table');
+  document.getElementById('viewGroup').classList.toggle('active', v === 'group');
+  applyFilters();
+}
+
+// ── Fetch ────────────────────────────────────────────────────
+async function fetchCalendar(){
+  const s = document.getElementById('startDate').value;
+  const e = document.getElementById('endDate').value;
+  if(!s || !e){ showState('error','Invalid dates','Please select a valid date range.'); return; }
+
+  showState('loading');
+
+  const mcUrl = `https://www.moneycontrol.com/economic-widget?duration=&startDate=${s}&endDate=${e}&impact=&country=India&deviceType=web&classic=true`;
+  const proxyUrl = PROXY + encodeURIComponent(mcUrl);
+
+  try {
+    const resp = await fetch(proxyUrl);
+    if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    const html = json.contents;
+    if(!html) throw new Error('Empty response');
+    parseAndRender(html, s, e);
+  } catch(err){
+    // Try alternate proxy
+    try {
+      const alt = `https://corsproxy.io/?${encodeURIComponent(mcUrl)}`;
+      const r2  = await fetch(alt);
+      const html = await r2.text();
+      parseAndRender(html, s, e);
+    } catch(err2){
+      showState('error','Could not load data',`${err2.message}. Moneycontrol may be blocking requests. Try again in a moment.`);
+    }
+  }
+}
+
+// ── Parse HTML from Moneycontrol widget ──────────────────────
+function parseAndRender(html, startDate, endDate){
+  const parser = new DOMParser();
+  const doc    = parser.parseFromString(html, 'text/html');
+  const rows   = doc.querySelectorAll('table tr');
+
+  allEvents = [];
+
+  rows.forEach(row => {
+    const cols = row.querySelectorAll('td');
+    if(cols.length < 4) return;
+
+    const timeText = cols[0]?.innerText?.trim();
+    if(!timeText || timeText.toLowerCase() === 'time') return;
+
+    // Event name
+    const eventEl   = cols[2]?.querySelector('a') || cols[2];
+    const eventName = eventEl?.innerText?.trim() || '–';
+    if(!eventName || eventName === '–') return;
+
+    // Impact
+    let impactLevel = '';
+    const impactEl  = cols[3];
+    if(impactEl){
+      const img = impactEl.querySelector('img');
+      const alt = (img?.alt || img?.src || '').toLowerCase();
+      const txt = impactEl.innerText?.toLowerCase() || '';
+      const combined = alt + txt;
+      if(combined.includes('high'))        impactLevel = 'high';
+      else if(combined.includes('medium')) impactLevel = 'medium';
+      else if(combined.includes('low'))    impactLevel = 'low';
+    }
+
+    const actual    = cols[4]?.innerText?.trim() || '';
+    const previous  = cols[5]?.innerText?.trim() || '';
+    const consensus = cols[6]?.innerText?.trim() || '';
+
+    // Try to get date from context (widget may show date header rows)
+    const dateHeader = row.closest('table')?.querySelector('tr.date-row, tr th[colspan]');
+
+    allEvents.push({
+      time:      timeText,
+      event:     eventName,
+      impact:    impactLevel,
+      actual:    actual    || '–',
+      previous:  previous  || '–',
+      consensus: consensus || '–',
+      date:      startDate,
+    });
+  });
+
+  applyFilters();
+}
+
+// ── Filters & render ─────────────────────────────────────────
+function applyFilters(){
+  const impact  = document.getElementById('impactFilter').value.toLowerCase();
+  const search  = document.getElementById('searchInput').value.toLowerCase();
+
+  let filtered = allEvents.filter(ev => {
+    if(impact && ev.impact !== impact) return false;
+    if(search  && !ev.event.toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  updateStats(filtered);
+
+  if(filtered.length === 0 && allEvents.length === 0){
+    showState('empty','No events found','No India economic events are scheduled for this period.');
+    return;
+  }
+  if(filtered.length === 0){
+    showState('empty','No matching events','Try adjusting your filters or search term.');
+    return;
+  }
+
+  if(currentView === 'group') renderGrouped(filtered);
+  else renderTable(filtered);
+}
+
+// ── Stats ────────────────────────────────────────────────────
+function updateStats(events){
+  const statsRow = document.getElementById('statsRow');
+  if(events.length === 0){ statsRow.style.display = 'none'; return; }
+  statsRow.style.display = 'flex';
+  document.getElementById('statTotal').textContent  = events.length;
+  document.getElementById('statHigh').textContent   = events.filter(e=>e.impact==='high').length;
+  document.getElementById('statMedium').textContent = events.filter(e=>e.impact==='medium').length;
+  document.getElementById('statLow').textContent    = events.filter(e=>e.impact==='low').length;
+}
+
+// ── Render flat table ────────────────────────────────────────
+let sortCol = 'time', sortAsc = true;
+
+function renderTable(events){
+  const sorted = sortEvents([...events], sortCol, sortAsc);
+  const tc = document.getElementById('tableContainer');
+  tc.innerHTML = `
+    <table class="cal">
+      <thead>
+        <tr>
+          ${th('time','Time','time')}
+          ${th('event','Event','event')}
+          ${th('impact','Impact','impact')}
+          ${th('actual','Actual','actual')}
+          ${th('previous','Previous','previous')}
+          ${th('consensus','Consensus','consensus')}
+        </tr>
+      </thead>
+      <tbody>
+        ${sorted.map(ev => rowHtml(ev)).join('')}
+      </tbody>
+    </table>`;
+}
+
+function th(col, label, key){
+  const active = sortCol === key;
+  const arrow  = active ? (sortAsc ? '▲' : '▼') : '↕';
+  return `<th class="${active?'sorted':''}" onclick="sortBy('${key}')">${label} <span class="sort-arrow">${arrow}</span></th>`;
+}
+
+function rowHtml(ev){
+  const ic = impactClass(ev.impact);
+  const ib = impactBadge(ev.impact);
+  return `
+    <tr class="highlight-${ev.impact||'na'}">
+      <td class="td-time">${ev.time}</td>
+      <td class="td-event">${ev.event}</td>
+      <td class="td-impact">${ib}</td>
+      <td class="td-number ${valClass(ev.actual)}">${ev.actual}</td>
+      <td class="td-number val-neutral">${ev.previous}</td>
+      <td class="td-number val-neutral">${ev.consensus}</td>
+    </tr>`;
+}
+
+// ── Render grouped by date ───────────────────────────────────
+function renderGrouped(events){
+  const groups = {};
+  events.forEach(ev => {
+    const key = ev.date || 'Unknown';
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(ev);
+  });
+
+  const tc = document.getElementById('tableContainer');
+  let html = `<table class="cal"><thead><tr>
+    <th>Time</th><th>Event</th><th>Impact</th><th>Actual</th><th>Previous</th><th>Consensus</th>
+  </tr></thead><tbody>`;
+
+  Object.keys(groups).sort().forEach(date => {
+    html += `<tr class="date-group-row"><td colspan="6">${fmtDisplay(date)}</td></tr>`;
+    groups[date].forEach(ev => { html += rowHtml(ev); });
+  });
+
+  html += `</tbody></table>`;
+  tc.innerHTML = html;
+}
+
+// ── Sort ─────────────────────────────────────────────────────
+function sortBy(col){
+  if(sortCol === col) sortAsc = !sortAsc;
+  else { sortCol = col; sortAsc = true; }
+  applyFilters();
+}
+
+function sortEvents(events, col, asc){
+  const impactOrder = { high:0, medium:1, low:2, '':3 };
+  return events.sort((a,b) => {
+    let va = a[col] || '', vb = b[col] || '';
+    if(col === 'impact'){
+      va = impactOrder[va]; vb = impactOrder[vb];
+    }
+    const r = va < vb ? -1 : va > vb ? 1 : 0;
+    return asc ? r : -r;
+  });
+}
+
+// ── State box ────────────────────────────────────────────────
+function showState(type, title='', msg=''){
+  document.getElementById('statsRow').style.display = 'none';
+  const tc = document.getElementById('tableContainer');
+  if(type === 'loading'){
+    tc.innerHTML = `<div class="state-box"><div class="spinner"></div><h3>Loading calendar…</h3><p>Fetching India economic events</p></div>`;
+  } else if(type === 'error'){
+    tc.innerHTML = `<div class="state-box"><div class="icon">⚠️</div><h3>${title}</h3><p>${msg}</p></div>`;
+  } else if(type === 'empty'){
+    tc.innerHTML = `<div class="state-box"><div class="icon">📅</div><h3>${title}</h3><p>${msg}</p></div>`;
+  }
+}
+
+// ── Helpers ──────────────────────────────────────────────────
+function impactBadge(level){
+  if(level === 'high')   return `<span class="impact-badge impact-high">● High</span>`;
+  if(level === 'medium') return `<span class="impact-badge impact-medium">● Medium</span>`;
+  if(level === 'low')    return `<span class="impact-badge impact-low">● Low</span>`;
+  return `<span class="impact-badge impact-na">–</span>`;
+}
+
+function impactClass(level){
+  return level || 'na';
+}
+
+function valClass(val){
+  if(!val || val === '–') return 'val-pending';
+  return 'val-neutral';
+}
+
+// ── Auto-refresh every 5 min ─────────────────────────────────
+setInterval(() => {
+  const active = document.querySelector('.qbtn.active');
+  if(active && (active.dataset.range === 'today' || active.dataset.range === 'tomorrow')){
+    fetchCalendar();
+  }
+}, 5 * 60 * 1000);
+
+// ── Initial load ─────────────────────────────────────────────
+fetchCalendar();
+</script>
+</body>
+</html>
