@@ -5,497 +5,176 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Published — Forbes India Editorial</title>
   <style>
-    /* ─── Tokens ─────────────────────────────────────────── */
     :root {
-      --fi-red:      #E02020;
-      --fi-red-dim:  #9a1515;
-      --ink:         #111111;
-      --ink-mid:     #444444;
-      --ink-light:   #888888;
-      --rule:        #e0e0e0;
-      --bg:          #f7f7f5;
-      --bg-card:     #ffffff;
-      --masthead:    #0d0d0d;
-      --live-green:  #1db954;
-      --tag-bg:      #f0f0ee;
-      --font-head:   'Georgia', 'Times New Roman', serif;
-      --font-ui:     -apple-system, 'Helvetica Neue', Arial, sans-serif;
-      --radius:      4px;
-      --shadow:      0 1px 4px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.04);
+      --fi-red:     #E02020;
+      --ink:        #111111;
+      --ink-mid:    #444444;
+      --ink-light:  #888888;
+      --rule:       #e0e0e0;
+      --bg:         #f7f7f5;
+      --bg-card:    #ffffff;
+      --masthead:   #0d0d0d;
+      --live-green: #1db954;
+      --tag-bg:     #f0f0ee;
+      --font-head:  'Georgia', 'Times New Roman', serif;
+      --font-ui:    -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      --radius:     4px;
     }
-
-    /* ─── Reset ──────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: var(--font-ui);
-      background: var(--bg);
-      color: var(--ink);
-      min-height: 100vh;
-    }
+    body { font-family: var(--font-ui); background: var(--bg); color: var(--ink); min-height: 100vh; }
     a { color: inherit; text-decoration: none; }
 
-    /* ─── Masthead ───────────────────────────────────────── */
+    /* Masthead */
     .masthead {
-      background: var(--masthead);
-      color: #fff;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 52px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: var(--masthead); color: #fff;
+      padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+      height: 52px; position: sticky; top: 0; z-index: 100;
       border-bottom: 3px solid var(--fi-red);
     }
-    .masthead-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .masthead-logo {
-      font-family: var(--font-head);
-      font-size: 18px;
-      font-weight: normal;
-      letter-spacing: .02em;
-      color: #fff;
-    }
+    .masthead-left { display: flex; align-items: center; gap: 16px; }
+    .masthead-logo { font-family: var(--font-head); font-size: 18px; font-weight: normal; letter-spacing: .02em; color: #fff; }
     .masthead-logo span { color: var(--fi-red); }
-    .masthead-sep {
-      width: 1px;
-      height: 20px;
-      background: #444;
-    }
-    .masthead-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: #aaa;
-      font-weight: 500;
-    }
-
-    /* ─── Live Indicator ─────────────────────────────────── */
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      color: #bbb;
-      letter-spacing: .05em;
-    }
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--live-green);
-      flex-shrink: 0;
-      animation: pulse 2s ease-in-out infinite;
-    }
+    .masthead-sep { width: 1px; height: 20px; background: #444; }
+    .masthead-title { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #aaa; font-weight: 500; }
+    .live-badge { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #bbb; letter-spacing: .05em; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--live-green); flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
     .live-dot.paused { background: #666; animation: none; }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: .4; transform: scale(.75); }
-    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.75)} }
     #countdown { color: #fff; font-weight: 600; }
 
-    /* ─── Controls bar ───────────────────────────────────── */
-    .controls {
-      background: #fff;
-      border-bottom: 1px solid var(--rule);
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .search-wrap {
-      position: relative;
-      flex: 1;
-      min-width: 200px;
-      max-width: 360px;
-    }
-    .search-wrap svg {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--ink-light);
-      pointer-events: none;
-    }
-    .search-input {
-      width: 100%;
-      padding: 8px 12px 8px 34px;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius);
-      font-size: 13px;
-      font-family: var(--font-ui);
-      background: var(--bg);
-      color: var(--ink);
-      outline: none;
-      transition: border-color .15s;
-    }
-    .search-input:focus { border-color: var(--fi-red); background: #fff; }
+    /* Refresh bar */
+    .refresh-bar-wrap { height: 2px; background: #e0e0e0; position: relative; overflow: hidden; }
+    .refresh-bar { height: 100%; background: var(--fi-red); width: 100%; transform-origin: left; transition: transform linear; }
 
-    .filter-select {
-      padding: 8px 10px;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius);
-      font-size: 13px;
-      font-family: var(--font-ui);
-      background: var(--bg);
-      color: var(--ink);
-      cursor: pointer;
-      outline: none;
-    }
-    .filter-select:focus { border-color: var(--fi-red); }
-
-    .count-badge {
-      margin-left: auto;
-      font-size: 12px;
-      color: var(--ink-light);
-      white-space: nowrap;
-    }
-    .count-badge strong { color: var(--ink); }
-
-    /* ─── Category tabs ──────────────────────────────────── */
-    .tabs {
-      background: #fff;
-      border-bottom: 1px solid var(--rule);
-      padding: 0 24px;
-      display: flex;
-      gap: 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .tabs::-webkit-scrollbar { display: none; }
-    .tab-btn {
-      padding: 11px 16px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: color .15s, border-color .15s;
-    }
-    .tab-btn:hover { color: var(--ink); }
-    .tab-btn.active { color: var(--fi-red); border-bottom-color: var(--fi-red); }
-
-    /* ─── Stats bar ──────────────────────────────────────── */
-    .stats-bar {
-      display: flex;
-      gap: 1px;
-      background: var(--rule);
-      border-bottom: 1px solid var(--rule);
-    }
-    .stat-cell {
-      flex: 1;
-      background: #fff;
-      padding: 10px 20px;
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-    .stat-num {
-      font-size: 22px;
-      font-family: var(--font-head);
-      font-weight: bold;
-      color: var(--ink);
-      line-height: 1;
-    }
-    .stat-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--ink-light);
-    }
-
-    /* ─── Main layout ────────────────────────────────────── */
-    .layout {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px 24px;
-    }
-
-    /* ─── Article list ───────────────────────────────────── */
-    .articles-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      background: var(--rule);
-      border: 1px solid var(--rule);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .article-row {
-      display: grid;
-      grid-template-columns: 72px 1fr 200px 140px 110px;
-      align-items: center;
-      gap: 0;
-      background: var(--bg-card);
-      transition: background .1s;
-      cursor: pointer;
-    }
-    .article-row:hover { background: #fafafa; }
-    .article-row.new-item {
-      animation: slideIn .4s ease-out;
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-8px); background: #fff8f8; }
-      to   { opacity: 1; transform: translateY(0);    background: var(--bg-card); }
-    }
-
-    /* Thumb */
-    .art-thumb {
-      width: 72px;
-      height: 52px;
-      object-fit: cover;
-      display: block;
-    }
-    .art-thumb-placeholder {
-      width: 72px;
-      height: 52px;
-      background: #e8e8e6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #bbb;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    /* Headline cell */
-    .art-main {
-      padding: 10px 16px;
-      min-width: 0;
-    }
-    .art-headline {
-      font-family: var(--font-head);
-      font-size: 14.5px;
-      line-height: 1.35;
-      color: var(--ink);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      margin-bottom: 5px;
-    }
-    .art-headline:hover { color: var(--fi-red); }
-    .art-meta-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .art-byline {
-      font-size: 11px;
-      color: var(--ink-light);
-    }
-    .art-type-tag {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      padding: 2px 6px;
-      border-radius: 2px;
-      background: var(--tag-bg);
-      color: var(--ink-mid);
-    }
-    .art-type-tag.news   { background: #e8f4ff; color: #1a5f9a; }
-    .art-type-tag.video  { background: #fff0e0; color: #b85c00; }
-    .art-type-tag.photo  { background: #f0ffe8; color: #2a7a1a; }
-
-    /* Categories cell */
-    .art-cats {
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .art-cat-pill {
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      padding: 2px 7px;
-      border-radius: 10px;
-      background: #f2f2f0;
-      color: var(--ink-mid);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 176px;
-    }
-
-    /* URL cell */
-    .art-url {
-      padding: 10px 12px;
-      font-size: 11px;
-      color: #888;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .art-url a {
-      color: var(--fi-red);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .art-url a:hover { text-decoration: underline; }
-
-    /* Actions cell */
-    .art-actions {
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .icon-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid var(--rule);
-      background: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--ink-light);
-      transition: background .12s, color .12s, border-color .12s;
-    }
-    .icon-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
-
-    /* ─── List header ────────────────────────────────────── */
-    .list-header {
-      display: grid;
-      grid-template-columns: 72px 1fr 200px 140px 110px;
-      background: #f2f2f0;
-      border-bottom: 2px solid var(--rule);
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--ink-light);
-    }
-    .lh-cell {
-      padding: 8px 16px;
-    }
-    .lh-cell:first-child { padding-left: 8px; }
-
-    /* ─── Empty / Loading states ─────────────────────────── */
-    .state-box {
-      padding: 60px 20px;
-      text-align: center;
-      color: var(--ink-light);
-      background: var(--bg-card);
-    }
-    .state-box .icon { font-size: 32px; margin-bottom: 12px; }
-    .state-box p { font-size: 14px; }
-
-    .skeleton {
-      background: linear-gradient(90deg, #ebebeb 25%, #f5f5f5 50%, #ebebeb 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.4s infinite;
-      border-radius: 3px;
-    }
-    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-
-    /* ─── Error banner ───────────────────────────────────── */
-    .error-banner {
-      background: #fff3f3;
-      border: 1px solid #fca5a5;
-      border-radius: var(--radius);
-      padding: 12px 16px;
-      font-size: 13px;
-      color: #b91c1c;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* ─── Refresh progress bar ───────────────────────────── */
-    .refresh-bar-wrap {
-      height: 2px;
-      background: #e0e0e0;
-      position: relative;
-      overflow: hidden;
-    }
-    .refresh-bar {
-      height: 100%;
-      background: var(--fi-red);
-      width: 100%;
-      transform-origin: left;
-      transition: transform linear;
-    }
-
-    /* ─── Back link ──────────────────────────────────────── */
+    /* Back link */
     .back-link {
-      font-size: 11px;
-      color: #888;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      font-weight: 600;
-      padding: 0 24px;
-      height: 36px;
-      background: #f5f5f3;
-      border-bottom: 1px solid var(--rule);
+      font-size: 11px; color: #888; display: flex; align-items: center; gap: 4px;
+      text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
+      padding: 0 24px; height: 34px; background: #f5f5f3; border-bottom: 1px solid var(--rule);
     }
     .back-link:hover { color: var(--fi-red); }
 
-    /* ─── Section header ─────────────────────────────────── */
-    .section-hd {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 14px;
+    /* Stats bar */
+    .stats-bar { display: flex; gap: 1px; background: var(--rule); border-bottom: 1px solid var(--rule); }
+    .stat-cell { flex: 1; background: #fff; padding: 10px 20px; display: flex; align-items: baseline; gap: 6px; }
+    .stat-num { font-size: 22px; font-family: var(--font-head); font-weight: bold; color: var(--ink); line-height: 1; }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); }
+
+    /* Controls */
+    .controls {
+      background: #fff; border-bottom: 1px solid var(--rule);
+      padding: 10px 24px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     }
-    .section-hd h2 {
-      font-family: var(--font-head);
-      font-size: 18px;
-      font-weight: bold;
+    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
+    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-light); pointer-events: none; }
+    .search-input {
+      width: 100%; padding: 7px 10px 7px 32px; border: 1px solid var(--rule); border-radius: var(--radius);
+      font-size: 13px; font-family: var(--font-ui); background: var(--bg); color: var(--ink); outline: none;
     }
-    .section-hd .sub {
-      font-size: 12px;
-      color: var(--ink-light);
+    .search-input:focus { border-color: var(--fi-red); background: #fff; }
+    .filter-select {
+      padding: 7px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+      font-size: 13px; font-family: var(--font-ui); background: var(--bg); color: var(--ink); cursor: pointer; outline: none;
+    }
+    .filter-select:focus { border-color: var(--fi-red); }
+    .count-badge { margin-left: auto; font-size: 12px; color: var(--ink-light); white-space: nowrap; }
+    .count-badge strong { color: var(--ink); }
+
+
+
+    /* Layout */
+    .layout { max-width: 1400px; margin: 0 auto; padding: 18px 24px; }
+    .section-hd { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+    .section-hd h2 { font-family: var(--font-head); font-size: 17px; font-weight: bold; }
+    .section-hd .sub { font-size: 12px; color: var(--ink-light); }
+
+    /* Error */
+    .error-banner {
+      background: #fff3f3; border: 1px solid #fca5a5; border-radius: var(--radius);
+      padding: 10px 14px; font-size: 13px; color: #b91c1c; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
     }
 
-    /* ─── Responsive ─────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .article-row    { grid-template-columns: 64px 1fr 100px; }
-      .list-header    { grid-template-columns: 64px 1fr 100px; }
-      .art-cats       { display: none; }
-      .art-url        { display: none; }
-      .lh-cats, .lh-url { display: none; }
-      .art-thumb      { width: 64px; height: 50px; }
-      .art-thumb-placeholder { width: 64px; height: 50px; }
-      .stats-bar      { display: none; }
+    /* Table */
+    .art-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; font-size: 13px; }
+    .art-table thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
+    .art-table thead th {
+      padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em; color: var(--ink-light);
+      white-space: nowrap;
     }
-    @media (max-width: 600px) {
-      .article-row    { grid-template-columns: 56px 1fr; }
-      .list-header    { grid-template-columns: 56px 1fr; }
-      .art-actions    { display: none; }
-      .lh-actions     { display: none; }
-      .controls       { padding: 10px 16px; }
-      .layout         { padding: 14px 16px; }
-      .tabs           { padding: 0 16px; }
-      .masthead       { padding: 0 16px; }
-      .back-link      { padding: 0 16px; }
+    .art-table tbody tr { border-bottom: 1px solid #f0f0ee; transition: background .1s; }
+    .art-table tbody tr:last-child { border-bottom: none; }
+    .art-table tbody tr:hover { background: #fafaf8; }
+    .art-table tbody tr.new-item { animation: slideIn .4s ease-out; }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-6px);background:#fff8f8} to{opacity:1;transform:translateY(0);background:var(--bg-card)} }
+    .art-table td { padding: 10px 12px; vertical-align: middle; }
+
+    /* ID cell */
+    .td-id { color: var(--ink-light); font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; width: 70px; }
+
+    /* Headline cell */
+    .td-headline { min-width: 0; }
+    .art-headline {
+      font-family: var(--font-head); font-size: 14px; line-height: 1.35; color: var(--ink);
+      display: block; margin-bottom: 4px;
+    }
+    .art-headline:hover { color: var(--fi-red); text-decoration: underline; }
+    .art-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .art-byline { font-size: 11px; color: var(--ink-light); }
+    .art-type-tag {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+      padding: 2px 6px; border-radius: 2px; background: var(--tag-bg); color: var(--ink-mid);
+    }
+    .art-type-tag.video { background: #fff0e0; color: #b85c00; }
+    .art-type-tag.photo { background: #f0ffe8; color: #2a7a1a; }
+    .art-type-tag.news  { background: #e8f4ff; color: #1a5f9a; }
+
+    /* Category cell */
+    .td-cats { width: 150px; }
+    .art-cat-pill {
+      display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .05em; padding: 2px 7px; border-radius: 10px;
+      background: #f2f2f0; color: var(--ink-mid); margin: 2px 2px 2px 0;
+      white-space: nowrap;
+    }
+
+    /* Published time cell */
+    .td-time { width: 120px; white-space: nowrap; }
+    .time-date { font-size: 12px; color: var(--ink); font-weight: 500; }
+    .time-clock { font-size: 11px; color: var(--ink-light); margin-top: 2px; }
+
+    /* Copy btn */
+    .td-copy { width: 40px; text-align: center; }
+    .icon-btn {
+      width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule);
+      background: none; display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--ink-light); transition: background .12s, color .12s, border-color .12s;
+    }
+    .icon-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
+
+    /* States */
+    .state-box { padding: 50px 20px; text-align: center; color: var(--ink-light); background: var(--bg-card); }
+    .state-box .icon { font-size: 28px; margin-bottom: 10px; }
+    .state-box p { font-size: 14px; }
+
+    /* Responsive */
+    @media(max-width:900px) {
+      .td-cats,.td-copy { display: none; }
+      .stats-bar .stat-cell:last-child { display: none; }
+    }
+    @media(max-width:600px) {
+      .td-id { display: none; }
+      .controls { padding: 10px 16px; }
+      .layout { padding: 12px 16px; }
+      .masthead { padding: 0 16px; }
+      .back-link { padding: 0 16px; }
+      .stats-bar { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- Masthead -->
 <header class="masthead">
   <div class="masthead-left">
     <div class="masthead-logo">Forbes <span>India</span></div>
@@ -508,18 +187,13 @@
   </div>
 </header>
 
-<!-- Refresh progress bar -->
-<div class="refresh-bar-wrap">
-  <div class="refresh-bar" id="refreshBar"></div>
-</div>
+<div class="refresh-bar-wrap"><div class="refresh-bar" id="refreshBar"></div></div>
 
-<!-- Back link -->
 <a href="../story-tracker/" class="back-link">
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M7.5 1L3 6l4.5 5"/></svg>
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7,2 3,6 7,10"/></svg>
   Story Tracker
 </a>
 
-<!-- Stats bar -->
 <div class="stats-bar" id="statsBar">
   <div class="stat-cell"><span class="stat-num" id="statTotal">—</span><span class="stat-label">Articles loaded</span></div>
   <div class="stat-cell"><span class="stat-num" id="statFiltered">—</span><span class="stat-label">Showing</span></div>
@@ -527,7 +201,6 @@
   <div class="stat-cell"><span class="stat-num" id="statLastFetch">—</span><span class="stat-label">Last fetched</span></div>
 </div>
 
-<!-- Controls -->
 <div class="controls">
   <div class="search-wrap">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
@@ -539,21 +212,18 @@
     <option value="video">Video</option>
     <option value="photo">Photo</option>
   </select>
-  <select class="filter-select" id="catFilter">
-    <option value="">All categories</option>
-  </select>
+  <select class="filter-select" id="catFilter"><option value="">All categories</option></select>
   <select class="filter-select" id="countSelect">
     <option value="20">20 articles</option>
     <option value="50" selected>50 articles</option>
     <option value="100">100 articles</option>
+    <option value="200">200 articles</option>
   </select>
   <div class="count-badge" id="countBadge"></div>
 </div>
 
-<!-- Category tabs -->
-<div class="tabs" id="tabsBar"></div>
 
-<!-- Main -->
+
 <main class="layout">
   <div class="section-hd">
     <h2 id="sectionTitle">Latest Published</h2>
@@ -562,21 +232,23 @@
 
   <div id="errorBanner" style="display:none" class="error-banner">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10a1 1 0 110-2 1 1 0 010 2zm0-3V4"/></svg>
-    <span id="errorMsg">Could not fetch articles.</span>
+    <span id="errorMsg"></span>
   </div>
 
-  <!-- List header -->
-  <div class="list-header" id="listHeader" style="display:none;">
-    <div class="lh-cell">Thumb</div>
-    <div class="lh-cell">Headline / Author</div>
-    <div class="lh-cell lh-cats">Categories</div>
-    <div class="lh-cell lh-url">URL</div>
-    <div class="lh-cell lh-actions">Actions</div>
-  </div>
-
-  <div class="articles-list" id="articlesList">
-    <!-- Skeleton rows while loading -->
-    <div class="state-box" id="loadingState">
+  <div id="tableWrap">
+    <table class="art-table" id="artTable" style="display:none">
+      <thead>
+        <tr>
+          <th class="td-id">Story ID</th>
+          <th>Headline / Byline</th>
+          <th class="td-cats">Category</th>
+          <th class="td-time">Published</th>
+          <th class="td-copy"></th>
+        </tr>
+      </thead>
+      <tbody id="artTbody"></tbody>
+    </table>
+    <div class="state-box" id="stateBox">
       <div class="icon">⟳</div>
       <p>Fetching latest articles…</p>
     </div>
@@ -584,88 +256,79 @@
 </main>
 
 <script>
-// ─── Config ────────────────────────────────────────────────
-const REFRESH_INTERVAL = 60; // seconds
-const CATEGORY_ID      = '50743'; // default; tabs can override
+const REFRESH_INTERVAL = 60;
+const FI_BASE          = 'https://www.forbesindia.com/';
+const API_BASE         = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
+const FIELDS           = 'story_id,display_headline,weburl_r,post_type,categories,author_byline,publish_date,date_timestamp';
 
-// Category definitions — extend as needed
-const KNOWN_CATEGORIES = [
-  { id: '50743', label: 'All' },
-  { id: '50744', label: 'Business' },
-  { id: '50745', label: 'Technology' },
-  { id: '50746', label: 'Leadership' },
-  { id: '50748', label: 'Finance' },
-  { id: '50749', label: 'Lists' },
-  { id: '50750', label: 'Lifestyle' },
-];
-
-const API_BASE = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
-const FIELDS   = 'story_id,display_headline,images,weburl_r,post_type,categories,author_byline,publish_date';
-
-// ─── State ─────────────────────────────────────────────────
-let allArticles   = [];
+let allArticles      = [];
 let filteredArticles = [];
-let activeCatId   = CATEGORY_ID;
-let countdownVal  = REFRESH_INTERVAL;
-let countdownTimer = null;
-let refreshTimer   = null;
-let knownIds       = new Set();
+let countdownVal     = REFRESH_INTERVAL;
+let countdownTimer   = null;
+let refreshTimer     = null;
+let knownIds         = new Set();
 
-// ─── DOM refs ──────────────────────────────────────────────
-const $list       = document.getElementById('articlesList');
-const $hdr        = document.getElementById('listHeader');
-const $loading    = document.getElementById('loadingState');
-const $error      = document.getElementById('errorBanner');
-const $errorMsg   = document.getElementById('errorMsg');
-const $countdown  = document.getElementById('countdown');
-const $liveDot    = document.getElementById('liveDot');
-const $bar        = document.getElementById('refreshBar');
-const $search     = document.getElementById('searchInput');
-const $typeFilter = document.getElementById('typeFilter');
-const $catFilter  = document.getElementById('catFilter');
-const $countSel   = document.getElementById('countSelect');
-const $countBadge = document.getElementById('countBadge');
-const $tabs       = document.getElementById('tabsBar');
-const $statTotal  = document.getElementById('statTotal');
-const $statFiltered = document.getElementById('statFiltered');
-const $statCats   = document.getElementById('statCategories');
-const $statFetch  = document.getElementById('statLastFetch');
-const $secTitle   = document.getElementById('sectionTitle');
-const $secSub     = document.getElementById('sectionSub');
+const $tbody     = document.getElementById('artTbody');
+const $table     = document.getElementById('artTable');
+const $stateBox  = document.getElementById('stateBox');
+const $error     = document.getElementById('errorBanner');
+const $errorMsg  = document.getElementById('errorMsg');
+const $countdown = document.getElementById('countdown');
+const $liveDot   = document.getElementById('liveDot');
+const $bar       = document.getElementById('refreshBar');
+const $search    = document.getElementById('searchInput');
+const $typeF     = document.getElementById('typeFilter');
+const $catF      = document.getElementById('catFilter');
+const $countSel  = document.getElementById('countSelect');
+const $countBadge= document.getElementById('countBadge');
+const $statTotal = document.getElementById('statTotal');
+const $statFilt  = document.getElementById('statFiltered');
+const $statCats  = document.getElementById('statCategories');
+const $statFetch = document.getElementById('statLastFetch');
+const $secTitle  = document.getElementById('sectionTitle');
+const $secSub    = document.getElementById('sectionSub');
 
-// ─── Safe field helpers ─────────────────────────────────────
-// author_byline can be a string, an array of strings, or an array of objects
-function toStr(val) {
+// ── Safe string extraction ─────────────────────────────────
+function safeStr(val) {
   if (!val) return '';
-  if (typeof val === 'string') return val;
-  if (Array.isArray(val)) {
-    return val.map(v => (v && typeof v === 'object') ? (v.name || v.display_name || v.author_name || v.byline || JSON.stringify(v)) : String(v)).join(', ');
+  if (typeof val === 'string') return val.trim();
+  if (Array.isArray(val)) return val.map(safeStr).filter(Boolean).join(', ');
+  if (typeof val === 'object') {
+    // author_byline object: try common name fields
+    return (val.english_name || val.display_name || val.name || val.author_name ||
+            val.fullname || val.full_name || val.nicename || '').trim();
   }
-  if (typeof val === 'object') return val.name || val.display_name || val.author_name || '';
-  return String(val);
+  return String(val).trim();
 }
 
-// ─── Build API URL ──────────────────────────────────────────
-function buildUrl(catId, count) {
-  const filter = JSON.stringify({ 'categories.id': catId });
-  return `${API_BASE}?count=${count}&fields=${encodeURIComponent(FIELDS)}&filter=${encodeURIComponent(filter)}&section=category&subSection=NA`;
+// ── URL resolution ─────────────────────────────────────────
+function resolveUrl(raw) {
+  if (!raw) return '';
+  const s = safeStr(raw);
+  if (!s) return '';
+  if (s.startsWith('http://') || s.startsWith('https://')) return s;
+  // slug like "/article/v-power-2026/falc…" or "article/..."
+  const clean = s.startsWith('/') ? s.slice(1) : s;
+  return FI_BASE + clean;
 }
 
-// ─── Fetch ──────────────────────────────────────────────────
-async function fetchArticles() {
-  const count = parseInt($countSel.value, 10);
-  const url   = buildUrl(activeCatId, count);
-  try {
-    const res  = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    return json.data || json.articles || json || [];
-  } catch(e) {
-    throw e;
+// ── Published time formatting ──────────────────────────────
+function formatTime(art) {
+  // Try publish_date first, then date_timestamp (unix seconds)
+  let d = null;
+  if (art.publish_date) {
+    d = new Date(art.publish_date);
+  } else if (art.date_timestamp) {
+    const ts = parseInt(art.date_timestamp, 10);
+    d = new Date(ts < 1e12 ? ts * 1000 : ts); // handle seconds vs ms
   }
+  if (!d || isNaN(d)) return { date: '—', time: '' };
+  const date = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  return { date, time };
 }
 
-// ─── Render ─────────────────────────────────────────────────
+// ── Type tag ───────────────────────────────────────────────
 function typeTag(postType) {
   const t = (postType || '').toLowerCase();
   if (t.includes('video'))  return '<span class="art-type-tag video">Video</span>';
@@ -673,94 +336,102 @@ function typeTag(postType) {
   return '<span class="art-type-tag news">Article</span>';
 }
 
-function thumbCell(images) {
-  // Try common image field structures
-  const src = images?.thumbnail_url || images?.thumbnail || images?.large || images?.medium || images?.small
-    || (Array.isArray(images) && images[0]?.url)
-    || null;
-  if (src) {
-    return `<img class="art-thumb" src="${src}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'art-thumb-placeholder\\'>📰</div>'" />`;
+// ── Build API URL ──────────────────────────────────────────
+function buildUrl(count) {
+  const params = new URLSearchParams({ count, fields: FIELDS, section: 'category', subSection: 'NA' });
+  return `${API_BASE}?${params.toString()}`;
+}
+
+// ── Fetch ──────────────────────────────────────────────────
+async function fetchArticles() {
+  const count = parseInt($countSel.value, 10);
+  const res   = await fetch(buildUrl(count));
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json  = await res.json();
+  // API may return array directly, or wrap in data/articles/stories
+  if (Array.isArray(json)) return json;
+  if (Array.isArray(json.data))     return json.data;
+  if (Array.isArray(json.articles)) return json.articles;
+  if (Array.isArray(json.stories))  return json.stories;
+  // fallback: look for first array value in top-level object
+  for (const v of Object.values(json)) {
+    if (Array.isArray(v) && v.length) return v;
   }
-  return '<div class="art-thumb-placeholder">📰</div>';
+  return [];
 }
 
-function catsCell(categories) {
-  if (!categories || !categories.length) return '<div class="art-cats"><span class="art-cat-pill">—</span></div>';
-  const pills = categories.slice(0, 2).map(c =>
-    `<span class="art-cat-pill" title="${c.name || c.label || ''}">${c.name || c.label || c.id}</span>`
+// ── Render row ─────────────────────────────────────────────
+function renderRow(art, isNew) {
+  const id       = art.story_id || '—';
+  const headline = safeStr(art.display_headline || art.headline) || '(No headline)';
+  const byline   = safeStr(art.author_byline || art.byline);
+  const postType = safeStr(art.post_type);
+  const cats     = art.categories || [];
+  const url      = resolveUrl(art.weburl_r || art.url || art.web_url);
+  const { date, time } = formatTime(art);
+
+  const catPills = cats.slice(0, 3).map(c =>
+    `<span class="art-cat-pill">${c.name || c.label || c.id}</span>`
   ).join('');
-  return `<div class="art-cats">${pills}</div>`;
-}
 
-function urlCell(weburl) {
-  if (!weburl) return '<div class="art-url">—</div>';
-  const short = weburl.replace(/^https?:\/\/(www\.)?forbesindia\.com/,'').replace(/\/$/,'');
-  return `<div class="art-url"><a href="${weburl}" target="_blank" rel="noopener">
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2H2v6h6V6M6 1h3v3M9 1L5 5"/></svg>
-    ${short || 'Open'}
-  </a></div>`;
-}
+  const escUrl = url.replace(/"/g, '&quot;');
+  const escTitle = headline.replace(/"/g, '&quot;');
 
-function renderRow(art, isNew = false) {
-  const headline = toStr(art.display_headline || art.headline) || '(No headline)';
-  const byline   = toStr(art.author_byline    || art.byline);
-  const weburl   = toStr(art.weburl_r         || art.url);
-  const postType = toStr(art.post_type);
-  const cats     = art.categories       || [];
-
-  const newCls = isNew ? ' new-item' : '';
-  return `<div class="article-row${newCls}">
-    ${thumbCell(art.images)}
-    <div class="art-main">
-      <a class="art-headline" href="${weburl}" target="_blank" rel="noopener">${headline}</a>
-      <div class="art-meta-row">
+  return `<tr${isNew ? ' class="new-item"' : ''}>
+    <td class="td-id">${id}</td>
+    <td class="td-headline">
+      ${url ? `<a class="art-headline" href="${escUrl}" target="_blank" rel="noopener">${headline}</a>`
+             : `<span class="art-headline">${headline}</span>`}
+      <div class="art-meta">
         ${byline ? `<span class="art-byline">By ${byline}</span>` : ''}
         ${typeTag(postType)}
       </div>
-    </div>
-    ${catsCell(cats)}
-    ${urlCell(weburl)}
-    <div class="art-actions">
-      <button class="icon-btn" title="Copy URL" onclick="copyUrl('${weburl}',this)">
+    </td>
+    <td class="td-cats">${catPills || '<span class="art-cat-pill">—</span>'}</td>
+    <td class="td-time">
+      <div class="time-date">${date}</div>
+      ${time ? `<div class="time-clock">${time}</div>` : ''}
+    </td>
+    <td class="td-copy">
+      <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
       </button>
-      <a href="${weburl}" target="_blank" rel="noopener" class="icon-btn" title="Open article">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 2H2v8h8V7M7 1h4v4M11 1L6 6"/></svg>
-      </a>
-    </div>
-  </div>`;
+    </td>
+  </tr>`;
 }
 
+// ── Render list ────────────────────────────────────────────
 function renderList(articles) {
   if (!articles.length) {
-    $hdr.style.display = 'none';
-    $list.innerHTML = '<div class="state-box"><div class="icon">🔍</div><p>No articles match your filters.</p></div>';
+    $table.style.display = 'none';
+    $stateBox.style.display = 'block';
+    $stateBox.innerHTML = '<div class="icon">🔍</div><p>No articles match your filters.</p>';
     return;
   }
-  $hdr.style.display = 'grid';
-  $list.innerHTML = articles.map((a, i) => {
-    const isNew = !knownIds.has(a.story_id) && knownIds.size > 0;
+  $stateBox.style.display = 'none';
+  $table.style.display = 'table';
+  $tbody.innerHTML = articles.map(a => {
+    const isNew = !knownIds.has(String(a.story_id)) && knownIds.size > 0;
     return renderRow(a, isNew);
   }).join('');
-  // After first render, populate knownIds
-  articles.forEach(a => knownIds.add(a.story_id));
+  articles.forEach(a => knownIds.add(String(a.story_id)));
 }
 
-// ─── Filter & search ────────────────────────────────────────
+// ── Filters ────────────────────────────────────────────────
 function applyFilters() {
   const q    = $search.value.trim().toLowerCase();
-  const type = $typeFilter.value.toLowerCase();
-  const cat  = $catFilter.value;
+  const type = $typeF.value.toLowerCase();
+  const cat  = $catF.value;
 
   filteredArticles = allArticles.filter(a => {
-    const headline = toStr(a.display_headline || a.headline).toLowerCase();
-    const byline   = toStr(a.author_byline    || a.byline).toLowerCase();
-    const postType = toStr(a.post_type).toLowerCase();
-    const cats     = (a.categories || []).map(c => c.id);
+    const headline = safeStr(a.display_headline || a.headline).toLowerCase();
+    const byline   = safeStr(a.author_byline || a.byline).toLowerCase();
+    const postType = safeStr(a.post_type).toLowerCase();
+    const catIds   = (a.categories || []).map(c => c.id);
 
     if (q && !headline.includes(q) && !byline.includes(q)) return false;
     if (type && !postType.includes(type)) return false;
-    if (cat && !cats.includes(cat)) return false;
+    if (cat && !catIds.includes(cat)) return false;
     return true;
   });
 
@@ -768,114 +439,83 @@ function applyFilters() {
   updateStats();
 }
 
-// ─── Stats ─────────────────────────────────────────────────
+// ── Stats ──────────────────────────────────────────────────
 function updateStats() {
-  $statTotal.textContent    = allArticles.length;
-  $statFiltered.textContent = filteredArticles.length;
-  $countBadge.innerHTML     = `<strong>${filteredArticles.length}</strong> of ${allArticles.length} articles`;
-
-  // Unique categories
+  $statTotal.textContent = allArticles.length;
+  $statFilt.textContent  = filteredArticles.length;
+  $countBadge.innerHTML  = `<strong>${filteredArticles.length}</strong> of ${allArticles.length} articles`;
   const catSet = new Set();
   allArticles.forEach(a => (a.categories || []).forEach(c => catSet.add(c.id)));
-  $statCats.textContent = catSet.size;
-
-  // Time
-  $statFetch.textContent = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  $statCats.textContent  = catSet.size;
+  $statFetch.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 
-// ─── Category filter dropdown population ───────────────────
+// ── Cat filter dropdown ────────────────────────────────────
 function populateCatFilter(articles) {
   const catMap = {};
   articles.forEach(a => (a.categories || []).forEach(c => {
     if (c.id) catMap[c.id] = c.name || c.label || c.id;
   }));
-  const current = $catFilter.value;
-  $catFilter.innerHTML = '<option value="">All categories</option>';
+  const current = $catF.value;
+  $catF.innerHTML = '<option value="">All categories</option>';
   Object.entries(catMap).sort((a,b) => a[1].localeCompare(b[1])).forEach(([id, name]) => {
-    const opt = document.createElement('option');
-    opt.value = id;
-    opt.textContent = name;
-    if (id === current) opt.selected = true;
-    $catFilter.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = id; o.textContent = name;
+    if (id === current) o.selected = true;
+    $catF.appendChild(o);
   });
 }
 
-// ─── Tabs ────────────────────────────────────────────────────
-function buildTabs() {
-  $tabs.innerHTML = KNOWN_CATEGORIES.map(cat => `
-    <button class="tab-btn${cat.id === activeCatId ? ' active' : ''}" data-id="${cat.id}">${cat.label}</button>
-  `).join('');
-  $tabs.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeCatId = btn.dataset.id;
-      $tabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      $secTitle.textContent = btn.textContent === 'All' ? 'Latest Published' : btn.textContent;
-      load(true);
-    });
-  });
-}
-
-// ─── Main load ──────────────────────────────────────────────
+// ── Main load ──────────────────────────────────────────────
 async function load(showLoader = false) {
   if (showLoader) {
-    $hdr.style.display = 'none';
-    $list.innerHTML = '<div class="state-box" id="loadingState"><div class="icon">⟳</div><p>Fetching…</p></div>';
+    $table.style.display = 'none';
+    $stateBox.style.display = 'block';
+    $stateBox.innerHTML = '<div class="icon">⟳</div><p>Fetching…</p>';
   }
   $error.style.display = 'none';
   $liveDot.classList.remove('paused');
 
   try {
-    const raw = await fetchArticles();
-    // Normalise: some endpoints wrap in { data: [...] }, others return array directly
-    allArticles = Array.isArray(raw) ? raw : (raw.data || raw.stories || raw.articles || []);
+    const raw   = await fetchArticles();
+    allArticles = raw;
     populateCatFilter(allArticles);
     applyFilters();
     $secSub.textContent = `${allArticles.length} articles · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
   } catch(err) {
     console.error(err);
-    $error.style.display = 'flex';
-    $errorMsg.textContent = `Could not load articles: ${err.message}. Will retry.`;
+    $error.style.display   = 'flex';
+    $errorMsg.textContent  = `Could not load articles: ${err.message}. Will retry in ${REFRESH_INTERVAL}s.`;
     $liveDot.classList.add('paused');
-    if (allArticles.length) {
-      // Keep showing stale data
-      $secSub.textContent += ' (stale)';
-    } else {
-      $hdr.style.display = 'none';
-      $list.innerHTML = '<div class="state-box"><div class="icon">⚠️</div><p>Failed to load. Retrying in ' + countdownVal + 's…</p></div>';
+    if (!allArticles.length) {
+      $table.style.display = 'none';
+      $stateBox.style.display = 'block';
+      $stateBox.innerHTML = '<div class="icon">⚠️</div><p>Failed to load articles.</p>';
     }
   }
 }
 
-// ─── Countdown + auto-refresh ───────────────────────────────
+// ── Countdown ─────────────────────────────────────────────
 function startCountdown() {
   countdownVal = REFRESH_INTERVAL;
   $countdown.textContent = countdownVal;
-  $bar.style.transition  = 'none';
-  $bar.style.transform   = 'scaleX(1)';
-
-  // Let browser paint the reset, then start draining
+  $bar.style.transition = 'none';
+  $bar.style.transform  = 'scaleX(1)';
   requestAnimationFrame(() => requestAnimationFrame(() => {
     $bar.style.transition = `transform ${REFRESH_INTERVAL}s linear`;
     $bar.style.transform  = 'scaleX(0)';
   }));
-
   clearInterval(countdownTimer);
   countdownTimer = setInterval(() => {
     countdownVal--;
     $countdown.textContent = Math.max(0, countdownVal);
-    if (countdownVal <= 0) {
-      clearInterval(countdownTimer);
-    }
+    if (countdownVal <= 0) clearInterval(countdownTimer);
   }, 1000);
-
   clearTimeout(refreshTimer);
-  refreshTimer = setTimeout(() => {
-    load(false).then(() => startCountdown());
-  }, REFRESH_INTERVAL * 1000);
+  refreshTimer = setTimeout(() => load(false).then(startCountdown), REFRESH_INTERVAL * 1000);
 }
 
-// ─── Copy URL helper ────────────────────────────────────────
+// ── Copy URL ───────────────────────────────────────────────
 window.copyUrl = function(url, btn) {
   if (!url) return;
   navigator.clipboard.writeText(url).then(() => {
@@ -886,15 +526,8 @@ window.copyUrl = function(url, btn) {
   });
 };
 
-// ─── Event listeners ────────────────────────────────────────
-$search.addEventListener('input', applyFilters);
-$typeFilter.addEventListener('change', applyFilters);
-$catFilter.addEventListener('change', applyFilters);
-$countSel.addEventListener('change', () => load(true).then(() => startCountdown()));
-
-// ─── Boot ────────────────────────────────────────────────────
-buildTabs();
-load(true).then(() => startCountdown());
+// ── Boot ───────────────────────────────────────────────────
+load(true).then(startCountdown);
 </script>
 </body>
 </html>
