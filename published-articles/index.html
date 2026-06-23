@@ -633,6 +633,18 @@ const $statFetch  = document.getElementById('statLastFetch');
 const $secTitle   = document.getElementById('sectionTitle');
 const $secSub     = document.getElementById('sectionSub');
 
+// ─── Safe field helpers ─────────────────────────────────────
+// author_byline can be a string, an array of strings, or an array of objects
+function toStr(val) {
+  if (!val) return '';
+  if (typeof val === 'string') return val;
+  if (Array.isArray(val)) {
+    return val.map(v => (v && typeof v === 'object') ? (v.name || v.display_name || v.author_name || v.byline || JSON.stringify(v)) : String(v)).join(', ');
+  }
+  if (typeof val === 'object') return val.name || val.display_name || val.author_name || '';
+  return String(val);
+}
+
 // ─── Build API URL ──────────────────────────────────────────
 function buildUrl(catId, count) {
   const filter = JSON.stringify({ 'categories.id': catId });
@@ -690,10 +702,10 @@ function urlCell(weburl) {
 }
 
 function renderRow(art, isNew = false) {
-  const headline = art.display_headline || art.headline || '(No headline)';
-  const byline   = art.author_byline    || art.byline   || '';
-  const weburl   = art.weburl_r         || art.url      || '';
-  const postType = art.post_type        || '';
+  const headline = toStr(art.display_headline || art.headline) || '(No headline)';
+  const byline   = toStr(art.author_byline    || art.byline);
+  const weburl   = toStr(art.weburl_r         || art.url);
+  const postType = toStr(art.post_type);
   const cats     = art.categories       || [];
 
   const newCls = isNew ? ' new-item' : '';
@@ -741,9 +753,9 @@ function applyFilters() {
   const cat  = $catFilter.value;
 
   filteredArticles = allArticles.filter(a => {
-    const headline = (a.display_headline || '').toLowerCase();
-    const byline   = (a.author_byline    || '').toLowerCase();
-    const postType = (a.post_type        || '').toLowerCase();
+    const headline = toStr(a.display_headline || a.headline).toLowerCase();
+    const byline   = toStr(a.author_byline    || a.byline).toLowerCase();
+    const postType = toStr(a.post_type).toLowerCase();
     const cats     = (a.categories || []).map(c => c.id);
 
     if (q && !headline.includes(q) && !byline.includes(q)) return false;
