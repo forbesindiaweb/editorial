@@ -22,6 +22,7 @@
     body { font-family: var(--font-ui); background: var(--bg); color: var(--ink); }
     a { color: inherit; text-decoration: none; }
 
+    /* Masthead */
     .masthead {
       background: var(--masthead); color: #fff;
       padding: 0 24px; height: 52px;
@@ -51,52 +52,58 @@
 
     /* Stats */
     .stats { display: flex; gap: 1px; background: var(--rule); border-bottom: 1px solid var(--rule); }
-    .stat { flex: 1; background: #fff; padding: 10px 16px; display: flex; flex-direction: column; gap: 3px; }
+    .stat { flex: 1; background: #fff; padding: 10px 16px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
     .stat-n { font-family: var(--font-head); font-size: 24px; font-weight: bold; line-height: 1; }
-    .stat-n.today { color: var(--green); }
-    .stat-n.yesterday { color: var(--ink-light); }
+    .stat-n.green { color: var(--green); }
+    .stat-n.grey  { color: var(--ink-light); }
     .stat-l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); }
-    .stat-sub { font-size: 11px; color: var(--ink-light); margin-top: 1px; }
+    .stat-sub { font-size: 11px; color: var(--ink-light); }
 
     /* Controls */
     .controls {
       background: #fff; border-bottom: 1px solid var(--rule);
       padding: 10px 24px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     }
-    .search-wrap { position: relative; flex: 1; min-width: 160px; max-width: 280px; }
+    .search-wrap { position: relative; flex: 1; min-width: 160px; max-width: 260px; }
     .search-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--ink-light); pointer-events: none; }
     input[type=search] {
       width: 100%; padding: 7px 10px 7px 30px; border: 1px solid var(--rule);
-      border-radius: 4px; font-size: 13px; font-family: var(--font-ui);
-      background: var(--bg); outline: none;
+      border-radius: 4px; font-size: 13px; font-family: var(--font-ui); background: var(--bg); outline: none;
     }
     input[type=search]:focus { border-color: var(--fi-red); background: #fff; }
-
     .ctrl-select {
-      padding: 7px 10px; border: 1px solid var(--rule); border-radius: 4px;
-      font-size: 13px; font-family: var(--font-ui); background: var(--bg); outline: none; cursor: pointer;
+      padding: 7px 9px; border: 1px solid var(--rule); border-radius: 4px;
+      font-size: 12px; font-family: var(--font-ui); background: var(--bg); outline: none; cursor: pointer; max-width: 150px;
     }
     .ctrl-select:focus { border-color: var(--fi-red); }
-
     .toggle-btn {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 12px; color: var(--ink-mid); cursor: pointer; user-select: none;
-      padding: 6px 10px; border: 1px solid var(--rule); border-radius: 4px;
-      background: var(--bg); white-space: nowrap;
+      display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--ink-mid);
+      cursor: pointer; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 4px;
+      background: var(--bg); white-space: nowrap; user-select: none;
     }
     .toggle-btn:hover { border-color: #aaa; }
     .toggle-btn.active { background: #fff3f3; border-color: var(--fi-red); color: var(--fi-red); font-weight: 600; }
-
     .export-btn {
-      display: flex; align-items: center; gap: 5px;
-      padding: 6px 12px; font-size: 12px; font-weight: 600;
-      background: #fff; border: 1px solid var(--rule); border-radius: 4px;
-      cursor: pointer; color: var(--ink-mid); margin-left: auto; white-space: nowrap;
+      display: flex; align-items: center; gap: 5px; padding: 6px 12px;
+      font-size: 12px; font-weight: 600; background: #fff; border: 1px solid var(--rule);
+      border-radius: 4px; cursor: pointer; color: var(--ink-mid); white-space: nowrap;
     }
     .export-btn:hover { border-color: var(--green); color: var(--green); }
-
+    .controls-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
     .count-badge { font-size: 12px; color: var(--ink-light); white-space: nowrap; }
     .count-badge strong { color: var(--ink); }
+
+    /* Loading progress */
+    .fetch-progress {
+      background: #fff8e8; border-bottom: 1px solid #ffe082;
+      padding: 7px 24px; font-size: 12px; color: #7a5800;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .fetch-progress .spinner {
+      width: 12px; height: 12px; border: 2px solid #ffe082; border-top-color: #f59e0b;
+      border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .err {
       margin: 12px 24px; padding: 10px 14px; border-radius: 4px;
@@ -111,7 +118,7 @@
     .section-hd .sub { font-size: 12px; color: var(--ink-light); }
 
     .tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; min-width: 700px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; min-width: 860px; }
     thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
     th {
       padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700;
@@ -119,55 +126,96 @@
       white-space: nowrap; cursor: pointer; user-select: none;
     }
     th:hover { color: var(--ink); }
-    th .sort-arrow { margin-left: 3px; opacity: .4; }
-    th.sorted .sort-arrow { opacity: 1; color: var(--fi-red); }
-    tbody tr { border-bottom: 1px solid #f0f0ee; transition: background .1s; }
+    th .sa { margin-left: 3px; opacity: .4; font-style: normal; }
+    th.sorted .sa { opacity: 1; color: var(--fi-red); }
+    tbody tr { border-bottom: 1px solid #f0f0ee; transition: background .1s; cursor: pointer; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #fafaf8; }
-    tbody tr.new-row { animation: slideIn .5s ease-out; }
-    @keyframes slideIn { from{background:#e8fff0} to{background:transparent} }
+    tbody tr.new-row { animation: newFlash .8s ease-out; }
+    @keyframes newFlash { 0%,20%{background:#e6fff0} 100%{background:transparent} }
     td { padding: 9px 12px; vertical-align: middle; }
 
-    .td-id { width: 75px; color: var(--ink-light); font-size: 11px; white-space: nowrap; }
-    .td-title { min-width: 260px; }
-    .td-title a { font-family: var(--font-head); font-size: 13.5px; line-height: 1.35; color: var(--ink); display: block; }
-    .td-title a:hover { color: var(--fi-red); text-decoration: underline; }
-    .td-author { width: 130px; font-size: 12px; color: var(--ink-mid); }
-    .td-cat { width: 130px; }
-    .td-type { width: 80px; }
-    .td-time { width: 110px; white-space: nowrap; }
-    .td-copy { width: 36px; text-align: center; }
+    .td-thumb { width: 60px; padding: 6px 6px 6px 12px; }
+    .td-thumb img { width: 52px; height: 38px; object-fit: cover; border-radius: 2px; display: block; }
+    .td-thumb .no-img { width: 52px; height: 38px; background: #eee; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #bbb; }
+    .td-id { width: 72px; color: var(--ink-light); font-size: 11px; white-space: nowrap; }
+    .td-title { min-width: 240px; }
+    .td-title .title-link { font-family: var(--font-head); font-size: 13.5px; line-height: 1.35; color: var(--ink); display: block; margin-bottom: 3px; }
+    .td-title .title-link:hover { color: var(--fi-red); text-decoration: underline; }
+    .bc-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 1px 5px; border-radius: 2px; background: #fff0e0; color: #b85c00; }
+    .td-author { width: 120px; font-size: 12px; color: var(--ink-mid); line-height: 1.3; }
+    .td-section { width: 120px; }
+    .td-type { width: 76px; }
+    .td-time { width: 105px; white-space: nowrap; }
+    .td-actions { width: 60px; text-align: center; white-space: nowrap; }
 
-    .cat-pill {
+    .sec-pill {
       display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: .05em; padding: 2px 7px; border-radius: 10px;
-      background: #f0f0ee; color: var(--ink-mid); margin: 1px 2px 1px 0;
+      letter-spacing: .04em; padding: 2px 6px; border-radius: 10px;
+      background: #f0f0ee; color: var(--ink-mid); margin: 1px 2px 1px 0; line-height: 1.4;
     }
-    .type-tag {
-      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-      padding: 2px 7px; border-radius: 2px; display: inline-block;
-    }
-    .type-text  { background: #e8f4ff; color: #1a5f9a; }
-    .type-video { background: #fff0e0; color: #b85c00; }
-    .type-photo { background: #f0ffe8; color: #2a7a1a; }
-    .bc-tag { background: #fff0e0; color: #b85c00; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 6px; border-radius: 2px; display: inline-block; margin-top: 3px; }
+    .type-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 2px 7px; border-radius: 2px; display: inline-block; }
+    .t-article { background: #e8f4ff; color: #1a5f9a; }
+    .t-video   { background: #fff0e0; color: #b85c00; }
+    .t-photo   { background: #f0ffe8; color: #2a7a1a; }
 
     .time-date { font-size: 12px; font-weight: 500; }
+    .time-today { color: var(--green); }
     .time-clock { font-size: 11px; color: var(--ink-light); }
-    .time-today { color: var(--green); font-weight: 600; }
+    .enriching { font-size: 11px; color: #bbb; font-style: italic; }
 
     .icon-btn {
-      width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule);
+      width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule);
       background: none; display: inline-flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--ink-light); transition: all .12s;
+      cursor: pointer; color: var(--ink-light); transition: all .12s; vertical-align: middle;
     }
     .icon-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
+
+    /* Detail panel */
+    .detail-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200;
+      display: flex; align-items: flex-start; justify-content: flex-end;
+    }
+    .detail-panel {
+      width: 400px; max-width: 100vw; height: 100vh; overflow-y: auto;
+      background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,.18);
+      display: flex; flex-direction: column;
+    }
+    .dp-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--rule);
+      display: flex; align-items: flex-start; gap: 12px; background: #f8f8f6;
+    }
+    .dp-img { width: 80px; height: 56px; object-fit: cover; border-radius: 3px; flex-shrink: 0; }
+    .dp-img-none { width: 80px; height: 56px; background: #eee; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #bbb; }
+    .dp-title { font-family: var(--font-head); font-size: 14px; line-height: 1.4; flex: 1; }
+    .dp-close {
+      width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule);
+      background: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--ink-light); flex-shrink: 0;
+    }
+    .dp-close:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
+    .dp-body { padding: 16px 20px; flex: 1; }
+    .dp-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+    .dp-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); min-width: 80px; padding-top: 1px; }
+    .dp-val { font-size: 13px; color: var(--ink); flex: 1; word-break: break-word; line-height: 1.4; }
+    .dp-val a { color: var(--fi-red); }
+    .dp-val a:hover { text-decoration: underline; }
+    .dp-divider { height: 1px; background: var(--rule); margin: 10px 0; }
+    .dp-footer { padding: 14px 20px; border-top: 1px solid var(--rule); display: flex; gap: 8px; }
+    .dp-btn {
+      flex: 1; padding: 8px; font-size: 12px; font-weight: 600; border-radius: 4px;
+      border: 1px solid var(--rule); background: #fff; cursor: pointer; color: var(--ink-mid);
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+    }
+    .dp-btn:hover { border-color: var(--fi-red); color: var(--fi-red); }
+    .dp-btn.primary { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
+    .dp-btn.primary:hover { background: #c01818; }
 
     .state-box { padding: 50px; text-align: center; color: var(--ink-light); background: #fff; }
     .state-box .icon { font-size: 28px; margin-bottom: 10px; }
 
-    @media(max-width:800px) {
-      .td-cat,.td-type { display: none; }
+    @media(max-width:860px) {
+      .td-thumb,.td-section,.td-type { display: none; }
       .controls { padding: 10px 16px; }
       .layout { padding: 12px 16px; }
       .back,.masthead { padding: 0 16px; }
@@ -188,7 +236,6 @@
     <span>Refreshes in <span id="countdown">60</span>s</span>
   </div>
 </header>
-
 <div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
 
 <a href="../story-tracker/" class="back">
@@ -198,22 +245,22 @@
 
 <div class="stats">
   <div class="stat">
-    <span class="stat-n today" id="statToday">—</span>
+    <span class="stat-n green" id="sToday">—</span>
     <span class="stat-l">Published Today</span>
-    <span class="stat-sub" id="statTodaySub"></span>
+    <span class="stat-sub" id="sTodaySub"></span>
   </div>
   <div class="stat">
-    <span class="stat-n yesterday" id="statYest">—</span>
+    <span class="stat-n grey" id="sYest">—</span>
     <span class="stat-l">Yesterday</span>
-    <span class="stat-sub" id="statYestSub"></span>
+    <span class="stat-sub" id="sYestSub"></span>
   </div>
   <div class="stat">
-    <span class="stat-n" id="statShowing">—</span>
+    <span class="stat-n" id="sShowing">—</span>
     <span class="stat-l">Showing</span>
-    <span class="stat-sub" id="statShowingSub"></span>
+    <span class="stat-sub" id="sShowingSub"></span>
   </div>
   <div class="stat">
-    <span class="stat-n" id="statFetch">—</span>
+    <span class="stat-n" id="sFetch">—</span>
     <span class="stat-l">Last updated</span>
   </div>
 </div>
@@ -223,7 +270,7 @@
     <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
     <input type="search" id="searchInput" placeholder="Search title or author…" />
   </div>
-  <select class="ctrl-select" id="catFilter"><option value="">All categories</option></select>
+  <select class="ctrl-select" id="catFilter"><option value="">All sections</option></select>
   <select class="ctrl-select" id="authorFilter"><option value="">All authors</option></select>
   <select class="ctrl-select" id="typeFilter">
     <option value="">All types</option>
@@ -235,11 +282,18 @@
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h10M6 1v10"/></svg>
     Brand Connect
   </button>
-  <button class="export-btn" id="exportBtn">
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9v2h9V9M6.5 1v7M4 6l2.5 2.5L9 6"/></svg>
-    Export CSV
-  </button>
-  <span class="count-badge" id="countBadge"></span>
+  <div class="controls-right">
+    <button class="export-btn" id="exportBtn">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9v2h9V9M6.5 1v7M4 6l2.5 2.5L9 6"/></svg>
+      Export CSV
+    </button>
+    <span class="count-badge" id="countBadge"></span>
+  </div>
+</div>
+
+<div id="fetchProgress" style="display:none" class="fetch-progress">
+  <div class="spinner"></div>
+  <span id="fetchProgressMsg">Enriching article details…</span>
 </div>
 
 <div id="errWrap" style="display:none" class="err">
@@ -253,16 +307,17 @@
     <span class="sub" id="secSub"></span>
   </div>
   <div class="tbl-wrap">
-    <div class="state-box" id="stateBox"><div class="icon">⟳</div><p>Fetching…</p></div>
+    <div class="state-box" id="stateBox"><div class="icon">⟳</div><p>Fetching articles…</p></div>
     <table id="artTable" style="display:none">
       <thead>
         <tr>
-          <th data-col="story_id">Story ID <span class="sort-arrow">↕</span></th>
-          <th data-col="display_headline">Title <span class="sort-arrow">↕</span></th>
-          <th data-col="author">Author <span class="sort-arrow">↕</span></th>
-          <th data-col="category">Category <span class="sort-arrow">↕</span></th>
-          <th data-col="post_type">Type <span class="sort-arrow">↕</span></th>
-          <th data-col="date_timestamp">Published <span class="sort-arrow">↕</span></th>
+          <th></th><!-- thumb -->
+          <th data-col="story_id">ID <span class="sa">↕</span></th>
+          <th data-col="display_headline">Title <span class="sa">↕</span></th>
+          <th data-col="author">Author <span class="sa">↕</span></th>
+          <th data-col="section">Section <span class="sa">↕</span></th>
+          <th data-col="post_type">Type <span class="sa">↕</span></th>
+          <th data-col="created_at">Published <span class="sa">↕</span></th>
           <th></th>
         </tr>
       </thead>
@@ -271,20 +326,36 @@
   </div>
 </div>
 
-<script>
-const API      = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
-const FIELDS   = 'story_id,display_headline,weburl,weburl_r,author_byline,categories,post_type,publish_date,date_timestamp';
-const INTERVAL = 60;
+<!-- Detail panel -->
+<div id="detailOverlay" class="detail-overlay" style="display:none" onclick="closeDetail(event)">
+  <div class="detail-panel" id="detailPanel">
+    <div class="dp-header">
+      <div id="dpImg"></div>
+      <div id="dpTitle" class="dp-title"></div>
+      <button class="dp-close" onclick="closeDetailBtn()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+      </button>
+    </div>
+    <div class="dp-body" id="dpBody"></div>
+    <div class="dp-footer" id="dpFooter"></div>
+  </div>
+</div>
 
-let allArticles  = [];
+<script>
+const LIST_API    = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
+const DETAIL_API  = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article';
+const INTERVAL    = 60;
+
+let allArticles  = [];   // enriched
 let knownIds     = new Set();
 let showBC       = false;
-let sortCol      = 'date_timestamp';
-let sortDir      = -1; // -1 = desc, 1 = asc
+let sortCol      = 'created_at';
+let sortDir      = -1;
 let cdVal        = INTERVAL;
 let cdTimer      = null;
 let refTimer     = null;
 
+// DOM
 const $tbody    = document.getElementById('artTbody');
 const $table    = document.getElementById('artTable');
 const $state    = document.getElementById('stateBox');
@@ -300,16 +371,11 @@ const $typeF    = document.getElementById('typeFilter');
 const $toggleBC = document.getElementById('toggleBC');
 const $exportBtn= document.getElementById('exportBtn');
 const $badge    = document.getElementById('countBadge');
-const $statToday= document.getElementById('statToday');
-const $statTodaySub = document.getElementById('statTodaySub');
-const $statYest = document.getElementById('statYest');
-const $statYestSub  = document.getElementById('statYestSub');
-const $statShowing  = document.getElementById('statShowing');
-const $statShowingSub = document.getElementById('statShowingSub');
-const $statFetch= document.getElementById('statFetch');
+const $progress = document.getElementById('fetchProgress');
+const $progMsg  = document.getElementById('fetchProgressMsg');
 const $sub      = document.getElementById('secSub');
 
-// ── Helpers ────────────────────────────────────────────────
+// ── Field helpers ───────────────────────────────────────────
 function safeStr(val) {
   if (!val) return '';
   if (typeof val === 'string') return val.trim();
@@ -319,8 +385,35 @@ function safeStr(val) {
   return String(val).trim();
 }
 
+function getAuthor(art) {
+  const b = art.author_byline;
+  if (!b) return '';
+  if (Array.isArray(b)) return b.map(x => safeStr(x)).filter(Boolean).join(', ');
+  return safeStr(b);
+}
+
+function getSection(art) {
+  // from get-article: section[] is array of strings
+  if (art.section && Array.isArray(art.section) && art.section.length) return art.section[0];
+  // fallback: subsection[].name
+  if (art.subsection && art.subsection.length) return art.subsection[0].name || '';
+  // fallback: categories from list API
+  if (art.categories && art.categories.length) {
+    const parent = art.categories.find(c => c.parent === 0 || c.parent === '0');
+    return (parent || art.categories[0]).name || '';
+  }
+  return '';
+}
+
+function getAllSections(art) {
+  const s = new Set();
+  if (art.section && Array.isArray(art.section)) art.section.forEach(x => x && s.add(x));
+  if (art.subsection) art.subsection.forEach(x => x.name && s.add(x.name));
+  return [...s];
+}
+
 function getUrl(art) {
-  const u = art.weburl || art.weburl_r || '';
+  const u = art.state_url || art.weburl || art.weburl_r || '';
   if (!u) return '';
   return u.startsWith('http') ? u : 'https://www.forbesindia.com' + (u.startsWith('/') ? u : '/' + u);
 }
@@ -329,26 +422,16 @@ function isBrandConnect(art) {
   return getUrl(art).toLowerCase().includes('brand-connect');
 }
 
-function getAuthor(art) {
-  const b = art.author_byline;
-  if (!b) return '';
-  if (Array.isArray(b)) return b.map(a => safeStr(a)).filter(Boolean).join(', ');
-  return safeStr(b);
-}
-
-function getCategory(art) {
-  const cats = art.categories;
-  if (!cats || !cats.length) return '';
-  // prefer parent (parent===0) category; otherwise first
-  const parent = cats.find(c => c.parent === 0 || c.parent === '0');
-  return (parent || cats[0]).name || '';
-}
-
-function getAllCats(art) {
-  return (art.categories || []).map(c => c.name).filter(Boolean);
+function getImage(art) {
+  return art.images?.url || (Array.isArray(art.images) ? art.images[0]?.url : null) || '';
 }
 
 function getPubMs(art) {
+  // created_at from get-article: "2026-06-23 17:46:03"
+  if (art.created_at) {
+    const d = new Date(art.created_at.replace(' ', 'T'));
+    if (!isNaN(d)) return d.getTime();
+  }
   if (art.date_timestamp) {
     const ts = parseInt(art.date_timestamp, 10);
     if (!isNaN(ts)) return ts < 1e12 ? ts * 1000 : ts;
@@ -369,118 +452,135 @@ function formatTime(art) {
   const yest = tod - 86400000;
   const isToday     = ms >= tod;
   const isYesterday = ms >= yest && ms < tod;
-  const date = isToday ? 'Today' : isYesterday ? 'Yesterday'
-    : d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+  const date = isToday ? 'Today'
+    : isYesterday ? 'Yesterday'
+    : d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
   const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-  return { date, time, isToday, isYesterday };
+  return { date, time, isToday, isYesterday, full: d.toLocaleString('en-IN') };
 }
 
-function typeClass(pt) {
+function typeInfo(pt) {
   const t = (pt || '').toLowerCase();
-  if (t.includes('video')) return 'type-video';
-  if (t.includes('photo') || t.includes('gallery')) return 'type-photo';
-  return 'type-text';
-}
-function typeLabel(pt) {
-  const t = (pt || '').toLowerCase();
-  if (t.includes('video')) return 'Video';
-  if (t.includes('photo') || t.includes('gallery')) return 'Photo';
-  return 'Article';
+  if (t.includes('video')) return { label: 'Video', cls: 't-video' };
+  if (t.includes('photo') || t.includes('gallery')) return { label: 'Photo', cls: 't-photo' };
+  return { label: 'Article', cls: 't-article' };
 }
 
-// ── Populate filter dropdowns ──────────────────────────────
+// ── Fetch ───────────────────────────────────────────────────
+async function fetchList() {
+  const res  = await fetch(`${LIST_API}?count=50`);
+  if (!res.ok) throw new Error(`List API: HTTP ${res.status}`);
+  const json = await res.json();
+  return Array.isArray(json) ? json
+       : Array.isArray(json.data) ? json.data
+       : Array.isArray(json.articles) ? json.articles : [];
+}
+
+async function fetchDetail(article_id) {
+  try {
+    const res  = await fetch(`${DETAIL_API}?article_id=${article_id}`);
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data || json;
+  } catch { return null; }
+}
+
+async function enrichArticles(list) {
+  // Batch parallel calls — all 50 at once
+  const details = await Promise.all(list.map(a => fetchDetail(a.story_id)));
+  return list.map((a, i) => {
+    const d = details[i];
+    if (!d) return a; // fallback to list data
+    return { ...a, ...d, _enriched: true };
+  });
+}
+
+// ── Filters population ──────────────────────────────────────
 function populateFilters() {
-  const cats    = new Set();
-  const authors = new Set();
+  const sections = new Set();
+  const authors  = new Set();
   allArticles.forEach(a => {
-    getAllCats(a).forEach(c => cats.add(c));
+    getAllSections(a).forEach(s => s && sections.add(s));
     const au = getAuthor(a);
-    if (au) au.split(', ').forEach(x => authors.add(x.trim()));
+    if (au) au.split(', ').forEach(x => x.trim() && authors.add(x.trim()));
   });
 
-  const savedCat = $catF.value;
-  $catF.innerHTML = '<option value="">All categories</option>';
-  [...cats].sort().forEach(c => {
+  const sc = $catF.value;
+  $catF.innerHTML = '<option value="">All sections</option>';
+  [...sections].sort().forEach(s => {
     const o = document.createElement('option');
-    o.value = c; o.textContent = c;
-    if (c === savedCat) o.selected = true;
+    o.value = s; o.textContent = s; if (s === sc) o.selected = true;
     $catF.appendChild(o);
   });
 
-  const savedAu = $authorF.value;
+  const sa = $authorF.value;
   $authorF.innerHTML = '<option value="">All authors</option>';
   [...authors].sort().forEach(a => {
     const o = document.createElement('option');
-    o.value = a; o.textContent = a;
-    if (a === savedAu) o.selected = true;
+    o.value = a; o.textContent = a; if (a === sa) o.selected = true;
     $authorF.appendChild(o);
   });
 }
 
-// ── Stats ──────────────────────────────────────────────────
+// ── Stats ───────────────────────────────────────────────────
 function updateStats(visible) {
   const now  = new Date();
   const tod  = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const yest = tod - 86400000;
+  const todayN = allArticles.filter(a => { const ms = getPubMs(a); return ms && ms >= tod; }).length;
+  const yestN  = allArticles.filter(a => { const ms = getPubMs(a); return ms && ms >= yest && ms < tod; }).length;
 
-  const todayAll = allArticles.filter(a => { const ms = getPubMs(a); return ms && ms >= tod; });
-  const yesterdayAll = allArticles.filter(a => { const ms = getPubMs(a); return ms && ms >= yest && ms < tod; });
-
-  $statToday.textContent  = todayAll.length;
-  $statTodaySub.textContent = todayAll.length ? `as of ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}` : 'none yet';
-  $statYest.textContent   = yesterdayAll.length;
-  $statYestSub.textContent = yesterdayAll.length ? `${new Date(tod - 1).toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}` : '';
-  $statShowing.textContent = visible.length;
-  $statShowingSub.textContent = `of ${allArticles.length} fetched`;
-  $badge.innerHTML = `<strong>${visible.length}</strong> of ${allArticles.length} articles`;
-  $statFetch.textContent = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('sToday').textContent    = todayN;
+  document.getElementById('sTodaySub').textContent = `as of ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+  document.getElementById('sYest').textContent     = yestN;
+  document.getElementById('sYestSub').textContent  = new Date(tod-1).toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+  document.getElementById('sShowing').textContent  = visible.length;
+  document.getElementById('sShowingSub').textContent = `of ${allArticles.length} fetched`;
+  document.getElementById('sFetch').textContent    = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  $badge.innerHTML = `<strong>${visible.length}</strong> of ${allArticles.length}`;
 }
 
-// ── Sort ───────────────────────────────────────────────────
-function getSortVal(art, col) {
-  if (col === 'story_id')        return Number(art.story_id) || 0;
-  if (col === 'display_headline') return (art.display_headline || '').toLowerCase();
-  if (col === 'author')          return getAuthor(art).toLowerCase();
-  if (col === 'category')        return getCategory(art).toLowerCase();
-  if (col === 'post_type')       return typeLabel(art.post_type).toLowerCase();
-  if (col === 'date_timestamp')  return getPubMs(art) || 0;
+// ── Sort ────────────────────────────────────────────────────
+function getSortVal(a, col) {
+  if (col === 'story_id')        return Number(a.story_id) || 0;
+  if (col === 'display_headline') return (a.display_headline || '').toLowerCase();
+  if (col === 'author')          return getAuthor(a).toLowerCase();
+  if (col === 'section')         return getSection(a).toLowerCase();
+  if (col === 'post_type')       return typeInfo(a.post_type).label.toLowerCase();
+  if (col === 'created_at')      return getPubMs(a) || 0;
   return '';
 }
-
 function updateSortHeaders() {
   document.querySelectorAll('th[data-col]').forEach(th => {
     th.classList.toggle('sorted', th.dataset.col === sortCol);
-    const arrow = th.querySelector('.sort-arrow');
-    if (arrow) arrow.textContent = th.dataset.col === sortCol ? (sortDir === -1 ? '↓' : '↑') : '↕';
+    const sa = th.querySelector('.sa');
+    if (sa) sa.textContent = th.dataset.col === sortCol ? (sortDir === -1 ? '↓' : '↑') : '↕';
   });
 }
 
-// ── Render ─────────────────────────────────────────────────
+// ── Render ──────────────────────────────────────────────────
 function renderRows() {
   const q      = $search.value.trim().toLowerCase();
-  const cat    = $catF.value;
+  const sec    = $catF.value;
   const author = $authorF.value;
   const type   = $typeF.value.toLowerCase();
 
   let visible = allArticles.filter(a => {
     if (!showBC && isBrandConnect(a)) return false;
-    const title  = (a.display_headline || '').toLowerCase();
-    const au     = getAuthor(a).toLowerCase();
-    const allCats = getAllCats(a);
-    const pt     = (a.post_type || '').toLowerCase();
+    const title = (a.display_headline || a.headline || '').toLowerCase();
+    const au    = getAuthor(a).toLowerCase();
+    const secs  = getAllSections(a);
+    const pt    = (a.post_type || '').toLowerCase();
     if (q && !title.includes(q) && !au.includes(q)) return false;
-    if (cat && !allCats.includes(cat)) return false;
+    if (sec && !secs.includes(sec)) return false;
     if (author && !au.includes(author.toLowerCase())) return false;
     if (type && !pt.includes(type)) return false;
     return true;
   });
 
-  // Sort
   visible.sort((a, b) => {
     const av = getSortVal(a, sortCol), bv = getSortVal(b, sortCol);
-    if (av < bv) return -1 * sortDir;
-    if (av > bv) return  1 * sortDir;
-    return 0;
+    if (av < bv) return -sortDir; if (av > bv) return sortDir; return 0;
   });
 
   if (!visible.length) {
@@ -490,110 +590,170 @@ function renderRows() {
   } else {
     $state.style.display = 'none';
     $table.style.display = 'table';
-
     $tbody.innerHTML = visible.map(a => {
       const isNew  = !knownIds.has(String(a.story_id)) && knownIds.size > 0;
       const title  = a.display_headline || a.headline || '(No title)';
       const url    = getUrl(a);
       const author = getAuthor(a);
-      const cat    = getCategory(a);
+      const sec    = getSection(a);
       const isBC   = isBrandConnect(a);
+      const img    = getImage(a);
       const { date, time, isToday } = formatTime(a);
+      const ti     = typeInfo(a.post_type);
       const escUrl = url.replace(/"/g, '&quot;');
+      const sid    = String(a.story_id || '');
 
-      return `<tr${isNew ? ' class="new-row"' : ''}>
+      return `<tr${isNew ? ' class="new-row"' : ''} onclick="openDetail('${sid}')" style="cursor:pointer">
+        <td class="td-thumb">
+          ${img ? `<img src="${img}" alt="" loading="lazy" onerror="this.style.display='none'">` : '<div class="no-img">📰</div>'}
+        </td>
         <td class="td-id">${a.story_id || '—'}</td>
         <td class="td-title">
-          ${url ? `<a href="${escUrl}" target="_blank" rel="noopener">${title}</a>` : `<span>${title}</span>`}
+          <a class="title-link" href="${escUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${title}</a>
           ${isBC ? '<span class="bc-tag">Brand Connect</span>' : ''}
+          ${!a._enriched ? '<span class="enriching">loading…</span>' : ''}
         </td>
         <td class="td-author">${author || '—'}</td>
-        <td class="td-cat">${cat ? `<span class="cat-pill">${cat}</span>` : '—'}</td>
-        <td class="td-type"><span class="type-tag ${typeClass(a.post_type)}">${typeLabel(a.post_type)}</span></td>
+        <td class="td-section">${sec ? `<span class="sec-pill">${sec}</span>` : '—'}</td>
+        <td class="td-type"><span class="type-tag ${ti.cls}">${ti.label}</span></td>
         <td class="td-time">
           <div class="time-date${isToday ? ' time-today' : ''}">${date}</div>
           ${time ? `<div class="time-clock">${time}</div>` : ''}
         </td>
-        <td class="td-copy">
+        <td class="td-actions" onclick="event.stopPropagation()">
           <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
           </button>
         </td>
       </tr>`;
     }).join('');
-
     visible.forEach(a => knownIds.add(String(a.story_id)));
   }
-
   updateStats(visible);
 }
 
-// ── Export CSV ─────────────────────────────────────────────
-function exportCSV() {
-  const q      = $search.value.trim().toLowerCase();
-  const cat    = $catF.value;
-  const author = $authorF.value;
-  const type   = $typeF.value.toLowerCase();
+// ── Detail panel ────────────────────────────────────────────
+function openDetail(sid) {
+  const art = allArticles.find(a => String(a.story_id) === sid);
+  if (!art) return;
 
+  const url    = getUrl(art);
+  const img    = getImage(art);
+  const author = getAuthor(art);
+  const secs   = getAllSections(art);
+  const ti     = typeInfo(art.post_type);
+  const { full } = formatTime(art);
+  const isBC   = isBrandConnect(art);
+
+  // Header
+  document.getElementById('dpImg').innerHTML = img
+    ? `<img class="dp-img" src="${img}" alt="">`
+    : '<div class="dp-img-none">📰</div>';
+  document.getElementById('dpTitle').textContent = art.display_headline || art.headline || '(No title)';
+
+  // Body
+  const rows = [
+    ['Story ID',  art.story_id || '—'],
+    ['Author',    author || '—'],
+    ['Section',   secs.join(', ') || '—'],
+    ['Type',      `<span class="type-tag ${ti.cls}">${ti.label}</span>${isBC ? ' <span class="bc-tag">Brand Connect</span>' : ''}`],
+    ['Published', full || '—'],
+    ['URL',       url ? `<a href="${url}" target="_blank" rel="noopener">${url}</a>` : '—'],
+    ['Image URL', img ? `<a href="${img}" target="_blank" rel="noopener">${img.split('/').pop()}</a>` : '—'],
+  ];
+
+  document.getElementById('dpBody').innerHTML = rows.map(([label, val]) =>
+    `<div class="dp-row"><span class="dp-label">${label}</span><span class="dp-val">${val}</span></div>`
+  ).join('') + '<div class="dp-divider"></div>';
+
+  document.getElementById('dpFooter').innerHTML = `
+    <button class="dp-btn" onclick="copyUrl('${url.replace(/'/g,"\\'")}',this)">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
+      Copy URL
+    </button>
+    <a href="${url}" target="_blank" rel="noopener" class="dp-btn primary">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 2H2v8h8V7M7 1h4v4M11 1L6 6"/></svg>
+      Open Article
+    </a>`;
+
+  document.getElementById('detailOverlay').style.display = 'flex';
+}
+
+function closeDetail(e) {
+  if (e.target === document.getElementById('detailOverlay'))
+    document.getElementById('detailOverlay').style.display = 'none';
+}
+function closeDetailBtn() {
+  document.getElementById('detailOverlay').style.display = 'none';
+}
+window.openDetail   = openDetail;
+window.closeDetail  = closeDetail;
+window.closeDetailBtn = closeDetailBtn;
+
+// ── Export CSV ──────────────────────────────────────────────
+function exportCSV() {
+  const q = $search.value.trim().toLowerCase(), sec = $catF.value,
+        author = $authorF.value, type = $typeF.value.toLowerCase();
   const rows = allArticles.filter(a => {
     if (!showBC && isBrandConnect(a)) return false;
-    const title = (a.display_headline || '').toLowerCase();
-    const au    = getAuthor(a).toLowerCase();
+    const title = (a.display_headline || '').toLowerCase(), au = getAuthor(a).toLowerCase();
     if (q && !title.includes(q) && !au.includes(q)) return false;
-    if (cat && !getAllCats(a).includes(cat)) return false;
+    if (sec && !getAllSections(a).includes(sec)) return false;
     if (author && !au.includes(author.toLowerCase())) return false;
     if (type && !(a.post_type || '').toLowerCase().includes(type)) return false;
     return true;
   });
-
-  const headers = ['Story ID','Title','Author','Category','Type','Published','URL'];
-  const escape  = v => `"${String(v || '').replace(/"/g, '""')}"`;
-  const lines   = [
-    headers.map(escape).join(','),
-    ...rows.map(a => {
-      const { date, time } = formatTime(a);
-      return [
-        a.story_id,
-        a.display_headline || a.headline,
-        getAuthor(a),
-        getCategory(a),
-        typeLabel(a.post_type),
-        date + (time ? ' ' + time : ''),
-        getUrl(a)
-      ].map(escape).join(',');
-    })
-  ];
-
-  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const esc  = v => `"${String(v||'').replace(/"/g,'""')}"`;
+  const hdrs = ['Story ID','Title','Author','Section','Type','Published','URL','Image URL'];
+  const lines = [hdrs.map(esc).join(','), ...rows.map(a => {
+    const { full } = formatTime(a);
+    return [a.story_id, a.display_headline||a.headline, getAuthor(a),
+      getAllSections(a).join('; '), typeInfo(a.post_type).label,
+      full, getUrl(a), getImage(a)].map(esc).join(',');
+  })];
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
   const link = document.createElement('a');
-  link.href  = URL.createObjectURL(blob);
-  link.download = `forbesindia-published-${new Date().toISOString().slice(0,10)}.csv`;
+  link.href = URL.createObjectURL(blob);
+  link.download = `forbesindia-${new Date().toISOString().slice(0,10)}.csv`;
   link.click();
 }
 
-// ── Fetch & Load ───────────────────────────────────────────
+// ── Main load ───────────────────────────────────────────────
 async function load(showLoader) {
   if (showLoader) {
     allArticles = []; knownIds = new Set();
     $table.style.display = 'none';
     $state.style.display = 'block';
-    $state.innerHTML = '<div class="icon">⟳</div><p>Fetching…</p>';
+    $state.innerHTML = '<div class="icon">⟳</div><p>Fetching articles…</p>';
   }
   $err.style.display = 'none';
   $dot.classList.remove('paused');
 
   try {
-    const res  = await fetch(`${API}?count=50&fields=${encodeURIComponent(FIELDS)}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    allArticles = Array.isArray(json) ? json
-                : Array.isArray(json.data) ? json.data
-                : Array.isArray(json.articles) ? json.articles : [];
-    $sub.textContent = `${allArticles.length} fetched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+    // Step 1: get list
+    const list = await fetchList();
+    $state.innerHTML = '<div class="icon">⟳</div><p>Loading details…</p>';
+
+    // Step 2: show list data immediately (partial render)
+    allArticles = list;
     populateFilters();
     renderRows();
+
+    // Step 3: enrich with get-article in parallel, show progress
+    $progress.style.display = 'flex';
+    $progMsg.textContent = `Fetching details for ${list.length} articles…`;
+
+    const enriched = await enrichArticles(list);
+    allArticles = enriched;
+    $progress.style.display = 'none';
+
+    populateFilters();
+    renderRows();
+    $sub.textContent = `${allArticles.length} articles · enriched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+
   } catch(e) {
     console.error(e);
+    $progress.style.display = 'none';
     $dot.classList.add('paused');
     $err.style.display = 'flex';
     $errMsg.textContent = `${e.message} — will retry in ${INTERVAL}s`;
@@ -605,7 +765,7 @@ async function load(showLoader) {
   }
 }
 
-// ── Countdown ──────────────────────────────────────────────
+// ── Countdown ───────────────────────────────────────────────
 function startCountdown() {
   cdVal = INTERVAL;
   $cd.textContent = cdVal;
@@ -621,12 +781,12 @@ function startCountdown() {
   refTimer = setTimeout(() => load(false).then(startCountdown), INTERVAL * 1000);
 }
 
-// ── Event listeners ────────────────────────────────────────
+// ── Events ──────────────────────────────────────────────────
 $search.addEventListener('input', renderRows);
 $catF.addEventListener('change', renderRows);
 $authorF.addEventListener('change', renderRows);
 $typeF.addEventListener('change', renderRows);
-
+$exportBtn.addEventListener('click', exportCSV);
 $toggleBC.addEventListener('click', () => {
   showBC = !showBC;
   $toggleBC.classList.toggle('active', showBC);
@@ -635,27 +795,28 @@ $toggleBC.addEventListener('click', () => {
     : `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h10M6 1v10"/></svg> Brand Connect`;
   renderRows();
 });
-
-$exportBtn.addEventListener('click', exportCSV);
-
 document.querySelectorAll('th[data-col]').forEach(th => {
   th.addEventListener('click', () => {
-    if (sortCol === th.dataset.col) { sortDir *= -1; }
-    else { sortCol = th.dataset.col; sortDir = th.dataset.col === 'date_timestamp' ? -1 : 1; }
-    updateSortHeaders();
-    renderRows();
+    sortCol = th.dataset.col;
+    sortDir = sortCol === th.dataset.col ? sortDir * -1 : (th.dataset.col === 'created_at' ? -1 : 1);
+    sortCol = th.dataset.col;
+    updateSortHeaders(); renderRows();
   });
 });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('detailOverlay').style.display = 'none';
+});
 
-// ── Boot ───────────────────────────────────────────────────
+// ── Boot ────────────────────────────────────────────────────
 updateSortHeaders();
 load(true).then(startCountdown);
 
 window.copyUrl = (url, btn) => {
   if (!url) return;
   navigator.clipboard.writeText(url).then(() => {
-    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#1db954" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg>`;
-    setTimeout(() => { btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>`; }, 1500);
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#1db954" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg>`;
+    setTimeout(() => { btn.innerHTML = orig; }, 1500);
   });
 };
 </script>
