@@ -423,11 +423,29 @@ function applyFilters() {
   const type = $typeF.value.toLowerCase();
   const cat  = $catF.value;
 
+  // Today's date boundaries (midnight → now)
+  const now       = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
   filteredArticles = allArticles.filter(a => {
     const headline = safeStr(a.display_headline || a.headline).toLowerCase();
     const byline   = safeStr(a.author_byline || a.byline).toLowerCase();
     const postType = safeStr(a.post_type).toLowerCase();
     const catIds   = (a.categories || []).map(c => c.id);
+    const url      = safeStr(a.weburl_r || a.url || a.web_url).toLowerCase();
+
+    // Exclude brand-connect articles
+    if (url.includes('brand-connect')) return false;
+
+    // Only show articles published today (midnight → now)
+    let pubMs = null;
+    if (a.publish_date) {
+      pubMs = new Date(a.publish_date).getTime();
+    } else if (a.date_timestamp) {
+      const ts = parseInt(a.date_timestamp, 10);
+      pubMs = ts < 1e12 ? ts * 1000 : ts;
+    }
+    if (pubMs !== null && (pubMs < todayStart || pubMs > now.getTime())) return false;
 
     if (q && !headline.includes(q) && !byline.includes(q)) return false;
     if (type && !postType.includes(type)) return false;
