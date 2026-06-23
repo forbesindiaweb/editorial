@@ -904,6 +904,10 @@ function App(){
               <span>{v.l}</span>
             </button>
           ))}
+          <a href="https://forbesindiaweb.github.io/editorial/published-articles/" target="_blank" rel="noreferrer" className="nav-btn" style={{width:"100%",display:"flex",alignItems:"center",gap:9,padding:"9px 10px",borderRadius:7,marginBottom:2,background:"transparent",color:"#6b7280",textAlign:"left",fontSize:13,fontWeight:400,textDecoration:"none"}}>
+  <span style={{fontSize:15,flexShrink:0}}>📰</span>
+  <span>Published Articles</span>
+</a>
           <div style={{marginTop:18,paddingLeft:3}}>
             <div style={{fontSize:10,color:"#374151",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:6,paddingLeft:7}}>Reporters</div>
             <button onClick={()=>setFReporter("All")} style={{width:"100%",textAlign:"left",padding:"5px 9px",borderRadius:6,border:"none",cursor:"pointer",background:fReporter==="All"?"rgba(99,102,241,0.18)":"transparent",color:fReporter==="All"?"#818cf8":"#6b7280",fontSize:12,marginBottom:1,fontFamily:"inherit",fontWeight:fReporter==="All"?700:400}}>All Reporters</button>
