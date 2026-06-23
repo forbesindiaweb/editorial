@@ -254,7 +254,7 @@
 const REFRESH_INTERVAL = 60;
 const FI_BASE          = 'https://www.forbesindia.com/';
 const API_BASE         = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
-const FIELDS = 'story_id,display_headline,weburl,weburl_r,post_type,categories,author_byline,publish_date,date_timestamp,updated_at';
+const FIELDS = 'story_id,display_headline,weburl,weburl_r,post_type,categories,author_byline,publish_date,date_timestamp';
 
 let allArticles      = [];
 let filteredArticles = [];
@@ -330,82 +330,24 @@ function typeTag(postType) {
   return '<span class="art-type-tag news">Article</span>';
 }
 
-// ── Fetch with pagination ──────────────────────────────────
-const PAGE_SIZE = 50; // fetch 50 at a time
-
-async function fetchPage(start) {
+// ── Fetch ──────────────────────────────────────────────────
+async function fetchArticles() {
+  $stateBox.innerHTML = `<div class="icon">⟳</div><p>Fetching articles…</p>`;
   const params = new URLSearchParams({
-    count: PAGE_SIZE,
-    start,
+    count: 200,
     fields: FIELDS,
     section: 'category',
     subSection: 'NA'
   });
-  const res = await fetch(`${API_BASE}?${params.toString()}`);
+  const res  = await fetch(`${API_BASE}?${params.toString()}`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = await res.json();
-  if (Array.isArray(json))            return json;
-  if (Array.isArray(json.data))       return json.data;
-  if (Array.isArray(json.articles))   return json.articles;
-  if (Array.isArray(json.stories))    return json.stories;
+  if (Array.isArray(json))          return json;
+  if (Array.isArray(json.data))     return json.data;
+  if (Array.isArray(json.articles)) return json.articles;
+  if (Array.isArray(json.stories))  return json.stories;
   for (const v of Object.values(json)) if (Array.isArray(v) && v.length) return v;
   return [];
-}
-
-function getPubMs(art) {
-  if (art.updated_at) {
-    const ts = parseInt(art.updated_at, 10);
-    if (!isNaN(ts)) return ts < 1e12 ? ts * 1000 : ts;
-  }
-  if (art.publish_date) {
-    const d = new Date(art.publish_date);
-    if (!isNaN(d)) return d.getTime();
-  }
-  if (art.date_timestamp) {
-    const ts = parseInt(art.date_timestamp, 10);
-    if (!isNaN(ts)) return ts < 1e12 ? ts * 1000 : ts;
-  }
-  return null;
-}
-
-async function fetchArticles() {
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-  const todayMs = todayStart.getTime();
-
-  let collected = [];
-  let start = 0;
-  let hitOldArticle = false;
-
-  // Update status while paginating
-  $stateBox.innerHTML = `<div class="icon">⟳</div><p>Fetching articles…</p>`;
-
-  while (!hitOldArticle) {
-    const page = await fetchPage(start);
-    if (!page.length) break;
-
-    for (const art of page) {
-      const pubMs = getPubMs(art);
-      // If we have a timestamp and it's before today, stop paginating
-      if (pubMs !== null && pubMs < todayMs) {
-        hitOldArticle = true;
-        break;
-      }
-      collected.push(art);
-    }
-
-    start += PAGE_SIZE;
-    // Safety cap — don't fetch more than 500 articles
-    if (start >= 500) break;
-
-    // Update progress
-    $stateBox.innerHTML = `<div class="icon">⟳</div><p>Fetching… ${collected.length} articles so far</p>`;
-
-    // If page was smaller than PAGE_SIZE, we've hit the end
-    if (page.length < PAGE_SIZE) break;
-  }
-
-  return collected;
 }
 
 // ── Render row ─────────────────────────────────────────────
