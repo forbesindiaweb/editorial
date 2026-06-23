@@ -215,8 +215,8 @@
   <select class="filter-select" id="catFilter"><option value="">All categories</option></select>
   <select class="filter-select" id="countSelect">
     <option value="20">20 articles</option>
-    <option value="50" selected>50 articles</option>
-    <option value="100">100 articles</option>
+    <option value="50">50 articles</option>
+    <option value="100" selected>100 articles</option>
     <option value="200">200 articles</option>
   </select>
   <div class="count-badge" id="countBadge"></div>
@@ -259,7 +259,7 @@
 const REFRESH_INTERVAL = 60;
 const FI_BASE          = 'https://www.forbesindia.com/';
 const API_BASE         = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
-const FIELDS           = 'story_id,display_headline,weburl_r,post_type,categories,author_byline,publish_date,date_timestamp';
+const FIELDS = 'story_id,display_headline,weburl,weburl_r,post_type,categories,author_byline,publish_date,date_timestamp,updated_at';
 
 let allArticles      = [];
 let filteredArticles = [];
@@ -423,10 +423,6 @@ function applyFilters() {
   const type = $typeF.value.toLowerCase();
   const cat  = $catF.value;
 
-  // Today's date boundaries (midnight → now)
-  const now       = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-
   filteredArticles = allArticles.filter(a => {
     const headline = safeStr(a.display_headline || a.headline).toLowerCase();
     const byline   = safeStr(a.author_byline || a.byline).toLowerCase();
@@ -436,16 +432,6 @@ function applyFilters() {
 
     // Exclude brand-connect articles
     if (url.includes('brand-connect')) return false;
-
-    // Only show articles published today (midnight → now)
-    let pubMs = null;
-    if (a.publish_date) {
-      pubMs = new Date(a.publish_date).getTime();
-    } else if (a.date_timestamp) {
-      const ts = parseInt(a.date_timestamp, 10);
-      pubMs = ts < 1e12 ? ts * 1000 : ts;
-    }
-    if (pubMs !== null && (pubMs < todayStart || pubMs > now.getTime())) return false;
 
     if (q && !headline.includes(q) && !byline.includes(q)) return false;
     if (type && !postType.includes(type)) return false;
