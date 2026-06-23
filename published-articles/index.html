@@ -6,170 +6,134 @@
   <title>Published — Forbes India Editorial</title>
   <style>
     :root {
-      --fi-red:     #E02020;
-      --ink:        #111111;
-      --ink-mid:    #444444;
-      --ink-light:  #888888;
-      --rule:       #e0e0e0;
-      --bg:         #f7f7f5;
-      --bg-card:    #ffffff;
-      --masthead:   #0d0d0d;
-      --live-green: #1db954;
-      --tag-bg:     #f0f0ee;
-      --font-head:  'Georgia', 'Times New Roman', serif;
-      --font-ui:    -apple-system, 'Helvetica Neue', Arial, sans-serif;
-      --radius:     4px;
+      --fi-red:    #E02020;
+      --ink:       #111;
+      --ink-mid:   #444;
+      --ink-light: #888;
+      --rule:      #e0e0e0;
+      --bg:        #f7f7f5;
+      --bg-card:   #fff;
+      --masthead:  #0d0d0d;
+      --green:     #1db954;
+      --font-head: 'Georgia','Times New Roman',serif;
+      --font-ui:   -apple-system,'Helvetica Neue',Arial,sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-ui); background: var(--bg); color: var(--ink); min-height: 100vh; }
+    body { font-family: var(--font-ui); background: var(--bg); color: var(--ink); }
     a { color: inherit; text-decoration: none; }
 
     /* Masthead */
     .masthead {
       background: var(--masthead); color: #fff;
-      padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
-      height: 52px; position: sticky; top: 0; z-index: 100;
+      padding: 0 24px; height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
       border-bottom: 3px solid var(--fi-red);
     }
     .masthead-left { display: flex; align-items: center; gap: 16px; }
-    .masthead-logo { font-family: var(--font-head); font-size: 18px; font-weight: normal; letter-spacing: .02em; color: #fff; }
-    .masthead-logo span { color: var(--fi-red); }
-    .masthead-sep { width: 1px; height: 20px; background: #444; }
-    .masthead-title { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #aaa; font-weight: 500; }
-    .live-badge { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #bbb; letter-spacing: .05em; }
-    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--live-green); flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
-    .live-dot.paused { background: #666; animation: none; }
+    .logo { font-family: var(--font-head); font-size: 18px; }
+    .logo span { color: var(--fi-red); }
+    .sep { width: 1px; height: 20px; background: #444; }
+    .page-title { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #aaa; }
+    .live-badge { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #bbb; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    .live-dot.paused { background: #555; animation: none; }
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.75)} }
-    #countdown { color: #fff; font-weight: 600; }
+    #countdown { color: #fff; font-weight: 700; }
 
-    /* Refresh bar */
-    .refresh-bar-wrap { height: 2px; background: #e0e0e0; position: relative; overflow: hidden; }
-    .refresh-bar { height: 100%; background: var(--fi-red); width: 100%; transform-origin: left; transition: transform linear; }
+    /* Progress bar */
+    .pbar-wrap { height: 2px; background: #ddd; }
+    .pbar { height: 100%; background: var(--fi-red); transform-origin: left; }
 
-    /* Back link */
-    .back-link {
-      font-size: 11px; color: #888; display: flex; align-items: center; gap: 4px;
-      text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
-      padding: 0 24px; height: 34px; background: #f5f5f3; border-bottom: 1px solid var(--rule);
+    /* Back */
+    .back {
+      display: flex; align-items: center; gap: 5px;
+      padding: 0 24px; height: 34px;
+      font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+      color: #888; background: #f2f2f0; border-bottom: 1px solid var(--rule);
     }
-    .back-link:hover { color: var(--fi-red); }
+    .back:hover { color: var(--fi-red); }
 
-    /* Stats bar */
-    .stats-bar { display: flex; gap: 1px; background: var(--rule); border-bottom: 1px solid var(--rule); }
-    .stat-cell { flex: 1; background: #fff; padding: 10px 20px; display: flex; align-items: baseline; gap: 6px; }
-    .stat-num { font-size: 22px; font-family: var(--font-head); font-weight: bold; color: var(--ink); line-height: 1; }
-    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); }
+    /* Stats */
+    .stats { display: flex; gap: 1px; background: var(--rule); border-bottom: 1px solid var(--rule); }
+    .stat { flex: 1; background: #fff; padding: 10px 20px; display: flex; align-items: baseline; gap: 6px; }
+    .stat-n { font-family: var(--font-head); font-size: 22px; font-weight: bold; }
+    .stat-l { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); }
 
     /* Controls */
     .controls {
       background: #fff; border-bottom: 1px solid var(--rule);
       padding: 10px 24px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     }
-    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
-    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-light); pointer-events: none; }
-    .search-input {
-      width: 100%; padding: 7px 10px 7px 32px; border: 1px solid var(--rule); border-radius: var(--radius);
-      font-size: 13px; font-family: var(--font-ui); background: var(--bg); color: var(--ink); outline: none;
+    .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 320px; }
+    .search-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--ink-light); pointer-events: none; }
+    input[type=search] {
+      width: 100%; padding: 7px 10px 7px 30px; border: 1px solid var(--rule);
+      border-radius: 4px; font-size: 13px; font-family: var(--font-ui);
+      background: var(--bg); outline: none;
     }
-    .search-input:focus { border-color: var(--fi-red); background: #fff; }
-    .filter-select {
-      padding: 7px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
-      font-size: 13px; font-family: var(--font-ui); background: var(--bg); color: var(--ink); cursor: pointer; outline: none;
+    input[type=search]:focus { border-color: var(--fi-red); background: #fff; }
+    .toggle-bc {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--ink-mid); cursor: pointer; user-select: none;
+      padding: 6px 10px; border: 1px solid var(--rule); border-radius: 4px;
+      background: var(--bg); transition: background .12s, border-color .12s;
     }
-    .filter-select:focus { border-color: var(--fi-red); }
+    .toggle-bc:hover { border-color: #aaa; }
+    .toggle-bc.active { background: #fff3f3; border-color: var(--fi-red); color: var(--fi-red); font-weight: 600; }
     .count-badge { margin-left: auto; font-size: 12px; color: var(--ink-light); white-space: nowrap; }
     .count-badge strong { color: var(--ink); }
 
-
-
-    /* Layout */
-    .layout { max-width: 1400px; margin: 0 auto; padding: 18px 24px; }
-    .section-hd { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
-    .section-hd h2 { font-family: var(--font-head); font-size: 17px; font-weight: bold; }
-    .section-hd .sub { font-size: 12px; color: var(--ink-light); }
-
     /* Error */
-    .error-banner {
-      background: #fff3f3; border: 1px solid #fca5a5; border-radius: var(--radius);
-      padding: 10px 14px; font-size: 13px; color: #b91c1c; margin-bottom: 14px;
-      display: flex; align-items: center; gap: 8px;
+    .err {
+      margin: 14px 24px; padding: 10px 14px; border-radius: 4px;
+      background: #fff3f3; border: 1px solid #fca5a5; color: #b91c1c;
+      font-size: 13px; display: flex; align-items: center; gap: 8px;
     }
 
     /* Table */
-    .art-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; font-size: 13px; }
-    .art-table thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
-    .art-table thead th {
-      padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .1em; color: var(--ink-light);
-      white-space: nowrap;
+    .layout { padding: 16px 24px; }
+    .section-hd { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+    .section-hd h2 { font-family: var(--font-head); font-size: 17px; }
+    .section-hd .sub { font-size: 12px; color: var(--ink-light); }
+
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; font-size: 13px; }
+    thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
+    th { padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-light); white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid #f0f0ee; transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #fafaf8; }
+    tbody tr.new-row { animation: slideIn .4s ease-out; }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-5px);background:#fff8f8} to{opacity:1;transform:translateY(0)} }
+    td { padding: 10px 12px; vertical-align: middle; }
+
+    .td-id { width: 80px; color: var(--ink-light); font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .td-title a {
+      font-family: var(--font-head); font-size: 14px; line-height: 1.35; color: var(--ink); display: block;
     }
-    .art-table tbody tr { border-bottom: 1px solid #f0f0ee; transition: background .1s; }
-    .art-table tbody tr:last-child { border-bottom: none; }
-    .art-table tbody tr:hover { background: #fafaf8; }
-    .art-table tbody tr.new-item { animation: slideIn .4s ease-out; }
-    @keyframes slideIn { from{opacity:0;transform:translateY(-6px);background:#fff8f8} to{opacity:1;transform:translateY(0);background:var(--bg-card)} }
-    .art-table td { padding: 10px 12px; vertical-align: middle; }
-
-    /* ID cell */
-    .td-id { color: var(--ink-light); font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; width: 70px; }
-
-    /* Headline cell */
-    .td-headline { min-width: 0; }
-    .art-headline {
-      font-family: var(--font-head); font-size: 14px; line-height: 1.35; color: var(--ink);
-      display: block; margin-bottom: 4px;
-    }
-    .art-headline:hover { color: var(--fi-red); text-decoration: underline; }
-    .art-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
-    .art-byline { font-size: 11px; color: var(--ink-light); }
-    .art-type-tag {
-      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
-      padding: 2px 6px; border-radius: 2px; background: var(--tag-bg); color: var(--ink-mid);
-    }
-    .art-type-tag.video { background: #fff0e0; color: #b85c00; }
-    .art-type-tag.photo { background: #f0ffe8; color: #2a7a1a; }
-    .art-type-tag.news  { background: #e8f4ff; color: #1a5f9a; }
-
-    /* Category cell */
-    .td-cats { width: 150px; }
-    .art-cat-pill {
-      display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: .05em; padding: 2px 7px; border-radius: 10px;
-      background: #f2f2f0; color: var(--ink-mid); margin: 2px 2px 2px 0;
-      white-space: nowrap;
-    }
-
-    /* Published time cell */
-    .td-time { width: 120px; white-space: nowrap; }
-    .time-date { font-size: 12px; color: var(--ink); font-weight: 500; }
-    .time-clock { font-size: 11px; color: var(--ink-light); margin-top: 2px; }
-
-    /* Copy btn */
-    .td-copy { width: 40px; text-align: center; }
+    .td-title a:hover { color: var(--fi-red); text-decoration: underline; }
+    .td-url { width: 260px; }
+    .url-text { font-size: 11px; color: #777; word-break: break-all; line-height: 1.4; }
+    .bc-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 1px 6px; border-radius: 2px; background: #fff0e0; color: #b85c00; margin-top: 3px; }
+    .td-copy { width: 36px; text-align: center; }
     .icon-btn {
       width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule);
       background: none; display: inline-flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--ink-light); transition: background .12s, color .12s, border-color .12s;
+      cursor: pointer; color: var(--ink-light);
+      transition: background .12s, color .12s, border-color .12s;
     }
     .icon-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
 
-    /* States */
-    .state-box { padding: 50px 20px; text-align: center; color: var(--ink-light); background: var(--bg-card); }
+    .state-box { padding: 50px; text-align: center; color: var(--ink-light); background: #fff; border: 1px solid var(--rule); border-radius: 4px; }
     .state-box .icon { font-size: 28px; margin-bottom: 10px; }
-    .state-box p { font-size: 14px; }
 
-    /* Responsive */
-    @media(max-width:900px) {
-      .td-cats,.td-copy { display: none; }
-      .stats-bar .stat-cell:last-child { display: none; }
-    }
-    @media(max-width:600px) {
-      .td-id { display: none; }
+    @media(max-width:700px) {
+      .td-url { display: none; }
+      .stats .stat:last-child { display: none; }
       .controls { padding: 10px 16px; }
       .layout { padding: 12px 16px; }
+      .back { padding: 0 16px; }
       .masthead { padding: 0 16px; }
-      .back-link { padding: 0 16px; }
-      .stats-bar { display: none; }
     }
   </style>
 </head>
@@ -177,351 +141,225 @@
 
 <header class="masthead">
   <div class="masthead-left">
-    <div class="masthead-logo">Forbes <span>India</span></div>
-    <div class="masthead-sep"></div>
-    <div class="masthead-title">Published Articles</div>
+    <div class="logo">Forbes <span>India</span></div>
+    <div class="sep"></div>
+    <div class="page-title">Published Articles</div>
   </div>
   <div class="live-badge">
     <div class="live-dot" id="liveDot"></div>
-    <span>Live · refreshes in <span id="countdown">60</span>s</span>
+    <span>Refreshes in <span id="countdown">60</span>s</span>
   </div>
 </header>
 
-<div class="refresh-bar-wrap"><div class="refresh-bar" id="refreshBar"></div></div>
+<div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
 
-<a href="../story-tracker/" class="back-link">
+<a href="../story-tracker/" class="back">
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7,2 3,6 7,10"/></svg>
   Story Tracker
 </a>
 
-<div class="stats-bar" id="statsBar">
-  <div class="stat-cell"><span class="stat-num" id="statTotal">—</span><span class="stat-label">Articles loaded</span></div>
-  <div class="stat-cell"><span class="stat-num" id="statFiltered">—</span><span class="stat-label">Showing</span></div>
-  <div class="stat-cell"><span class="stat-num" id="statCategories">—</span><span class="stat-label">Categories</span></div>
-  <div class="stat-cell"><span class="stat-num" id="statLastFetch">—</span><span class="stat-label">Last fetched</span></div>
+<div class="stats">
+  <div class="stat"><span class="stat-n" id="statTotal">—</span><span class="stat-l">Fetched</span></div>
+  <div class="stat"><span class="stat-n" id="statShowing">—</span><span class="stat-l">Showing</span></div>
+  <div class="stat"><span class="stat-n" id="statBC">—</span><span class="stat-l">Brand Connect</span></div>
+  <div class="stat"><span class="stat-n" id="statFetch">—</span><span class="stat-l">Last updated</span></div>
 </div>
 
 <div class="controls">
   <div class="search-wrap">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
-    <input class="search-input" id="searchInput" type="search" placeholder="Search headline or author…" />
+    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+    <input type="search" id="searchInput" placeholder="Search title…" />
   </div>
-  <select class="filter-select" id="typeFilter">
-    <option value="">All types</option>
-    <option value="article">Article</option>
-    <option value="video">Video</option>
-    <option value="photo">Photo</option>
-  </select>
-  <select class="filter-select" id="catFilter"><option value="">All categories</option></select>
-
+  <button class="toggle-bc" id="toggleBC" title="Toggle Brand Connect visibility">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6.5h11M6.5 1v11"/></svg>
+    Show Brand Connect
+  </button>
   <div class="count-badge" id="countBadge"></div>
 </div>
 
+<div id="errWrap" style="display:none" class="err">
+  <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10a1 1 0 110-2 1 1 0 010 2zm0-3V4"/></svg>
+  <span id="errMsg"></span>
+</div>
 
-
-<main class="layout">
+<div class="layout">
   <div class="section-hd">
-    <h2 id="sectionTitle">Latest Published</h2>
-    <span class="sub" id="sectionSub"></span>
+    <h2>Latest Published</h2>
+    <span class="sub" id="secSub"></span>
   </div>
-
-  <div id="errorBanner" style="display:none" class="error-banner">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10a1 1 0 110-2 1 1 0 010 2zm0-3V4"/></svg>
-    <span id="errorMsg"></span>
-  </div>
-
   <div id="tableWrap">
-    <table class="art-table" id="artTable" style="display:none">
+    <div class="state-box" id="stateBox"><div class="icon">⟳</div><p>Fetching…</p></div>
+    <table id="artTable" style="display:none">
       <thead>
         <tr>
-          <th class="td-id">Story ID</th>
-          <th>Headline / Byline</th>
-          <th class="td-cats">Category</th>
-          <th class="td-time">Published</th>
-          <th class="td-copy"></th>
+          <th>Story ID</th>
+          <th>Title</th>
+          <th>URL</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="artTbody"></tbody>
     </table>
-    <div class="state-box" id="stateBox">
-      <div class="icon">⟳</div>
-      <p>Fetching latest articles…</p>
-    </div>
   </div>
-</main>
+</div>
 
 <script>
-const REFRESH_INTERVAL = 60;
-const FI_BASE          = 'https://www.forbesindia.com/';
-const API_BASE         = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
-const FIELDS = 'story_id,display_headline,weburl,weburl_r,post_type,categories,author_byline,publish_date,date_timestamp';
+const API      = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
+const INTERVAL = 60;
 
-let allArticles      = [];
-let filteredArticles = [];
-let countdownVal     = REFRESH_INTERVAL;
-let countdownTimer   = null;
-let refreshTimer     = null;
-let knownIds         = new Set();
+let allArticles = [];
+let showBC      = false;   // brand-connect hidden by default
+let knownIds    = new Set();
+let cdVal       = INTERVAL;
+let cdTimer     = null;
+let refTimer    = null;
 
-const $tbody     = document.getElementById('artTbody');
-const $table     = document.getElementById('artTable');
-const $stateBox  = document.getElementById('stateBox');
-const $error     = document.getElementById('errorBanner');
-const $errorMsg  = document.getElementById('errorMsg');
-const $countdown = document.getElementById('countdown');
-const $liveDot   = document.getElementById('liveDot');
-const $bar       = document.getElementById('refreshBar');
-const $search    = document.getElementById('searchInput');
-const $typeF     = document.getElementById('typeFilter');
-const $catF      = document.getElementById('catFilter');
-const $countBadge= document.getElementById('countBadge');
-const $statTotal = document.getElementById('statTotal');
-const $statFilt  = document.getElementById('statFiltered');
-const $statCats  = document.getElementById('statCategories');
-const $statFetch = document.getElementById('statLastFetch');
-const $secTitle  = document.getElementById('sectionTitle');
-const $secSub    = document.getElementById('sectionSub');
+const $tbody    = document.getElementById('artTbody');
+const $table    = document.getElementById('artTable');
+const $state    = document.getElementById('stateBox');
+const $err      = document.getElementById('errWrap');
+const $errMsg   = document.getElementById('errMsg');
+const $cd       = document.getElementById('countdown');
+const $dot      = document.getElementById('liveDot');
+const $pbar     = document.getElementById('pbar');
+const $search   = document.getElementById('searchInput');
+const $toggleBC = document.getElementById('toggleBC');
+const $badge    = document.getElementById('countBadge');
+const $total    = document.getElementById('statTotal');
+const $showing  = document.getElementById('statShowing');
+const $bcCount  = document.getElementById('statBC');
+const $fetched  = document.getElementById('statFetch');
+const $sub      = document.getElementById('secSub');
 
-// ── Safe string extraction ─────────────────────────────────
-function safeStr(val) {
-  if (!val) return '';
-  if (typeof val === 'string') return val.trim();
-  if (Array.isArray(val)) return val.map(safeStr).filter(Boolean).join(', ');
-  if (typeof val === 'object') {
-    // author_byline object: try common name fields
-    return (val.english_name || val.display_name || val.name || val.author_name ||
-            val.fullname || val.full_name || val.nicename || '').trim();
-  }
-  return String(val).trim();
+function isBrandConnect(art) {
+  const u = (art.weburl || art.weburl_r || '').toLowerCase();
+  return u.includes('brand-connect');
 }
 
-// ── URL resolution ─────────────────────────────────────────
-function resolveUrl(raw) {
-  if (!raw) return '';
-  const s = safeStr(raw);
-  if (!s) return '';
-  if (s.startsWith('http://') || s.startsWith('https://')) return s;
-  // slug like "/article/v-power-2026/falc…" or "article/..."
-  const clean = s.startsWith('/') ? s.slice(1) : s;
-  return FI_BASE + clean;
+function getUrl(art) {
+  const u = art.weburl || art.weburl_r || '';
+  if (!u) return '';
+  if (u.startsWith('http')) return u;
+  return 'https://www.forbesindia.com' + (u.startsWith('/') ? u : '/' + u);
 }
 
-// ── Published time formatting ──────────────────────────────
-function formatTime(art) {
-  // Try publish_date first, then date_timestamp (unix seconds)
-  let d = null;
-  if (art.publish_date) {
-    d = new Date(art.publish_date);
-  } else if (art.date_timestamp) {
-    const ts = parseInt(art.date_timestamp, 10);
-    d = new Date(ts < 1e12 ? ts * 1000 : ts); // handle seconds vs ms
-  }
-  if (!d || isNaN(d)) return { date: '—', time: '' };
-  const date = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-  const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-  return { date, time };
-}
+function renderRows() {
+  const q = $search.value.trim().toLowerCase();
 
-// ── Type tag ───────────────────────────────────────────────
-function typeTag(postType) {
-  const t = (postType || '').toLowerCase();
-  if (t.includes('video'))  return '<span class="art-type-tag video">Video</span>';
-  if (t.includes('photo') || t.includes('gallery')) return '<span class="art-type-tag photo">Photo</span>';
-  return '<span class="art-type-tag news">Article</span>';
-}
-
-// ── Fetch ──────────────────────────────────────────────────
-async function fetchArticles() {
-  $stateBox.innerHTML = `<div class="icon">⟳</div><p>Fetching articles…</p>`;
-  const params = new URLSearchParams({
-    count: 200,
-    fields: FIELDS,
-    section: 'category',
-    subSection: 'NA'
-  });
-  const res  = await fetch(`${API_BASE}?${params.toString()}`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const json = await res.json();
-  if (Array.isArray(json))          return json;
-  if (Array.isArray(json.data))     return json.data;
-  if (Array.isArray(json.articles)) return json.articles;
-  if (Array.isArray(json.stories))  return json.stories;
-  for (const v of Object.values(json)) if (Array.isArray(v) && v.length) return v;
-  return [];
-}
-
-// ── Render row ─────────────────────────────────────────────
-function renderRow(art, isNew) {
-  const id       = art.story_id || '—';
-  const headline = safeStr(art.display_headline || art.headline) || '(No headline)';
-  const byline   = safeStr(art.author_byline || art.byline);
-  const postType = safeStr(art.post_type);
-  const cats     = art.categories || [];
-  const url      = resolveUrl(art.weburl || art.weburl_r || art.url || art.web_url);
-  const { date, time } = formatTime(art);
-
-  const catPills = cats.slice(0, 3).map(c =>
-    `<span class="art-cat-pill">${c.name || c.label || c.id}</span>`
-  ).join('');
-
-  const escUrl = url.replace(/"/g, '&quot;');
-  const escTitle = headline.replace(/"/g, '&quot;');
-
-  return `<tr${isNew ? ' class="new-item"' : ''}>
-    <td class="td-id">${id}</td>
-    <td class="td-headline">
-      ${url ? `<a class="art-headline" href="${escUrl}" target="_blank" rel="noopener">${headline}</a>`
-             : `<span class="art-headline">${headline}</span>`}
-      <div class="art-meta">
-        ${byline ? `<span class="art-byline">By ${byline}</span>` : ''}
-        ${typeTag(postType)}
-      </div>
-    </td>
-    <td class="td-cats">${catPills || '<span class="art-cat-pill">—</span>'}</td>
-    <td class="td-time">
-      <div class="time-date">${date}</div>
-      ${time ? `<div class="time-clock">${time}</div>` : ''}
-    </td>
-    <td class="td-copy">
-      <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
-      </button>
-    </td>
-  </tr>`;
-}
-
-// ── Render list ────────────────────────────────────────────
-function renderList(articles) {
-  if (!articles.length) {
-    $table.style.display = 'none';
-    $stateBox.style.display = 'block';
-    $stateBox.innerHTML = '<div class="icon">🔍</div><p>No articles match your filters.</p>';
-    return;
-  }
-  $stateBox.style.display = 'none';
-  $table.style.display = 'table';
-  $tbody.innerHTML = articles.map(a => {
-    const isNew = !knownIds.has(String(a.story_id)) && knownIds.size > 0;
-    return renderRow(a, isNew);
-  }).join('');
-  articles.forEach(a => knownIds.add(String(a.story_id)));
-}
-
-// ── Filters ────────────────────────────────────────────────
-function applyFilters() {
-  const q    = $search.value.trim().toLowerCase();
-  const type = $typeF.value.toLowerCase();
-  const cat  = $catF.value;
-
-  filteredArticles = allArticles.filter(a => {
-    const headline = safeStr(a.display_headline || a.headline).toLowerCase();
-    const byline   = safeStr(a.author_byline || a.byline).toLowerCase();
-    const postType = safeStr(a.post_type).toLowerCase();
-    const catIds   = (a.categories || []).map(c => c.id);
-    const url      = safeStr(a.weburl || a.weburl_r || a.url || a.web_url).toLowerCase();
-
-    // Exclude brand-connect articles
-    if (url.includes('brand-connect')) return false;
-
-    if (q && !headline.includes(q) && !byline.includes(q)) return false;
-    if (type && !postType.includes(type)) return false;
-    if (cat && !catIds.includes(cat)) return false;
+  const visible = allArticles.filter(a => {
+    if (!showBC && isBrandConnect(a)) return false;
+    if (q && !(a.display_headline || a.headline || '').toLowerCase().includes(q)) return false;
     return true;
   });
 
-  renderList(filteredArticles);
-  updateStats();
+  if (!visible.length) {
+    $table.style.display = 'none';
+    $state.style.display = 'block';
+    $state.innerHTML = '<div class="icon">🔍</div><p>No articles match.</p>';
+  } else {
+    $state.style.display = 'none';
+    $table.style.display = 'table';
+    $tbody.innerHTML = visible.map(a => {
+      const isNew  = !knownIds.has(String(a.story_id)) && knownIds.size > 0;
+      const title  = a.display_headline || a.headline || '(No title)';
+      const url    = getUrl(a);
+      const isBC   = isBrandConnect(a);
+      const escUrl = url.replace(/"/g, '&quot;');
+      return `<tr${isNew ? ' class="new-row"' : ''}>
+        <td class="td-id">${a.story_id || '—'}</td>
+        <td class="td-title">
+          ${url ? `<a href="${escUrl}" target="_blank" rel="noopener">${title}</a>` : `<span>${title}</span>`}
+        </td>
+        <td class="td-url">
+          <div class="url-text">${url || '—'}</div>
+          ${isBC ? '<span class="bc-tag">Brand Connect</span>' : ''}
+        </td>
+        <td class="td-copy">
+          <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
+          </button>
+        </td>
+      </tr>`;
+    }).join('');
+    visible.forEach(a => knownIds.add(String(a.story_id)));
+  }
+
+  const bcTotal = allArticles.filter(isBrandConnect).length;
+  $total.textContent   = allArticles.length;
+  $showing.textContent = visible.length;
+  $bcCount.textContent = bcTotal;
+  $badge.innerHTML     = `<strong>${visible.length}</strong> of ${allArticles.length} articles`;
 }
 
-// ── Stats ──────────────────────────────────────────────────
-function updateStats() {
-  $statTotal.textContent = allArticles.length;
-  $statFilt.textContent  = filteredArticles.length;
-  $countBadge.innerHTML  = `<strong>${filteredArticles.length}</strong> of ${allArticles.length} articles`;
-  const catSet = new Set();
-  allArticles.forEach(a => (a.categories || []).forEach(c => catSet.add(c.id)));
-  $statCats.textContent  = catSet.size;
-  $statFetch.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-
-// ── Cat filter dropdown ────────────────────────────────────
-function populateCatFilter(articles) {
-  const catMap = {};
-  articles.forEach(a => (a.categories || []).forEach(c => {
-    if (c.id) catMap[c.id] = c.name || c.label || c.id;
-  }));
-  const current = $catF.value;
-  $catF.innerHTML = '<option value="">All categories</option>';
-  Object.entries(catMap).sort((a,b) => a[1].localeCompare(b[1])).forEach(([id, name]) => {
-    const o = document.createElement('option');
-    o.value = id; o.textContent = name;
-    if (id === current) o.selected = true;
-    $catF.appendChild(o);
-  });
-}
-
-// ── Main load ──────────────────────────────────────────────
-async function load(showLoader = false) {
+async function load(showLoader) {
   if (showLoader) {
     $table.style.display = 'none';
-    $stateBox.style.display = 'block';
-    $stateBox.innerHTML = '<div class="icon">⟳</div><p>Fetching…</p>';
+    $state.style.display = 'block';
+    $state.innerHTML = '<div class="icon">⟳</div><p>Fetching…</p>';
   }
-  $error.style.display = 'none';
-  $liveDot.classList.remove('paused');
+  $err.style.display = 'none';
+  $dot.classList.remove('paused');
 
   try {
-    const raw   = await fetchArticles();
+    const res  = await fetch(`${API}?count=200`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const raw  = Array.isArray(json) ? json
+               : Array.isArray(json.data) ? json.data
+               : Array.isArray(json.articles) ? json.articles
+               : [];
     allArticles = raw;
-    populateCatFilter(allArticles);
-    applyFilters();
-    $secSub.textContent = `${allArticles.length} articles · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
-  } catch(err) {
-    console.error(err);
-    $error.style.display   = 'flex';
-    $errorMsg.textContent  = `Could not load articles: ${err.message}. Will retry in ${REFRESH_INTERVAL}s.`;
-    $liveDot.classList.add('paused');
+    $fetched.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    $sub.textContent     = `${allArticles.length} fetched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+    renderRows();
+  } catch(e) {
+    console.error(e);
+    $dot.classList.add('paused');
+    $err.style.display = 'flex';
+    $errMsg.textContent = `${e.message} — will retry in ${INTERVAL}s`;
     if (!allArticles.length) {
       $table.style.display = 'none';
-      $stateBox.style.display = 'block';
-      $stateBox.innerHTML = '<div class="icon">⚠️</div><p>Failed to load articles.</p>';
+      $state.style.display = 'block';
+      $state.innerHTML = '<div class="icon">⚠️</div><p>Failed to load.</p>';
     }
   }
 }
 
-// ── Countdown ─────────────────────────────────────────────
 function startCountdown() {
-  countdownVal = REFRESH_INTERVAL;
-  $countdown.textContent = countdownVal;
-  $bar.style.transition = 'none';
-  $bar.style.transform  = 'scaleX(1)';
+  cdVal = INTERVAL;
+  $cd.textContent = cdVal;
+  $pbar.style.transition = 'none';
+  $pbar.style.transform  = 'scaleX(1)';
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    $bar.style.transition = `transform ${REFRESH_INTERVAL}s linear`;
-    $bar.style.transform  = 'scaleX(0)';
+    $pbar.style.transition = `transform ${INTERVAL}s linear`;
+    $pbar.style.transform  = 'scaleX(0)';
   }));
-  clearInterval(countdownTimer);
-  countdownTimer = setInterval(() => {
-    countdownVal--;
-    $countdown.textContent = Math.max(0, countdownVal);
-    if (countdownVal <= 0) clearInterval(countdownTimer);
-  }, 1000);
-  clearTimeout(refreshTimer);
-  refreshTimer = setTimeout(() => load(false).then(startCountdown), REFRESH_INTERVAL * 1000);
+  clearInterval(cdTimer);
+  cdTimer = setInterval(() => { $cd.textContent = Math.max(0, --cdVal); }, 1000);
+  clearTimeout(refTimer);
+  refTimer = setTimeout(() => load(false).then(startCountdown), INTERVAL * 1000);
 }
 
-// ── Copy URL ───────────────────────────────────────────────
-window.copyUrl = function(url, btn) {
+$toggleBC.addEventListener('click', () => {
+  showBC = !showBC;
+  $toggleBC.classList.toggle('active', showBC);
+  $toggleBC.innerHTML = showBC
+    ? `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="2" x2="11" y2="11"/><line x1="11" y1="2" x2="2" y2="11"/></svg> Hide Brand Connect`
+    : `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6.5h11M6.5 1v11"/></svg> Show Brand Connect`;
+  renderRows();
+});
+
+$search.addEventListener('input', renderRows);
+
+load(true).then(startCountdown);
+
+window.copyUrl = (url, btn) => {
   if (!url) return;
   navigator.clipboard.writeText(url).then(() => {
     btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#1db954" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg>`;
-    setTimeout(() => {
-      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>`;
-    }, 1500);
+    setTimeout(() => { btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>`; }, 1500);
   });
 };
-
-// ── Boot ───────────────────────────────────────────────────
-load(true).then(startCountdown);
 </script>
 </body>
 </html>
