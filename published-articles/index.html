@@ -213,12 +213,7 @@
     <option value="photo">Photo</option>
   </select>
   <select class="filter-select" id="catFilter"><option value="">All categories</option></select>
-  <select class="filter-select" id="countSelect">
-    <option value="20">20 articles</option>
-    <option value="50">50 articles</option>
-    <option value="100" selected>100 articles</option>
-    <option value="200">200 articles</option>
-  </select>
+
   <div class="count-badge" id="countBadge"></div>
 </div>
 
@@ -279,7 +274,6 @@ const $bar       = document.getElementById('refreshBar');
 const $search    = document.getElementById('searchInput');
 const $typeF     = document.getElementById('typeFilter');
 const $catF      = document.getElementById('catFilter');
-const $countSel  = document.getElementById('countSelect');
 const $countBadge= document.getElementById('countBadge');
 const $statTotal = document.getElementById('statTotal');
 const $statFilt  = document.getElementById('statFiltered');
@@ -336,28 +330,82 @@ function typeTag(postType) {
   return '<span class="art-type-tag news">Article</span>';
 }
 
-// ── Build API URL ──────────────────────────────────────────
-function buildUrl(count) {
-  const params = new URLSearchParams({ count, fields: FIELDS, section: 'category', subSection: 'NA' });
-  return `${API_BASE}?${params.toString()}`;
+// ── Fetch with pagination ──────────────────────────────────
+const PAGE_SIZE = 50; // fetch 50 at a time
+
+async function fetchPage(start) {
+  const params = new URLSearchParams({
+    count: PAGE_SIZE,
+    start,
+    fields: FIELDS,
+    section: 'category',
+    subSection: 'NA'
+  });
+  const res = await fetch(`${API_BASE}?${params.toString()}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (Array.isArray(json))            return json;
+  if (Array.isArray(json.data))       return json.data;
+  if (Array.isArray(json.articles))   return json.articles;
+  if (Array.isArray(json.stories))    return json.stories;
+  for (const v of Object.values(json)) if (Array.isArray(v) && v.length) return v;
+  return [];
 }
 
-// ── Fetch ──────────────────────────────────────────────────
-async function fetchArticles() {
-  const count = parseInt($countSel.value, 10);
-  const res   = await fetch(buildUrl(count));
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const json  = await res.json();
-  // API may return array directly, or wrap in data/articles/stories
-  if (Array.isArray(json)) return json;
-  if (Array.isArray(json.data))     return json.data;
-  if (Array.isArray(json.articles)) return json.articles;
-  if (Array.isArray(json.stories))  return json.stories;
-  // fallback: look for first array value in top-level object
-  for (const v of Object.values(json)) {
-    if (Array.isArray(v) && v.length) return v;
+function getPubMs(art) {
+  if (art.updated_at) {
+    const ts = parseInt(art.updated_at, 10);
+    if (!isNaN(ts)) return ts < 1e12 ? ts * 1000 : ts;
   }
-  return [];
+  if (art.publish_date) {
+    const d = new Date(art.publish_date);
+    if (!isNaN(d)) return d.getTime();
+  }
+  if (art.date_timestamp) {
+    const ts = parseInt(art.date_timestamp, 10);
+    if (!isNaN(ts)) return ts < 1e12 ? ts * 1000 : ts;
+  }
+  return null;
+}
+
+async function fetchArticles() {
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const todayMs = todayStart.getTime();
+
+  let collected = [];
+  let start = 0;
+  let hitOldArticle = false;
+
+  // Update status while paginating
+  $stateBox.innerHTML = `<div class="icon">⟳</div><p>Fetching articles…</p>`;
+
+  while (!hitOldArticle) {
+    const page = await fetchPage(start);
+    if (!page.length) break;
+
+    for (const art of page) {
+      const pubMs = getPubMs(art);
+      // If we have a timestamp and it's before today, stop paginating
+      if (pubMs !== null && pubMs < todayMs) {
+        hitOldArticle = true;
+        break;
+      }
+      collected.push(art);
+    }
+
+    start += PAGE_SIZE;
+    // Safety cap — don't fetch more than 500 articles
+    if (start >= 500) break;
+
+    // Update progress
+    $stateBox.innerHTML = `<div class="icon">⟳</div><p>Fetching… ${collected.length} articles so far</p>`;
+
+    // If page was smaller than PAGE_SIZE, we've hit the end
+    if (page.length < PAGE_SIZE) break;
+  }
+
+  return collected;
 }
 
 // ── Render row ─────────────────────────────────────────────
@@ -367,7 +415,7 @@ function renderRow(art, isNew) {
   const byline   = safeStr(art.author_byline || art.byline);
   const postType = safeStr(art.post_type);
   const cats     = art.categories || [];
-  const url      = resolveUrl(art.weburl_r || art.url || art.web_url);
+  const url      = resolveUrl(art.weburl || art.weburl_r || art.url || art.web_url);
   const { date, time } = formatTime(art);
 
   const catPills = cats.slice(0, 3).map(c =>
@@ -428,7 +476,7 @@ function applyFilters() {
     const byline   = safeStr(a.author_byline || a.byline).toLowerCase();
     const postType = safeStr(a.post_type).toLowerCase();
     const catIds   = (a.categories || []).map(c => c.id);
-    const url      = safeStr(a.weburl_r || a.url || a.web_url).toLowerCase();
+    const url      = safeStr(a.weburl || a.weburl_r || a.url || a.web_url).toLowerCase();
 
     // Exclude brand-connect articles
     if (url.includes('brand-connect')) return false;
