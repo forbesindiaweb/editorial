@@ -141,7 +141,7 @@
 
 <header class="masthead">
   <div class="masthead-left">
-    <div class="logo">Forbes <span>India</span></div>
+    <img src="https://images.forbesindia.com/blog/wp-content/uploads/2025/10/forbeslogo-1-2025-10-8c82c269e82b0027d98922ffd47a4f98.png" alt="Forbes India" style="height:22px;display:block;" />
     <div class="sep"></div>
     <div class="page-title">Published Articles</div>
   </div>
@@ -291,8 +291,25 @@ function renderRows() {
   $badge.innerHTML     = `<strong>${visible.length}</strong> of ${allArticles.length} articles`;
 }
 
+async function fetchBatch(minStoryId) {
+  // Use the same filter format the API already supports
+  let url = `${API}?count=50`;
+  if (minStoryId) {
+    // fetch articles with story_id less than minStoryId (older batch)
+    url += `&filter=${encodeURIComponent(JSON.stringify({"story_id":{"$lt": String(minStoryId)}}))}`;
+  }
+  const res  = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  return Array.isArray(json) ? json
+       : Array.isArray(json.data) ? json.data
+       : Array.isArray(json.articles) ? json.articles : [];
+}
+
 async function load(showLoader) {
   if (showLoader) {
+    allArticles = [];
+    knownIds    = new Set();
     $table.style.display = 'none';
     $state.style.display = 'block';
     $state.innerHTML = '<div class="icon">⟳</div><p>Fetching…</p>';
@@ -301,35 +318,12 @@ async function load(showLoader) {
   $dot.classList.remove('paused');
 
   try {
-    // Fetch up to 4 pages of 50 = 200 articles max
-    // API only supports count up to 50; use story_id cursor to page
-    let collected = [];
-    let lastId    = null;
-    const today   = new Date(); today.setHours(0,0,0,0);
-
-    for (let page = 0; page < 4; page++) {
-      let url = `${API}?count=50`;
-      if (lastId) {
-        url += `&filter=${encodeURIComponent(JSON.stringify({"story_id":{"$lt": lastId}}))}`;
-      }
-      const res  = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      const rows = Array.isArray(json) ? json
-                 : Array.isArray(json.data) ? json.data
-                 : Array.isArray(json.articles) ? json.articles : [];
-      if (!rows.length) break;
-
-      collected = collected.concat(rows);
-      lastId    = rows[rows.length - 1].story_id;
-
-      if (rows.length < 50) break; // last page
-    }
-
-    allArticles = collected;
+    const rows = await fetchBatch(null);
+    allArticles = rows;
     $fetched.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    $sub.textContent     = `${allArticles.length} fetched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+    $sub.textContent = `${allArticles.length} loaded · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
     renderRows();
+    updateLoadMoreBtn();
   } catch(e) {
     console.error(e);
     $dot.classList.add('paused');
@@ -341,6 +335,50 @@ async function load(showLoader) {
       $state.innerHTML = '<div class="icon">⚠️</div><p>Failed to load.</p>';
     }
   }
+}
+
+async function loadMore() {
+  const $btn = document.getElementById('loadMoreBtn');
+  $btn.disabled = true;
+  $btn.textContent = 'Loading…';
+  try {
+    const minId = Math.min(...allArticles.map(a => Number(a.story_id)));
+    const rows  = await fetchBatch(minId);
+    if (rows.length) {
+      // Deduplicate
+      const existingIds = new Set(allArticles.map(a => String(a.story_id)));
+      const newRows = rows.filter(r => !existingIds.has(String(r.story_id)));
+      allArticles = allArticles.concat(newRows);
+      $sub.textContent = `${allArticles.length} loaded · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+      renderRows();
+      $btn.disabled = false;
+      $btn.textContent = rows.length < 50 ? 'No more articles' : `Load 50 more`;
+      if (rows.length < 50) $btn.disabled = true;
+    } else {
+      $btn.textContent = 'No more articles';
+    }
+  } catch(e) {
+    $btn.disabled = false;
+    $btn.textContent = 'Retry load more';
+  }
+}
+
+function updateLoadMoreBtn() {
+  const existing = document.getElementById('loadMoreBtn');
+  if (existing) existing.remove();
+  const btn = document.createElement('button');
+  btn.id = 'loadMoreBtn';
+  btn.textContent = 'Load 50 more';
+  btn.style.cssText = `
+    display:block; margin: 16px auto 4px;
+    padding: 9px 28px; font-size: 13px; font-family: var(--font-ui);
+    background: #fff; border: 1px solid #ccc; border-radius: 4px;
+    cursor: pointer; color: #444; transition: background .12s, border-color .12s;
+  `;
+  btn.onmouseover = () => { btn.style.borderColor = 'var(--fi-red)'; btn.style.color = 'var(--fi-red)'; };
+  btn.onmouseout  = () => { btn.style.borderColor = '#ccc'; btn.style.color = '#444'; };
+  btn.onclick = loadMore;
+  document.querySelector('.layout').appendChild(btn);
 }
 
 function startCountdown() {
