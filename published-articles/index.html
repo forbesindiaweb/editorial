@@ -301,14 +301,32 @@ async function load(showLoader) {
   $dot.classList.remove('paused');
 
   try {
-    const res  = await fetch(`${API}?count=200`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    const raw  = Array.isArray(json) ? json
-               : Array.isArray(json.data) ? json.data
-               : Array.isArray(json.articles) ? json.articles
-               : [];
-    allArticles = raw;
+    // Fetch up to 4 pages of 50 = 200 articles max
+    // API only supports count up to 50; use story_id cursor to page
+    let collected = [];
+    let lastId    = null;
+    const today   = new Date(); today.setHours(0,0,0,0);
+
+    for (let page = 0; page < 4; page++) {
+      let url = `${API}?count=50`;
+      if (lastId) {
+        url += `&filter=${encodeURIComponent(JSON.stringify({"story_id":{"$lt": lastId}}))}`;
+      }
+      const res  = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const rows = Array.isArray(json) ? json
+                 : Array.isArray(json.data) ? json.data
+                 : Array.isArray(json.articles) ? json.articles : [];
+      if (!rows.length) break;
+
+      collected = collected.concat(rows);
+      lastId    = rows[rows.length - 1].story_id;
+
+      if (rows.length < 50) break; // last page
+    }
+
+    allArticles = collected;
     $fetched.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     $sub.textContent     = `${allArticles.length} fetched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
     renderRows();
