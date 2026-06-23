@@ -22,7 +22,6 @@
     body { font-family: var(--font-ui); background: var(--bg); color: var(--ink); }
     a { color: inherit; text-decoration: none; }
 
-    /* Masthead */
     .masthead {
       background: var(--masthead); color: #fff;
       padding: 0 24px; height: 52px;
@@ -31,8 +30,6 @@
       border-bottom: 3px solid var(--fi-red);
     }
     .masthead-left { display: flex; align-items: center; gap: 16px; }
-    .logo { font-family: var(--font-head); font-size: 18px; }
-    .logo span { color: var(--fi-red); }
     .sep { width: 1px; height: 20px; background: #444; }
     .page-title { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #aaa; }
     .live-badge { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #bbb; }
@@ -41,11 +38,9 @@
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.75)} }
     #countdown { color: #fff; font-weight: 700; }
 
-    /* Progress bar */
     .pbar-wrap { height: 2px; background: #ddd; }
     .pbar { height: 100%; background: var(--fi-red); transform-origin: left; }
 
-    /* Back */
     .back {
       display: flex; align-items: center; gap: 5px;
       padding: 0 24px; height: 34px;
@@ -56,16 +51,19 @@
 
     /* Stats */
     .stats { display: flex; gap: 1px; background: var(--rule); border-bottom: 1px solid var(--rule); }
-    .stat { flex: 1; background: #fff; padding: 10px 20px; display: flex; align-items: baseline; gap: 6px; }
-    .stat-n { font-family: var(--font-head); font-size: 22px; font-weight: bold; }
-    .stat-l { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); }
+    .stat { flex: 1; background: #fff; padding: 10px 16px; display: flex; flex-direction: column; gap: 3px; }
+    .stat-n { font-family: var(--font-head); font-size: 24px; font-weight: bold; line-height: 1; }
+    .stat-n.today { color: var(--green); }
+    .stat-n.yesterday { color: var(--ink-light); }
+    .stat-l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); }
+    .stat-sub { font-size: 11px; color: var(--ink-light); margin-top: 1px; }
 
     /* Controls */
     .controls {
       background: #fff; border-bottom: 1px solid var(--rule);
-      padding: 10px 24px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 10px 24px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     }
-    .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 320px; }
+    .search-wrap { position: relative; flex: 1; min-width: 160px; max-width: 280px; }
     .search-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--ink-light); pointer-events: none; }
     input[type=search] {
       width: 100%; padding: 7px 10px 7px 30px; border: 1px solid var(--rule);
@@ -73,20 +71,35 @@
       background: var(--bg); outline: none;
     }
     input[type=search]:focus { border-color: var(--fi-red); background: #fff; }
-    .toggle-bc {
-      display: flex; align-items: center; gap: 6px;
+
+    .ctrl-select {
+      padding: 7px 10px; border: 1px solid var(--rule); border-radius: 4px;
+      font-size: 13px; font-family: var(--font-ui); background: var(--bg); outline: none; cursor: pointer;
+    }
+    .ctrl-select:focus { border-color: var(--fi-red); }
+
+    .toggle-btn {
+      display: flex; align-items: center; gap: 5px;
       font-size: 12px; color: var(--ink-mid); cursor: pointer; user-select: none;
       padding: 6px 10px; border: 1px solid var(--rule); border-radius: 4px;
-      background: var(--bg); transition: background .12s, border-color .12s;
+      background: var(--bg); white-space: nowrap;
     }
-    .toggle-bc:hover { border-color: #aaa; }
-    .toggle-bc.active { background: #fff3f3; border-color: var(--fi-red); color: var(--fi-red); font-weight: 600; }
-    .count-badge { margin-left: auto; font-size: 12px; color: var(--ink-light); white-space: nowrap; }
+    .toggle-btn:hover { border-color: #aaa; }
+    .toggle-btn.active { background: #fff3f3; border-color: var(--fi-red); color: var(--fi-red); font-weight: 600; }
+
+    .export-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 12px; font-size: 12px; font-weight: 600;
+      background: #fff; border: 1px solid var(--rule); border-radius: 4px;
+      cursor: pointer; color: var(--ink-mid); margin-left: auto; white-space: nowrap;
+    }
+    .export-btn:hover { border-color: var(--green); color: var(--green); }
+
+    .count-badge { font-size: 12px; color: var(--ink-light); white-space: nowrap; }
     .count-badge strong { color: var(--ink); }
 
-    /* Error */
     .err {
-      margin: 14px 24px; padding: 10px 14px; border-radius: 4px;
+      margin: 12px 24px; padding: 10px 14px; border-radius: 4px;
       background: #fff3f3; border: 1px solid #fca5a5; color: #b91c1c;
       font-size: 13px; display: flex; align-items: center; gap: 8px;
     }
@@ -97,43 +110,68 @@
     .section-hd h2 { font-family: var(--font-head); font-size: 17px; }
     .section-hd .sub { font-size: 12px; color: var(--ink-light); }
 
-    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; font-size: 13px; }
+    .tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; min-width: 700px; }
     thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
-    th { padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-light); white-space: nowrap; }
+    th {
+      padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em; color: var(--ink-light);
+      white-space: nowrap; cursor: pointer; user-select: none;
+    }
+    th:hover { color: var(--ink); }
+    th .sort-arrow { margin-left: 3px; opacity: .4; }
+    th.sorted .sort-arrow { opacity: 1; color: var(--fi-red); }
     tbody tr { border-bottom: 1px solid #f0f0ee; transition: background .1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #fafaf8; }
-    tbody tr.new-row { animation: slideIn .4s ease-out; }
-    @keyframes slideIn { from{opacity:0;transform:translateY(-5px);background:#fff8f8} to{opacity:1;transform:translateY(0)} }
-    td { padding: 10px 12px; vertical-align: middle; }
+    tbody tr.new-row { animation: slideIn .5s ease-out; }
+    @keyframes slideIn { from{background:#e8fff0} to{background:transparent} }
+    td { padding: 9px 12px; vertical-align: middle; }
 
-    .td-id { width: 80px; color: var(--ink-light); font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .td-title a {
-      font-family: var(--font-head); font-size: 14px; line-height: 1.35; color: var(--ink); display: block;
-    }
+    .td-id { width: 75px; color: var(--ink-light); font-size: 11px; white-space: nowrap; }
+    .td-title { min-width: 260px; }
+    .td-title a { font-family: var(--font-head); font-size: 13.5px; line-height: 1.35; color: var(--ink); display: block; }
     .td-title a:hover { color: var(--fi-red); text-decoration: underline; }
-    .td-url { width: 260px; }
-    .url-text { font-size: 11px; color: #777; word-break: break-all; line-height: 1.4; }
-    .bc-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 1px 6px; border-radius: 2px; background: #fff0e0; color: #b85c00; margin-top: 3px; }
+    .td-author { width: 130px; font-size: 12px; color: var(--ink-mid); }
+    .td-cat { width: 130px; }
+    .td-type { width: 80px; }
+    .td-time { width: 110px; white-space: nowrap; }
     .td-copy { width: 36px; text-align: center; }
+
+    .cat-pill {
+      display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .05em; padding: 2px 7px; border-radius: 10px;
+      background: #f0f0ee; color: var(--ink-mid); margin: 1px 2px 1px 0;
+    }
+    .type-tag {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+      padding: 2px 7px; border-radius: 2px; display: inline-block;
+    }
+    .type-text  { background: #e8f4ff; color: #1a5f9a; }
+    .type-video { background: #fff0e0; color: #b85c00; }
+    .type-photo { background: #f0ffe8; color: #2a7a1a; }
+    .bc-tag { background: #fff0e0; color: #b85c00; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 6px; border-radius: 2px; display: inline-block; margin-top: 3px; }
+
+    .time-date { font-size: 12px; font-weight: 500; }
+    .time-clock { font-size: 11px; color: var(--ink-light); }
+    .time-today { color: var(--green); font-weight: 600; }
+
     .icon-btn {
       width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule);
       background: none; display: inline-flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--ink-light);
-      transition: background .12s, color .12s, border-color .12s;
+      cursor: pointer; color: var(--ink-light); transition: all .12s;
     }
     .icon-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
 
-    .state-box { padding: 50px; text-align: center; color: var(--ink-light); background: #fff; border: 1px solid var(--rule); border-radius: 4px; }
+    .state-box { padding: 50px; text-align: center; color: var(--ink-light); background: #fff; }
     .state-box .icon { font-size: 28px; margin-bottom: 10px; }
 
-    @media(max-width:700px) {
-      .td-url { display: none; }
-      .stats .stat:last-child { display: none; }
+    @media(max-width:800px) {
+      .td-cat,.td-type { display: none; }
       .controls { padding: 10px 16px; }
       .layout { padding: 12px 16px; }
-      .back { padding: 0 16px; }
-      .masthead { padding: 0 16px; }
+      .back,.masthead { padding: 0 16px; }
+      .stats .stat:nth-child(n+4) { display: none; }
     }
   </style>
 </head>
@@ -159,22 +197,49 @@
 </a>
 
 <div class="stats">
-  <div class="stat"><span class="stat-n" id="statTotal">—</span><span class="stat-l">Fetched</span></div>
-  <div class="stat"><span class="stat-n" id="statShowing">—</span><span class="stat-l">Showing</span></div>
-  <div class="stat"><span class="stat-n" id="statBC">—</span><span class="stat-l">Brand Connect</span></div>
-  <div class="stat"><span class="stat-n" id="statFetch">—</span><span class="stat-l">Last updated</span></div>
+  <div class="stat">
+    <span class="stat-n today" id="statToday">—</span>
+    <span class="stat-l">Published Today</span>
+    <span class="stat-sub" id="statTodaySub"></span>
+  </div>
+  <div class="stat">
+    <span class="stat-n yesterday" id="statYest">—</span>
+    <span class="stat-l">Yesterday</span>
+    <span class="stat-sub" id="statYestSub"></span>
+  </div>
+  <div class="stat">
+    <span class="stat-n" id="statShowing">—</span>
+    <span class="stat-l">Showing</span>
+    <span class="stat-sub" id="statShowingSub"></span>
+  </div>
+  <div class="stat">
+    <span class="stat-n" id="statFetch">—</span>
+    <span class="stat-l">Last updated</span>
+  </div>
 </div>
 
 <div class="controls">
   <div class="search-wrap">
     <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
-    <input type="search" id="searchInput" placeholder="Search title…" />
+    <input type="search" id="searchInput" placeholder="Search title or author…" />
   </div>
-  <button class="toggle-bc" id="toggleBC" title="Toggle Brand Connect visibility">
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6.5h11M6.5 1v11"/></svg>
-    Show Brand Connect
+  <select class="ctrl-select" id="catFilter"><option value="">All categories</option></select>
+  <select class="ctrl-select" id="authorFilter"><option value="">All authors</option></select>
+  <select class="ctrl-select" id="typeFilter">
+    <option value="">All types</option>
+    <option value="text">Article</option>
+    <option value="video">Video</option>
+    <option value="photo">Photo</option>
+  </select>
+  <button class="toggle-btn" id="toggleBC">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h10M6 1v10"/></svg>
+    Brand Connect
   </button>
-  <div class="count-badge" id="countBadge"></div>
+  <button class="export-btn" id="exportBtn">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9v2h9V9M6.5 1v7M4 6l2.5 2.5L9 6"/></svg>
+    Export CSV
+  </button>
+  <span class="count-badge" id="countBadge"></span>
 </div>
 
 <div id="errWrap" style="display:none" class="err">
@@ -187,14 +252,17 @@
     <h2>Latest Published</h2>
     <span class="sub" id="secSub"></span>
   </div>
-  <div id="tableWrap">
+  <div class="tbl-wrap">
     <div class="state-box" id="stateBox"><div class="icon">⟳</div><p>Fetching…</p></div>
     <table id="artTable" style="display:none">
       <thead>
         <tr>
-          <th>Story ID</th>
-          <th>Title</th>
-          <th>URL</th>
+          <th data-col="story_id">Story ID <span class="sort-arrow">↕</span></th>
+          <th data-col="display_headline">Title <span class="sort-arrow">↕</span></th>
+          <th data-col="author">Author <span class="sort-arrow">↕</span></th>
+          <th data-col="category">Category <span class="sort-arrow">↕</span></th>
+          <th data-col="post_type">Type <span class="sort-arrow">↕</span></th>
+          <th data-col="date_timestamp">Published <span class="sort-arrow">↕</span></th>
           <th></th>
         </tr>
       </thead>
@@ -205,14 +273,17 @@
 
 <script>
 const API      = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
+const FIELDS   = 'story_id,display_headline,weburl,weburl_r,author_byline,categories,post_type,publish_date,date_timestamp';
 const INTERVAL = 60;
 
-let allArticles = [];
-let showBC      = false;   // brand-connect hidden by default
-let knownIds    = new Set();
-let cdVal       = INTERVAL;
-let cdTimer     = null;
-let refTimer    = null;
+let allArticles  = [];
+let knownIds     = new Set();
+let showBC       = false;
+let sortCol      = 'date_timestamp';
+let sortDir      = -1; // -1 = desc, 1 = asc
+let cdVal        = INTERVAL;
+let cdTimer      = null;
+let refTimer     = null;
 
 const $tbody    = document.getElementById('artTbody');
 const $table    = document.getElementById('artTable');
@@ -223,33 +294,193 @@ const $cd       = document.getElementById('countdown');
 const $dot      = document.getElementById('liveDot');
 const $pbar     = document.getElementById('pbar');
 const $search   = document.getElementById('searchInput');
+const $catF     = document.getElementById('catFilter');
+const $authorF  = document.getElementById('authorFilter');
+const $typeF    = document.getElementById('typeFilter');
 const $toggleBC = document.getElementById('toggleBC');
+const $exportBtn= document.getElementById('exportBtn');
 const $badge    = document.getElementById('countBadge');
-const $total    = document.getElementById('statTotal');
-const $showing  = document.getElementById('statShowing');
-const $bcCount  = document.getElementById('statBC');
-const $fetched  = document.getElementById('statFetch');
+const $statToday= document.getElementById('statToday');
+const $statTodaySub = document.getElementById('statTodaySub');
+const $statYest = document.getElementById('statYest');
+const $statYestSub  = document.getElementById('statYestSub');
+const $statShowing  = document.getElementById('statShowing');
+const $statShowingSub = document.getElementById('statShowingSub');
+const $statFetch= document.getElementById('statFetch');
 const $sub      = document.getElementById('secSub');
 
-function isBrandConnect(art) {
-  const u = (art.weburl || art.weburl_r || '').toLowerCase();
-  return u.includes('brand-connect');
+// ── Helpers ────────────────────────────────────────────────
+function safeStr(val) {
+  if (!val) return '';
+  if (typeof val === 'string') return val.trim();
+  if (Array.isArray(val)) return val.map(safeStr).filter(Boolean).join(', ');
+  if (typeof val === 'object')
+    return (val.english_name || val.display_name || val.name || val.author_name || val.nicename || '').trim();
+  return String(val).trim();
 }
 
 function getUrl(art) {
   const u = art.weburl || art.weburl_r || '';
   if (!u) return '';
-  if (u.startsWith('http')) return u;
-  return 'https://www.forbesindia.com' + (u.startsWith('/') ? u : '/' + u);
+  return u.startsWith('http') ? u : 'https://www.forbesindia.com' + (u.startsWith('/') ? u : '/' + u);
 }
 
-function renderRows() {
-  const q = $search.value.trim().toLowerCase();
+function isBrandConnect(art) {
+  return getUrl(art).toLowerCase().includes('brand-connect');
+}
 
-  const visible = allArticles.filter(a => {
+function getAuthor(art) {
+  const b = art.author_byline;
+  if (!b) return '';
+  if (Array.isArray(b)) return b.map(a => safeStr(a)).filter(Boolean).join(', ');
+  return safeStr(b);
+}
+
+function getCategory(art) {
+  const cats = art.categories;
+  if (!cats || !cats.length) return '';
+  // prefer parent (parent===0) category; otherwise first
+  const parent = cats.find(c => c.parent === 0 || c.parent === '0');
+  return (parent || cats[0]).name || '';
+}
+
+function getAllCats(art) {
+  return (art.categories || []).map(c => c.name).filter(Boolean);
+}
+
+function getPubMs(art) {
+  if (art.date_timestamp) {
+    const ts = parseInt(art.date_timestamp, 10);
+    if (!isNaN(ts)) return ts < 1e12 ? ts * 1000 : ts;
+  }
+  if (art.publish_date) {
+    const d = new Date(art.publish_date);
+    if (!isNaN(d)) return d.getTime();
+  }
+  return null;
+}
+
+function formatTime(art) {
+  const ms = getPubMs(art);
+  if (!ms) return { date: '—', time: '', isToday: false, isYesterday: false };
+  const d    = new Date(ms);
+  const now  = new Date();
+  const tod  = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const yest = tod - 86400000;
+  const isToday     = ms >= tod;
+  const isYesterday = ms >= yest && ms < tod;
+  const date = isToday ? 'Today' : isYesterday ? 'Yesterday'
+    : d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+  const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  return { date, time, isToday, isYesterday };
+}
+
+function typeClass(pt) {
+  const t = (pt || '').toLowerCase();
+  if (t.includes('video')) return 'type-video';
+  if (t.includes('photo') || t.includes('gallery')) return 'type-photo';
+  return 'type-text';
+}
+function typeLabel(pt) {
+  const t = (pt || '').toLowerCase();
+  if (t.includes('video')) return 'Video';
+  if (t.includes('photo') || t.includes('gallery')) return 'Photo';
+  return 'Article';
+}
+
+// ── Populate filter dropdowns ──────────────────────────────
+function populateFilters() {
+  const cats    = new Set();
+  const authors = new Set();
+  allArticles.forEach(a => {
+    getAllCats(a).forEach(c => cats.add(c));
+    const au = getAuthor(a);
+    if (au) au.split(', ').forEach(x => authors.add(x.trim()));
+  });
+
+  const savedCat = $catF.value;
+  $catF.innerHTML = '<option value="">All categories</option>';
+  [...cats].sort().forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    if (c === savedCat) o.selected = true;
+    $catF.appendChild(o);
+  });
+
+  const savedAu = $authorF.value;
+  $authorF.innerHTML = '<option value="">All authors</option>';
+  [...authors].sort().forEach(a => {
+    const o = document.createElement('option');
+    o.value = a; o.textContent = a;
+    if (a === savedAu) o.selected = true;
+    $authorF.appendChild(o);
+  });
+}
+
+// ── Stats ──────────────────────────────────────────────────
+function updateStats(visible) {
+  const now  = new Date();
+  const tod  = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const yest = tod - 86400000;
+
+  const todayAll = allArticles.filter(a => { const ms = getPubMs(a); return ms && ms >= tod; });
+  const yesterdayAll = allArticles.filter(a => { const ms = getPubMs(a); return ms && ms >= yest && ms < tod; });
+
+  $statToday.textContent  = todayAll.length;
+  $statTodaySub.textContent = todayAll.length ? `as of ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}` : 'none yet';
+  $statYest.textContent   = yesterdayAll.length;
+  $statYestSub.textContent = yesterdayAll.length ? `${new Date(tod - 1).toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}` : '';
+  $statShowing.textContent = visible.length;
+  $statShowingSub.textContent = `of ${allArticles.length} fetched`;
+  $badge.innerHTML = `<strong>${visible.length}</strong> of ${allArticles.length} articles`;
+  $statFetch.textContent = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+// ── Sort ───────────────────────────────────────────────────
+function getSortVal(art, col) {
+  if (col === 'story_id')        return Number(art.story_id) || 0;
+  if (col === 'display_headline') return (art.display_headline || '').toLowerCase();
+  if (col === 'author')          return getAuthor(art).toLowerCase();
+  if (col === 'category')        return getCategory(art).toLowerCase();
+  if (col === 'post_type')       return typeLabel(art.post_type).toLowerCase();
+  if (col === 'date_timestamp')  return getPubMs(art) || 0;
+  return '';
+}
+
+function updateSortHeaders() {
+  document.querySelectorAll('th[data-col]').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.col === sortCol);
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = th.dataset.col === sortCol ? (sortDir === -1 ? '↓' : '↑') : '↕';
+  });
+}
+
+// ── Render ─────────────────────────────────────────────────
+function renderRows() {
+  const q      = $search.value.trim().toLowerCase();
+  const cat    = $catF.value;
+  const author = $authorF.value;
+  const type   = $typeF.value.toLowerCase();
+
+  let visible = allArticles.filter(a => {
     if (!showBC && isBrandConnect(a)) return false;
-    if (q && !(a.display_headline || a.headline || '').toLowerCase().includes(q)) return false;
+    const title  = (a.display_headline || '').toLowerCase();
+    const au     = getAuthor(a).toLowerCase();
+    const allCats = getAllCats(a);
+    const pt     = (a.post_type || '').toLowerCase();
+    if (q && !title.includes(q) && !au.includes(q)) return false;
+    if (cat && !allCats.includes(cat)) return false;
+    if (author && !au.includes(author.toLowerCase())) return false;
+    if (type && !pt.includes(type)) return false;
     return true;
+  });
+
+  // Sort
+  visible.sort((a, b) => {
+    const av = getSortVal(a, sortCol), bv = getSortVal(b, sortCol);
+    if (av < bv) return -1 * sortDir;
+    if (av > bv) return  1 * sortDir;
+    return 0;
   });
 
   if (!visible.length) {
@@ -259,20 +490,29 @@ function renderRows() {
   } else {
     $state.style.display = 'none';
     $table.style.display = 'table';
+
     $tbody.innerHTML = visible.map(a => {
       const isNew  = !knownIds.has(String(a.story_id)) && knownIds.size > 0;
       const title  = a.display_headline || a.headline || '(No title)';
       const url    = getUrl(a);
+      const author = getAuthor(a);
+      const cat    = getCategory(a);
       const isBC   = isBrandConnect(a);
+      const { date, time, isToday } = formatTime(a);
       const escUrl = url.replace(/"/g, '&quot;');
+
       return `<tr${isNew ? ' class="new-row"' : ''}>
         <td class="td-id">${a.story_id || '—'}</td>
         <td class="td-title">
           ${url ? `<a href="${escUrl}" target="_blank" rel="noopener">${title}</a>` : `<span>${title}</span>`}
-        </td>
-        <td class="td-url">
-          <div class="url-text">${url || '—'}</div>
           ${isBC ? '<span class="bc-tag">Brand Connect</span>' : ''}
+        </td>
+        <td class="td-author">${author || '—'}</td>
+        <td class="td-cat">${cat ? `<span class="cat-pill">${cat}</span>` : '—'}</td>
+        <td class="td-type"><span class="type-tag ${typeClass(a.post_type)}">${typeLabel(a.post_type)}</span></td>
+        <td class="td-time">
+          <div class="time-date${isToday ? ' time-today' : ''}">${date}</div>
+          ${time ? `<div class="time-clock">${time}</div>` : ''}
         </td>
         <td class="td-copy">
           <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)">
@@ -281,35 +521,60 @@ function renderRows() {
         </td>
       </tr>`;
     }).join('');
+
     visible.forEach(a => knownIds.add(String(a.story_id)));
   }
 
-  const bcTotal = allArticles.filter(isBrandConnect).length;
-  $total.textContent   = allArticles.length;
-  $showing.textContent = visible.length;
-  $bcCount.textContent = bcTotal;
-  $badge.innerHTML     = `<strong>${visible.length}</strong> of ${allArticles.length} articles`;
+  updateStats(visible);
 }
 
-async function fetchBatch(minStoryId) {
-  // Use the same filter format the API already supports
-  let url = `${API}?count=50`;
-  if (minStoryId) {
-    // fetch articles with story_id less than minStoryId (older batch)
-    url += `&filter=${encodeURIComponent(JSON.stringify({"story_id":{"$lt": String(minStoryId)}}))}`;
-  }
-  const res  = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const json = await res.json();
-  return Array.isArray(json) ? json
-       : Array.isArray(json.data) ? json.data
-       : Array.isArray(json.articles) ? json.articles : [];
+// ── Export CSV ─────────────────────────────────────────────
+function exportCSV() {
+  const q      = $search.value.trim().toLowerCase();
+  const cat    = $catF.value;
+  const author = $authorF.value;
+  const type   = $typeF.value.toLowerCase();
+
+  const rows = allArticles.filter(a => {
+    if (!showBC && isBrandConnect(a)) return false;
+    const title = (a.display_headline || '').toLowerCase();
+    const au    = getAuthor(a).toLowerCase();
+    if (q && !title.includes(q) && !au.includes(q)) return false;
+    if (cat && !getAllCats(a).includes(cat)) return false;
+    if (author && !au.includes(author.toLowerCase())) return false;
+    if (type && !(a.post_type || '').toLowerCase().includes(type)) return false;
+    return true;
+  });
+
+  const headers = ['Story ID','Title','Author','Category','Type','Published','URL'];
+  const escape  = v => `"${String(v || '').replace(/"/g, '""')}"`;
+  const lines   = [
+    headers.map(escape).join(','),
+    ...rows.map(a => {
+      const { date, time } = formatTime(a);
+      return [
+        a.story_id,
+        a.display_headline || a.headline,
+        getAuthor(a),
+        getCategory(a),
+        typeLabel(a.post_type),
+        date + (time ? ' ' + time : ''),
+        getUrl(a)
+      ].map(escape).join(',');
+    })
+  ];
+
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href  = URL.createObjectURL(blob);
+  link.download = `forbesindia-published-${new Date().toISOString().slice(0,10)}.csv`;
+  link.click();
 }
 
+// ── Fetch & Load ───────────────────────────────────────────
 async function load(showLoader) {
   if (showLoader) {
-    allArticles = [];
-    knownIds    = new Set();
+    allArticles = []; knownIds = new Set();
     $table.style.display = 'none';
     $state.style.display = 'block';
     $state.innerHTML = '<div class="icon">⟳</div><p>Fetching…</p>';
@@ -318,12 +583,15 @@ async function load(showLoader) {
   $dot.classList.remove('paused');
 
   try {
-    const rows = await fetchBatch(null);
-    allArticles = rows;
-    $fetched.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    $sub.textContent = `${allArticles.length} loaded · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+    const res  = await fetch(`${API}?count=50&fields=${encodeURIComponent(FIELDS)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    allArticles = Array.isArray(json) ? json
+                : Array.isArray(json.data) ? json.data
+                : Array.isArray(json.articles) ? json.articles : [];
+    $sub.textContent = `${allArticles.length} fetched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+    populateFilters();
     renderRows();
-    updateLoadMoreBtn();
   } catch(e) {
     console.error(e);
     $dot.classList.add('paused');
@@ -337,50 +605,7 @@ async function load(showLoader) {
   }
 }
 
-async function loadMore() {
-  const $btn = document.getElementById('loadMoreBtn');
-  $btn.disabled = true;
-  $btn.textContent = 'Loading…';
-  try {
-    const minId = Math.min(...allArticles.map(a => Number(a.story_id)));
-    const rows  = await fetchBatch(minId);
-    if (rows.length) {
-      // Deduplicate
-      const existingIds = new Set(allArticles.map(a => String(a.story_id)));
-      const newRows = rows.filter(r => !existingIds.has(String(r.story_id)));
-      allArticles = allArticles.concat(newRows);
-      $sub.textContent = `${allArticles.length} loaded · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
-      renderRows();
-      $btn.disabled = false;
-      $btn.textContent = rows.length < 50 ? 'No more articles' : `Load 50 more`;
-      if (rows.length < 50) $btn.disabled = true;
-    } else {
-      $btn.textContent = 'No more articles';
-    }
-  } catch(e) {
-    $btn.disabled = false;
-    $btn.textContent = 'Retry load more';
-  }
-}
-
-function updateLoadMoreBtn() {
-  const existing = document.getElementById('loadMoreBtn');
-  if (existing) existing.remove();
-  const btn = document.createElement('button');
-  btn.id = 'loadMoreBtn';
-  btn.textContent = 'Load 50 more';
-  btn.style.cssText = `
-    display:block; margin: 16px auto 4px;
-    padding: 9px 28px; font-size: 13px; font-family: var(--font-ui);
-    background: #fff; border: 1px solid #ccc; border-radius: 4px;
-    cursor: pointer; color: #444; transition: background .12s, border-color .12s;
-  `;
-  btn.onmouseover = () => { btn.style.borderColor = 'var(--fi-red)'; btn.style.color = 'var(--fi-red)'; };
-  btn.onmouseout  = () => { btn.style.borderColor = '#ccc'; btn.style.color = '#444'; };
-  btn.onclick = loadMore;
-  document.querySelector('.layout').appendChild(btn);
-}
-
+// ── Countdown ──────────────────────────────────────────────
 function startCountdown() {
   cdVal = INTERVAL;
   $cd.textContent = cdVal;
@@ -396,17 +621,34 @@ function startCountdown() {
   refTimer = setTimeout(() => load(false).then(startCountdown), INTERVAL * 1000);
 }
 
+// ── Event listeners ────────────────────────────────────────
+$search.addEventListener('input', renderRows);
+$catF.addEventListener('change', renderRows);
+$authorF.addEventListener('change', renderRows);
+$typeF.addEventListener('change', renderRows);
+
 $toggleBC.addEventListener('click', () => {
   showBC = !showBC;
   $toggleBC.classList.toggle('active', showBC);
   $toggleBC.innerHTML = showBC
-    ? `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="2" x2="11" y2="11"/><line x1="11" y1="2" x2="2" y2="11"/></svg> Hide Brand Connect`
-    : `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6.5h11M6.5 1v11"/></svg> Show Brand Connect`;
+    ? `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg> Hide Brand Connect`
+    : `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h10M6 1v10"/></svg> Brand Connect`;
   renderRows();
 });
 
-$search.addEventListener('input', renderRows);
+$exportBtn.addEventListener('click', exportCSV);
 
+document.querySelectorAll('th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    if (sortCol === th.dataset.col) { sortDir *= -1; }
+    else { sortCol = th.dataset.col; sortDir = th.dataset.col === 'date_timestamp' ? -1 : 1; }
+    updateSortHeaders();
+    renderRows();
+  });
+});
+
+// ── Boot ───────────────────────────────────────────────────
+updateSortHeaders();
 load(true).then(startCountdown);
 
 window.copyUrl = (url, btn) => {
