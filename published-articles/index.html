@@ -59,6 +59,20 @@
     .stat-l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); }
     .stat-sub { font-size: 11px; color: var(--ink-light); }
 
+    /* View tabs */
+    .view-tabs {
+      background: #fff; border-bottom: 1px solid var(--rule);
+      padding: 0 24px; display: flex; gap: 0;
+    }
+    .view-tab {
+      padding: 11px 18px; font-size: 12px; font-weight: 600; letter-spacing: .04em;
+      text-transform: uppercase; color: var(--ink-light); background: none;
+      border: none; border-bottom: 2px solid transparent; cursor: pointer;
+      white-space: nowrap; transition: color .15s, border-color .15s;
+    }
+    .view-tab:hover { color: var(--ink); }
+    .view-tab.active { color: var(--fi-red); border-bottom-color: var(--fi-red); }
+
     /* Controls */
     .controls {
       background: #fff; border-bottom: 1px solid var(--rule);
@@ -111,14 +125,13 @@
       font-size: 13px; display: flex; align-items: center; gap: 8px;
     }
 
-    /* Table */
+    /* Feed table */
     .layout { padding: 16px 24px; }
     .section-hd { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
     .section-hd h2 { font-family: var(--font-head); font-size: 17px; }
     .section-hd .sub { font-size: 12px; color: var(--ink-light); }
-
     .tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; min-width: 860px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; min-width: 900px; }
     thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
     th {
       padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700;
@@ -139,15 +152,17 @@
     .td-thumb img { width: 52px; height: 38px; object-fit: cover; border-radius: 2px; display: block; }
     .td-thumb .no-img { width: 52px; height: 38px; background: #eee; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #bbb; }
     .td-id { width: 72px; color: var(--ink-light); font-size: 11px; white-space: nowrap; }
-    .td-title { min-width: 240px; }
+    .td-title { min-width: 200px; }
     .td-title .title-link { font-family: var(--font-head); font-size: 13.5px; line-height: 1.35; color: var(--ink); display: block; margin-bottom: 3px; }
     .td-title .title-link:hover { color: var(--fi-red); text-decoration: underline; }
     .bc-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 1px 5px; border-radius: 2px; background: #fff0e0; color: #b85c00; }
-    .td-author { width: 120px; font-size: 12px; color: var(--ink-mid); line-height: 1.3; }
-    .td-section { width: 120px; }
-    .td-type { width: 76px; }
-    .td-time { width: 105px; white-space: nowrap; }
-    .td-actions { width: 60px; text-align: center; white-space: nowrap; }
+    .td-author { width: 110px; font-size: 12px; color: var(--ink-mid); line-height: 1.3; }
+    .td-coauthor { width: 110px; font-size: 11px; color: var(--ink-light); line-height: 1.3; font-style: italic; }
+    .td-section { width: 110px; }
+    .td-type { width: 72px; }
+    .td-time { width: 100px; white-space: nowrap; }
+    .td-caption { width: 140px; font-size: 11px; color: var(--ink-light); line-height: 1.4; }
+    .td-actions { width: 44px; text-align: center; white-space: nowrap; }
 
     .sec-pill {
       display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
@@ -158,13 +173,12 @@
     .t-article { background: #e8f4ff; color: #1a5f9a; }
     .t-video   { background: #fff0e0; color: #b85c00; }
     .t-photo   { background: #f0ffe8; color: #2a7a1a; }
-
     .time-date { font-size: 12px; font-weight: 500; }
     .time-today { color: var(--green); }
     .time-clock { font-size: 11px; color: var(--ink-light); }
-    .td-caption { width: 160px; font-size: 11px; color: var(--ink-light); line-height: 1.4; }
     .char-count { font-size: 10px; color: #aaa; margin-left: 4px; }
     .intro-text { font-size: 12px; color: var(--ink-mid); line-height: 1.5; font-style: italic; margin-top: 8px; padding: 8px 10px; background: #f8f8f6; border-left: 3px solid var(--fi-red); border-radius: 0 4px 4px 0; }
+    .enriching { font-size: 11px; color: #bbb; font-style: italic; }
 
     .icon-btn {
       width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule);
@@ -183,18 +197,11 @@
       background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,.18);
       display: flex; flex-direction: column;
     }
-    .dp-header {
-      padding: 16px 20px; border-bottom: 1px solid var(--rule);
-      display: flex; align-items: flex-start; gap: 12px; background: #f8f8f6;
-    }
+    .dp-header { padding: 16px 20px; border-bottom: 1px solid var(--rule); display: flex; align-items: flex-start; gap: 12px; background: #f8f8f6; }
     .dp-img { width: 80px; height: 56px; object-fit: cover; border-radius: 3px; flex-shrink: 0; }
     .dp-img-none { width: 80px; height: 56px; background: #eee; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #bbb; }
     .dp-title { font-family: var(--font-head); font-size: 14px; line-height: 1.4; flex: 1; }
-    .dp-close {
-      width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule);
-      background: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: var(--ink-light); flex-shrink: 0;
-    }
+    .dp-close { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-light); flex-shrink: 0; }
     .dp-close:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
     .dp-body { padding: 16px 20px; flex: 1; }
     .dp-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
@@ -204,24 +211,63 @@
     .dp-val a:hover { text-decoration: underline; }
     .dp-divider { height: 1px; background: var(--rule); margin: 10px 0; }
     .dp-footer { padding: 14px 20px; border-top: 1px solid var(--rule); display: flex; gap: 8px; }
-    .dp-btn {
-      flex: 1; padding: 8px; font-size: 12px; font-weight: 600; border-radius: 4px;
-      border: 1px solid var(--rule); background: #fff; cursor: pointer; color: var(--ink-mid);
-      display: flex; align-items: center; justify-content: center; gap: 5px;
-    }
+    .dp-btn { flex: 1; padding: 8px; font-size: 12px; font-weight: 600; border-radius: 4px; border: 1px solid var(--rule); background: #fff; cursor: pointer; color: var(--ink-mid); display: flex; align-items: center; justify-content: center; gap: 5px; }
     .dp-btn:hover { border-color: var(--fi-red); color: var(--fi-red); }
     .dp-btn.primary { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
     .dp-btn.primary:hover { background: #c01818; }
+
+    /* ── Reporter Report ── */
+    .report-layout { padding: 20px 24px; }
+    .report-note { font-size: 12px; color: var(--ink-light); background: #fffbea; border: 1px solid #fde68a; border-radius: 4px; padding: 8px 12px; margin-bottom: 18px; }
+
+    /* Reporter cards grid */
+    .rep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .rep-card { background: #fff; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+    .rep-card-hd { padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f0ee; }
+    .rep-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--fi-red); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+    .rep-name { font-weight: 700; font-size: 14px; }
+    .rep-total { margin-left: auto; font-family: var(--font-head); font-size: 22px; font-weight: bold; color: var(--fi-red); line-height: 1; }
+    .rep-total-label { font-size: 10px; color: var(--ink-light); text-align: right; text-transform: uppercase; letter-spacing: .05em; }
+    .rep-card-body { padding: 12px 16px; }
+    .rep-cat-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .rep-cat-label { font-size: 11px; color: var(--ink-mid); width: 120px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rep-bar-wrap { flex: 1; height: 6px; background: #f0f0ee; border-radius: 3px; overflow: hidden; }
+    .rep-bar { height: 100%; background: var(--fi-red); border-radius: 3px; transition: width .4s ease; }
+    .rep-cat-n { font-size: 11px; color: var(--ink-light); width: 20px; text-align: right; flex-shrink: 0; }
+    .rep-articles { margin-top: 10px; border-top: 1px solid #f5f5f3; padding-top: 8px; }
+    .rep-article-item { font-size: 11px; color: var(--ink-mid); padding: 3px 0; border-bottom: 1px solid #fafaf8; line-height: 1.35; display: flex; gap: 6px; align-items: baseline; }
+    .rep-article-item:last-child { border-bottom: none; }
+    .rep-article-id { color: var(--ink-light); flex-shrink: 0; font-size: 10px; }
+    .rep-article-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rep-article-title a { color: var(--ink-mid); }
+    .rep-article-title a:hover { color: var(--fi-red); }
+    .rep-toggle { font-size: 11px; color: var(--fi-red); cursor: pointer; margin-top: 6px; display: inline-block; }
+
+    /* Summary table */
+    .summary-tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; margin-bottom: 20px; }
+    .summary-tbl { width: 100%; border-collapse: collapse; background: #fff; font-size: 12px; min-width: 500px; }
+    .summary-tbl thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
+    .summary-tbl th { padding: 8px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-light); white-space: nowrap; }
+    .summary-tbl td { padding: 8px 12px; border-bottom: 1px solid #f5f5f3; vertical-align: middle; }
+    .summary-tbl tbody tr:last-child td { border-bottom: none; }
+    .summary-tbl tbody tr:hover td { background: #fafaf8; }
+    .rank-badge { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; background: #f0f0ee; color: var(--ink-mid); }
+    .rank-badge.gold { background: #fef3c7; color: #92400e; }
+    .rank-badge.silver { background: #f1f5f9; color: #475569; }
+    .rank-badge.bronze { background: #fef9ee; color: #7c4a00; }
+
+    .report-hd { font-family: var(--font-head); font-size: 15px; font-weight: bold; margin-bottom: 12px; color: var(--ink); }
 
     .state-box { padding: 50px; text-align: center; color: var(--ink-light); background: #fff; }
     .state-box .icon { font-size: 28px; margin-bottom: 10px; }
 
     @media(max-width:860px) {
-      .td-thumb,.td-section,.td-type,.td-caption { display: none; }
+      .td-thumb,.td-section,.td-type,.td-caption,.td-coauthor { display: none; }
       .controls { padding: 10px 16px; }
-      .layout { padding: 12px 16px; }
+      .layout,.report-layout { padding: 12px 16px; }
       .back,.masthead { padding: 0 16px; }
       .stats .stat:nth-child(n+4) { display: none; }
+      .rep-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -246,28 +292,24 @@
 </a>
 
 <div class="stats">
-  <div class="stat">
-    <span class="stat-n green" id="sToday">—</span>
-    <span class="stat-l">Published Today</span>
-    <span class="stat-sub" id="sTodaySub"></span>
-  </div>
-  <div class="stat">
-    <span class="stat-n grey" id="sYest">—</span>
-    <span class="stat-l">Yesterday</span>
-    <span class="stat-sub" id="sYestSub"></span>
-  </div>
-  <div class="stat">
-    <span class="stat-n" id="sShowing">—</span>
-    <span class="stat-l">Showing</span>
-    <span class="stat-sub" id="sShowingSub"></span>
-  </div>
-  <div class="stat">
-    <span class="stat-n" id="sFetch">—</span>
-    <span class="stat-l">Last updated</span>
-  </div>
+  <div class="stat"><span class="stat-n green" id="sToday">—</span><span class="stat-l">Published Today</span><span class="stat-sub" id="sTodaySub"></span></div>
+  <div class="stat"><span class="stat-n grey" id="sYest">—</span><span class="stat-l">Yesterday</span><span class="stat-sub" id="sYestSub"></span></div>
+  <div class="stat"><span class="stat-n" id="sShowing">—</span><span class="stat-l">Showing</span><span class="stat-sub" id="sShowingSub"></span></div>
+  <div class="stat"><span class="stat-n" id="sFetch">—</span><span class="stat-l">Last updated</span></div>
 </div>
 
-<div class="controls">
+<!-- View tabs -->
+<div class="view-tabs">
+  <button class="view-tab active" id="tabFeed" onclick="switchView('feed')">
+    📰 Article Feed
+  </button>
+  <button class="view-tab" id="tabReport" onclick="switchView('report')">
+    📊 Reporter Report
+  </button>
+</div>
+
+<!-- Feed controls (hidden in report view) -->
+<div class="controls" id="feedControls">
   <div class="search-wrap">
     <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
     <input type="search" id="searchInput" placeholder="Search title or author…" />
@@ -303,35 +345,77 @@
   <span id="errMsg"></span>
 </div>
 
-<div class="layout">
-  <div class="section-hd">
-    <h2>Latest Published</h2>
-    <span class="sub" id="secSub"></span>
+<!-- FEED VIEW -->
+<div id="viewFeed">
+  <div class="layout">
+    <div class="section-hd">
+      <h2>Latest Published</h2>
+      <span class="sub" id="secSub"></span>
+    </div>
+    <div class="tbl-wrap">
+      <div class="state-box" id="stateBox"><div class="icon">⟳</div><p>Fetching articles…</p></div>
+      <table id="artTable" style="display:none">
+        <thead>
+          <tr>
+            <th></th>
+            <th data-col="story_id">ID <span class="sa">↕</span></th>
+            <th data-col="display_headline">Title <span class="sa">↕</span></th>
+            <th data-col="author">Main Author <span class="sa">↕</span></th>
+            <th data-col="coauthor">Co-Author <span class="sa">↕</span></th>
+            <th data-col="section">Section <span class="sa">↕</span></th>
+            <th data-col="post_type">Type <span class="sa">↕</span></th>
+            <th data-col="created_at">Published <span class="sa">↕</span></th>
+            <th data-col="caption">Caption <span class="sa">↕</span></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="artTbody"></tbody>
+      </table>
+    </div>
   </div>
-  <div class="tbl-wrap">
-    <div class="state-box" id="stateBox"><div class="icon">⟳</div><p>Fetching articles…</p></div>
-    <table id="artTable" style="display:none">
-      <thead>
-        <tr>
-          <th></th><!-- thumb -->
-          <th data-col="story_id">ID <span class="sa">↕</span></th>
-          <th data-col="display_headline">Title <span class="sa">↕</span></th>
-          <th data-col="author">Author <span class="sa">↕</span></th>
-          <th data-col="section">Section <span class="sa">↕</span></th>
-          <th data-col="post_type">Type <span class="sa">↕</span></th>
-          <th data-col="created_at">Published <span class="sa">↕</span></th>
-          <th data-col="caption">Caption <span class="sa">↕</span></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="artTbody"></tbody>
-    </table>
+</div>
+
+<!-- REPORT VIEW -->
+<div id="viewReport" style="display:none">
+  <div class="report-layout">
+    <div class="report-note">
+      ⚠️ Based on the latest 50 articles from the API. For full historical reports, a CMS data export is needed.
+    </div>
+
+    <!-- Summary table -->
+    <div class="report-hd">Productivity Summary</div>
+    <div class="summary-tbl-wrap">
+      <table class="summary-tbl">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Reporter</th>
+            <th>Total Articles</th>
+            <th>As Main Author</th>
+            <th>As Co-Author</th>
+            <th>Top Section</th>
+            <th>Article / Video / Photo</th>
+          </tr>
+        </thead>
+        <tbody id="summaryTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Reporter cards -->
+    <div class="report-hd">By Reporter</div>
+    <div class="rep-grid" id="repGrid"></div>
+
+    <!-- Export -->
+    <button class="export-btn" id="exportReportBtn" style="margin-top:4px;">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9v2h9V9M6.5 1v7M4 6l2.5 2.5L9 6"/></svg>
+      Export Report CSV
+    </button>
   </div>
 </div>
 
 <!-- Detail panel -->
 <div id="detailOverlay" class="detail-overlay" style="display:none" onclick="closeDetail(event)">
-  <div class="detail-panel" id="detailPanel">
+  <div class="detail-panel">
     <div class="dp-header">
       <div id="dpImg"></div>
       <div id="dpTitle" class="dp-title"></div>
@@ -345,20 +429,20 @@
 </div>
 
 <script>
-const LIST_API    = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
-const DETAIL_API  = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article';
-const INTERVAL    = 60;
+const LIST_API   = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
+const DETAIL_API = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article';
+const INTERVAL   = 60;
 
-let allArticles  = [];   // enriched
-let knownIds     = new Set();
-let showBC       = false;
-let sortCol      = 'created_at';
-let sortDir      = -1;
-let cdVal        = INTERVAL;
-let cdTimer      = null;
-let refTimer     = null;
+let allArticles = [];
+let knownIds    = new Set();
+let showBC      = false;
+let sortCol     = 'created_at';
+let sortDir     = -1;
+let cdVal       = INTERVAL;
+let cdTimer     = null;
+let refTimer    = null;
+let currentView = 'feed';
 
-// DOM
 const $tbody    = document.getElementById('artTbody');
 const $table    = document.getElementById('artTable');
 const $state    = document.getElementById('stateBox');
@@ -378,6 +462,18 @@ const $progress = document.getElementById('fetchProgress');
 const $progMsg  = document.getElementById('fetchProgressMsg');
 const $sub      = document.getElementById('secSub');
 
+// ── View switcher ───────────────────────────────────────────
+function switchView(v) {
+  currentView = v;
+  document.getElementById('viewFeed').style.display   = v === 'feed'   ? '' : 'none';
+  document.getElementById('viewReport').style.display = v === 'report' ? '' : 'none';
+  document.getElementById('feedControls').style.display = v === 'feed' ? '' : 'none';
+  document.getElementById('tabFeed').classList.toggle('active', v === 'feed');
+  document.getElementById('tabReport').classList.toggle('active', v === 'report');
+  if (v === 'report' && allArticles.length) renderReport();
+}
+window.switchView = switchView;
+
 // ── Field helpers ───────────────────────────────────────────
 function safeStr(val) {
   if (!val) return '';
@@ -388,162 +484,112 @@ function safeStr(val) {
   return String(val).trim();
 }
 
-function getAuthor(art) {
+// Returns array of all authors
+function getAuthors(art) {
   const b = art.author_byline;
-  if (!b) return '';
-  if (Array.isArray(b)) return b.map(x => safeStr(x)).filter(Boolean).join(', ');
-  return safeStr(b);
+  if (!b) return [];
+  if (Array.isArray(b)) return b.map(x => safeStr(x)).filter(Boolean);
+  const s = safeStr(b);
+  return s ? [s] : [];
 }
 
+function getMainAuthor(art) { return getAuthors(art)[0] || ''; }
+function getCoAuthors(art)  { return getAuthors(art).slice(1); }
+
 function getSection(art) {
-  // from get-article: section[] is array of strings
   if (art.section && Array.isArray(art.section) && art.section.length) return art.section[0];
-  // fallback: subsection[].name
   if (art.subsection && art.subsection.length) return art.subsection[0].name || '';
-  // fallback: categories from list API
   if (art.categories && art.categories.length) {
     const parent = art.categories.find(c => c.parent === 0 || c.parent === '0');
     return (parent || art.categories[0]).name || '';
   }
   return '';
 }
-
 function getAllSections(art) {
   const s = new Set();
   if (art.section && Array.isArray(art.section)) art.section.forEach(x => x && s.add(x));
   if (art.subsection) art.subsection.forEach(x => x.name && s.add(x.name));
   return [...s];
 }
-
 function getUrl(art) {
   const u = art.state_url || art.weburl || art.weburl_r || '';
   if (!u) return '';
   return u.startsWith('http') ? u : 'https://www.forbesindia.com' + (u.startsWith('/') ? u : '/' + u);
 }
-
-function isBrandConnect(art) {
-  return getUrl(art).toLowerCase().includes('brand-connect');
-}
-
-function getImage(art) {
-  return art.images?.url || (Array.isArray(art.images) ? art.images[0]?.url : null) || '';
-}
+function isBrandConnect(art) { return getUrl(art).toLowerCase().includes('brand-connect'); }
+function getImage(art) { return art.images?.url || (Array.isArray(art.images) ? art.images[0]?.url : null) || ''; }
+function getCaption(art) { return art.images?.caption || (Array.isArray(art.images) ? art.images[0]?.caption : '') || ''; }
+function getIntro(art) { return art.intro || ''; }
+function charCount(str) { const n = (str||'').trim().length; return n ? `<span class="char-count">(${n})</span>` : ''; }
 
 function getPubMs(art) {
-  // created_at from get-article: "2026-06-23 17:46:03"
-  if (art.created_at) {
-    const d = new Date(art.created_at.replace(' ', 'T'));
-    if (!isNaN(d)) return d.getTime();
-  }
-  if (art.date_timestamp) {
-    const ts = parseInt(art.date_timestamp, 10);
-    if (!isNaN(ts)) return ts < 1e12 ? ts * 1000 : ts;
-  }
-  if (art.publish_date) {
-    const d = new Date(art.publish_date);
-    if (!isNaN(d)) return d.getTime();
-  }
+  if (art.created_at) { const d = new Date(art.created_at.replace(' ','T')); if (!isNaN(d)) return d.getTime(); }
+  if (art.date_timestamp) { const ts = parseInt(art.date_timestamp,10); if (!isNaN(ts)) return ts < 1e12 ? ts*1000 : ts; }
+  if (art.publish_date) { const d = new Date(art.publish_date); if (!isNaN(d)) return d.getTime(); }
   return null;
 }
-
 function formatTime(art) {
   const ms = getPubMs(art);
-  if (!ms) return { date: '—', time: '', isToday: false, isYesterday: false };
-  const d    = new Date(ms);
-  const now  = new Date();
-  const tod  = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  if (!ms) return { date:'—', time:'', isToday:false, isYesterday:false, full:'—' };
+  const d = new Date(ms), now = new Date();
+  const tod  = new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
   const yest = tod - 86400000;
   const isToday     = ms >= tod;
   const isYesterday = ms >= yest && ms < tod;
-  const date = isToday ? 'Today'
-    : isYesterday ? 'Yesterday'
-    : d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
-  const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  const date = isToday ? 'Today' : isYesterday ? 'Yesterday'
+    : d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'});
+  const time = d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   return { date, time, isToday, isYesterday, full: d.toLocaleString('en-IN') };
 }
-
 function typeInfo(pt) {
-  const t = (pt || '').toLowerCase();
-  if (t.includes('video')) return { label: 'Video', cls: 't-video' };
-  if (t.includes('photo') || t.includes('gallery')) return { label: 'Photo', cls: 't-photo' };
-  return { label: 'Article', cls: 't-article' };
+  const t = (pt||'').toLowerCase();
+  if (t.includes('video')) return { label:'Video', cls:'t-video' };
+  if (t.includes('photo')||t.includes('gallery')) return { label:'Photo', cls:'t-photo' };
+  return { label:'Article', cls:'t-article' };
 }
 
-function getCaption(art) {
-  return art.images?.caption || (Array.isArray(art.images) ? art.images[0]?.caption : '') || '';
-}
-
-function getIntro(art) {
-  return art.intro || '';
-}
-
-function charCount(str) {
-  const n = (str || '').trim().length;
-  return n ? `<span class="char-count">(${n})</span>` : '';
-}
+// ── Fetch ───────────────────────────────────────────────────
 async function fetchList() {
-  const res  = await fetch(`${LIST_API}?count=50`);
+  const res = await fetch(`${LIST_API}?count=50`);
   if (!res.ok) throw new Error(`List API: HTTP ${res.status}`);
   const json = await res.json();
-  return Array.isArray(json) ? json
-       : Array.isArray(json.data) ? json.data
-       : Array.isArray(json.articles) ? json.articles : [];
+  return Array.isArray(json) ? json : Array.isArray(json.data) ? json.data : Array.isArray(json.articles) ? json.articles : [];
 }
-
 async function fetchDetail(article_id) {
   try {
-    const res  = await fetch(`${DETAIL_API}?article_id=${article_id}`);
+    const res = await fetch(`${DETAIL_API}?article_id=${article_id}`);
     if (!res.ok) return null;
     const json = await res.json();
     return json.data || json;
   } catch { return null; }
 }
-
 async function enrichArticles(list) {
-  // Batch parallel calls — all 50 at once
   const details = await Promise.all(list.map(a => fetchDetail(a.story_id)));
-  return list.map((a, i) => {
-    const d = details[i];
-    if (!d) return a; // fallback to list data
-    return { ...a, ...d, _enriched: true };
-  });
+  return list.map((a,i) => { const d = details[i]; return d ? {...a,...d,_enriched:true} : a; });
 }
 
-// ── Filters population ──────────────────────────────────────
+// ── Filters ──────────────────────────────────────────────────
 function populateFilters() {
-  const sections = new Set();
-  const authors  = new Set();
+  const sections = new Set(), authors = new Set();
   allArticles.forEach(a => {
     getAllSections(a).forEach(s => s && sections.add(s));
-    const au = getAuthor(a);
-    if (au) au.split(', ').forEach(x => x.trim() && authors.add(x.trim()));
+    getAuthors(a).forEach(x => x.trim() && authors.add(x.trim()));
   });
-
   const sc = $catF.value;
   $catF.innerHTML = '<option value="">All sections</option>';
-  [...sections].sort().forEach(s => {
-    const o = document.createElement('option');
-    o.value = s; o.textContent = s; if (s === sc) o.selected = true;
-    $catF.appendChild(o);
-  });
-
+  [...sections].sort().forEach(s => { const o = document.createElement('option'); o.value=s; o.textContent=s; if(s===sc)o.selected=true; $catF.appendChild(o); });
   const sa = $authorF.value;
   $authorF.innerHTML = '<option value="">All authors</option>';
-  [...authors].sort().forEach(a => {
-    const o = document.createElement('option');
-    o.value = a; o.textContent = a; if (a === sa) o.selected = true;
-    $authorF.appendChild(o);
-  });
+  [...authors].sort().forEach(a => { const o = document.createElement('option'); o.value=a; o.textContent=a; if(a===sa)o.selected=true; $authorF.appendChild(o); });
 }
 
-// ── Stats ───────────────────────────────────────────────────
+// ── Stats ────────────────────────────────────────────────────
 function updateStats(visible) {
   const now  = new Date();
-  const tod  = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const tod  = new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
   const yest = tod - 86400000;
-  const todayN = allArticles.filter(a => { const ms = getPubMs(a); return ms && ms >= tod; }).length;
-  const yestN  = allArticles.filter(a => { const ms = getPubMs(a); return ms && ms >= yest && ms < tod; }).length;
-
+  const todayN = allArticles.filter(a => { const ms=getPubMs(a); return ms&&ms>=tod; }).length;
+  const yestN  = allArticles.filter(a => { const ms=getPubMs(a); return ms&&ms>=yest&&ms<tod; }).length;
   document.getElementById('sToday').textContent    = todayN;
   document.getElementById('sTodaySub').textContent = `as of ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
   document.getElementById('sYest').textContent     = yestN;
@@ -554,25 +600,27 @@ function updateStats(visible) {
   $badge.innerHTML = `<strong>${visible.length}</strong> of ${allArticles.length}`;
 }
 
-// ── Sort ────────────────────────────────────────────────────
+// ── Sort ─────────────────────────────────────────────────────
 function getSortVal(a, col) {
-  if (col === 'story_id')        return Number(a.story_id) || 0;
-  if (col === 'display_headline') return (a.display_headline || '').toLowerCase();
-  if (col === 'author')          return getAuthor(a).toLowerCase();
-  if (col === 'section')         return getSection(a).toLowerCase();
-  if (col === 'post_type')       return typeInfo(a.post_type).label.toLowerCase();
-  if (col === 'caption')         return getCaption(a).toLowerCase();
+  if (col==='story_id')         return Number(a.story_id)||0;
+  if (col==='display_headline') return (a.display_headline||'').toLowerCase();
+  if (col==='author')           return getMainAuthor(a).toLowerCase();
+  if (col==='coauthor')         return getCoAuthors(a).join(', ').toLowerCase();
+  if (col==='section')          return getSection(a).toLowerCase();
+  if (col==='post_type')        return typeInfo(a.post_type).label.toLowerCase();
+  if (col==='created_at')       return getPubMs(a)||0;
+  if (col==='caption')          return getCaption(a).toLowerCase();
   return '';
 }
 function updateSortHeaders() {
   document.querySelectorAll('th[data-col]').forEach(th => {
-    th.classList.toggle('sorted', th.dataset.col === sortCol);
+    th.classList.toggle('sorted', th.dataset.col===sortCol);
     const sa = th.querySelector('.sa');
-    if (sa) sa.textContent = th.dataset.col === sortCol ? (sortDir === -1 ? '↓' : '↑') : '↕';
+    if (sa) sa.textContent = th.dataset.col===sortCol ? (sortDir===-1?'↓':'↑') : '↕';
   });
 }
 
-// ── Render ──────────────────────────────────────────────────
+// ── Render feed ──────────────────────────────────────────────
 function renderRows() {
   const q      = $search.value.trim().toLowerCase();
   const sec    = $catF.value;
@@ -581,61 +629,58 @@ function renderRows() {
 
   let visible = allArticles.filter(a => {
     if (!showBC && isBrandConnect(a)) return false;
-    const title = (a.display_headline || a.headline || '').toLowerCase();
-    const au    = getAuthor(a).toLowerCase();
-    const secs  = getAllSections(a);
-    const pt    = (a.post_type || '').toLowerCase();
-    if (q && !title.includes(q) && !au.includes(q)) return false;
+    const title  = (a.display_headline||a.headline||'').toLowerCase();
+    const authors = getAuthors(a).join(' ').toLowerCase();
+    const secs   = getAllSections(a);
+    const pt     = (a.post_type||'').toLowerCase();
+    if (q && !title.includes(q) && !authors.includes(q)) return false;
     if (sec && !secs.includes(sec)) return false;
-    if (author && !au.includes(author.toLowerCase())) return false;
+    if (author && !getAuthors(a).map(x=>x.toLowerCase()).includes(author.toLowerCase())) return false;
     if (type && !pt.includes(type)) return false;
     return true;
   });
 
-  visible.sort((a, b) => {
-    const av = getSortVal(a, sortCol), bv = getSortVal(b, sortCol);
-    if (av < bv) return -sortDir; if (av > bv) return sortDir; return 0;
+  visible.sort((a,b) => {
+    const av=getSortVal(a,sortCol), bv=getSortVal(b,sortCol);
+    if (av<bv) return -sortDir; if (av>bv) return sortDir; return 0;
   });
 
   if (!visible.length) {
-    $table.style.display = 'none';
-    $state.style.display = 'block';
-    $state.innerHTML = '<div class="icon">🔍</div><p>No articles match.</p>';
+    $table.style.display='none'; $state.style.display='block';
+    $state.innerHTML='<div class="icon">🔍</div><p>No articles match.</p>';
   } else {
-    $state.style.display = 'none';
-    $table.style.display = 'table';
+    $state.style.display='none'; $table.style.display='table';
     $tbody.innerHTML = visible.map(a => {
-      const isNew  = !knownIds.has(String(a.story_id)) && knownIds.size > 0;
-      const title  = a.display_headline || a.headline || '(No title)';
-      const url    = getUrl(a);
-      const author = getAuthor(a);
-      const sec    = getSection(a);
-      const isBC   = isBrandConnect(a);
-      const img    = getImage(a);
+      const isNew   = !knownIds.has(String(a.story_id)) && knownIds.size>0;
+      const title   = a.display_headline||a.headline||'(No title)';
+      const url     = getUrl(a);
+      const main    = getMainAuthor(a);
+      const coauths = getCoAuthors(a).join(', ');
+      const sec     = getSection(a);
+      const isBC    = isBrandConnect(a);
+      const img     = getImage(a);
       const caption = getCaption(a);
-      const { date, time, isToday } = formatTime(a);
-      const ti     = typeInfo(a.post_type);
-      const escUrl = url.replace(/"/g, '&quot;');
-      const sid    = String(a.story_id || '');
-
-      return `<tr${isNew ? ' class="new-row"' : ''} onclick="openDetail('${sid}')" style="cursor:pointer">
-        <td class="td-thumb">
-          ${img ? `<img src="${img}" alt="" loading="lazy" onerror="this.style.display='none'">` : '<div class="no-img">📰</div>'}
-        </td>
-        <td class="td-id">${a.story_id || '—'}</td>
+      const {date,time,isToday} = formatTime(a);
+      const ti      = typeInfo(a.post_type);
+      const escUrl  = url.replace(/"/g,'&quot;');
+      const sid     = String(a.story_id||'');
+      return `<tr${isNew?' class="new-row"':''} onclick="openDetail('${sid}')" style="cursor:pointer">
+        <td class="td-thumb">${img?`<img src="${img}" alt="" loading="lazy" onerror="this.style.display='none'">` : '<div class="no-img">📰</div>'}</td>
+        <td class="td-id">${a.story_id||'—'}</td>
         <td class="td-title">
           <a class="title-link" href="${escUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${title}</a>${charCount(title)}
-          ${isBC ? '<span class="bc-tag">Brand Connect</span>' : ''}
-          ${!a._enriched ? '<span class="enriching">loading…</span>' : ''}
+          ${isBC?'<span class="bc-tag">Brand Connect</span>':''}
+          ${!a._enriched?'<span class="enriching">loading…</span>':''}
         </td>
-        <td class="td-author">${author || '—'}</td>
-        <td class="td-section">${sec ? `<span class="sec-pill">${sec}</span>` : '—'}</td>
+        <td class="td-author">${main||'—'}</td>
+        <td class="td-coauthor">${coauths||'—'}</td>
+        <td class="td-section">${sec?`<span class="sec-pill">${sec}</span>`:'—'}</td>
         <td class="td-type"><span class="type-tag ${ti.cls}">${ti.label}</span></td>
         <td class="td-time">
-          <div class="time-date${isToday ? ' time-today' : ''}">${date}</div>
-          ${time ? `<div class="time-clock">${time}</div>` : ''}
+          <div class="time-date${isToday?' time-today':''}">${date}</div>
+          ${time?`<div class="time-clock">${time}</div>`:''}
         </td>
-        <td class="td-caption">${caption ? `${caption}` : '—'}</td>
+        <td class="td-caption">${caption||'—'}</td>
         <td class="td-actions" onclick="event.stopPropagation()">
           <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)">
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
@@ -648,55 +693,208 @@ function renderRows() {
   updateStats(visible);
 }
 
-// ── Detail panel ────────────────────────────────────────────
+// ── Reporter Report ──────────────────────────────────────────
+function buildReporterData() {
+  const map = {};
+  allArticles.forEach(a => {
+    if (isBrandConnect(a)) return;
+    const authors = getAuthors(a);
+    if (!authors.length) return;
+    const sec  = getSection(a);
+    const ti   = typeInfo(a.post_type).label;
+    const url  = getUrl(a);
+    const title = a.display_headline||a.headline||'(No title)';
+    const sid  = a.story_id;
+
+    authors.forEach((name, idx) => {
+      if (!name) return;
+      if (!map[name]) map[name] = { name, total:0, asMain:0, asCoAuthor:0, sections:{}, types:{Article:0,Video:0,Photo:0}, articles:[] };
+      const r = map[name];
+      r.total++;
+      if (idx===0) r.asMain++; else r.asCoAuthor++;
+      r.sections[sec] = (r.sections[sec]||0) + 1;
+      r.types[ti] = (r.types[ti]||0) + 1;
+      r.articles.push({sid, title, url, sec, ti, isMain: idx===0});
+    });
+  });
+  return Object.values(map).sort((a,b) => b.total - a.total);
+}
+
+function renderReport() {
+  const reporters = buildReporterData();
+  const maxTotal  = reporters[0]?.total || 1;
+
+  // Summary table
+  document.getElementById('summaryTbody').innerHTML = reporters.map((r, i) => {
+    const topSec = Object.entries(r.sections).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
+    const rankCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    return `<tr>
+      <td><span class="rank-badge ${rankCls}">${i+1}</span></td>
+      <td style="font-weight:600">${r.name}</td>
+      <td style="font-weight:700;color:var(--fi-red)">${r.total}</td>
+      <td>${r.asMain}</td>
+      <td>${r.asCoAuthor}</td>
+      <td><span class="sec-pill">${topSec}</span></td>
+      <td style="font-size:11px;color:var(--ink-mid)">${r.types.Article||0} / ${r.types.Video||0} / ${r.types.Photo||0}</td>
+    </tr>`;
+  }).join('');
+
+  // Reporter cards
+  document.getElementById('repGrid').innerHTML = reporters.map(r => {
+    const topSecs  = Object.entries(r.sections).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const maxSec   = topSecs[0]?.[1]||1;
+    const initials = r.name.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+    const cardId   = 'card-' + r.name.replace(/\s+/g,'-');
+    const artList  = r.articles.slice(0,5).map(a =>
+      `<div class="rep-article-item">
+        <span class="rep-article-id">${a.sid}</span>
+        <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
+        ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
+      </div>`
+    ).join('');
+    const hasMore  = r.articles.length > 5;
+
+    return `<div class="rep-card">
+      <div class="rep-card-hd">
+        <div class="rep-avatar">${initials}</div>
+        <div>
+          <div class="rep-name">${r.name}</div>
+          <div style="font-size:11px;color:var(--ink-light);">${r.asMain} main · ${r.asCoAuthor} co-author</div>
+        </div>
+        <div style="text-align:right;margin-left:auto">
+          <div class="rep-total">${r.total}</div>
+          <div class="rep-total-label">articles</div>
+        </div>
+      </div>
+      <div class="rep-card-body">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:8px;">By Section</div>
+        ${topSecs.map(([sec,n]) => `
+          <div class="rep-cat-row">
+            <span class="rep-cat-label" title="${sec}">${sec||'(none)'}</span>
+            <div class="rep-bar-wrap"><div class="rep-bar" style="width:${Math.round(n/maxSec*100)}%"></div></div>
+            <span class="rep-cat-n">${n}</span>
+          </div>`).join('')}
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin:10px 0 6px;">
+          Type: <span style="color:var(--ink-mid);font-weight:500;text-transform:none;letter-spacing:0">
+            ${r.types.Article||0} Article · ${r.types.Video||0} Video · ${r.types.Photo||0} Photo
+          </span>
+        </div>
+        <div class="rep-articles">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:5px;">Recent Articles</div>
+          <div id="${cardId}-list">${artList}</div>
+          ${hasMore?`<span class="rep-toggle" onclick="toggleArticles('${cardId}',${JSON.stringify(r.articles).replace(/'/g,"&#39;")})">+ Show all ${r.articles.length}</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.toggleArticles = function(cardId, articles) {
+  const el   = document.getElementById(cardId+'-list');
+  const btn  = el.nextElementSibling;
+  const showing = el.dataset.expanded === '1';
+  if (!showing) {
+    el.innerHTML = articles.map(a =>
+      `<div class="rep-article-item">
+        <span class="rep-article-id">${a.sid}</span>
+        <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
+        ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
+      </div>`
+    ).join('');
+    el.dataset.expanded = '1';
+    if (btn) btn.textContent = '− Show less';
+  } else {
+    el.innerHTML = articles.slice(0,5).map(a =>
+      `<div class="rep-article-item">
+        <span class="rep-article-id">${a.sid}</span>
+        <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
+        ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
+      </div>`
+    ).join('');
+    el.dataset.expanded = '0';
+    if (btn) btn.textContent = `+ Show all ${articles.length}`;
+  }
+};
+
+// ── Export feed CSV ──────────────────────────────────────────
+function exportCSV() {
+  const q=$search.value.trim().toLowerCase(), sec=$catF.value, author=$authorF.value, type=$typeF.value.toLowerCase();
+  const rows = allArticles.filter(a => {
+    if (!showBC&&isBrandConnect(a)) return false;
+    const title=(a.display_headline||'').toLowerCase(), aus=getAuthors(a).join(' ').toLowerCase();
+    if (q&&!title.includes(q)&&!aus.includes(q)) return false;
+    if (sec&&!getAllSections(a).includes(sec)) return false;
+    if (author&&!getAuthors(a).map(x=>x.toLowerCase()).includes(author.toLowerCase())) return false;
+    if (type&&!(a.post_type||'').toLowerCase().includes(type)) return false;
+    return true;
+  });
+  const esc=v=>`"${String(v||'').replace(/"/g,'""')}"`;
+  const hdrs=['Story ID','Title','Main Author','Co-Author(s)','Section','Type','Published','Caption','URL','Image URL'];
+  const lines=[hdrs.map(esc).join(','),...rows.map(a=>{
+    const {full}=formatTime(a);
+    return [a.story_id,a.display_headline||a.headline,getMainAuthor(a),getCoAuthors(a).join('; '),
+      getSection(a),typeInfo(a.post_type).label,full,getCaption(a),getUrl(a),getImage(a)].map(esc).join(',');
+  })];
+  download(lines.join('\n'),`forbesindia-feed-${new Date().toISOString().slice(0,10)}.csv`);
+}
+
+// ── Export report CSV ────────────────────────────────────────
+function exportReportCSV() {
+  const reporters = buildReporterData();
+  const esc=v=>`"${String(v||'').replace(/"/g,'""')}"`;
+  const hdrs=['Rank','Reporter','Total Articles','As Main Author','As Co-Author','Article','Video','Photo','Top Section'];
+  const lines=[hdrs.map(esc).join(','),...reporters.map((r,i)=>{
+    const topSec=Object.entries(r.sections).sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
+    return [i+1,r.name,r.total,r.asMain,r.asCoAuthor,r.types.Article||0,r.types.Video||0,r.types.Photo||0,topSec].map(esc).join(',');
+  })];
+  download(lines.join('\n'),`forbesindia-reporter-report-${new Date().toISOString().slice(0,10)}.csv`);
+}
+
+function download(csv, filename) {
+  const blob=new Blob([csv],{type:'text/csv'});
+  const link=document.createElement('a');
+  link.href=URL.createObjectURL(blob); link.download=filename; link.click();
+}
+
+// ── Detail panel ─────────────────────────────────────────────
 function openDetail(sid) {
-  const art = allArticles.find(a => String(a.story_id) === sid);
+  const art = allArticles.find(a => String(a.story_id)===sid);
   if (!art) return;
+  const url=getUrl(art), img=getImage(art), main=getMainAuthor(art),
+        coauths=getCoAuthors(art), secs=getAllSections(art),
+        ti=typeInfo(art.post_type), {full}=formatTime(art),
+        isBC=isBrandConnect(art), intro=getIntro(art),
+        caption=getCaption(art), title=art.display_headline||art.headline||'(No title)';
 
-  const url    = getUrl(art);
-  const img    = getImage(art);
-  const author = getAuthor(art);
-  const secs   = getAllSections(art);
-  const ti     = typeInfo(art.post_type);
-  const { full } = formatTime(art);
-  const isBC   = isBrandConnect(art);
-  const intro   = getIntro(art);
-  const caption = getCaption(art);
-  const title   = art.display_headline || art.headline || '(No title)';
-
-  // Header
   document.getElementById('dpImg').innerHTML = img
-    ? `<img class="dp-img" src="${img}" alt="">`
-    : '<div class="dp-img-none">📰</div>';
+    ? `<img class="dp-img" src="${img}" alt="">` : '<div class="dp-img-none">📰</div>';
   document.getElementById('dpTitle').innerHTML =
-    `${title} <span class="char-count">(${title.length})</span>`;
+    `${title} ${charCount(title)}`;
 
-  // Body
-  const rows = [
-    ['Story ID',  art.story_id || '—'],
-    ['Author',    author || '—'],
-    ['Section',   secs.join(', ') || '—'],
-    ['Type',      `<span class="type-tag ${ti.cls}">${ti.label}</span>${isBC ? ' <span class="bc-tag">Brand Connect</span>' : ''}`],
-    ['Published', full || '—'],
-    ['Caption',   caption || '—'],
-    ['URL',       url ? `<a href="${url}" target="_blank" rel="noopener">${url}</a>` : '—'],
-    ['Image URL', img ? `<a href="${img}" target="_blank" rel="noopener">${img.split('/').pop()}</a>` : '—'],
+  const rows=[
+    ['Story ID', art.story_id||'—'],
+    ['Main Author', main||'—'],
+    ['Co-Author', coauths.length ? coauths.join(', ') : '—'],
+    ['Section', secs.join(', ')||'—'],
+    ['Type', `<span class="type-tag ${ti.cls}">${ti.label}</span>${isBC?' <span class="bc-tag">Brand Connect</span>':''}`],
+    ['Published', full||'—'],
+    ['Caption', caption||'—'],
+    ['URL', url?`<a href="${url}" target="_blank" rel="noopener">${url}</a>`:'—'],
+    ['Image URL', img?`<a href="${img}" target="_blank" rel="noopener">${img.split('/').pop()}</a>`:'—'],
   ];
-
   const introHtml = intro
     ? `<div class="dp-row" style="flex-direction:column;gap:5px;">
-        <span class="dp-label">Intro <span class="char-count">(${intro.trim().length})</span></span>
+        <span class="dp-label">Intro ${charCount(intro)}</span>
         <div class="intro-text">${intro}</div>
-       </div><div class="dp-divider"></div>`
-    : '';
+       </div><div class="dp-divider"></div>` : '';
 
   document.getElementById('dpBody').innerHTML =
-    rows.map(([label, val]) =>
-      `<div class="dp-row"><span class="dp-label">${label}</span><span class="dp-val">${val}</span></div>`
-    ).join('') + '<div class="dp-divider"></div>' + introHtml;
+    rows.map(([l,v])=>`<div class="dp-row"><span class="dp-label">${l}</span><span class="dp-val">${v}</span></div>`).join('')
+    + '<div class="dp-divider"></div>' + introHtml;
 
-  document.getElementById('dpFooter').innerHTML = `
-    <button class="dp-btn" onclick="copyUrl('${url.replace(/'/g,"\\'")}',this)">
+  const escUrl=url.replace(/'/g,"\\'");
+  document.getElementById('dpFooter').innerHTML=`
+    <button class="dp-btn" onclick="copyUrl('${escUrl}',this)">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
       Copy URL
     </button>
@@ -704,148 +902,87 @@ function openDetail(sid) {
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 2H2v8h8V7M7 1h4v4M11 1L6 6"/></svg>
       Open Article
     </a>`;
-
-  document.getElementById('detailOverlay').style.display = 'flex';
+  document.getElementById('detailOverlay').style.display='flex';
 }
+function closeDetail(e) { if(e.target===document.getElementById('detailOverlay')) document.getElementById('detailOverlay').style.display='none'; }
+function closeDetailBtn() { document.getElementById('detailOverlay').style.display='none'; }
+window.openDetail=openDetail; window.closeDetail=closeDetail; window.closeDetailBtn=closeDetailBtn;
 
-function closeDetail(e) {
-  if (e.target === document.getElementById('detailOverlay'))
-    document.getElementById('detailOverlay').style.display = 'none';
-}
-function closeDetailBtn() {
-  document.getElementById('detailOverlay').style.display = 'none';
-}
-window.openDetail   = openDetail;
-window.closeDetail  = closeDetail;
-window.closeDetailBtn = closeDetailBtn;
-
-// ── Export CSV ──────────────────────────────────────────────
-function exportCSV() {
-  const q = $search.value.trim().toLowerCase(), sec = $catF.value,
-        author = $authorF.value, type = $typeF.value.toLowerCase();
-  const rows = allArticles.filter(a => {
-    if (!showBC && isBrandConnect(a)) return false;
-    const title = (a.display_headline || '').toLowerCase(), au = getAuthor(a).toLowerCase();
-    if (q && !title.includes(q) && !au.includes(q)) return false;
-    if (sec && !getAllSections(a).includes(sec)) return false;
-    if (author && !au.includes(author.toLowerCase())) return false;
-    if (type && !(a.post_type || '').toLowerCase().includes(type)) return false;
-    return true;
-  });
-  const esc  = v => `"${String(v||'').replace(/"/g,'""')}"`;
-  const hdrs = ['Story ID','Title','Author','Section','Type','Published','URL','Image URL'];
-  const lines = [hdrs.map(esc).join(','), ...rows.map(a => {
-    const { full } = formatTime(a);
-    return [a.story_id, a.display_headline||a.headline, getAuthor(a),
-      getAllSections(a).join('; '), typeInfo(a.post_type).label,
-      full, getUrl(a), getImage(a)].map(esc).join(',');
-  })];
-  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `forbesindia-${new Date().toISOString().slice(0,10)}.csv`;
-  link.click();
-}
-
-// ── Main load ───────────────────────────────────────────────
+// ── Load ─────────────────────────────────────────────────────
 async function load(showLoader) {
   if (showLoader) {
-    allArticles = []; knownIds = new Set();
-    $table.style.display = 'none';
-    $state.style.display = 'block';
-    $state.innerHTML = '<div class="icon">⟳</div><p>Fetching articles…</p>';
+    allArticles=[]; knownIds=new Set();
+    $table.style.display='none'; $state.style.display='block';
+    $state.innerHTML='<div class="icon">⟳</div><p>Fetching articles…</p>';
   }
-  $err.style.display = 'none';
-  $dot.classList.remove('paused');
-
+  $err.style.display='none'; $dot.classList.remove('paused');
   try {
-    // Step 1: get list
     const list = await fetchList();
-    $state.innerHTML = '<div class="icon">⟳</div><p>Loading details…</p>';
-
-    // Step 2: show list data immediately (partial render)
-    allArticles = list;
-    populateFilters();
-    renderRows();
-
-    // Step 3: enrich with get-article in parallel, show progress
-    $progress.style.display = 'flex';
-    $progMsg.textContent = `Fetching details for ${list.length} articles…`;
-
+    $state.innerHTML='<div class="icon">⟳</div><p>Loading details…</p>';
+    allArticles=list; populateFilters(); renderRows();
+    $progress.style.display='flex';
+    $progMsg.textContent=`Fetching details for ${list.length} articles…`;
     const enriched = await enrichArticles(list);
-    allArticles = enriched;
-    $progress.style.display = 'none';
-
-    populateFilters();
-    renderRows();
-    $sub.textContent = `${allArticles.length} articles · enriched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
-
+    allArticles=enriched; $progress.style.display='none';
+    populateFilters(); renderRows();
+    $sub.textContent=`${allArticles.length} articles · enriched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+    if (currentView==='report') renderReport();
   } catch(e) {
-    console.error(e);
-    $progress.style.display = 'none';
-    $dot.classList.add('paused');
-    $err.style.display = 'flex';
-    $errMsg.textContent = `${e.message} — will retry in ${INTERVAL}s`;
+    console.error(e); $progress.style.display='none';
+    $dot.classList.add('paused'); $err.style.display='flex';
+    $errMsg.textContent=`${e.message} — will retry in ${INTERVAL}s`;
     if (!allArticles.length) {
-      $table.style.display = 'none';
-      $state.style.display = 'block';
-      $state.innerHTML = '<div class="icon">⚠️</div><p>Failed to load.</p>';
+      $table.style.display='none'; $state.style.display='block';
+      $state.innerHTML='<div class="icon">⚠️</div><p>Failed to load.</p>';
     }
   }
 }
 
-// ── Countdown ───────────────────────────────────────────────
+// ── Countdown ─────────────────────────────────────────────────
 function startCountdown() {
-  cdVal = INTERVAL;
-  $cd.textContent = cdVal;
-  $pbar.style.transition = 'none';
-  $pbar.style.transform  = 'scaleX(1)';
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    $pbar.style.transition = `transform ${INTERVAL}s linear`;
-    $pbar.style.transform  = 'scaleX(0)';
+  cdVal=INTERVAL; $cd.textContent=cdVal;
+  $pbar.style.transition='none'; $pbar.style.transform='scaleX(1)';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    $pbar.style.transition=`transform ${INTERVAL}s linear`; $pbar.style.transform='scaleX(0)';
   }));
   clearInterval(cdTimer);
-  cdTimer = setInterval(() => { $cd.textContent = Math.max(0, --cdVal); }, 1000);
+  cdTimer=setInterval(()=>{ $cd.textContent=Math.max(0,--cdVal); },1000);
   clearTimeout(refTimer);
-  refTimer = setTimeout(() => load(false).then(startCountdown), INTERVAL * 1000);
+  refTimer=setTimeout(()=>load(false).then(startCountdown),INTERVAL*1000);
 }
 
-// ── Events ──────────────────────────────────────────────────
-$search.addEventListener('input', renderRows);
-$catF.addEventListener('change', renderRows);
-$authorF.addEventListener('change', renderRows);
-$typeF.addEventListener('change', renderRows);
-$exportBtn.addEventListener('click', exportCSV);
-$toggleBC.addEventListener('click', () => {
-  showBC = !showBC;
-  $toggleBC.classList.toggle('active', showBC);
-  $toggleBC.innerHTML = showBC
-    ? `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg> Hide Brand Connect`
-    : `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h10M6 1v10"/></svg> Brand Connect`;
+// ── Events ────────────────────────────────────────────────────
+$search.addEventListener('input',renderRows);
+$catF.addEventListener('change',renderRows);
+$authorF.addEventListener('change',renderRows);
+$typeF.addEventListener('change',renderRows);
+$exportBtn.addEventListener('click',exportCSV);
+document.getElementById('exportReportBtn').addEventListener('click',exportReportCSV);
+$toggleBC.addEventListener('click',()=>{
+  showBC=!showBC; $toggleBC.classList.toggle('active',showBC);
+  $toggleBC.innerHTML=showBC
+    ?`<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg> Hide Brand Connect`
+    :`<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h10M6 1v10"/></svg> Brand Connect`;
   renderRows();
 });
-document.querySelectorAll('th[data-col]').forEach(th => {
-  th.addEventListener('click', () => {
-    sortCol = th.dataset.col;
-    sortDir = sortCol === th.dataset.col ? sortDir * -1 : (th.dataset.col === 'created_at' ? -1 : 1);
-    sortCol = th.dataset.col;
-    updateSortHeaders(); renderRows();
+document.querySelectorAll('th[data-col]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    sortCol=th.dataset.col; sortDir=sortCol===th.dataset.col?sortDir*-1:(th.dataset.col==='created_at'?-1:1);
+    sortCol=th.dataset.col; updateSortHeaders(); renderRows();
   });
 });
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('detailOverlay').style.display = 'none';
-});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElementById('detailOverlay').style.display='none'; });
 
-// ── Boot ────────────────────────────────────────────────────
+// ── Boot ──────────────────────────────────────────────────────
 updateSortHeaders();
 load(true).then(startCountdown);
 
-window.copyUrl = (url, btn) => {
-  if (!url) return;
-  navigator.clipboard.writeText(url).then(() => {
-    const orig = btn.innerHTML;
-    btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#1db954" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg>`;
-    setTimeout(() => { btn.innerHTML = orig; }, 1500);
+window.copyUrl=(url,btn)=>{
+  if(!url)return;
+  navigator.clipboard.writeText(url).then(()=>{
+    const orig=btn.innerHTML;
+    btn.innerHTML=`<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#1db954" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg>`;
+    setTimeout(()=>{btn.innerHTML=orig;},1500);
   });
 };
 </script>
