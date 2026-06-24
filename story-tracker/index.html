@@ -733,7 +733,7 @@ function App(){
   const [selectedIdx,setSelectedIdx]=useState(null);
   const [search,setSearch]=useState("");
   const [fCat,setFCat]=useState("All");
-  const [fStatuses,setFStatuses]=useState([]);
+  const [fStatuses,setFStatuses]=useState(STATUSES.filter(s=>s!=="Published"));
   const [fPri,setFPri]=useState("All");
   const [fReporter,setFReporter]=useState("All");
   const [fMedia,setFMedia]=useState("All");
