@@ -493,8 +493,14 @@ function getAuthors(art) {
   return s ? [s] : [];
 }
 
-function getMainAuthor(art) { return getAuthors(art)[0] || ''; }
-function getCoAuthors(art)  { return getAuthors(art).slice(1); }
+function getMainAuthor(art) {
+  const authors = getAuthors(art);
+  return authors.length === 1 ? authors[0] : '';
+}
+function getCoAuthors(art) {
+  const authors = getAuthors(art);
+  return authors.length > 1 ? authors : [];
+}
 
 function getSection(art) {
   if (art.section && Array.isArray(art.section) && art.section.length) return art.section[0];
@@ -706,15 +712,17 @@ function buildReporterData() {
     const title = a.display_headline||a.headline||'(No title)';
     const sid  = a.story_id;
 
+    const totalAuthors = authors.length;
     authors.forEach((name, idx) => {
       if (!name) return;
       if (!map[name]) map[name] = { name, total:0, asMain:0, asCoAuthor:0, sections:{}, types:{Article:0,Video:0,Photo:0}, articles:[] };
       const r = map[name];
       r.total++;
-      if (idx===0) r.asMain++; else r.asCoAuthor++;
+      const isMain = totalAuthors === 1;
+      if (isMain) r.asMain++; else r.asCoAuthor++;
       r.sections[sec] = (r.sections[sec]||0) + 1;
       r.types[ti] = (r.types[ti]||0) + 1;
-      r.articles.push({sid, title, url, sec, ti, isMain: idx===0});
+      r.articles.push({sid, title, url, sec, ti, isMain});
     });
   });
   return Object.values(map).sort((a,b) => b.total - a.total);
