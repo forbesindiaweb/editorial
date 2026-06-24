@@ -162,7 +162,9 @@
     .time-date { font-size: 12px; font-weight: 500; }
     .time-today { color: var(--green); }
     .time-clock { font-size: 11px; color: var(--ink-light); }
-    .enriching { font-size: 11px; color: #bbb; font-style: italic; }
+    .td-caption { width: 160px; font-size: 11px; color: var(--ink-light); line-height: 1.4; }
+    .char-count { font-size: 10px; color: #aaa; margin-left: 4px; }
+    .intro-text { font-size: 12px; color: var(--ink-mid); line-height: 1.5; font-style: italic; margin-top: 8px; padding: 8px 10px; background: #f8f8f6; border-left: 3px solid var(--fi-red); border-radius: 0 4px 4px 0; }
 
     .icon-btn {
       width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule);
@@ -215,7 +217,7 @@
     .state-box .icon { font-size: 28px; margin-bottom: 10px; }
 
     @media(max-width:860px) {
-      .td-thumb,.td-section,.td-type { display: none; }
+      .td-thumb,.td-section,.td-type,.td-caption { display: none; }
       .controls { padding: 10px 16px; }
       .layout { padding: 12px 16px; }
       .back,.masthead { padding: 0 16px; }
@@ -318,6 +320,7 @@
           <th data-col="section">Section <span class="sa">↕</span></th>
           <th data-col="post_type">Type <span class="sa">↕</span></th>
           <th data-col="created_at">Published <span class="sa">↕</span></th>
+          <th data-col="caption">Caption <span class="sa">↕</span></th>
           <th></th>
         </tr>
       </thead>
@@ -466,7 +469,18 @@ function typeInfo(pt) {
   return { label: 'Article', cls: 't-article' };
 }
 
-// ── Fetch ───────────────────────────────────────────────────
+function getCaption(art) {
+  return art.images?.caption || (Array.isArray(art.images) ? art.images[0]?.caption : '') || '';
+}
+
+function getIntro(art) {
+  return art.intro || '';
+}
+
+function charCount(str) {
+  const n = (str || '').trim().length;
+  return n ? `<span class="char-count">(${n})</span>` : '';
+}
 async function fetchList() {
   const res  = await fetch(`${LIST_API}?count=50`);
   if (!res.ok) throw new Error(`List API: HTTP ${res.status}`);
@@ -547,7 +561,7 @@ function getSortVal(a, col) {
   if (col === 'author')          return getAuthor(a).toLowerCase();
   if (col === 'section')         return getSection(a).toLowerCase();
   if (col === 'post_type')       return typeInfo(a.post_type).label.toLowerCase();
-  if (col === 'created_at')      return getPubMs(a) || 0;
+  if (col === 'caption')         return getCaption(a).toLowerCase();
   return '';
 }
 function updateSortHeaders() {
@@ -598,6 +612,7 @@ function renderRows() {
       const sec    = getSection(a);
       const isBC   = isBrandConnect(a);
       const img    = getImage(a);
+      const caption = getCaption(a);
       const { date, time, isToday } = formatTime(a);
       const ti     = typeInfo(a.post_type);
       const escUrl = url.replace(/"/g, '&quot;');
@@ -609,7 +624,7 @@ function renderRows() {
         </td>
         <td class="td-id">${a.story_id || '—'}</td>
         <td class="td-title">
-          <a class="title-link" href="${escUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${title}</a>
+          <a class="title-link" href="${escUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${title}</a>${charCount(title)}
           ${isBC ? '<span class="bc-tag">Brand Connect</span>' : ''}
           ${!a._enriched ? '<span class="enriching">loading…</span>' : ''}
         </td>
@@ -620,6 +635,7 @@ function renderRows() {
           <div class="time-date${isToday ? ' time-today' : ''}">${date}</div>
           ${time ? `<div class="time-clock">${time}</div>` : ''}
         </td>
+        <td class="td-caption">${caption ? `${caption}` : '—'}</td>
         <td class="td-actions" onclick="event.stopPropagation()">
           <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)">
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
@@ -644,12 +660,16 @@ function openDetail(sid) {
   const ti     = typeInfo(art.post_type);
   const { full } = formatTime(art);
   const isBC   = isBrandConnect(art);
+  const intro   = getIntro(art);
+  const caption = getCaption(art);
+  const title   = art.display_headline || art.headline || '(No title)';
 
   // Header
   document.getElementById('dpImg').innerHTML = img
     ? `<img class="dp-img" src="${img}" alt="">`
     : '<div class="dp-img-none">📰</div>';
-  document.getElementById('dpTitle').textContent = art.display_headline || art.headline || '(No title)';
+  document.getElementById('dpTitle').innerHTML =
+    `${title} <span class="char-count">(${title.length})</span>`;
 
   // Body
   const rows = [
@@ -658,13 +678,22 @@ function openDetail(sid) {
     ['Section',   secs.join(', ') || '—'],
     ['Type',      `<span class="type-tag ${ti.cls}">${ti.label}</span>${isBC ? ' <span class="bc-tag">Brand Connect</span>' : ''}`],
     ['Published', full || '—'],
+    ['Caption',   caption || '—'],
     ['URL',       url ? `<a href="${url}" target="_blank" rel="noopener">${url}</a>` : '—'],
     ['Image URL', img ? `<a href="${img}" target="_blank" rel="noopener">${img.split('/').pop()}</a>` : '—'],
   ];
 
-  document.getElementById('dpBody').innerHTML = rows.map(([label, val]) =>
-    `<div class="dp-row"><span class="dp-label">${label}</span><span class="dp-val">${val}</span></div>`
-  ).join('') + '<div class="dp-divider"></div>';
+  const introHtml = intro
+    ? `<div class="dp-row" style="flex-direction:column;gap:5px;">
+        <span class="dp-label">Intro <span class="char-count">(${intro.trim().length})</span></span>
+        <div class="intro-text">${intro}</div>
+       </div><div class="dp-divider"></div>`
+    : '';
+
+  document.getElementById('dpBody').innerHTML =
+    rows.map(([label, val]) =>
+      `<div class="dp-row"><span class="dp-label">${label}</span><span class="dp-val">${val}</span></div>`
+    ).join('') + '<div class="dp-divider"></div>' + introHtml;
 
   document.getElementById('dpFooter').innerHTML = `
     <button class="dp-btn" onclick="copyUrl('${url.replace(/'/g,"\\'")}',this)">
