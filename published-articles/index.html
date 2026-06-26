@@ -33,14 +33,21 @@
     .masthead-left { display: flex; align-items: center; gap: 16px; }
     .sep { width: 1px; height: 20px; background: #444; }
     .page-title { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #aaa; }
-    .live-badge { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #bbb; }
-    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
-    .live-dot.paused { background: #555; animation: none; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.75)} }
-    #countdown { color: #fff; font-weight: 700; }
+    .masthead-right { display: flex; align-items: center; gap: 10px; }
+    .refresh-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 12px; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .08em;
+      background: none; border: 1px solid #444; border-radius: 4px;
+      color: #bbb; cursor: pointer; transition: all .15s; white-space: nowrap;
+    }
+    .refresh-btn:hover { border-color: var(--fi-red); color: #fff; }
+    .refresh-btn:disabled { opacity: .45; cursor: default; }
+    .refresh-btn.loading svg { animation: spin .7s linear infinite; }
+    .last-updated { font-size: 11px; color: #666; white-space: nowrap; }
 
     .pbar-wrap { height: 2px; background: #ddd; }
-    .pbar { height: 100%; background: var(--fi-red); transform-origin: left; }
+    .pbar { height: 100%; background: var(--fi-red); transform-origin: left; transition: transform .3s linear; }
 
     .back {
       display: flex; align-items: center; gap: 5px;
@@ -131,7 +138,7 @@
     .section-hd h2 { font-family: var(--font-head); font-size: 17px; }
     .section-hd .sub { font-size: 12px; color: var(--ink-light); }
     .tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; min-width: 900px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; min-width: 700px; }
     thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
     th {
       padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700;
@@ -157,12 +164,10 @@
     .td-title .title-link:hover { color: var(--fi-red); text-decoration: underline; }
     .bc-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 1px 5px; border-radius: 2px; background: #fff0e0; color: #b85c00; }
     .td-author { width: 110px; font-size: 12px; color: var(--ink-mid); line-height: 1.3; }
-    .td-coauthor { width: 110px; font-size: 11px; color: var(--ink-light); line-height: 1.3; font-style: italic; }
     .td-section { width: 110px; }
     .td-type { width: 72px; }
     .td-time { width: 100px; white-space: nowrap; }
-    .td-caption { width: 140px; font-size: 11px; color: var(--ink-light); line-height: 1.4; }
-    .td-actions { width: 44px; text-align: center; white-space: nowrap; }
+    .td-actions { width: 80px; text-align: right; white-space: nowrap; padding-right: 10px; }
 
     .sec-pill {
       display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
@@ -176,7 +181,6 @@
     .time-date { font-size: 12px; font-weight: 500; }
     .time-today { color: var(--green); }
     .time-clock { font-size: 11px; color: var(--ink-light); }
-    .char-count { font-size: 10px; color: #aaa; margin-left: 4px; }
     .intro-text { font-size: 12px; color: var(--ink-mid); line-height: 1.5; font-style: italic; margin-top: 8px; padding: 8px 10px; background: #f8f8f6; border-left: 3px solid var(--fi-red); border-radius: 0 4px 4px 0; }
     .enriching { font-size: 11px; color: #bbb; font-style: italic; }
 
@@ -186,6 +190,14 @@
       cursor: pointer; color: var(--ink-light); transition: all .12s; vertical-align: middle;
     }
     .icon-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
+    .edit-btn {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      padding: 3px 7px; border-radius: 3px; border: 1px solid #d0d0d0;
+      background: #f8f8f6; color: var(--ink-mid); cursor: pointer;
+      text-decoration: none; transition: all .12s; white-space: nowrap; vertical-align: middle;
+    }
+    .edit-btn:hover { background: #1a5f9a; color: #fff; border-color: #1a5f9a; }
 
     /* Detail panel */
     .detail-overlay {
@@ -193,34 +205,48 @@
       display: flex; align-items: flex-start; justify-content: flex-end;
     }
     .detail-panel {
-      width: 400px; max-width: 100vw; height: 100vh; overflow-y: auto;
+      width: 440px; max-width: 100vw; height: 100vh; overflow-y: auto;
       background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,.18);
       display: flex; flex-direction: column;
     }
-    .dp-header { padding: 16px 20px; border-bottom: 1px solid var(--rule); display: flex; align-items: flex-start; gap: 12px; background: #f8f8f6; }
-    .dp-img { width: 80px; height: 56px; object-fit: cover; border-radius: 3px; flex-shrink: 0; }
-    .dp-img-none { width: 80px; height: 56px; background: #eee; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #bbb; }
-    .dp-title { font-family: var(--font-head); font-size: 14px; line-height: 1.4; flex: 1; }
-    .dp-close { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-light); flex-shrink: 0; }
+    .dp-header { padding: 14px 16px; border-bottom: 1px solid var(--rule); display: flex; align-items: flex-start; gap: 10px; background: #f8f8f6; }
+    .dp-nav-btn {
+      width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--rule);
+      background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--ink-mid); flex-shrink: 0; transition: all .12s; align-self: center;
+    }
+    .dp-nav-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
+    .dp-nav-btn:disabled { opacity: .3; cursor: default; }
+    .dp-nav-btn:disabled:hover { background: #fff; color: var(--ink-mid); border-color: var(--rule); }
+    .dp-header-mid { flex: 1; display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
+    .dp-img { width: 72px; height: 50px; object-fit: cover; border-radius: 3px; flex-shrink: 0; }
+    .dp-img-none { width: 72px; height: 50px; background: #eee; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #bbb; }
+    .dp-title-wrap { flex: 1; min-width: 0; }
+    .dp-title { font-family: var(--font-head); font-size: 13.5px; line-height: 1.4; }
+    .dp-nav-count { font-size: 10px; color: var(--ink-light); margin-top: 4px; }
+    .dp-close { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-light); flex-shrink: 0; align-self: flex-start; }
     .dp-close:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
-    .dp-body { padding: 16px 20px; flex: 1; }
-    .dp-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
-    .dp-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); min-width: 80px; padding-top: 1px; }
-    .dp-val { font-size: 13px; color: var(--ink); flex: 1; word-break: break-word; line-height: 1.4; }
+    .dp-body { padding: 14px 18px; flex: 1; }
+    .dp-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+    .dp-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); min-width: 90px; padding-top: 2px; flex-shrink: 0; }
+    .dp-val { font-size: 13px; color: var(--ink); flex: 1; word-break: break-word; line-height: 1.45; }
     .dp-val a { color: var(--fi-red); }
     .dp-val a:hover { text-decoration: underline; }
+    .dp-val.meta-val { font-size: 12px; color: var(--ink-mid); }
     .dp-divider { height: 1px; background: var(--rule); margin: 10px 0; }
-    .dp-footer { padding: 14px 20px; border-top: 1px solid var(--rule); display: flex; gap: 8px; }
-    .dp-btn { flex: 1; padding: 8px; font-size: 12px; font-weight: 600; border-radius: 4px; border: 1px solid var(--rule); background: #fff; cursor: pointer; color: var(--ink-mid); display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .dp-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-light); background: #f8f8f6; padding: 5px 10px; margin: 8px -18px; border-top: 1px solid #f0f0ee; border-bottom: 1px solid #f0f0ee; }
+    .dp-footer { padding: 12px 16px; border-top: 1px solid var(--rule); display: flex; gap: 8px; flex-wrap: wrap; }
+    .dp-btn { flex: 1; min-width: 80px; padding: 8px; font-size: 12px; font-weight: 600; border-radius: 4px; border: 1px solid var(--rule); background: #fff; cursor: pointer; color: var(--ink-mid); display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; text-decoration: none; }
     .dp-btn:hover { border-color: var(--fi-red); color: var(--fi-red); }
     .dp-btn.primary { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
     .dp-btn.primary:hover { background: #c01818; }
+    .dp-btn.edit { background: #e8f4ff; color: #1a5f9a; border-color: #b3d4f0; }
+    .dp-btn.edit:hover { background: #1a5f9a; color: #fff; border-color: #1a5f9a; }
 
     /* ── Reporter Report ── */
     .report-layout { padding: 20px 24px; }
     .report-note { font-size: 12px; color: var(--ink-light); background: #fffbea; border: 1px solid #fde68a; border-radius: 4px; padding: 8px 12px; margin-bottom: 18px; }
 
-    /* Reporter cards grid */
     .rep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .rep-card { background: #fff; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
     .rep-card-hd { padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f0ee; }
@@ -243,7 +269,6 @@
     .rep-article-title a:hover { color: var(--fi-red); }
     .rep-toggle { font-size: 11px; color: var(--fi-red); cursor: pointer; margin-top: 6px; display: inline-block; }
 
-    /* Summary table */
     .summary-tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; margin-bottom: 20px; }
     .summary-tbl { width: 100%; border-collapse: collapse; background: #fff; font-size: 12px; min-width: 500px; }
     .summary-tbl thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
@@ -255,19 +280,29 @@
     .rank-badge.gold { background: #fef3c7; color: #92400e; }
     .rank-badge.silver { background: #f1f5f9; color: #475569; }
     .rank-badge.bronze { background: #fef9ee; color: #7c4a00; }
-
     .report-hd { font-family: var(--font-head); font-size: 15px; font-weight: bold; margin-bottom: 12px; color: var(--ink); }
 
     .state-box { padding: 50px; text-align: center; color: var(--ink-light); background: #fff; }
     .state-box .icon { font-size: 28px; margin-bottom: 10px; }
 
+    /* Mobile — show key columns only, keep them readable */
     @media(max-width:860px) {
-      .td-thumb,.td-section,.td-type,.td-caption,.td-coauthor { display: none; }
+      /* hide heavy columns */
+      .col-section, .col-type, .col-coauthor { display: none; }
+      /* tighten layout */
       .controls { padding: 10px 16px; }
-      .layout,.report-layout { padding: 12px 16px; }
-      .back,.masthead { padding: 0 16px; }
+      .layout, .report-layout { padding: 12px 16px; }
+      .back, .masthead { padding: 0 16px; }
       .stats .stat:nth-child(n+4) { display: none; }
       .rep-grid { grid-template-columns: 1fr; }
+      table { min-width: 420px; }
+      .td-actions { width: 60px; }
+      .masthead .last-updated { display: none; }
+      .page-title { display: none; }
+    }
+    @media(max-width:540px) {
+      .col-time { display: none; }
+      table { min-width: 340px; }
     }
   </style>
 </head>
@@ -279,12 +314,15 @@
     <div class="sep"></div>
     <div class="page-title">Published Articles</div>
   </div>
-  <div class="live-badge">
-    <div class="live-dot" id="liveDot"></div>
-    <span>Refreshes in <span id="countdown">300</span>s</span>
+  <div class="masthead-right">
+    <span class="last-updated" id="lastUpdated"></span>
+    <button class="refresh-btn" id="refreshBtn" onclick="manualRefresh()">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1.5 7A5.5 5.5 0 0012.5 7M12.5 7a5.5 5.5 0 00-11 0M12.5 4.5V7H10"/></svg>
+      Refresh
+    </button>
   </div>
 </header>
-<div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
+<div class="pbar-wrap"><div class="pbar" id="pbar" style="transform:scaleX(0)"></div></div>
 
 <a href="../story-tracker/" class="back">
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7,2 3,6 7,10"/></svg>
@@ -300,15 +338,11 @@
 
 <!-- View tabs -->
 <div class="view-tabs">
-  <button class="view-tab active" id="tabFeed" onclick="switchView('feed')">
-    📰 Article Feed
-  </button>
-  <button class="view-tab" id="tabReport" onclick="switchView('report')">
-    📊 Reporter Report
-  </button>
+  <button class="view-tab active" id="tabFeed" onclick="switchView('feed')">📰 Article Feed</button>
+  <button class="view-tab" id="tabReport" onclick="switchView('report')">📊 Reporter Report</button>
 </div>
 
-<!-- Feed controls (hidden in report view) -->
+<!-- Feed controls -->
 <div class="controls" id="feedControls">
   <div class="search-wrap">
     <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
@@ -360,13 +394,12 @@
             <th></th>
             <th data-col="story_id">ID <span class="sa">↕</span></th>
             <th data-col="display_headline">Title <span class="sa">↕</span></th>
-            <th data-col="author">Main Author <span class="sa">↕</span></th>
-            <th data-col="coauthor">Co-Author <span class="sa">↕</span></th>
-            <th data-col="section">Section <span class="sa">↕</span></th>
-            <th data-col="post_type">Type <span class="sa">↕</span></th>
-            <th data-col="created_at">Published <span class="sa">↕</span></th>
-            <th data-col="caption">Caption <span class="sa">↕</span></th>
-            <th></th>
+            <th data-col="author" class="col-author">Main Author <span class="sa">↕</span></th>
+            <th data-col="coauthor" class="col-coauthor">Co-Author <span class="sa">↕</span></th>
+            <th data-col="section" class="col-section">Section <span class="sa">↕</span></th>
+            <th data-col="post_type" class="col-type">Type <span class="sa">↕</span></th>
+            <th data-col="created_at" class="col-time">Published <span class="sa">↕</span></th>
+            <th class="col-actions">Actions</th>
           </tr>
         </thead>
         <tbody id="artTbody"></tbody>
@@ -379,33 +412,23 @@
 <div id="viewReport" style="display:none">
   <div class="report-layout">
     <div class="report-note">
-      ⚠️ Based on the latest 50 articles from the API. For full historical reports, a CMS data export is needed.
+      ⚠️ Based on the latest 50 articles from the API. Brand Connect articles are excluded. For full historical reports, a CMS data export is needed.
     </div>
-
-    <!-- Summary table -->
     <div class="report-hd">Productivity Summary</div>
     <div class="summary-tbl-wrap">
       <table class="summary-tbl">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Reporter</th>
-            <th>Total Articles</th>
-            <th>As Main Author</th>
-            <th>As Co-Author</th>
-            <th>Top Section</th>
-            <th>Article / Video / Photo</th>
+            <th>#</th><th>Reporter</th><th>Total Articles</th>
+            <th>As Main Author</th><th>As Co-Author</th>
+            <th>Top Section</th><th>Article / Video / Photo</th>
           </tr>
         </thead>
         <tbody id="summaryTbody"></tbody>
       </table>
     </div>
-
-    <!-- Reporter cards -->
     <div class="report-hd">By Reporter</div>
     <div class="rep-grid" id="repGrid"></div>
-
-    <!-- Export -->
     <button class="export-btn" id="exportReportBtn" style="margin-top:4px;">
       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9v2h9V9M6.5 1v7M4 6l2.5 2.5L9 6"/></svg>
       Export Report CSV
@@ -417,8 +440,19 @@
 <div id="detailOverlay" class="detail-overlay" style="display:none" onclick="closeDetail(event)">
   <div class="detail-panel">
     <div class="dp-header">
-      <div id="dpImg"></div>
-      <div id="dpTitle" class="dp-title"></div>
+      <button class="dp-nav-btn" id="dpPrev" title="Previous article" onclick="navigateDetail(-1)">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7,2 3,6 7,10"/></svg>
+      </button>
+      <div class="dp-header-mid">
+        <div id="dpImg"></div>
+        <div class="dp-title-wrap">
+          <div id="dpTitle" class="dp-title"></div>
+          <div class="dp-nav-count" id="dpNavCount"></div>
+        </div>
+      </div>
+      <button class="dp-nav-btn" id="dpNext" title="Next article" onclick="navigateDetail(1)">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5,2 9,6 5,10"/></svg>
+      </button>
       <button class="dp-close" onclick="closeDetailBtn()">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
       </button>
@@ -431,25 +465,22 @@
 <script>
 const LIST_API   = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
 const DETAIL_API = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article';
-const INTERVAL   = 300;
+const CMS_EDIT   = 'https://cms.forbesindia.com/wp-admin/post.php?post={ID}&action=edit';
 
-let allArticles = [];
-let knownIds    = new Set();
-let showBC      = false;
-let sortCol     = 'created_at';
-let sortDir     = -1;
-let cdVal       = INTERVAL;
-let cdTimer     = null;
-let refTimer    = null;
-let currentView = 'feed';
+let allArticles    = [];
+let knownIds       = new Set();
+let showBC         = false;
+let sortCol        = 'created_at';
+let sortDir        = -1;
+let currentView    = 'feed';
+let visibleArticles = [];   // current filtered+sorted list for panel navigation
+let detailIndex    = -1;    // index within visibleArticles
 
 const $tbody    = document.getElementById('artTbody');
 const $table    = document.getElementById('artTable');
 const $state    = document.getElementById('stateBox');
 const $err      = document.getElementById('errWrap');
 const $errMsg   = document.getElementById('errMsg');
-const $cd       = document.getElementById('countdown');
-const $dot      = document.getElementById('liveDot');
 const $pbar     = document.getElementById('pbar');
 const $search   = document.getElementById('searchInput');
 const $catF     = document.getElementById('catFilter');
@@ -461,8 +492,9 @@ const $badge    = document.getElementById('countBadge');
 const $progress = document.getElementById('fetchProgress');
 const $progMsg  = document.getElementById('fetchProgressMsg');
 const $sub      = document.getElementById('secSub');
+const $refreshBtn = document.getElementById('refreshBtn');
 
-// ── View switcher ───────────────────────────────────────────
+// ── View switcher ──────────────────────────────────────────
 function switchView(v) {
   currentView = v;
   document.getElementById('viewFeed').style.display   = v === 'feed'   ? '' : 'none';
@@ -474,7 +506,7 @@ function switchView(v) {
 }
 window.switchView = switchView;
 
-// ── Field helpers ───────────────────────────────────────────
+// ── Field helpers ──────────────────────────────────────────
 function safeStr(val) {
   if (!val) return '';
   if (typeof val === 'string') return val.trim();
@@ -483,8 +515,6 @@ function safeStr(val) {
     return (val.english_name || val.display_name || val.name || val.author_name || val.nicename || '').trim();
   return String(val).trim();
 }
-
-// Returns array of all authors
 function getAuthors(art) {
   const b = art.author_byline;
   if (!b) return [];
@@ -492,16 +522,12 @@ function getAuthors(art) {
   const s = safeStr(b);
   return s ? [s] : [];
 }
-
 function getMainAuthor(art) {
-  const authors = getAuthors(art);
-  return authors.length === 1 ? authors[0] : '';
+  const a = getAuthors(art); return a.length === 1 ? a[0] : '';
 }
 function getCoAuthors(art) {
-  const authors = getAuthors(art);
-  return authors.length > 1 ? authors : [];
+  const a = getAuthors(art); return a.length > 1 ? a : [];
 }
-
 function getSection(art) {
   if (art.section && Array.isArray(art.section) && art.section.length) return art.section[0];
   if (art.subsection && art.subsection.length) return art.subsection[0].name || '';
@@ -526,8 +552,11 @@ function isBrandConnect(art) { return getUrl(art).toLowerCase().includes('brand-
 function getImage(art) { return art.images?.url || (Array.isArray(art.images) ? art.images[0]?.url : null) || ''; }
 function getCaption(art) { return art.images?.caption || (Array.isArray(art.images) ? art.images[0]?.caption : '') || ''; }
 function getIntro(art) { return art.intro || ''; }
-function charCount(str) { const n = (str||'').trim().length; return n ? `<span class="char-count">(${n})</span>` : ''; }
-
+function getDisplayHeadline(art) { return art.display_headline || ''; }
+function getMetaTitle(art) { return art.meta_title || art.meta_titile || ''; }
+function getMetaDesc(art) { return art.meta_description || ''; }
+function charCount(str) { const n = (str||'').trim().length; return n ? `<span style="font-size:10px;color:#bbb;margin-left:4px">(${n})</span>` : ''; }
+function cmsEditUrl(sid) { return CMS_EDIT.replace('{ID}', sid); }
 function getPubMs(art) {
   if (art.created_at) { const d = new Date(art.created_at.replace(' ','T')); if (!isNaN(d)) return d.getTime(); }
   if (art.date_timestamp) { const ts = parseInt(art.date_timestamp,10); if (!isNaN(ts)) return ts < 1e12 ? ts*1000 : ts; }
@@ -554,7 +583,7 @@ function typeInfo(pt) {
   return { label:'Article', cls:'t-article' };
 }
 
-// ── Fetch ───────────────────────────────────────────────────
+// ── Fetch ──────────────────────────────────────────────────
 async function fetchList() {
   const res = await fetch(`${LIST_API}?count=50`);
   if (!res.ok) throw new Error(`List API: HTTP ${res.status}`);
@@ -574,10 +603,10 @@ async function enrichArticles(list) {
   return list.map((a,i) => { const d = details[i]; return d ? {...a,...d,_enriched:true} : a; });
 }
 
-// ── Filters ──────────────────────────────────────────────────
+// ── Filters ────────────────────────────────────────────────
 function populateFilters() {
   const sections = new Set(), authors = new Set();
-  allArticles.forEach(a => {
+  allArticles.filter(a => !isBrandConnect(a)).forEach(a => {
     getAllSections(a).forEach(s => s && sections.add(s));
     getAuthors(a).forEach(x => x.trim() && authors.add(x.trim()));
   });
@@ -589,24 +618,26 @@ function populateFilters() {
   [...authors].sort().forEach(a => { const o = document.createElement('option'); o.value=a; o.textContent=a; if(a===sa)o.selected=true; $authorF.appendChild(o); });
 }
 
-// ── Stats ────────────────────────────────────────────────────
+// ── Stats — always exclude Brand Connect ────────────────────
 function updateStats(visible) {
   const now  = new Date();
   const tod  = new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
   const yest = tod - 86400000;
-  const todayN = allArticles.filter(a => { const ms=getPubMs(a); return ms&&ms>=tod; }).length;
-  const yestN  = allArticles.filter(a => { const ms=getPubMs(a); return ms&&ms>=yest&&ms<tod; }).length;
+  // Exclude brand connect from all counts
+  const nonBC = allArticles.filter(a => !isBrandConnect(a));
+  const todayN = nonBC.filter(a => { const ms=getPubMs(a); return ms&&ms>=tod; }).length;
+  const yestN  = nonBC.filter(a => { const ms=getPubMs(a); return ms&&ms>=yest&&ms<tod; }).length;
   document.getElementById('sToday').textContent    = todayN;
   document.getElementById('sTodaySub').textContent = `as of ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
   document.getElementById('sYest').textContent     = yestN;
   document.getElementById('sYestSub').textContent  = new Date(tod-1).toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
   document.getElementById('sShowing').textContent  = visible.length;
-  document.getElementById('sShowingSub').textContent = `of ${allArticles.length} fetched`;
+  document.getElementById('sShowingSub').textContent = `of ${nonBC.length} editorial`;
   document.getElementById('sFetch').textContent    = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  $badge.innerHTML = `<strong>${visible.length}</strong> of ${allArticles.length}`;
+  $badge.innerHTML = `<strong>${visible.length}</strong> of ${nonBC.length}`;
 }
 
-// ── Sort ─────────────────────────────────────────────────────
+// ── Sort ────────────────────────────────────────────────────
 function getSortVal(a, col) {
   if (col==='story_id')         return Number(a.story_id)||0;
   if (col==='display_headline') return (a.display_headline||'').toLowerCase();
@@ -615,7 +646,6 @@ function getSortVal(a, col) {
   if (col==='section')          return getSection(a).toLowerCase();
   if (col==='post_type')        return typeInfo(a.post_type).label.toLowerCase();
   if (col==='created_at')       return getPubMs(a)||0;
-  if (col==='caption')          return getCaption(a).toLowerCase();
   return '';
 }
 function updateSortHeaders() {
@@ -626,14 +656,14 @@ function updateSortHeaders() {
   });
 }
 
-// ── Render feed ──────────────────────────────────────────────
-function renderRows() {
+// ── Render feed ────────────────────────────────────────────
+function getFiltered() {
   const q      = $search.value.trim().toLowerCase();
   const sec    = $catF.value;
   const author = $authorF.value;
   const type   = $typeF.value.toLowerCase();
 
-  let visible = allArticles.filter(a => {
+  return allArticles.filter(a => {
     if (!showBC && isBrandConnect(a)) return false;
     const title  = (a.display_headline||a.headline||'').toLowerCase();
     const authors = getAuthors(a).join(' ').toLowerCase();
@@ -644,19 +674,22 @@ function renderRows() {
     if (author && !getAuthors(a).map(x=>x.toLowerCase()).includes(author.toLowerCase())) return false;
     if (type && !pt.includes(type)) return false;
     return true;
-  });
-
-  visible.sort((a,b) => {
+  }).sort((a,b) => {
     const av=getSortVal(a,sortCol), bv=getSortVal(b,sortCol);
     if (av<bv) return -sortDir; if (av>bv) return sortDir; return 0;
   });
+}
+
+function renderRows() {
+  const visible = getFiltered();
+  visibleArticles = visible;
 
   if (!visible.length) {
     $table.style.display='none'; $state.style.display='block';
     $state.innerHTML='<div class="icon">🔍</div><p>No articles match.</p>';
   } else {
     $state.style.display='none'; $table.style.display='table';
-    $tbody.innerHTML = visible.map(a => {
+    $tbody.innerHTML = visible.map((a,idx) => {
       const isNew   = !knownIds.has(String(a.story_id)) && knownIds.size>0;
       const title   = a.display_headline||a.headline||'(No title)';
       const url     = getUrl(a);
@@ -665,12 +698,12 @@ function renderRows() {
       const sec     = getSection(a);
       const isBC    = isBrandConnect(a);
       const img     = getImage(a);
-      const caption = getCaption(a);
       const {date,time,isToday} = formatTime(a);
       const ti      = typeInfo(a.post_type);
       const escUrl  = url.replace(/"/g,'&quot;');
       const sid     = String(a.story_id||'');
-      return `<tr${isNew?' class="new-row"':''} onclick="openDetail('${sid}')" style="cursor:pointer">
+      const editUrl = cmsEditUrl(sid);
+      return `<tr${isNew?' class="new-row"':''} onclick="openDetail('${sid}')" data-idx="${idx}">
         <td class="td-thumb">${img?`<img src="${img}" alt="" loading="lazy" onerror="this.style.display='none'">` : '<div class="no-img">📰</div>'}</td>
         <td class="td-id">${a.story_id||'—'}</td>
         <td class="td-title">
@@ -678,17 +711,20 @@ function renderRows() {
           ${isBC?'<span class="bc-tag">Brand Connect</span>':''}
           ${!a._enriched?'<span class="enriching">loading…</span>':''}
         </td>
-        <td class="td-author">${main||'—'}</td>
-        <td class="td-coauthor">${coauths||'—'}</td>
-        <td class="td-section">${sec?`<span class="sec-pill">${sec}</span>`:'—'}</td>
-        <td class="td-type"><span class="type-tag ${ti.cls}">${ti.label}</span></td>
-        <td class="td-time">
+        <td class="td-author col-author">${main||'—'}</td>
+        <td class="td-author col-coauthor" style="font-size:11px;color:var(--ink-light);font-style:italic">${coauths||'—'}</td>
+        <td class="td-section col-section">${sec?`<span class="sec-pill">${sec}</span>`:'—'}</td>
+        <td class="td-type col-type"><span class="type-tag ${ti.cls}">${ti.label}</span></td>
+        <td class="td-time col-time">
           <div class="time-date${isToday?' time-today':''}">${date}</div>
           ${time?`<div class="time-clock">${time}</div>`:''}
         </td>
-        <td class="td-caption">${caption||'—'}</td>
-        <td class="td-actions" onclick="event.stopPropagation()">
-          <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)">
+        <td class="td-actions col-actions" onclick="event.stopPropagation()">
+          <a class="edit-btn" href="${editUrl}" target="_blank" rel="noopener" title="Edit in CMS">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l2 2-6 6H2V8L8 2z"/></svg>
+            Edit
+          </a>
+          <button class="icon-btn" title="Copy URL" onclick="copyUrl('${escUrl}',this)" style="margin-left:3px">
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
           </button>
         </td>
@@ -696,10 +732,10 @@ function renderRows() {
     }).join('');
     visible.forEach(a => knownIds.add(String(a.story_id)));
   }
-  updateStats(visible);
+  updateStats(visible.filter(a => !isBrandConnect(a)));
 }
 
-// ── Reporter Report ──────────────────────────────────────────
+// ── Reporter Report ────────────────────────────────────────
 function buildReporterData() {
   const map = {};
   allArticles.forEach(a => {
@@ -711,14 +747,12 @@ function buildReporterData() {
     const url  = getUrl(a);
     const title = a.display_headline||a.headline||'(No title)';
     const sid  = a.story_id;
-
-    const totalAuthors = authors.length;
-    authors.forEach((name, idx) => {
+    authors.forEach((name) => {
       if (!name) return;
       if (!map[name]) map[name] = { name, total:0, asMain:0, asCoAuthor:0, sections:{}, types:{Article:0,Video:0,Photo:0}, articles:[] };
       const r = map[name];
       r.total++;
-      const isMain = totalAuthors === 1;
+      const isMain = authors.length === 1;
       if (isMain) r.asMain++; else r.asCoAuthor++;
       r.sections[sec] = (r.sections[sec]||0) + 1;
       r.types[ti] = (r.types[ti]||0) + 1;
@@ -730,9 +764,6 @@ function buildReporterData() {
 
 function renderReport() {
   const reporters = buildReporterData();
-  const maxTotal  = reporters[0]?.total || 1;
-
-  // Summary table
   document.getElementById('summaryTbody').innerHTML = reporters.map((r, i) => {
     const topSec = Object.entries(r.sections).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
     const rankCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
@@ -740,14 +771,11 @@ function renderReport() {
       <td><span class="rank-badge ${rankCls}">${i+1}</span></td>
       <td style="font-weight:600">${r.name}</td>
       <td style="font-weight:700;color:var(--fi-red)">${r.total}</td>
-      <td>${r.asMain}</td>
-      <td>${r.asCoAuthor}</td>
+      <td>${r.asMain}</td><td>${r.asCoAuthor}</td>
       <td><span class="sec-pill">${topSec}</span></td>
       <td style="font-size:11px;color:var(--ink-mid)">${r.types.Article||0} / ${r.types.Video||0} / ${r.types.Photo||0}</td>
     </tr>`;
   }).join('');
-
-  // Reporter cards
   document.getElementById('repGrid').innerHTML = reporters.map(r => {
     const topSecs  = Object.entries(r.sections).sort((a,b)=>b[1]-a[1]).slice(0,5);
     const maxSec   = topSecs[0]?.[1]||1;
@@ -761,7 +789,6 @@ function renderReport() {
       </div>`
     ).join('');
     const hasMore  = r.articles.length > 5;
-
     return `<div class="rep-card">
       <div class="rep-card-hd">
         <div class="rep-avatar">${initials}</div>
@@ -798,55 +825,41 @@ function renderReport() {
 }
 
 window.toggleArticles = function(cardId, articles) {
-  const el   = document.getElementById(cardId+'-list');
-  const btn  = el.nextElementSibling;
+  const el  = document.getElementById(cardId+'-list');
+  const btn = el.nextElementSibling;
   const showing = el.dataset.expanded === '1';
+  const renderItems = (arr) => arr.map(a =>
+    `<div class="rep-article-item">
+      <span class="rep-article-id">${a.sid}</span>
+      <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
+      ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
+    </div>`
+  ).join('');
   if (!showing) {
-    el.innerHTML = articles.map(a =>
-      `<div class="rep-article-item">
-        <span class="rep-article-id">${a.sid}</span>
-        <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
-        ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
-      </div>`
-    ).join('');
+    el.innerHTML = renderItems(articles);
     el.dataset.expanded = '1';
     if (btn) btn.textContent = '− Show less';
   } else {
-    el.innerHTML = articles.slice(0,5).map(a =>
-      `<div class="rep-article-item">
-        <span class="rep-article-id">${a.sid}</span>
-        <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
-        ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
-      </div>`
-    ).join('');
+    el.innerHTML = renderItems(articles.slice(0,5));
     el.dataset.expanded = '0';
     if (btn) btn.textContent = `+ Show all ${articles.length}`;
   }
 };
 
-// ── Export feed CSV ──────────────────────────────────────────
+// ── Export feed CSV ────────────────────────────────────────
 function exportCSV() {
-  const q=$search.value.trim().toLowerCase(), sec=$catF.value, author=$authorF.value, type=$typeF.value.toLowerCase();
-  const rows = allArticles.filter(a => {
-    if (!showBC&&isBrandConnect(a)) return false;
-    const title=(a.display_headline||'').toLowerCase(), aus=getAuthors(a).join(' ').toLowerCase();
-    if (q&&!title.includes(q)&&!aus.includes(q)) return false;
-    if (sec&&!getAllSections(a).includes(sec)) return false;
-    if (author&&!getAuthors(a).map(x=>x.toLowerCase()).includes(author.toLowerCase())) return false;
-    if (type&&!(a.post_type||'').toLowerCase().includes(type)) return false;
-    return true;
-  });
+  const rows = getFiltered();
   const esc=v=>`"${String(v||'').replace(/"/g,'""')}"`;
-  const hdrs=['Story ID','Title','Main Author','Co-Author(s)','Section','Type','Published','Caption','URL','Image URL'];
+  const hdrs=['Story ID','Title','Display Headline','Main Author','Co-Author(s)','Section','Type','Published','Caption','Meta Title','Meta Description','URL','Image URL'];
   const lines=[hdrs.map(esc).join(','),...rows.map(a=>{
     const {full}=formatTime(a);
-    return [a.story_id,a.display_headline||a.headline,getMainAuthor(a),getCoAuthors(a).join('; '),
-      getSection(a),typeInfo(a.post_type).label,full,getCaption(a),getUrl(a),getImage(a)].map(esc).join(',');
+    return [a.story_id,a.display_headline||a.headline,getDisplayHeadline(a),getMainAuthor(a),
+      getCoAuthors(a).join('; '),getSection(a),typeInfo(a.post_type).label,full,
+      getCaption(a),getMetaTitle(a),getMetaDesc(a),getUrl(a),getImage(a)].map(esc).join(',');
   })];
   download(lines.join('\n'),`forbesindia-feed-${new Date().toISOString().slice(0,10)}.csv`);
 }
 
-// ── Export report CSV ────────────────────────────────────────
 function exportReportCSV() {
   const reporters = buildReporterData();
   const esc=v=>`"${String(v||'').replace(/"/g,'""')}"`;
@@ -864,66 +877,123 @@ function download(csv, filename) {
   link.href=URL.createObjectURL(blob); link.download=filename; link.click();
 }
 
-// ── Detail panel ─────────────────────────────────────────────
-function openDetail(sid) {
-  const art = allArticles.find(a => String(a.story_id)===sid);
-  if (!art) return;
-  const url=getUrl(art), img=getImage(art), main=getMainAuthor(art),
-        coauths=getCoAuthors(art), secs=getAllSections(art),
-        ti=typeInfo(art.post_type), {full}=formatTime(art),
-        isBC=isBrandConnect(art), intro=getIntro(art),
-        caption=getCaption(art), title=art.display_headline||art.headline||'(No title)';
+// ── Detail panel ───────────────────────────────────────────
+function renderDetailPanel(art, idx) {
+  const url     = getUrl(art);
+  const img     = getImage(art);
+  const main    = getMainAuthor(art);
+  const coauths = getCoAuthors(art);
+  const secs    = getAllSections(art);
+  const ti      = typeInfo(art.post_type);
+  const {full}  = formatTime(art);
+  const isBC    = isBrandConnect(art);
+  const intro   = getIntro(art);
+  const caption = getCaption(art);
+  const title   = art.display_headline||art.headline||'(No title)';
+  const dh      = getDisplayHeadline(art);
+  const mt      = getMetaTitle(art);
+  const md      = getMetaDesc(art);
+  const sid     = String(art.story_id||'');
 
+  // header image + title
   document.getElementById('dpImg').innerHTML = img
     ? `<img class="dp-img" src="${img}" alt="">` : '<div class="dp-img-none">📰</div>';
-  document.getElementById('dpTitle').innerHTML =
-    `${title} ${charCount(title)}`;
+  document.getElementById('dpTitle').innerHTML = `${title}${charCount(title)}`;
+  document.getElementById('dpNavCount').textContent = `${idx+1} of ${visibleArticles.length}`;
 
-  const rows=[
-    ['Story ID', art.story_id||'—'],
-    ['Main Author', main||'—'],
-    ['Co-Author', coauths.length ? coauths.join(', ') : '—'],
-    ['Section', secs.join(', ')||'—'],
-    ['Type', `<span class="type-tag ${ti.cls}">${ti.label}</span>${isBC?' <span class="bc-tag">Brand Connect</span>':''}`],
-    ['Published', full||'—'],
-    ['Caption', caption||'—'],
-    ['URL', url?`<a href="${url}" target="_blank" rel="noopener">${url}</a>`:'—'],
-    ['Image URL', img?`<a href="${img}" target="_blank" rel="noopener">${img.split('/').pop()}</a>`:'—'],
-  ];
-  const introHtml = intro
-    ? `<div class="dp-row" style="flex-direction:column;gap:5px;">
-        <span class="dp-label">Intro ${charCount(intro)}</span>
-        <div class="intro-text">${intro}</div>
-       </div><div class="dp-divider"></div>` : '';
+  // nav buttons
+  document.getElementById('dpPrev').disabled = idx <= 0;
+  document.getElementById('dpNext').disabled = idx >= visibleArticles.length - 1;
 
-  document.getElementById('dpBody').innerHTML =
-    rows.map(([l,v])=>`<div class="dp-row"><span class="dp-label">${l}</span><span class="dp-val">${v}</span></div>`).join('')
-    + '<div class="dp-divider"></div>' + introHtml;
+  // body rows helper
+  const row = (label, val, cls='') =>
+    `<div class="dp-row"><span class="dp-label">${label}</span><span class="dp-val ${cls}">${val||'—'}</span></div>`;
 
-  const escUrl=url.replace(/'/g,"\\'");
+  const escUrl = url.replace(/'/g,"\\'");
+  const editUrl = cmsEditUrl(sid);
+
+  document.getElementById('dpBody').innerHTML = `
+    <div class="dp-section-title">Article Info</div>
+    ${row('Story ID', sid)}
+    ${row('Main Author', main||'—')}
+    ${row('Co-Author', coauths.length ? coauths.join(', ') : '—')}
+    ${row('Section', secs.join(', ')||'—')}
+    ${row('Type', `<span class="type-tag ${ti.cls}">${ti.label}</span>${isBC?' <span class="bc-tag">Brand Connect</span>':''}`)}
+    ${row('Published', full||'—')}
+    ${row('URL', url?`<a href="${url}" target="_blank" rel="noopener">${url}</a>`:'—')}
+
+    <div class="dp-section-title">SEO & Meta</div>
+    ${row('Display Headline', dh ? `${dh}${charCount(dh)}` : '—')}
+    ${row('Meta Title', mt ? `${mt}${charCount(mt)}` : '—', 'meta-val')}
+    ${row('Meta Desc', md ? `${md}${charCount(md)}` : '—', 'meta-val')}
+    ${caption ? row('Caption', caption) : ''}
+
+    <div class="dp-section-title">Image</div>
+    ${row('Image URL', img?`<a href="${img}" target="_blank" rel="noopener">${img.split('/').pop()}</a>`:'—')}
+    ${intro ? `
+    <div class="dp-section-title">Intro</div>
+    <div class="intro-text">${intro}</div>` : ''}
+  `;
+
   document.getElementById('dpFooter').innerHTML=`
     <button class="dp-btn" onclick="copyUrl('${escUrl}',this)">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
       Copy URL
     </button>
+    <a href="${editUrl}" target="_blank" rel="noopener" class="dp-btn edit">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l2 2-6 6H2V8L8 2z"/></svg>
+      Edit in CMS
+    </a>
     <a href="${url}" target="_blank" rel="noopener" class="dp-btn primary">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 2H2v8h8V7M7 1h4v4M11 1L6 6"/></svg>
-      Open Article
+      Open
     </a>`;
+}
+
+function openDetail(sid) {
+  const idx = visibleArticles.findIndex(a => String(a.story_id)===sid);
+  if (idx === -1) return;
+  detailIndex = idx;
+  renderDetailPanel(visibleArticles[idx], idx);
   document.getElementById('detailOverlay').style.display='flex';
 }
+
+function navigateDetail(dir) {
+  const next = detailIndex + dir;
+  if (next < 0 || next >= visibleArticles.length) return;
+  detailIndex = next;
+  renderDetailPanel(visibleArticles[next], next);
+}
+
 function closeDetail(e) { if(e.target===document.getElementById('detailOverlay')) document.getElementById('detailOverlay').style.display='none'; }
 function closeDetailBtn() { document.getElementById('detailOverlay').style.display='none'; }
-window.openDetail=openDetail; window.closeDetail=closeDetail; window.closeDetailBtn=closeDetailBtn;
 
-// ── Load ─────────────────────────────────────────────────────
+window.openDetail=openDetail; window.closeDetail=closeDetail; window.closeDetailBtn=closeDetailBtn;
+window.navigateDetail=navigateDetail;
+
+// ── Load ───────────────────────────────────────────────────
+function setRefreshLoading(loading) {
+  $refreshBtn.disabled = loading;
+  $refreshBtn.classList.toggle('loading', loading);
+  if (loading) {
+    $pbar.style.transition='none'; $pbar.style.transform='scaleX(0)';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      $pbar.style.transition='transform 8s linear'; $pbar.style.transform='scaleX(.85)';
+    }));
+  } else {
+    $pbar.style.transition='transform .3s ease'; $pbar.style.transform='scaleX(1)';
+    setTimeout(()=>{ $pbar.style.transition='transform .5s ease'; $pbar.style.transform='scaleX(0)'; }, 400);
+  }
+}
+
 async function load(showLoader) {
   if (showLoader) {
     allArticles=[]; knownIds=new Set();
     $table.style.display='none'; $state.style.display='block';
     $state.innerHTML='<div class="icon">⟳</div><p>Fetching articles…</p>';
   }
-  $err.style.display='none'; $dot.classList.remove('paused');
+  $err.style.display='none';
+  setRefreshLoading(true);
   try {
     const list = await fetchList();
     $state.innerHTML='<div class="icon">⟳</div><p>Loading details…</p>';
@@ -933,39 +1003,37 @@ async function load(showLoader) {
     const enriched = await enrichArticles(list);
     allArticles=enriched; $progress.style.display='none';
     populateFilters(); renderRows();
-    $sub.textContent=`${allArticles.length} articles · enriched · updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+    const now = new Date();
+    const ts = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    $sub.textContent=`${allArticles.length} articles · enriched · updated ${ts}`;
+    document.getElementById('lastUpdated').textContent=`Updated ${ts}`;
     if (currentView==='report') renderReport();
   } catch(e) {
     console.error(e); $progress.style.display='none';
-    $dot.classList.add('paused'); $err.style.display='flex';
-    $errMsg.textContent=`${e.message} — will retry in ${INTERVAL}s`;
+    $err.style.display='flex';
+    $errMsg.textContent=`${e.message} — click Refresh to retry`;
     if (!allArticles.length) {
       $table.style.display='none'; $state.style.display='block';
       $state.innerHTML='<div class="icon">⚠️</div><p>Failed to load.</p>';
     }
+  } finally {
+    setRefreshLoading(false);
   }
 }
 
-// ── Countdown ─────────────────────────────────────────────────
-function startCountdown() {
-  cdVal=INTERVAL; $cd.textContent=cdVal;
-  $pbar.style.transition='none'; $pbar.style.transform='scaleX(1)';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    $pbar.style.transition=`transform ${INTERVAL}s linear`; $pbar.style.transform='scaleX(0)';
-  }));
-  clearInterval(cdTimer);
-  cdTimer=setInterval(()=>{ $cd.textContent=Math.max(0,--cdVal); },1000);
-  clearTimeout(refTimer);
-  refTimer=setTimeout(()=>load(false).then(startCountdown),INTERVAL*1000);
+function manualRefresh() {
+  if ($refreshBtn.disabled) return;
+  load(false);
 }
+window.manualRefresh = manualRefresh;
 
-// ── Events ────────────────────────────────────────────────────
-$search.addEventListener('input',renderRows);
-$catF.addEventListener('change',renderRows);
-$authorF.addEventListener('change',renderRows);
-$typeF.addEventListener('change',renderRows);
-$exportBtn.addEventListener('click',exportCSV);
-document.getElementById('exportReportBtn').addEventListener('click',exportReportCSV);
+// ── Events ─────────────────────────────────────────────────
+$search.addEventListener('input', () => { renderRows(); });
+$catF.addEventListener('change', () => { renderRows(); });
+$authorF.addEventListener('change', () => { renderRows(); });
+$typeF.addEventListener('change', () => { renderRows(); });
+$exportBtn.addEventListener('click', exportCSV);
+document.getElementById('exportReportBtn').addEventListener('click', exportReportCSV);
 $toggleBC.addEventListener('click',()=>{
   showBC=!showBC; $toggleBC.classList.toggle('active',showBC);
   $toggleBC.innerHTML=showBC
@@ -975,15 +1043,22 @@ $toggleBC.addEventListener('click',()=>{
 });
 document.querySelectorAll('th[data-col]').forEach(th=>{
   th.addEventListener('click',()=>{
-    sortCol=th.dataset.col; sortDir=sortCol===th.dataset.col?sortDir*-1:(th.dataset.col==='created_at'?-1:1);
-    sortCol=th.dataset.col; updateSortHeaders(); renderRows();
+    if (th.dataset.col===sortCol) { sortDir*=-1; }
+    else { sortCol=th.dataset.col; sortDir = sortCol==='created_at'?-1:1; }
+    updateSortHeaders(); renderRows();
   });
 });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElementById('detailOverlay').style.display='none'; });
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') { document.getElementById('detailOverlay').style.display='none'; return; }
+  if (document.getElementById('detailOverlay').style.display!=='none') {
+    if (e.key==='ArrowLeft'||e.key==='ArrowUp') { e.preventDefault(); navigateDetail(-1); }
+    if (e.key==='ArrowRight'||e.key==='ArrowDown') { e.preventDefault(); navigateDetail(1); }
+  }
+});
 
-// ── Boot ──────────────────────────────────────────────────────
+// ── Boot ───────────────────────────────────────────────────
 updateSortHeaders();
-load(true).then(startCountdown);
+load(true);
 
 window.copyUrl=(url,btn)=>{
   if(!url)return;
