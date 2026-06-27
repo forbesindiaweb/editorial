@@ -3,857 +3,480 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>data.gov.in — Economy Data Explorer</title>
+<title>data.gov.in Explorer</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap');
+:root {
+  --bg:#0f1117; --surface:#181c27; --border:#252b3b; --accent:#f97316;
+  --accent2:#3b82f6; --muted:#4a5568; --text:#e2e8f0; --dim:#718096;
+  --green:#10b981; --red:#ef4444; --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
 
-  :root {
-    --bg:       #0f1117;
-    --surface:  #181c27;
-    --border:   #252b3b;
-    --accent:   #f97316;
-    --accent2:  #3b82f6;
-    --muted:    #4a5568;
-    --text:     #e2e8f0;
-    --text-dim: #718096;
-    --green:    #10b981;
-    --red:      #ef4444;
-    --mono:     'IBM Plex Mono', monospace;
-    --sans:     'IBM Plex Sans', sans-serif;
-  }
+header{border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;gap:10px;height:50px;position:sticky;top:0;background:var(--bg);z-index:100}
+.logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.logo span{color:var(--dim);font-weight:400}
+.htag{font-family:var(--mono);font-size:9px;background:rgba(249,115,22,.12);color:var(--accent);border:1px solid rgba(249,115,22,.25);border-radius:3px;padding:2px 6px;letter-spacing:.06em}
+.key-pill{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:11px}
+.key-pill input{background:none;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:11px;width:190px}
+.key-pill input::placeholder{color:var(--muted)}
+.kdot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.kdot.ok{background:var(--green)} .kdot.err{background:var(--red)}
+.keye{cursor:pointer;color:var(--muted);font-size:12px}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+.shell{display:grid;grid-template-columns:310px 1fr;min-height:calc(100vh - 50px)}
+@media(max-width:768px){.shell{grid-template-columns:1fr}}
 
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 14px;
-    line-height: 1.6;
-  }
+.sidebar{border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;overflow:hidden}
+.tab-row{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.tbtn{flex:1;padding:9px 4px;font-size:11px;font-weight:600;background:none;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;letter-spacing:.02em}
+.tbtn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tbtn:hover:not(.active){color:var(--text)}
+.tpanel{display:none;flex-direction:column;flex:1;overflow:hidden}
+.tpanel.active{display:flex}
 
-  /* ── HEADER ── */
-  header {
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    height: 56px;
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 100;
-  }
-  .logo {
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .logo span { color: var(--text-dim); font-weight: 400; }
-  .tag {
-    font-family: var(--mono);
-    font-size: 10px;
-    background: rgba(249,115,22,0.12);
-    color: var(--accent);
-    border: 1px solid rgba(249,115,22,0.25);
-    border-radius: 3px;
-    padding: 2px 7px;
-    letter-spacing: 0.06em;
-  }
+.search-area{padding:10px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:7px}
+.srow{display:flex;gap:5px}
+.sinput{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:12px;padding:7px 9px;border-radius:4px;outline:none}
+.sinput:focus{border-color:var(--accent2)} .sinput::placeholder{color:var(--muted)}
+.sselect{background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:11px;padding:7px 5px;border-radius:4px;outline:none;cursor:pointer}
+.gobtn{background:var(--accent2);color:#fff;border:none;border-radius:4px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.gobtn:hover{opacity:.85} .gobtn:disabled{opacity:.4;cursor:not-allowed}
 
-  /* ── LAYOUT ── */
-  .shell {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    min-height: calc(100vh - 56px);
-  }
-  @media (max-width: 768px) {
-    .shell { grid-template-columns: 1fr; }
-    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
-  }
+.rmeta{padding:7px 10px;font-family:var(--mono);font-size:10px;color:var(--muted);border-bottom:1px solid var(--border);flex-shrink:0;display:none}
+.rlist{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.ritem{padding:9px 10px;border-bottom:1px solid rgba(37,43,59,.5);cursor:pointer;transition:background .1s}
+.ritem:hover{background:rgba(255,255,255,.03)}
+.ritem.active{background:rgba(249,115,22,.07);border-left:2px solid var(--accent)}
+.ri-t{font-size:12px;font-weight:600;color:var(--text);line-height:1.3}
+.ritem.active .ri-t{color:var(--accent)}
+.ri-m{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px}
+.ri-b{display:flex;gap:3px;flex-wrap:wrap;margin-top:3px}
+.badge{font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:2px}
+.b-s{background:rgba(59,130,246,.12);color:var(--accent2)}
+.b-o{background:rgba(16,185,129,.1);color:var(--green)}
+.b-a{background:rgba(249,115,22,.12);color:var(--accent)}
 
-  /* ── SIDEBAR ── */
-  .sidebar {
-    border-right: 1px solid var(--border);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background: var(--surface);
-  }
+.plist{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.pempty{padding:28px 14px;text-align:center;color:var(--muted);font-size:12px}
+.pitem{padding:9px 10px;border-bottom:1px solid rgba(37,43,59,.5);display:flex;align-items:flex-start;gap:7px;cursor:pointer}
+.pitem:hover{background:rgba(255,255,255,.03)}
+.pt{font-size:12px;font-weight:600;color:var(--text);line-height:1.3}
+.pm{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.unpinbtn{color:var(--muted);font-size:13px;cursor:pointer;padding:0 2px;flex-shrink:0}
+.unpinbtn:hover{color:var(--red)}
 
-  .section-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
+.main{display:flex;flex-direction:column;overflow:hidden}
+.intro{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;gap:10px;flex:1}
+.intro-icon{font-size:38px}
+.intro h2{font-size:17px;font-weight:600}
+.intro p{color:var(--dim);max-width:360px;font-size:13px}
+.steps{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;justify-content:center}
+.step{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--dim)}
+.step strong{color:var(--accent)}
 
-  /* Key input */
-  .key-wrap { position: relative; }
-  .key-wrap input {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 11px;
-    padding: 8px 40px 8px 10px;
-    border-radius: 4px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .key-wrap input:focus { border-color: var(--accent); }
-  .key-wrap input::placeholder { color: var(--muted); }
-  .key-eye {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 13px;
-    user-select: none;
-  }
-  .key-status {
-    margin-top: 6px;
-    font-size: 11px;
-    color: var(--text-dim);
-    font-family: var(--mono);
-  }
-  .key-status.ok { color: var(--green); }
-  .key-status.err { color: var(--red); }
+.dsview{padding:18px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.dsh{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dshl h2{font-size:16px;font-weight:600;margin-bottom:3px;line-height:1.3}
+.dshl p{font-size:11px;color:var(--dim);max-width:480px}
+.dsid{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px}
+.dsid code{color:var(--accent)}
+.brow{display:flex;gap:7px;flex-wrap:wrap;flex-shrink:0}
+.fbtn{background:var(--accent);color:#fff;border:none;padding:7px 14px;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.fbtn:hover{opacity:.85} .fbtn:disabled{opacity:.4;cursor:not-allowed}
+.pbtn{background:var(--surface);color:var(--text);border:1px solid var(--border);padding:7px 12px;border-radius:4px;font-size:12px;cursor:pointer;transition:all .15s}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.pinned{background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.3);color:var(--accent)}
 
-  /* Dataset list */
-  .search-box {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 13px;
-    padding: 7px 10px;
-    border-radius: 4px;
-    outline: none;
-    margin-bottom: 10px;
-  }
-  .search-box:focus { border-color: var(--accent2); }
+.notice{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:4px;padding:9px 12px;font-size:11px;color:#93c5fd;font-family:var(--mono);line-height:1.5;word-break:break-all}
+.errbox{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:4px;padding:9px 12px;font-size:12px;color:#fca5a5;font-family:var(--mono)}
 
-  .dataset-list {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    max-height: 420px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-  .dataset-item {
-    padding: 9px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.12s;
-  }
-  .dataset-item:hover { background: rgba(255,255,255,0.04); border-color: var(--border); }
-  .dataset-item.active { background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.3); }
-  .dataset-item .ds-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.3;
-  }
-  .dataset-item.active .ds-title { color: var(--accent); }
-  .dataset-item .ds-meta {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 3px;
-  }
-  .ds-badge {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 9px;
-    padding: 1px 5px;
-    border-radius: 2px;
-    margin-top: 4px;
-    margin-right: 3px;
-  }
-  .ds-badge.live { background: rgba(16,185,129,0.12); color: var(--green); }
-  .ds-badge.sector { background: rgba(59,130,246,0.12); color: var(--accent2); }
+.srow2{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:9px}
+.sbox{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:11px 13px}
+.slbl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.sval{font-size:18px;font-weight:600;font-family:var(--mono)}
+.sval.o{color:var(--accent)} .sval.b{color:var(--accent2)} .sval.g{color:var(--green)}
 
-  /* ── MAIN PANEL ── */
-  .main { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+.ccard{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:16px}
+.ctitle{font-size:12px;font-weight:600;margin-bottom:2px}
+.csub{font-size:11px;color:var(--dim);margin-bottom:10px}
+.ctrls{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.cbtn{font-family:var(--mono);font-size:10px;padding:3px 7px;border-radius:3px;background:var(--bg);border:1px solid var(--border);color:var(--muted);cursor:pointer}
+.cbtn.active{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.3);color:var(--accent)}
 
-  /* Hero / intro */
-  .intro {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 48px 24px;
-    border: 1px dashed var(--border);
-    border-radius: 8px;
-    gap: 12px;
-    min-height: 340px;
-  }
-  .intro-icon { font-size: 40px; }
-  .intro h2 { font-size: 18px; font-weight: 600; color: var(--text); }
-  .intro p { color: var(--text-dim); max-width: 380px; font-size: 13px; }
-  .intro code {
-    font-family: var(--mono);
-    font-size: 11px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 2px 6px;
-    border-radius: 3px;
-    color: var(--accent);
-  }
+.tcard{background:var(--surface);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.ttbar{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border);gap:8px;flex-wrap:wrap}
+.ttbar span{font-size:12px;font-weight:600}
+.tfi{background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:11px;padding:4px 7px;border-radius:3px;outline:none;width:140px}
+.tfi:focus{border-color:var(--accent2)}
+.expbtn{font-family:var(--mono);font-size:10px;color:var(--green);background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:3px;padding:3px 8px;cursor:pointer}
+.twrap{overflow-x:auto;max-height:340px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead{position:sticky;top:0;background:var(--bg);z-index:1}
+th{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:6px 10px;text-align:left;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{color:var(--text)}
+td{padding:6px 10px;border-bottom:1px solid rgba(37,43,59,.5);color:var(--text);max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tr:hover td{background:rgba(255,255,255,.02)}
+.pgrow{display:flex;align-items:center;gap:7px;padding:9px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--dim)}
+.pgbtn{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:3px 8px;border-radius:3px;cursor:pointer;font-size:11px}
+.pgbtn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.pgbtn:disabled{opacity:.35;cursor:not-allowed}
 
-  /* Dataset view */
-  .ds-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .ds-header-left h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-  .ds-header-left p { font-size: 12px; color: var(--text-dim); max-width: 540px; }
-  .ds-id {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 6px;
-  }
+.rawrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rawtog{font-family:var(--mono);font-size:10px;color:var(--accent2);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:3px;padding:4px 9px;cursor:pointer}
+.rawurl{font-family:var(--mono);font-size:10px;color:var(--muted);word-break:break-all;flex:1}
+pre.rawjson{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:12px;font-family:var(--mono);font-size:10px;color:var(--dim);overflow:auto;max-height:240px;display:none;scrollbar-width:thin;scrollbar-color:var(--border) transparent;margin-top:8px}
+pre.rawjson.vis{display:block}
 
-  .fetch-btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 9px 18px;
-    border-radius: 4px;
-    font-family: var(--sans);
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: opacity 0.15s;
-    flex-shrink: 0;
-  }
-  .fetch-btn:hover { opacity: 0.85; }
-  .fetch-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* Stats row */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-  }
-  .stat-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 14px 16px;
-  }
-  .stat-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 4px;
-  }
-  .stat-value {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text);
-    font-family: var(--mono);
-  }
-  .stat-value.orange { color: var(--accent); }
-  .stat-value.blue { color: var(--accent2); }
-  .stat-value.green { color: var(--green); }
-
-  /* Chart */
-  .chart-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 20px;
-  }
-  .chart-title {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .chart-sub {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-  }
-  canvas { display: block; width: 100% !important; }
-
-  /* Table */
-  .table-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  .table-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .table-toolbar span { font-size: 13px; font-weight: 600; }
-  .table-wrap { overflow-x: auto; max-height: 380px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  thead { position: sticky; top: 0; background: var(--bg); }
-  th {
-    font-family: var(--mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--muted);
-    padding: 8px 14px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    white-space: nowrap;
-    user-select: none;
-  }
-  th:hover { color: var(--text); }
-  td {
-    padding: 9px 14px;
-    border-bottom: 1px solid rgba(37,43,59,0.6);
-    color: var(--text);
-    max-width: 220px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  tr:hover td { background: rgba(255,255,255,0.02); }
-
-  /* Pagination */
-  .pagination {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-  .pg-btn {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 4px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: border-color 0.12s;
-  }
-  .pg-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  .pg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-  /* Raw JSON */
-  .raw-toggle {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--accent2);
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 4px 10px;
-    cursor: pointer;
-  }
-  .raw-toggle:hover { background: rgba(59,130,246,0.08); }
-  pre.raw-json {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 16px;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    overflow: auto;
-    max-height: 300px;
-    display: none;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-  pre.raw-json.visible { display: block; }
-
-  /* Spinner */
-  .spinner {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .notice {
-    background: rgba(59,130,246,0.07);
-    border: 1px solid rgba(59,130,246,0.2);
-    border-radius: 4px;
-    padding: 10px 14px;
-    font-size: 12px;
-    color: #93c5fd;
-    font-family: var(--mono);
-  }
-  .notice a { color: var(--accent2); }
-
-  .error-box {
-    background: rgba(239,68,68,0.07);
-    border: 1px solid rgba(239,68,68,0.2);
-    border-radius: 4px;
-    padding: 10px 14px;
-    font-size: 12px;
-    color: #fca5a5;
-    font-family: var(--mono);
-  }
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.muted-msg{padding:20px;text-align:center;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">data<span>.gov.in</span></div>
-  <div class="tag">Economy Explorer</div>
+  <div class="htag">Explorer</div>
+  <div class="key-pill">
+    <span class="kdot" id="kdot"></span>
+    <span style="color:var(--muted);font-size:10px">KEY</span>
+    <input type="password" id="apiKey" placeholder="Paste your data.gov.in API key…" autocomplete="off" />
+    <span class="keye" id="keye">👁</span>
+  </div>
 </header>
 
 <div class="shell">
-
-  <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
-    <!-- API Key -->
-    <div>
-      <div class="section-label">API Key</div>
-      <div class="key-wrap">
-        <input type="password" id="apiKey" placeholder="Paste your data.gov.in API key" autocomplete="off" />
-        <span class="key-eye" id="eyeToggle" title="Show/hide">👁</span>
+    <div class="tab-row">
+      <button class="tbtn active" onclick="switchTab('search')">🔍 Search</button>
+      <button class="tbtn" onclick="switchTab('pinned')">📌 Pinned</button>
+    </div>
+
+    <div class="tpanel active" id="tp-search">
+      <div class="search-area">
+        <div class="srow">
+          <input class="sinput" type="text" id="searchQ" placeholder="CPI, FDI, exports, IIP, bank…" />
+          <select class="sselect" id="secFilter">
+            <option value="">All Sectors</option>
+            <option value="economy">Economy</option>
+            <option value="agriculture">Agriculture</option>
+            <option value="commerce">Commerce</option>
+            <option value="finance">Finance</option>
+            <option value="health">Health</option>
+            <option value="education">Education</option>
+            <option value="labour">Labour &amp; Employment</option>
+            <option value="transport">Transport</option>
+            <option value="environment">Environment</option>
+            <option value="energy">Energy</option>
+            <option value="science">Science &amp; Technology</option>
+            <option value="social">Social Justice</option>
+            <option value="housing">Housing</option>
+          </select>
+        </div>
+        <button class="gobtn" id="searchBtn" onclick="doSearch()">Search</button>
       </div>
-      <div class="key-status" id="keyStatus">
-        Get a free key → <a href="https://data.gov.in/user/register" target="_blank" style="color:var(--accent2)">data.gov.in/user/register</a>
+      <div class="rmeta" id="rmeta"></div>
+      <div class="rlist" id="rlist">
+        <div class="muted-msg" style="padding-top:36px">
+          <div style="font-size:26px;margin-bottom:8px">🔎</div>
+          Search 1,30,000+ official GOI datasets<br><br>
+          <span style="color:var(--accent)">Try: CPI · FDI · IIP · exports · GDP</span>
+        </div>
       </div>
     </div>
 
-    <!-- Dataset picker -->
-    <div style="flex:1; display:flex; flex-direction:column; gap:8px; overflow:hidden;">
-      <div class="section-label">Economy Datasets</div>
-      <input class="search-box" type="text" id="dsSearch" placeholder="Filter datasets…" />
-      <div class="dataset-list" id="datasetList"></div>
+    <div class="tpanel" id="tp-pinned">
+      <div class="plist" id="plist"></div>
     </div>
   </aside>
 
-  <!-- ── MAIN ── -->
-  <main class="main" id="mainPanel">
-
-    <div class="intro" id="introState">
+  <main class="main">
+    <div class="intro" id="intro">
       <div class="intro-icon">📊</div>
-      <h2>India Economy Data Explorer</h2>
-      <p>Enter your <code>data.gov.in</code> API key and pick a dataset from the sidebar to fetch live government data.</p>
-      <p style="margin-top:4px; font-size:11px; font-family:var(--mono); color:var(--muted);">
-        Free to use · Official GOI data · JSON API
-      </p>
+      <h2>India Open Data Explorer</h2>
+      <p>Live search, fetch &amp; visualise 1,30,000+ government datasets in one place.</p>
+      <div class="steps">
+        <div class="step"><strong>1</strong> Paste API key</div>
+        <div class="step"><strong>2</strong> Search a topic</div>
+        <div class="step"><strong>3</strong> Select dataset</div>
+        <div class="step"><strong>4</strong> Fetch &amp; explore</div>
+      </div>
+      <p style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:6px">Free key → data.gov.in/user/register</p>
     </div>
-
-    <div id="dataView" style="display:none; display:flex; flex-direction:column; gap:20px;"></div>
-
+    <div class="dsview" id="dsview" style="display:none"></div>
   </main>
 </div>
 
-<!-- Chart.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-
 <script>
-// ── DATASET CATALOGUE ──────────────────────────────────────────────────────
-// Curated list of economy/GDP/IIP-related resources known to have working APIs
-const DATASETS = [
-  {
-    id: '9ef84268-d588-465a-a308-a864a43d0070',
-    title: 'Annual Rate of Inflation (WPI) — All Commodities',
-    desc: 'Wholesale Price Index inflation rate for all commodity groups, annual data from Ministry of Commerce.',
-    sector: 'Prices',
-    fields: ['year', 'inflation_rate'],
-    chartField: 'inflation_rate',
-    labelField: 'year',
-    chartType: 'bar',
-  },
-  {
-    id: 'fce8f5b9-1fb2-4a29-b74d-f9ccadcce2fa',
-    title: 'Foreign Direct Investment — Sector-wise Inflows',
-    desc: 'FDI equity inflows by sector, published by DPIIT.',
-    sector: 'Investment',
-    fields: ['sector', 'amount_in_usd_mn'],
-    chartField: 'amount_in_usd_mn',
-    labelField: 'sector',
-    chartType: 'bar',
-  },
-  {
-    id: 'b4e6d87a-891c-4b26-a777-ee73ac2b1c8b',
-    title: 'Exports by Commodity — Monthly',
-    desc: 'Monthly export figures by commodity group, Ministry of Commerce & Industry.',
-    sector: 'Trade',
-    fields: ['commodity', 'value_in_usd_mn'],
-    chartField: 'value_in_usd_mn',
-    labelField: 'commodity',
-    chartType: 'bar',
-  },
-  {
-    id: '7f3a2e01-5b34-4d9a-89c5-0612a3f82bb2',
-    title: 'Consumer Price Index (CPI) — Urban & Rural',
-    desc: 'Combined, Urban and Rural CPI data from Ministry of Statistics.',
-    sector: 'Prices',
-    fields: ['month', 'general_cpi'],
-    chartField: 'general_cpi',
-    labelField: 'month',
-    chartType: 'line',
-  },
-  {
-    id: '3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69',
-    title: 'Real-time Air Quality Index (AQI) — Demo',
-    desc: 'A known-working demo dataset. Use this to verify your API key and see live data structure.',
-    sector: 'Demo',
-    fields: ['city', 'pollutant_avg'],
-    chartField: 'pollutant_avg',
-    labelField: 'city',
-    chartType: 'bar',
-    demo: true,
-  },
-];
+var curDs=null,curData=[],sortCol=null,sortDir=1,pg=0,tblFilter="",aChart=null,lastJson=null,chartType="bar";
+var pinned=JSON.parse(localStorage.getItem("dgPinned")||"[]");
+var PS=15;
 
-// ── STATE ──────────────────────────────────────────────────────────────────
-let currentDataset = null;
-let currentData    = [];
-let sortCol        = null;
-let sortDir        = 1;
-let page           = 0;
-const PAGE_SIZE    = 15;
-let activeChart    = null;
-let rawVisible     = false;
+var apiKeyEl=document.getElementById("apiKey");
+var kdot=document.getElementById("kdot");
+document.getElementById("keye").onclick=function(){apiKeyEl.type=apiKeyEl.type==="password"?"text":"password"};
+function getKey(){return apiKeyEl.value.trim()}
+function setKS(s){kdot.className="kdot"+(s===true?" ok":s===false?" err":"")}
 
-// ── ELEMENTS ──────────────────────────────────────────────────────────────
-const apiKeyEl    = document.getElementById('apiKey');
-const keyStatus   = document.getElementById('keyStatus');
-const eyeToggle   = document.getElementById('eyeToggle');
-const dsSearch    = document.getElementById('dsSearch');
-const datasetList = document.getElementById('datasetList');
-const introState  = document.getElementById('introState');
-const dataView    = document.getElementById('dataView');
-
-// ── SIDEBAR: render dataset list ──────────────────────────────────────────
-function renderDatasetList(filter = '') {
-  const q = filter.toLowerCase();
-  const items = DATASETS.filter(d =>
-    d.title.toLowerCase().includes(q) || d.sector.toLowerCase().includes(q)
-  );
-  datasetList.innerHTML = items.map(d => `
-    <div class="dataset-item ${currentDataset?.id === d.id ? 'active' : ''}"
-         data-id="${d.id}" onclick="selectDataset('${d.id}')">
-      <div class="ds-title">${d.title}</div>
-      <div class="ds-meta">${d.id.slice(0,8)}…</div>
-      <span class="ds-badge sector">${d.sector}</span>
-      ${d.demo ? '<span class="ds-badge live">DEMO</span>' : ''}
-    </div>
-  `).join('');
-}
-renderDatasetList();
-
-dsSearch.addEventListener('input', () => renderDatasetList(dsSearch.value));
-
-// ── API KEY ───────────────────────────────────────────────────────────────
-eyeToggle.addEventListener('click', () => {
-  apiKeyEl.type = apiKeyEl.type === 'password' ? 'text' : 'password';
-});
-
-function getKey() {
-  return apiKeyEl.value.trim();
+function switchTab(t){
+  document.querySelectorAll(".tbtn").forEach(function(b,i){b.classList.toggle("active",["search","pinned"][i]===t)});
+  document.querySelectorAll(".tpanel").forEach(function(p,i){p.classList.toggle("active",["search","pinned"][i]===t)});
+  if(t==="pinned")renderPinned();
 }
 
-// ── SELECT DATASET ────────────────────────────────────────────────────────
-function selectDataset(id) {
-  currentDataset = DATASETS.find(d => d.id === id);
-  currentData    = [];
-  page           = 0;
-  sortCol        = null;
-  sortDir        = 1;
-  renderDatasetList(dsSearch.value);
-  renderDatasetView();
-}
-
-// ── MAIN VIEW ─────────────────────────────────────────────────────────────
-function renderDatasetView() {
-  introState.style.display = 'none';
-  dataView.style.display   = 'flex';
-  const ds = currentDataset;
-
-  dataView.innerHTML = `
-    <div class="ds-header">
-      <div class="ds-header-left">
-        <h2>${ds.title}</h2>
-        <p>${ds.desc}</p>
-        <div class="ds-id">Resource ID: <code style="font-family:var(--mono); color:var(--accent)">${ds.id}</code></div>
-      </div>
-      <button class="fetch-btn" id="fetchBtn" onclick="fetchData()">⬇ Fetch Data</button>
-    </div>
-
-    <div class="notice">
-      📡 API endpoint: <strong>https://api.data.gov.in/resource/${ds.id}?format=json&api-key=YOUR_KEY&limit=100</strong><br>
-      ${ds.demo ? '✅ This is the official demo dataset — verified working.' : '⚠️ Dataset availability depends on data.gov.in. Some datasets may require "Request API" on the portal first.'}
-    </div>
-
-    <div id="statsRow" class="stats-row" style="display:none"></div>
-    <div id="chartArea" style="display:none"></div>
-    <div id="tableArea" style="display:none"></div>
-    <div id="rawArea" style="display:none"></div>
-    <div id="errorArea"></div>
-  `;
-}
-
-// ── FETCH DATA ────────────────────────────────────────────────────────────
-async function fetchData() {
-  const key = getKey();
-  if (!key) {
-    alert('Please enter your data.gov.in API key in the sidebar first.');
-    return;
+async function doSearch(){
+  var key=getKey();
+  if(!key){alert("Paste your API key in the header first.");return}
+  var q=document.getElementById("searchQ").value.trim();
+  var sec=document.getElementById("secFilter").value;
+  if(!q&&!sec){alert("Enter a search term or pick a sector.");return}
+  var btn=document.getElementById("searchBtn");
+  btn.disabled=true;btn.innerHTML="<span class=\'spinner\'></span>Searching…";
+  document.getElementById("rmeta").style.display="none";
+  document.getElementById("rlist").innerHTML="<div class=\'muted-msg\'><span class=\'spinner\'></span> Searching…</div>";
+  var url="https://api.data.gov.in/lists?format=json&notfilters[source]=visualize_list&filters[active]=1&limit=50&api-key="+key;
+  if(q)url+="&filters[title]="+encodeURIComponent(q);
+  if(sec)url+="&filters[sector]="+encodeURIComponent(sec);
+  try{
+    var res=await fetch(url);
+    var json=await res.json();
+    if(json.message&&/invalid|unauthorized/i.test(json.message)){setKS(false);throw new Error("Invalid API key.")}
+    setKS(true);
+    var recs=json.records||json.results||[];
+    renderResults(recs,json.total||recs.length);
+  }catch(e){
+    document.getElementById("rlist").innerHTML="<div class=\'muted-msg\' style=\'color:var(--red)\'>&bowtie; "+e.message+"</div>";
   }
-  const ds  = currentDataset;
-  const btn = document.getElementById('fetchBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Fetching…';
-  document.getElementById('errorArea').innerHTML = '';
+  btn.disabled=false;btn.innerHTML="Search";
+}
 
-  const url = `https://api.data.gov.in/resource/${ds.id}?api-key=${key}&format=json&limit=100&offset=0`;
+document.getElementById("searchQ").addEventListener("keydown",function(e){if(e.key==="Enter")doSearch()});
 
-  try {
-    const res  = await fetch(url);
-    const json = await res.json();
+function esc(s){return String(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;")}
 
-    if (json.message && json.message.toLowerCase().includes('invalid')) {
-      throw new Error('Invalid API key. Check your key at data.gov.in → My Account.');
-    }
-    if (!json.records || json.records.length === 0) {
-      throw new Error('No records returned. This dataset may not have an active API — try requesting it on data.gov.in first.');
-    }
+function renderResults(recs,total){
+  var m=document.getElementById("rmeta"),l=document.getElementById("rlist");
+  if(!recs.length){m.style.display="none";l.innerHTML="<div class=\'muted-msg\'>No results. Try broader keywords.</div>";return}
+  m.style.display="block";m.textContent=recs.length+" of "+Number(total).toLocaleString()+" results";
+  l.innerHTML=recs.map(function(r){
+    var id=r.index_name||r.id||"";
+    var title=r.title||r.name||"Untitled";
+    var sector=Array.isArray(r.sector)?r.sector[0]:(r.sector||"");
+    var org=Array.isArray(r.org)?r.org[0]:(r.org||"");
+    var active=r.active;
+    return "<div class=\'ritem"+(curDs&&curDs.id===id?" active":"")+"\' onclick=\'selDs(\""+id+"\",\""+esc(title)+"\",\""+esc(sector)+"\",\""+esc(org)+"\")\'>"+
+      "<div class=\'ri-t\'>"+title+"</div>"+
+      "<div class=\'ri-m\'>"+id.slice(0,8)+"…</div>"+
+      "<div class=\'ri-b\'>"+
+        (sector?"<span class=\'badge b-s\'>"+sector+"</span>":"")+
+        (org?"<span class=\'badge b-o\'>"+org.slice(0,28)+"</span>":"")+
+        (active?"<span class=\'badge b-a\'>ACTIVE</span>":"")+
+      "</div></div>";
+  }).join("");
+}
 
-    currentData = json.records;
-    keyStatus.textContent = '✓ Key accepted';
-    keyStatus.className   = 'key-status ok';
+function selDs(id,title,sector,org){
+  curDs={id:id,title:title,sector:sector,org:org};
+  curData=[];pg=0;sortCol=null;sortDir=1;tblFilter="";lastJson=null;
+  document.querySelectorAll(".ritem").forEach(function(el){el.classList.remove("active")});
+  event&&event.currentTarget&&event.currentTarget.classList.add("active");
+  renderDsView();
+}
 
-    renderStats(json);
-    renderChart(ds, currentData);
-    renderTable(currentData, ds);
-    renderRaw(json);
+function renderDsView(){
+  document.getElementById("intro").style.display="none";
+  var dv=document.getElementById("dsview");dv.style.display="flex";
+  var ds=curDs;
+  var isp=pinned.some(function(p){return p.id===ds.id});
+  dv.innerHTML="<div class=\'dsh\'>"+
+    "<div class=\'dshl\'>"+
+      "<h2>"+ds.title+"</h2>"+
+      (ds.sector?"<p>"+ds.sector+(ds.org?" &middot; "+ds.org:"")+"</p>":"")+
+      "<div class=\'dsid\'>Resource ID: <code>"+ds.id+"</code></div>"+
+    "</div>"+
+    "<div class=\'brow\'>"+
+      "<button class=\'fbtn\' id=\'fbtn\' onclick=\'fetchData()\'>&#11015; Fetch Data</button>"+
+      "<button class=\'pbtn"+(isp?" pinned":"")+"\' id=\'pbtn\' onclick=\'togglePin()\'>&#128204; "+(isp?"Pinned":"Pin")+"</button>"+
+    "</div>"+
+  "</div>"+
+  "<div class=\'notice\'>Endpoint: https://api.data.gov.in/resource/<strong>"+ds.id+"</strong>?format=json&amp;api-key=KEY&amp;limit=100</div>"+
+  "<div id=\'srow\' style=\'display:none\'></div>"+
+  "<div id=\'carea\' style=\'display:none\'></div>"+
+  "<div id=\'tarea\' style=\'display:none\'></div>"+
+  "<div id=\'rarea\' style=\'display:none\'></div>"+
+  "<div id=\'erra\'></div>";
+}
 
-    btn.innerHTML  = '⬇ Fetch Data';
-    btn.disabled   = false;
-
-  } catch(err) {
-    btn.innerHTML = '⬇ Fetch Data';
-    btn.disabled  = false;
-    document.getElementById('errorArea').innerHTML = `
-      <div class="error-box">⚠ ${err.message}</div>
-    `;
-    keyStatus.textContent = '✗ Error';
-    keyStatus.className   = 'key-status err';
+async function fetchData(){
+  var key=getKey();
+  if(!key){alert("Please enter your API key.");return}
+  var btn=document.getElementById("fbtn");
+  btn.disabled=true;btn.innerHTML="<span class=\'spinner\'></span>Fetching…";
+  document.getElementById("erra").innerHTML="";
+  ["srow","carea","tarea","rarea"].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display="none"});
+  var url="https://api.data.gov.in/resource/"+curDs.id+"?api-key="+key+"&format=json&limit=100&offset=0";
+  try{
+    var res=await fetch(url);var json=await res.json();lastJson=json;
+    if(json.message&&/invalid|unauthorized/i.test(json.message)){setKS(false);throw new Error("Invalid API key.")}
+    if(json.status==="error")throw new Error(json.message||"API error.");
+    if(!json.records||!json.records.length)throw new Error("No records returned. This dataset may not have an active API yet. Visit data.gov.in and click \"Request API\" on this resource.");
+    setKS(true);curData=json.records;
+    renderStats(json);renderChart(curData);renderTable(curData);renderRaw(json,url);
+  }catch(e){
+    document.getElementById("erra").innerHTML="<div class=\'errbox\'>&oplus; "+e.message+"</div>";
+    if(/invalid|unauthorized/i.test(e.message))setKS(false);
   }
+  btn.innerHTML="&#11015; Fetch Data";btn.disabled=false;
 }
 
-// ── STATS ─────────────────────────────────────────────────────────────────
-function renderStats(json) {
-  const el = document.getElementById('statsRow');
-  const total  = json.total   || currentData.length;
-  const count  = currentData.length;
-  const fields = Object.keys(currentData[0] || {}).length;
-  el.style.display = 'grid';
-  el.innerHTML = `
-    <div class="stat-box">
-      <div class="stat-label">Total Records</div>
-      <div class="stat-value orange">${Number(total).toLocaleString()}</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Loaded</div>
-      <div class="stat-value blue">${count}</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Fields</div>
-      <div class="stat-value green">${fields}</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Source</div>
-      <div class="stat-value" style="font-size:13px; font-family:var(--mono); color:var(--text-dim)">data.gov.in</div>
-    </div>
-  `;
+function renderStats(json){
+  var el=document.getElementById("srow");el.style.display="grid";
+  var total=json.total||curData.length,fields=Object.keys(curData[0]||{}).length;
+  el.className="srow2";
+  el.innerHTML="<div class=\'sbox\'><div class=\'slbl\'>Total Records</div><div class=\'sval o\'>"+Number(total).toLocaleString()+"</div></div>"+
+    "<div class=\'sbox\'><div class=\'slbl\'>Loaded</div><div class=\'sval b\'>"+curData.length+"</div></div>"+
+    "<div class=\'sbox\'><div class=\'slbl\'>Columns</div><div class=\'sval g\'>"+fields+"</div></div>"+
+    "<div class=\'sbox\'><div class=\'slbl\'>Updated</div><div class=\'sval\' style=\'font-size:11px;color:var(--dim)\'>"+
+      (json.updated_date||json.updated||"—")+"</div></div>";
 }
 
-// ── CHART ─────────────────────────────────────────────────────────────────
-function renderChart(ds, data) {
-  const el  = document.getElementById('chartArea');
-  el.style.display = 'block';
+function renderChart(data){
+  var el=document.getElementById("carea");el.style.display="block";
+  var keys=Object.keys(data[0]||{}).filter(function(k){return k!=="document_id"&&k!=="resource_uuid"});
+  var lk=keys.find(function(k){return isNaN(parseFloat(data[0][k]))})||keys[0];
+  var nk=keys.find(function(k){return k!==lk&&!isNaN(parseFloat(data[0][k]))&&parseFloat(data[0][k])!==0})||keys[1];
+  var sl=data.slice(0,25);
+  var labels=sl.map(function(r){return String(r[lk]||"").slice(0,28)});
+  var values=sl.map(function(r){return parseFloat(r[nk])||0});
+  el.innerHTML="<div class=\'ccard\'>"+
+    "<div class=\'ctitle\'>"+curDs.title+"</div>"+
+    "<div class=\'csub\'>Field: <code style=\'font-family:var(--mono);color:var(--accent)\'>"+nk+"</code> &middot; up to 25 records</div>"+
+    "<div class=\'ctrls\'>" +
+      ["bar","line","pie","doughnut"].map(function(t){
+        return "<button class=\'cbtn"+(chartType===t?" active":"")+"\' onclick=\'swChart(\""+t+"\",\""+lk+"\",\""+nk+"\")\'>"+t.charAt(0).toUpperCase()+t.slice(1)+"</button>";
+      }).join("") +
+    "</div>"+
+    "<canvas id=\'mc\'></canvas></div>";
+  drawChart(chartType,labels,values,nk);
+}
 
-  // Auto-detect best label + numeric field from actual data
-  const firstRow   = data[0];
-  const allKeys    = Object.keys(firstRow);
-  const numericKey = allKeys.find(k => !isNaN(parseFloat(firstRow[k])) && parseFloat(firstRow[k]) !== 0) || allKeys[1];
-  const labelKey   = allKeys.find(k => isNaN(parseFloat(firstRow[k]))) || allKeys[0];
+function swChart(type,lk,nk){
+  chartType=type;
+  if(!curData.length)return;
+  var sl=curData.slice(0,25);
+  var labels=sl.map(function(r){return String(r[lk]||"").slice(0,28)});
+  var values=sl.map(function(r){return parseFloat(r[nk])||0});
+  document.querySelectorAll(".cbtn").forEach(function(b){b.classList.remove("active")});
+  event&&event.currentTarget&&event.currentTarget.classList.add("active");
+  if(aChart){aChart.destroy();aChart=null}
+  drawChart(type,labels,values,nk);
+}
 
-  const labels = data.slice(0, 20).map(r => String(r[labelKey] || '').slice(0, 25));
-  const values = data.slice(0, 20).map(r => parseFloat(r[numericKey]) || 0);
-  const type   = ds.chartType || 'bar';
-
-  el.innerHTML = `
-    <div class="chart-card">
-      <div class="chart-title">📈 ${ds.title}</div>
-      <div class="chart-sub">Showing top 20 records · Field: <code style="font-family:var(--mono); color:var(--accent)">${numericKey}</code></div>
-      <canvas id="myChart" height="220"></canvas>
-    </div>
-  `;
-
-  if (activeChart) { activeChart.destroy(); activeChart = null; }
-
-  const ctx = document.getElementById('myChart').getContext('2d');
-  activeChart = new Chart(ctx, {
-    type,
-    data: {
-      labels,
-      datasets: [{
-        label: numericKey,
-        data: values,
-        backgroundColor: type === 'line'
-          ? 'rgba(249,115,22,0.08)'
-          : labels.map((_,i) => `hsl(${210 + i*8},70%,55%)`),
-        borderColor: type === 'line' ? '#f97316' : 'transparent',
-        borderWidth: type === 'line' ? 2 : 0,
-        fill: type === 'line',
-        tension: 0.4,
-        pointBackgroundColor: '#f97316',
-        pointRadius: type === 'line' ? 3 : 0,
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${Number(ctx.raw).toLocaleString()}` } }
+function drawChart(type,labels,values,nk){
+  if(aChart){aChart.destroy();aChart=null}
+  var ctx=document.getElementById("mc");if(!ctx)return;
+  var isPie=type==="pie"||type==="doughnut";
+  var colors=labels.map(function(_,i){return"hsl("+(210+i*13)%360+",65%,55%)"});
+  aChart=new Chart(ctx.getContext("2d"),{
+    type:type,
+    data:{labels:labels,datasets:[{
+      label:nk,data:values,
+      backgroundColor:isPie?colors:(type==="line"?"rgba(249,115,22,.08)":colors),
+      borderColor:type==="line"?"#f97316":(isPie?"rgba(0,0,0,0)":"transparent"),
+      borderWidth:type==="line"?2:0,fill:type==="line",tension:.4,
+      pointBackgroundColor:"#f97316",pointRadius:type==="line"?3:0
+    }]},
+    options:{responsive:true,
+      plugins:{
+        legend:{display:isPie,labels:{color:"#718096",font:{size:10}}},
+        tooltip:{callbacks:{label:function(c){return" "+Number(c.raw).toLocaleString()}}}
       },
-      scales: {
-        x: {
-          ticks: { color: '#718096', font: { family: 'IBM Plex Mono', size: 10 }, maxRotation: 45 },
-          grid: { color: 'rgba(37,43,59,0.5)' }
-        },
-        y: {
-          ticks: { color: '#718096', font: { family: 'IBM Plex Mono', size: 10 } },
-          grid: { color: 'rgba(37,43,59,0.5)' }
-        }
+      scales:isPie?{}:{
+        x:{ticks:{color:"#718096",font:{family:"IBM Plex Mono",size:9},maxRotation:45},grid:{color:"rgba(37,43,59,.5)"}},
+        y:{ticks:{color:"#718096",font:{family:"IBM Plex Mono",size:9}},grid:{color:"rgba(37,43,59,.5)"}}
       }
     }
   });
 }
 
-// ── TABLE ─────────────────────────────────────────────────────────────────
-function renderTable(data, ds) {
-  const el  = document.getElementById('tableArea');
-  el.style.display = 'block';
-  const cols = Object.keys(data[0] || {});
-
-  const sorted = [...data].sort((a, b) => {
-    if (!sortCol) return 0;
-    const av = a[sortCol], bv = b[sortCol];
-    const an = parseFloat(av), bn = parseFloat(bv);
-    if (!isNaN(an) && !isNaN(bn)) return (an - bn) * sortDir;
-    return String(av).localeCompare(String(bv)) * sortDir;
+function renderTable(data){
+  var el=document.getElementById("tarea");el.style.display="block";
+  var filtered=tblFilter?data.filter(function(r){return Object.values(r).some(function(v){return String(v).toLowerCase().includes(tblFilter.toLowerCase())})}):data;
+  var cols=Object.keys(data[0]||{}).filter(function(k){return k!=="document_id"});
+  var sorted=[].concat(filtered).sort(function(a,b){
+    if(!sortCol)return 0;
+    var an=parseFloat(a[sortCol]),bn=parseFloat(b[sortCol]);
+    if(!isNaN(an)&&!isNaN(bn))return(an-bn)*sortDir;
+    return String(a[sortCol]).localeCompare(String(b[sortCol]))*sortDir;
   });
-
-  const paged = sorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const total = sorted.length;
-  const pages = Math.ceil(total / PAGE_SIZE);
-
-  el.innerHTML = `
-    <div class="table-card">
-      <div class="table-toolbar">
-        <span>Raw Records</span>
-        <span style="font-size:11px; color:var(--text-dim); font-family:var(--mono)">
-          ${total} rows · ${cols.length} columns
-        </span>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              ${cols.map(c => `<th onclick="sortBy('${c}')">${c} ${sortCol===c ? (sortDir===1?'▲':'▼') : ''}</th>`).join('')}
-            </tr>
-          </thead>
-          <tbody>
-            ${paged.map(row => `
-              <tr>${cols.map(c => `<td title="${row[c]||''}">${row[c]||'—'}</td>`).join('')}</tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-      <div class="pagination">
-        <button class="pg-btn" onclick="goPage(${page-1})" ${page===0?'disabled':''}>← Prev</button>
-        <span>Page ${page+1} of ${pages}</span>
-        <button class="pg-btn" onclick="goPage(${page+1})" ${page>=pages-1?'disabled':''}>Next →</button>
-        <span style="margin-left:auto; font-family:var(--mono); font-size:10px; color:var(--muted)">
-          Click column header to sort
-        </span>
-      </div>
-    </div>
-  `;
+  var paged=sorted.slice(pg*PS,(pg+1)*PS);
+  var pages=Math.ceil(sorted.length/PS);
+  el.innerHTML="<div class=\'tcard\'>"+
+    "<div class=\'ttbar\'>"+
+      "<span>Records</span>"+
+      "<input class=\'tfi\' type=\'text\' placeholder=\'Filter rows…\' value=\'"+tblFilter+"\' oninput=\'fTable(this.value)\' />"+
+      "<button class=\'expbtn\' onclick=\'exportCSV()\'>&#11015; CSV</button>"+
+      "<span style=\'font-size:10px;color:var(--muted);font-family:var(--mono)\'>"+sorted.length+"/"+data.length+" rows</span>"+
+    "</div>"+
+    "<div class=\'twrap\'><table><thead><tr>"+
+      cols.map(function(c){return"<th onclick=\'sBy(\""+c+"\")\'>"+c.replace(/_/g," ")+" "+(sortCol===c?(sortDir===1?"&#9650;":"&#9660;"):"")+"</th>"}).join("")+
+    "</tr></thead><tbody>"+
+      paged.map(function(row){return"<tr>"+cols.map(function(c){return"<td title=\'"+String(row[c]||"").replace(/'/g,"\\'")+"\'>"+String(row[c]||"—").slice(0,60)+"</td>"}).join("")+"</tr>"}).join("")+
+    "</tbody></table></div>"+
+    "<div class=\'pgrow\'>"+
+      "<button class=\'pgbtn\' onclick=\'goPg("+(pg-1)+")\'  "+(pg===0?"disabled":"")+">&#8592; Prev</button>"+
+      "<span>Page "+(pg+1)+" of "+pages+"</span>"+
+      "<button class=\'pgbtn\' onclick=\'goPg("+(pg+1)+")\'  "+(pg>=pages-1?"disabled":"")+">Next &#8594;</button>"+
+    "</div></div>";
 }
 
-function sortBy(col) {
-  if (sortCol === col) sortDir *= -1;
-  else { sortCol = col; sortDir = 1; }
-  page = 0;
-  renderTable(currentData, currentDataset);
+function fTable(v){tblFilter=v;pg=0;renderTable(curData)}
+function sBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1}pg=0;renderTable(curData)}
+function goPg(p){pg=p;renderTable(curData)}
+
+function exportCSV(){
+  if(!curData.length)return;
+  var cols=Object.keys(curData[0]).filter(function(k){return k!=="document_id"});
+  var rows=[cols.join(",")].concat(curData.map(function(r){return cols.map(function(c){return"\""+String(r[c]||"").replace(/"/g,"\"\"")+"\""}  ).join(",")}));
+  var blob=new Blob([rows.join("\n")],{type:"text/csv"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="datagov-"+curDs.id.slice(0,8)+".csv";a.click();
 }
 
-function goPage(p) {
-  page = p;
-  renderTable(currentData, currentDataset);
+function renderRaw(json,url){
+  var el=document.getElementById("rarea");el.style.display="block";
+  el.innerHTML="<div class=\'rawrow\'><button class=\'rawtog\' onclick=\'togRaw()\'>{ } Raw JSON</button>"+
+    "<span class=\'rawurl\'>"+url.replace(getKey(),"***KEY***")+"</span></div>"+
+    "<pre class=\'rawjson\' id=\'rawj\'>"+JSON.stringify(json,null,2)+"</pre>";
+}
+function togRaw(){var el=document.getElementById("rawj");if(el)el.classList.toggle("vis")}
+
+function togglePin(){
+  var ds=curDs,idx=pinned.findIndex(function(p){return p.id===ds.id});
+  if(idx>=0)pinned.splice(idx,1);else pinned.push({id:ds.id,title:ds.title,sector:ds.sector,org:ds.org});
+  localStorage.setItem("dgPinned",JSON.stringify(pinned));
+  var btn=document.getElementById("pbtn");
+  if(btn){var now=pinned.some(function(p){return p.id===ds.id});btn.textContent="\uD83D\uDCCC "+(now?"Pinned":"Pin");btn.className="pbtn"+(now?" pinned":"")}
 }
 
-// ── RAW JSON ──────────────────────────────────────────────────────────────
-function renderRaw(json) {
-  const el = document.getElementById('rawArea');
-  el.style.display = 'block';
-  rawVisible = false;
-  el.innerHTML = `
-    <div style="display:flex; align-items:center; gap:12px;">
-      <button class="raw-toggle" onclick="toggleRaw()">{ } View raw JSON response</button>
-      <span style="font-size:11px; color:var(--muted); font-family:var(--mono)">
-        Endpoint: api.data.gov.in/resource/${currentDataset.id}
-      </span>
-    </div>
-    <pre class="raw-json" id="rawJson">${JSON.stringify(json, null, 2)}</pre>
-  `;
+function renderPinned(){
+  var el=document.getElementById("plist");
+  if(!pinned.length){el.innerHTML="<div class=\'pempty\'>\uD83D\uDCCC No pinned datasets yet.<br><br>Pin any dataset for quick access.</div>";return}
+  el.innerHTML=pinned.map(function(p){
+    return "<div class=\'pitem\' onclick=\'selDs(\""+p.id+"\",\""+esc(p.title)+"\",\""+esc(p.sector||"")+"\",\""+esc(p.org||"")+"\")\'>"+
+      "<div style=\'flex:1\'><div class=\'pt\'>"+p.title+"</div><div class=\'pm\'>"+p.id.slice(0,8)+"… &middot; "+(p.sector||"")+"</div></div>"+
+      "<span class=\'unpinbtn\' onclick=\'event.stopPropagation();unpin(\""+p.id+"\")\'>&#x2715;</span></div>";
+  }).join("");
 }
 
-function toggleRaw() {
-  rawVisible = !rawVisible;
-  const el = document.getElementById('rawJson');
-  if (el) el.className = 'raw-json' + (rawVisible ? ' visible' : '');
+function unpin(id){
+  pinned=pinned.filter(function(p){return p.id!==id});
+  localStorage.setItem("dgPinned",JSON.stringify(pinned));
+  renderPinned();
+  var btn=document.getElementById("pbtn");
+  if(btn&&curDs&&curDs.id===id){btn.textContent="\uD83D\uDCCC Pin";btn.className="pbtn"}
 }
 </script>
 </body>
