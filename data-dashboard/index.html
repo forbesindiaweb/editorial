@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>data.gov.in — Economy Data Explorer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+  :root {
+    --bg:       #0f1117;
+    --surface:  #181c27;
+    --border:   #252b3b;
+    --accent:   #f97316;
+    --accent2:  #3b82f6;
+    --muted:    #4a5568;
+    --text:     #e2e8f0;
+    --text-dim: #718096;
+    --green:    #10b981;
+    --red:      #ef4444;
+    --mono:     'IBM Plex Mono', monospace;
+    --sans:     'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .logo span { color: var(--text-dim); font-weight: 400; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    background: rgba(249,115,22,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(249,115,22,0.25);
+    border-radius: 3px;
+    padding: 2px 7px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── LAYOUT ── */
+  .shell {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: calc(100vh - 56px);
+  }
+  @media (max-width: 768px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--surface);
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* Key input */
+  .key-wrap { position: relative; }
+  .key-wrap input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 8px 40px 8px 10px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .key-wrap input:focus { border-color: var(--accent); }
+  .key-wrap input::placeholder { color: var(--muted); }
+  .key-eye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 13px;
+    user-select: none;
+  }
+  .key-status {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+  }
+  .key-status.ok { color: var(--green); }
+  .key-status.err { color: var(--red); }
+
+  /* Dataset list */
+  .search-box {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 7px 10px;
+    border-radius: 4px;
+    outline: none;
+    margin-bottom: 10px;
+  }
+  .search-box:focus { border-color: var(--accent2); }
+
+  .dataset-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 420px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .dataset-item {
+    padding: 9px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.12s;
+  }
+  .dataset-item:hover { background: rgba(255,255,255,0.04); border-color: var(--border); }
+  .dataset-item.active { background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.3); }
+  .dataset-item .ds-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .dataset-item.active .ds-title { color: var(--accent); }
+  .dataset-item .ds-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .ds-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-top: 4px;
+    margin-right: 3px;
+  }
+  .ds-badge.live { background: rgba(16,185,129,0.12); color: var(--green); }
+  .ds-badge.sector { background: rgba(59,130,246,0.12); color: var(--accent2); }
+
+  /* ── MAIN PANEL ── */
+  .main { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+
+  /* Hero / intro */
+  .intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 24px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    gap: 12px;
+    min-height: 340px;
+  }
+  .intro-icon { font-size: 40px; }
+  .intro h2 { font-size: 18px; font-weight: 600; color: var(--text); }
+  .intro p { color: var(--text-dim); max-width: 380px; font-size: 13px; }
+  .intro code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  /* Dataset view */
+  .ds-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .ds-header-left h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .ds-header-left p { font-size: 12px; color: var(--text-dim); max-width: 540px; }
+  .ds-id {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .fetch-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }
+  .fetch-btn:hover { opacity: 0.85; }
+  .fetch-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--mono);
+  }
+  .stat-value.orange { color: var(--accent); }
+  .stat-value.blue { color: var(--accent2); }
+  .stat-value.green { color: var(--green); }
+
+  /* Chart */
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+  }
+  .chart-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .chart-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+  canvas { display: block; width: 100% !important; }
+
+  /* Table */
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .table-toolbar span { font-size: 13px; font-weight: 600; }
+  .table-wrap { overflow-x: auto; max-height: 380px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead { position: sticky; top: 0; background: var(--bg); }
+  th {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    padding: 8px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+  }
+  th:hover { color: var(--text); }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(37,43,59,0.6);
+    color: var(--text);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .pg-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 4px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: border-color 0.12s;
+  }
+  .pg-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .pg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* Raw JSON */
+  .raw-toggle {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+  .raw-toggle:hover { background: rgba(59,130,246,0.08); }
+  pre.raw-json {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    overflow: auto;
+    max-height: 300px;
+    display: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  pre.raw-json.visible { display: block; }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .notice {
+    background: rgba(59,130,246,0.07);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #93c5fd;
+    font-family: var(--mono);
+  }
+  .notice a { color: var(--accent2); }
+
+  .error-box {
+    background: rgba(239,68,68,0.07);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #fca5a5;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">data<span>.gov.in</span></div>
+  <div class="tag">Economy Explorer</div>
+</header>
+
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <!-- API Key -->
+    <div>
+      <div class="section-label">API Key</div>
+      <div class="key-wrap">
+        <input type="password" id="apiKey" placeholder="Paste your data.gov.in API key" autocomplete="off" />
+        <span class="key-eye" id="eyeToggle" title="Show/hide">👁</span>
+      </div>
+      <div class="key-status" id="keyStatus">
+        Get a free key → <a href="https://data.gov.in/user/register" target="_blank" style="color:var(--accent2)">data.gov.in/user/register</a>
+      </div>
+    </div>
+
+    <!-- Dataset picker -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:8px; overflow:hidden;">
+      <div class="section-label">Economy Datasets</div>
+      <input class="search-box" type="text" id="dsSearch" placeholder="Filter datasets…" />
+      <div class="dataset-list" id="datasetList"></div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main" id="mainPanel">
+
+    <div class="intro" id="introState">
+      <div class="intro-icon">📊</div>
+      <h2>India Economy Data Explorer</h2>
+      <p>Enter your <code>data.gov.in</code> API key and pick a dataset from the sidebar to fetch live government data.</p>
+      <p style="margin-top:4px; font-size:11px; font-family:var(--mono); color:var(--muted);">
+        Free to use · Official GOI data · JSON API
+      </p>
+    </div>
+
+    <div id="dataView" style="display:none; display:flex; flex-direction:column; gap:20px;"></div>
+
+  </main>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script>
+// ── DATASET CATALOGUE ──────────────────────────────────────────────────────
+// Curated list of economy/GDP/IIP-related resources known to have working APIs
+const DATASETS = [
+  {
+    id: '9ef84268-d588-465a-a308-a864a43d0070',
+    title: 'Annual Rate of Inflation (WPI) — All Commodities',
+    desc: 'Wholesale Price Index inflation rate for all commodity groups, annual data from Ministry of Commerce.',
+    sector: 'Prices',
+    fields: ['year', 'inflation_rate'],
+    chartField: 'inflation_rate',
+    labelField: 'year',
+    chartType: 'bar',
+  },
+  {
+    id: 'fce8f5b9-1fb2-4a29-b74d-f9ccadcce2fa',
+    title: 'Foreign Direct Investment — Sector-wise Inflows',
+    desc: 'FDI equity inflows by sector, published by DPIIT.',
+    sector: 'Investment',
+    fields: ['sector', 'amount_in_usd_mn'],
+    chartField: 'amount_in_usd_mn',
+    labelField: 'sector',
+    chartType: 'bar',
+  },
+  {
+    id: 'b4e6d87a-891c-4b26-a777-ee73ac2b1c8b',
+    title: 'Exports by Commodity — Monthly',
+    desc: 'Monthly export figures by commodity group, Ministry of Commerce & Industry.',
+    sector: 'Trade',
+    fields: ['commodity', 'value_in_usd_mn'],
+    chartField: 'value_in_usd_mn',
+    labelField: 'commodity',
+    chartType: 'bar',
+  },
+  {
+    id: '7f3a2e01-5b34-4d9a-89c5-0612a3f82bb2',
+    title: 'Consumer Price Index (CPI) — Urban & Rural',
+    desc: 'Combined, Urban and Rural CPI data from Ministry of Statistics.',
+    sector: 'Prices',
+    fields: ['month', 'general_cpi'],
+    chartField: 'general_cpi',
+    labelField: 'month',
+    chartType: 'line',
+  },
+  {
+    id: '3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69',
+    title: 'Real-time Air Quality Index (AQI) — Demo',
+    desc: 'A known-working demo dataset. Use this to verify your API key and see live data structure.',
+    sector: 'Demo',
+    fields: ['city', 'pollutant_avg'],
+    chartField: 'pollutant_avg',
+    labelField: 'city',
+    chartType: 'bar',
+    demo: true,
+  },
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let currentDataset = null;
+let currentData    = [];
+let sortCol        = null;
+let sortDir        = 1;
+let page           = 0;
+const PAGE_SIZE    = 15;
+let activeChart    = null;
+let rawVisible     = false;
+
+// ── ELEMENTS ──────────────────────────────────────────────────────────────
+const apiKeyEl    = document.getElementById('apiKey');
+const keyStatus   = document.getElementById('keyStatus');
+const eyeToggle   = document.getElementById('eyeToggle');
+const dsSearch    = document.getElementById('dsSearch');
+const datasetList = document.getElementById('datasetList');
+const introState  = document.getElementById('introState');
+const dataView    = document.getElementById('dataView');
+
+// ── SIDEBAR: render dataset list ──────────────────────────────────────────
+function renderDatasetList(filter = '') {
+  const q = filter.toLowerCase();
+  const items = DATASETS.filter(d =>
+    d.title.toLowerCase().includes(q) || d.sector.toLowerCase().includes(q)
+  );
+  datasetList.innerHTML = items.map(d => `
+    <div class="dataset-item ${currentDataset?.id === d.id ? 'active' : ''}"
+         data-id="${d.id}" onclick="selectDataset('${d.id}')">
+      <div class="ds-title">${d.title}</div>
+      <div class="ds-meta">${d.id.slice(0,8)}…</div>
+      <span class="ds-badge sector">${d.sector}</span>
+      ${d.demo ? '<span class="ds-badge live">DEMO</span>' : ''}
+    </div>
+  `).join('');
+}
+renderDatasetList();
+
+dsSearch.addEventListener('input', () => renderDatasetList(dsSearch.value));
+
+// ── API KEY ───────────────────────────────────────────────────────────────
+eyeToggle.addEventListener('click', () => {
+  apiKeyEl.type = apiKeyEl.type === 'password' ? 'text' : 'password';
+});
+
+function getKey() {
+  return apiKeyEl.value.trim();
+}
+
+// ── SELECT DATASET ────────────────────────────────────────────────────────
+function selectDataset(id) {
+  currentDataset = DATASETS.find(d => d.id === id);
+  currentData    = [];
+  page           = 0;
+  sortCol        = null;
+  sortDir        = 1;
+  renderDatasetList(dsSearch.value);
+  renderDatasetView();
+}
+
+// ── MAIN VIEW ─────────────────────────────────────────────────────────────
+function renderDatasetView() {
+  introState.style.display = 'none';
+  dataView.style.display   = 'flex';
+  const ds = currentDataset;
+
+  dataView.innerHTML = `
+    <div class="ds-header">
+      <div class="ds-header-left">
+        <h2>${ds.title}</h2>
+        <p>${ds.desc}</p>
+        <div class="ds-id">Resource ID: <code style="font-family:var(--mono); color:var(--accent)">${ds.id}</code></div>
+      </div>
+      <button class="fetch-btn" id="fetchBtn" onclick="fetchData()">⬇ Fetch Data</button>
+    </div>
+
+    <div class="notice">
+      📡 API endpoint: <strong>https://api.data.gov.in/resource/${ds.id}?format=json&api-key=YOUR_KEY&limit=100</strong><br>
+      ${ds.demo ? '✅ This is the official demo dataset — verified working.' : '⚠️ Dataset availability depends on data.gov.in. Some datasets may require "Request API" on the portal first.'}
+    </div>
+
+    <div id="statsRow" class="stats-row" style="display:none"></div>
+    <div id="chartArea" style="display:none"></div>
+    <div id="tableArea" style="display:none"></div>
+    <div id="rawArea" style="display:none"></div>
+    <div id="errorArea"></div>
+  `;
+}
+
+// ── FETCH DATA ────────────────────────────────────────────────────────────
+async function fetchData() {
+  const key = getKey();
+  if (!key) {
+    alert('Please enter your data.gov.in API key in the sidebar first.');
+    return;
+  }
+  const ds  = currentDataset;
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Fetching…';
+  document.getElementById('errorArea').innerHTML = '';
+
+  const url = `https://api.data.gov.in/resource/${ds.id}?api-key=${key}&format=json&limit=100&offset=0`;
+
+  try {
+    const res  = await fetch(url);
+    const json = await res.json();
+
+    if (json.message && json.message.toLowerCase().includes('invalid')) {
+      throw new Error('Invalid API key. Check your key at data.gov.in → My Account.');
+    }
+    if (!json.records || json.records.length === 0) {
+      throw new Error('No records returned. This dataset may not have an active API — try requesting it on data.gov.in first.');
+    }
+
+    currentData = json.records;
+    keyStatus.textContent = '✓ Key accepted';
+    keyStatus.className   = 'key-status ok';
+
+    renderStats(json);
+    renderChart(ds, currentData);
+    renderTable(currentData, ds);
+    renderRaw(json);
+
+    btn.innerHTML  = '⬇ Fetch Data';
+    btn.disabled   = false;
+
+  } catch(err) {
+    btn.innerHTML = '⬇ Fetch Data';
+    btn.disabled  = false;
+    document.getElementById('errorArea').innerHTML = `
+      <div class="error-box">⚠ ${err.message}</div>
+    `;
+    keyStatus.textContent = '✗ Error';
+    keyStatus.className   = 'key-status err';
+  }
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────
+function renderStats(json) {
+  const el = document.getElementById('statsRow');
+  const total  = json.total   || currentData.length;
+  const count  = currentData.length;
+  const fields = Object.keys(currentData[0] || {}).length;
+  el.style.display = 'grid';
+  el.innerHTML = `
+    <div class="stat-box">
+      <div class="stat-label">Total Records</div>
+      <div class="stat-value orange">${Number(total).toLocaleString()}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Loaded</div>
+      <div class="stat-value blue">${count}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Fields</div>
+      <div class="stat-value green">${fields}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Source</div>
+      <div class="stat-value" style="font-size:13px; font-family:var(--mono); color:var(--text-dim)">data.gov.in</div>
+    </div>
+  `;
+}
+
+// ── CHART ─────────────────────────────────────────────────────────────────
+function renderChart(ds, data) {
+  const el  = document.getElementById('chartArea');
+  el.style.display = 'block';
+
+  // Auto-detect best label + numeric field from actual data
+  const firstRow   = data[0];
+  const allKeys    = Object.keys(firstRow);
+  const numericKey = allKeys.find(k => !isNaN(parseFloat(firstRow[k])) && parseFloat(firstRow[k]) !== 0) || allKeys[1];
+  const labelKey   = allKeys.find(k => isNaN(parseFloat(firstRow[k]))) || allKeys[0];
+
+  const labels = data.slice(0, 20).map(r => String(r[labelKey] || '').slice(0, 25));
+  const values = data.slice(0, 20).map(r => parseFloat(r[numericKey]) || 0);
+  const type   = ds.chartType || 'bar';
+
+  el.innerHTML = `
+    <div class="chart-card">
+      <div class="chart-title">📈 ${ds.title}</div>
+      <div class="chart-sub">Showing top 20 records · Field: <code style="font-family:var(--mono); color:var(--accent)">${numericKey}</code></div>
+      <canvas id="myChart" height="220"></canvas>
+    </div>
+  `;
+
+  if (activeChart) { activeChart.destroy(); activeChart = null; }
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+  activeChart = new Chart(ctx, {
+    type,
+    data: {
+      labels,
+      datasets: [{
+        label: numericKey,
+        data: values,
+        backgroundColor: type === 'line'
+          ? 'rgba(249,115,22,0.08)'
+          : labels.map((_,i) => `hsl(${210 + i*8},70%,55%)`),
+        borderColor: type === 'line' ? '#f97316' : 'transparent',
+        borderWidth: type === 'line' ? 2 : 0,
+        fill: type === 'line',
+        tension: 0.4,
+        pointBackgroundColor: '#f97316',
+        pointRadius: type === 'line' ? 3 : 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${Number(ctx.raw).toLocaleString()}` } }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#718096', font: { family: 'IBM Plex Mono', size: 10 }, maxRotation: 45 },
+          grid: { color: 'rgba(37,43,59,0.5)' }
+        },
+        y: {
+          ticks: { color: '#718096', font: { family: 'IBM Plex Mono', size: 10 } },
+          grid: { color: 'rgba(37,43,59,0.5)' }
+        }
+      }
+    }
+  });
+}
+
+// ── TABLE ─────────────────────────────────────────────────────────────────
+function renderTable(data, ds) {
+  const el  = document.getElementById('tableArea');
+  el.style.display = 'block';
+  const cols = Object.keys(data[0] || {});
+
+  const sorted = [...data].sort((a, b) => {
+    if (!sortCol) return 0;
+    const av = a[sortCol], bv = b[sortCol];
+    const an = parseFloat(av), bn = parseFloat(bv);
+    if (!isNaN(an) && !isNaN(bn)) return (an - bn) * sortDir;
+    return String(av).localeCompare(String(bv)) * sortDir;
+  });
+
+  const paged = sorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const total = sorted.length;
+  const pages = Math.ceil(total / PAGE_SIZE);
+
+  el.innerHTML = `
+    <div class="table-card">
+      <div class="table-toolbar">
+        <span>Raw Records</span>
+        <span style="font-size:11px; color:var(--text-dim); font-family:var(--mono)">
+          ${total} rows · ${cols.length} columns
+        </span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              ${cols.map(c => `<th onclick="sortBy('${c}')">${c} ${sortCol===c ? (sortDir===1?'▲':'▼') : ''}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${paged.map(row => `
+              <tr>${cols.map(c => `<td title="${row[c]||''}">${row[c]||'—'}</td>`).join('')}</tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <button class="pg-btn" onclick="goPage(${page-1})" ${page===0?'disabled':''}>← Prev</button>
+        <span>Page ${page+1} of ${pages}</span>
+        <button class="pg-btn" onclick="goPage(${page+1})" ${page>=pages-1?'disabled':''}>Next →</button>
+        <span style="margin-left:auto; font-family:var(--mono); font-size:10px; color:var(--muted)">
+          Click column header to sort
+        </span>
+      </div>
+    </div>
+  `;
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = 1; }
+  page = 0;
+  renderTable(currentData, currentDataset);
+}
+
+function goPage(p) {
+  page = p;
+  renderTable(currentData, currentDataset);
+}
+
+// ── RAW JSON ──────────────────────────────────────────────────────────────
+function renderRaw(json) {
+  const el = document.getElementById('rawArea');
+  el.style.display = 'block';
+  rawVisible = false;
+  el.innerHTML = `
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="raw-toggle" onclick="toggleRaw()">{ } View raw JSON response</button>
+      <span style="font-size:11px; color:var(--muted); font-family:var(--mono)">
+        Endpoint: api.data.gov.in/resource/${currentDataset.id}
+      </span>
+    </div>
+    <pre class="raw-json" id="rawJson">${JSON.stringify(json, null, 2)}</pre>
+  `;
+}
+
+function toggleRaw() {
+  rawVisible = !rawVisible;
+  const el = document.getElementById('rawJson');
+  if (el) el.className = 'raw-json' + (rawVisible ? ' visible' : '');
+}
+</script>
+</body>
+</html>
