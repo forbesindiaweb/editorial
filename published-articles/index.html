@@ -22,7 +22,6 @@
     body { font-family: var(--font-ui); background: var(--bg); color: var(--ink); }
     a { color: inherit; text-decoration: none; }
 
-    /* Masthead */
     .masthead {
       background: var(--masthead); color: #fff;
       padding: 0 24px; height: 52px;
@@ -40,11 +39,13 @@
       text-transform: uppercase; letter-spacing: .08em;
       background: none; border: 1px solid #444; border-radius: 4px;
       color: #bbb; cursor: pointer; transition: all .15s; white-space: nowrap;
+      font-family: var(--font-ui);
     }
     .refresh-btn:hover { border-color: var(--fi-red); color: #fff; }
     .refresh-btn:disabled { opacity: .45; cursor: default; }
     .refresh-btn.loading svg { animation: spin .7s linear infinite; }
     .last-updated { font-size: 11px; color: #666; white-space: nowrap; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .pbar-wrap { height: 2px; background: #ddd; }
     .pbar { height: 100%; background: var(--fi-red); transform-origin: left; transition: transform .3s linear; }
@@ -58,19 +59,19 @@
     .back:hover { color: var(--fi-red); }
 
     /* Stats */
-    .stats { display: flex; gap: 1px; background: var(--rule); border-bottom: 1px solid var(--rule); }
-    .stat { flex: 1; background: #fff; padding: 10px 16px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .stats { display: flex; gap: 1px; background: var(--rule); border-bottom: 1px solid var(--rule); overflow-x: auto; }
+    .stat { flex: 1; min-width: 100px; background: #fff; padding: 10px 16px; display: flex; flex-direction: column; gap: 3px; }
     .stat-n { font-family: var(--font-head); font-size: 24px; font-weight: bold; line-height: 1; }
-    .stat-n.green { color: var(--green); }
-    .stat-n.grey  { color: var(--ink-light); }
+    .stat-n.green  { color: var(--green); }
+    .stat-n.grey   { color: var(--ink-light); }
+    .stat-n.blue   { color: #1a5f9a; }
+    .stat-n.purple { color: #7c3aed; }
+    .stat-n.amber  { color: #b45309; }
     .stat-l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); }
     .stat-sub { font-size: 11px; color: var(--ink-light); }
 
     /* View tabs */
-    .view-tabs {
-      background: #fff; border-bottom: 1px solid var(--rule);
-      padding: 0 24px; display: flex; gap: 0;
-    }
+    .view-tabs { background: #fff; border-bottom: 1px solid var(--rule); padding: 0 24px; display: flex; }
     .view-tab {
       padding: 11px 18px; font-size: 12px; font-weight: 600; letter-spacing: .04em;
       text-transform: uppercase; color: var(--ink-light); background: none;
@@ -108,13 +109,13 @@
       display: flex; align-items: center; gap: 5px; padding: 6px 12px;
       font-size: 12px; font-weight: 600; background: #fff; border: 1px solid var(--rule);
       border-radius: 4px; cursor: pointer; color: var(--ink-mid); white-space: nowrap;
+      font-family: var(--font-ui);
     }
     .export-btn:hover { border-color: var(--green); color: var(--green); }
     .controls-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
     .count-badge { font-size: 12px; color: var(--ink-light); white-space: nowrap; }
     .count-badge strong { color: var(--ink); }
 
-    /* Loading progress */
     .fetch-progress {
       background: #fff8e8; border-bottom: 1px solid #ffe082;
       padding: 7px 24px; font-size: 12px; color: #7a5800;
@@ -124,15 +125,13 @@
       width: 12px; height: 12px; border: 2px solid #ffe082; border-top-color: #f59e0b;
       border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
     .err {
       margin: 12px 24px; padding: 10px 14px; border-radius: 4px;
       background: #fff3f3; border: 1px solid #fca5a5; color: #b91c1c;
       font-size: 13px; display: flex; align-items: center; gap: 8px;
     }
 
-    /* Feed table */
+    /* Table */
     .layout { padding: 16px 24px; }
     .section-hd { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
     .section-hd h2 { font-family: var(--font-head); font-size: 17px; }
@@ -169,11 +168,7 @@
     .td-time { width: 100px; white-space: nowrap; }
     .td-actions { width: 80px; text-align: right; white-space: nowrap; padding-right: 10px; }
 
-    .sec-pill {
-      display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: .04em; padding: 2px 6px; border-radius: 10px;
-      background: #f0f0ee; color: var(--ink-mid); margin: 1px 2px 1px 0; line-height: 1.4;
-    }
+    .sec-pill { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 10px; background: #f0f0ee; color: var(--ink-mid); margin: 1px 2px 1px 0; line-height: 1.4; }
     .type-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 2px 7px; border-radius: 2px; display: inline-block; }
     .t-article { background: #e8f4ff; color: #1a5f9a; }
     .t-video   { background: #fff0e0; color: #b85c00; }
@@ -183,13 +178,6 @@
     .time-clock { font-size: 11px; color: var(--ink-light); }
     .intro-text { font-size: 12px; color: var(--ink-mid); line-height: 1.5; font-style: italic; margin-top: 8px; padding: 8px 10px; background: #f8f8f6; border-left: 3px solid var(--fi-red); border-radius: 0 4px 4px 0; }
     .enriching { font-size: 11px; color: #bbb; font-style: italic; }
-
-    .icon-btn {
-      width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule);
-      background: none; display: inline-flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--ink-light); transition: all .12s; vertical-align: middle;
-    }
-    .icon-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
     .edit-btn {
       display: inline-flex; align-items: center; gap: 3px;
       font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
@@ -198,26 +186,39 @@
       text-decoration: none; transition: all .12s; white-space: nowrap; vertical-align: middle;
     }
     .edit-btn:hover { background: #1a5f9a; color: #fff; border-color: #1a5f9a; }
+    .icon-btn {
+      width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule);
+      background: none; display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--ink-light); transition: all .12s; vertical-align: middle;
+    }
+    .icon-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
+
+    /* Load more */
+    .load-more-wrap { padding: 20px 24px; text-align: center; }
+    .load-more-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 28px; font-size: 13px; font-weight: 600;
+      background: #fff; border: 1px solid var(--rule); border-radius: 4px;
+      cursor: pointer; color: var(--ink-mid); transition: all .15s;
+      font-family: var(--font-ui);
+    }
+    .load-more-btn:hover { border-color: var(--fi-red); color: var(--fi-red); }
+    .load-more-btn:disabled { opacity: .45; cursor: default; }
+    .load-more-btn .lm-spinner {
+      width: 13px; height: 13px; border: 2px solid #ddd; border-top-color: var(--fi-red);
+      border-radius: 50%; animation: spin .7s linear infinite; display: none;
+    }
+    .load-more-btn.loading .lm-spinner { display: block; }
+    .load-more-btn.loading .lm-text { display: none; }
+    .load-more-meta { font-size: 11px; color: var(--ink-light); margin-top: 6px; }
 
     /* Detail panel */
-    .detail-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200;
-      display: flex; align-items: flex-start; justify-content: flex-end;
-    }
-    .detail-panel {
-      width: 440px; max-width: 100vw; height: 100vh; overflow-y: auto;
-      background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,.18);
-      display: flex; flex-direction: column;
-    }
+    .detail-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; display: flex; align-items: flex-start; justify-content: flex-end; }
+    .detail-panel { width: 440px; max-width: 100vw; height: 100vh; overflow-y: auto; background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,.18); display: flex; flex-direction: column; }
     .dp-header { padding: 14px 16px; border-bottom: 1px solid var(--rule); display: flex; align-items: flex-start; gap: 10px; background: #f8f8f6; }
-    .dp-nav-btn {
-      width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--rule);
-      background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: var(--ink-mid); flex-shrink: 0; transition: all .12s; align-self: center;
-    }
+    .dp-nav-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--rule); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-mid); flex-shrink: 0; transition: all .12s; align-self: center; }
     .dp-nav-btn:hover { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
-    .dp-nav-btn:disabled { opacity: .3; cursor: default; }
-    .dp-nav-btn:disabled:hover { background: #fff; color: var(--ink-mid); border-color: var(--rule); }
+    .dp-nav-btn:disabled { opacity: .3; cursor: default; pointer-events: none; }
     .dp-header-mid { flex: 1; display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
     .dp-img { width: 72px; height: 50px; object-fit: cover; border-radius: 3px; flex-shrink: 0; }
     .dp-img-none { width: 72px; height: 50px; background: #eee; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #bbb; }
@@ -236,17 +237,16 @@
     .dp-divider { height: 1px; background: var(--rule); margin: 10px 0; }
     .dp-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-light); background: #f8f8f6; padding: 5px 10px; margin: 8px -18px; border-top: 1px solid #f0f0ee; border-bottom: 1px solid #f0f0ee; }
     .dp-footer { padding: 12px 16px; border-top: 1px solid var(--rule); display: flex; gap: 8px; flex-wrap: wrap; }
-    .dp-btn { flex: 1; min-width: 80px; padding: 8px; font-size: 12px; font-weight: 600; border-radius: 4px; border: 1px solid var(--rule); background: #fff; cursor: pointer; color: var(--ink-mid); display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; text-decoration: none; }
+    .dp-btn { flex: 1; min-width: 80px; padding: 8px; font-size: 12px; font-weight: 600; border-radius: 4px; border: 1px solid var(--rule); background: #fff; cursor: pointer; color: var(--ink-mid); display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; text-decoration: none; font-family: var(--font-ui); }
     .dp-btn:hover { border-color: var(--fi-red); color: var(--fi-red); }
     .dp-btn.primary { background: var(--fi-red); color: #fff; border-color: var(--fi-red); }
     .dp-btn.primary:hover { background: #c01818; }
     .dp-btn.edit { background: #e8f4ff; color: #1a5f9a; border-color: #b3d4f0; }
     .dp-btn.edit:hover { background: #1a5f9a; color: #fff; border-color: #1a5f9a; }
 
-    /* ── Reporter Report ── */
+    /* Reporter Report */
     .report-layout { padding: 20px 24px; }
     .report-note { font-size: 12px; color: var(--ink-light); background: #fffbea; border: 1px solid #fde68a; border-radius: 4px; padding: 8px 12px; margin-bottom: 18px; }
-
     .rep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .rep-card { background: #fff; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
     .rep-card-hd { padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f0ee; }
@@ -268,7 +268,6 @@
     .rep-article-title a { color: var(--ink-mid); }
     .rep-article-title a:hover { color: var(--fi-red); }
     .rep-toggle { font-size: 11px; color: var(--fi-red); cursor: pointer; margin-top: 6px; display: inline-block; }
-
     .summary-tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; margin-bottom: 20px; }
     .summary-tbl { width: 100%; border-collapse: collapse; background: #fff; font-size: 12px; min-width: 500px; }
     .summary-tbl thead tr { background: #f2f2f0; border-bottom: 2px solid var(--rule); }
@@ -285,20 +284,15 @@
     .state-box { padding: 50px; text-align: center; color: var(--ink-light); background: #fff; }
     .state-box .icon { font-size: 28px; margin-bottom: 10px; }
 
-    /* Mobile — show key columns only, keep them readable */
     @media(max-width:860px) {
-      /* hide heavy columns */
       .col-section, .col-type, .col-coauthor { display: none; }
-      /* tighten layout */
       .controls { padding: 10px 16px; }
       .layout, .report-layout { padding: 12px 16px; }
       .back, .masthead { padding: 0 16px; }
-      .stats .stat:nth-child(n+4) { display: none; }
+      .stats .stat:nth-child(n+5) { display: none; }
       .rep-grid { grid-template-columns: 1fr; }
       table { min-width: 420px; }
-      .td-actions { width: 60px; }
-      .masthead .last-updated { display: none; }
-      .page-title { display: none; }
+      .masthead .last-updated, .page-title { display: none; }
     }
     @media(max-width:540px) {
       .col-time { display: none; }
@@ -330,19 +324,20 @@
 </a>
 
 <div class="stats">
-  <div class="stat"><span class="stat-n green" id="sToday">—</span><span class="stat-l">Published Today</span><span class="stat-sub" id="sTodaySub"></span></div>
-  <div class="stat"><span class="stat-n grey" id="sYest">—</span><span class="stat-l">Yesterday</span><span class="stat-sub" id="sYestSub"></span></div>
-  <div class="stat"><span class="stat-n" id="sShowing">—</span><span class="stat-l">Showing</span><span class="stat-sub" id="sShowingSub"></span></div>
-  <div class="stat"><span class="stat-n" id="sFetch">—</span><span class="stat-l">Last updated</span></div>
+  <div class="stat"><span class="stat-n green"  id="sToday">—</span><span class="stat-l">Published Today</span><span class="stat-sub" id="sTodaySub"></span></div>
+  <div class="stat"><span class="stat-n grey"   id="sYest">—</span> <span class="stat-l">Yesterday</span>      <span class="stat-sub" id="sYestSub"></span></div>
+  <div class="stat"><span class="stat-n blue"   id="sWeek">—</span> <span class="stat-l">This Week</span>      <span class="stat-sub" id="sWeekSub"></span></div>
+  <div class="stat"><span class="stat-n purple" id="sLastWeek">—</span><span class="stat-l">Last Week</span>   <span class="stat-sub" id="sLastWeekSub"></span></div>
+  <div class="stat"><span class="stat-n amber"  id="sMonth">—</span><span class="stat-l">This Month</span>    <span class="stat-sub" id="sMonthSub"></span></div>
+  <div class="stat"><span class="stat-n"        id="sShowing">—</span><span class="stat-l">Showing</span>     <span class="stat-sub" id="sShowingSub"></span></div>
+  <div class="stat"><span class="stat-n"        id="sFetch">—</span> <span class="stat-l">Last updated</span></div>
 </div>
 
-<!-- View tabs -->
 <div class="view-tabs">
-  <button class="view-tab active" id="tabFeed" onclick="switchView('feed')">📰 Article Feed</button>
-  <button class="view-tab" id="tabReport" onclick="switchView('report')">📊 Reporter Report</button>
+  <button class="view-tab active" id="tabFeed"   onclick="switchView('feed')">📰 Article Feed</button>
+  <button class="view-tab"        id="tabReport" onclick="switchView('report')">📊 Reporter Report</button>
 </div>
 
-<!-- Feed controls -->
 <div class="controls" id="feedControls">
   <div class="search-wrap">
     <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
@@ -371,9 +366,8 @@
 
 <div id="fetchProgress" style="display:none" class="fetch-progress">
   <div class="spinner"></div>
-  <span id="fetchProgressMsg">Enriching article details…</span>
+  <span id="fetchProgressMsg">Fetching articles…</span>
 </div>
-
 <div id="errWrap" style="display:none" class="err">
   <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10a1 1 0 110-2 1 1 0 010 2zm0-3V4"/></svg>
   <span id="errMsg"></span>
@@ -382,54 +376,54 @@
 <!-- FEED VIEW -->
 <div id="viewFeed">
   <div class="layout">
-    <div class="section-hd">
-      <h2>Latest Published</h2>
-      <span class="sub" id="secSub"></span>
-    </div>
+    <div class="section-hd"><h2>Latest Published</h2><span class="sub" id="secSub"></span></div>
     <div class="tbl-wrap">
       <div class="state-box" id="stateBox"><div class="icon">⟳</div><p>Fetching articles…</p></div>
       <table id="artTable" style="display:none">
-        <thead>
-          <tr>
-            <th></th>
-            <th data-col="story_id">ID <span class="sa">↕</span></th>
-            <th data-col="display_headline">Title <span class="sa">↕</span></th>
-            <th data-col="author" class="col-author">Main Author <span class="sa">↕</span></th>
-            <th data-col="coauthor" class="col-coauthor">Co-Author <span class="sa">↕</span></th>
-            <th data-col="section" class="col-section">Section <span class="sa">↕</span></th>
-            <th data-col="post_type" class="col-type">Type <span class="sa">↕</span></th>
-            <th data-col="created_at" class="col-time">Published <span class="sa">↕</span></th>
-            <th class="col-actions">Actions</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th></th>
+          <th data-col="story_id">ID <span class="sa">↕</span></th>
+          <th data-col="display_headline">Title <span class="sa">↕</span></th>
+          <th data-col="author"   class="col-author">Main Author <span class="sa">↕</span></th>
+          <th data-col="coauthor" class="col-coauthor">Co-Author <span class="sa">↕</span></th>
+          <th data-col="section"  class="col-section">Section <span class="sa">↕</span></th>
+          <th data-col="post_type" class="col-type">Type <span class="sa">↕</span></th>
+          <th data-col="created_at" class="col-time">Published <span class="sa">↕</span></th>
+          <th class="col-actions">Actions</th>
+        </tr></thead>
         <tbody id="artTbody"></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- Load more -->
+  <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+    <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">
+      <div class="lm-spinner"></div>
+      <span class="lm-text">Load 50 more articles</span>
+    </button>
+    <div class="load-more-meta" id="loadMoreMeta"></div>
   </div>
 </div>
 
 <!-- REPORT VIEW -->
 <div id="viewReport" style="display:none">
   <div class="report-layout">
-    <div class="report-note">
-      ⚠️ Based on the latest 50 articles from the API. Brand Connect articles are excluded. For full historical reports, a CMS data export is needed.
-    </div>
+    <div class="report-note">⚠️ Based on all fetched articles. Brand Connect excluded. Use "Load more" to fetch additional articles.</div>
     <div class="report-hd">Productivity Summary</div>
     <div class="summary-tbl-wrap">
       <table class="summary-tbl">
-        <thead>
-          <tr>
-            <th>#</th><th>Reporter</th><th>Total Articles</th>
-            <th>As Main Author</th><th>As Co-Author</th>
-            <th>Top Section</th><th>Article / Video / Photo</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>#</th><th>Reporter</th><th>Total</th>
+          <th>Main Author</th><th>Co-Author</th>
+          <th>Top Section</th><th>Article / Video / Photo</th>
+        </tr></thead>
         <tbody id="summaryTbody"></tbody>
       </table>
     </div>
     <div class="report-hd">By Reporter</div>
     <div class="rep-grid" id="repGrid"></div>
-    <button class="export-btn" id="exportReportBtn" style="margin-top:4px;">
+    <button class="export-btn" id="exportReportBtn">
       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9v2h9V9M6.5 1v7M4 6l2.5 2.5L9 6"/></svg>
       Export Report CSV
     </button>
@@ -440,7 +434,7 @@
 <div id="detailOverlay" class="detail-overlay" style="display:none" onclick="closeDetail(event)">
   <div class="detail-panel">
     <div class="dp-header">
-      <button class="dp-nav-btn" id="dpPrev" title="Previous article" onclick="navigateDetail(-1)">
+      <button class="dp-nav-btn" id="dpPrev" onclick="navigateDetail(-1)">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7,2 3,6 7,10"/></svg>
       </button>
       <div class="dp-header-mid">
@@ -450,7 +444,7 @@
           <div class="dp-nav-count" id="dpNavCount"></div>
         </div>
       </div>
-      <button class="dp-nav-btn" id="dpNext" title="Next article" onclick="navigateDetail(1)">
+      <button class="dp-nav-btn" id="dpNext" onclick="navigateDetail(1)">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5,2 9,6 5,10"/></svg>
       </button>
       <button class="dp-close" onclick="closeDetailBtn()">
@@ -466,43 +460,69 @@
 const LIST_API   = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
 const DETAIL_API = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article';
 const CMS_EDIT   = 'https://cms.forbesindia.com/wp-admin/post.php?post={ID}&action=edit';
+const PAGE_SIZE  = 50;
 
-let allArticles    = [];
-let knownIds       = new Set();
-let showBC         = false;
-let sortCol        = 'created_at';
-let sortDir        = -1;
-let currentView    = 'feed';
-let visibleArticles = [];   // current filtered+sorted list for panel navigation
-let detailIndex    = -1;    // index within visibleArticles
+let allArticles     = [];
+let knownIds        = new Set();
+let showBC          = false;
+let sortCol         = 'created_at';
+let sortDir         = -1;
+let currentView     = 'feed';
+let visibleArticles = [];
+let detailIndex     = -1;
+let currentOffset   = 0;   // next offset to load
+let hasMore         = true; // whether more pages may exist
 
-const $tbody    = document.getElementById('artTbody');
-const $table    = document.getElementById('artTable');
-const $state    = document.getElementById('stateBox');
-const $err      = document.getElementById('errWrap');
-const $errMsg   = document.getElementById('errMsg');
-const $pbar     = document.getElementById('pbar');
-const $search   = document.getElementById('searchInput');
-const $catF     = document.getElementById('catFilter');
-const $authorF  = document.getElementById('authorFilter');
-const $typeF    = document.getElementById('typeFilter');
-const $toggleBC = document.getElementById('toggleBC');
-const $exportBtn= document.getElementById('exportBtn');
-const $badge    = document.getElementById('countBadge');
-const $progress = document.getElementById('fetchProgress');
-const $progMsg  = document.getElementById('fetchProgressMsg');
-const $sub      = document.getElementById('secSub');
+const $tbody      = document.getElementById('artTbody');
+const $table      = document.getElementById('artTable');
+const $state      = document.getElementById('stateBox');
+const $err        = document.getElementById('errWrap');
+const $errMsg     = document.getElementById('errMsg');
+const $pbar       = document.getElementById('pbar');
+const $search     = document.getElementById('searchInput');
+const $catF       = document.getElementById('catFilter');
+const $authorF    = document.getElementById('authorFilter');
+const $typeF      = document.getElementById('typeFilter');
+const $toggleBC   = document.getElementById('toggleBC');
+const $exportBtn  = document.getElementById('exportBtn');
+const $badge      = document.getElementById('countBadge');
+const $progress   = document.getElementById('fetchProgress');
+const $progMsg    = document.getElementById('fetchProgressMsg');
+const $sub        = document.getElementById('secSub');
 const $refreshBtn = document.getElementById('refreshBtn');
+const $lmWrap     = document.getElementById('loadMoreWrap');
+const $lmBtn      = document.getElementById('loadMoreBtn');
+const $lmMeta     = document.getElementById('loadMoreMeta');
+
+// ── Date helpers ───────────────────────────────────────────
+function getWeekBounds(date) {
+  // Week: Mon 00:00 → Sun 23:59
+  const d   = new Date(date);
+  const day = d.getDay(); // 0=Sun,1=Mon...
+  const diffToMon = (day === 0) ? -6 : 1 - day;
+  const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diffToMon);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
+  return { start: mon.getTime(), end: sun.getTime() };
+}
+function getMonthBounds(date) {
+  const d = new Date(date);
+  const start = new Date(d.getFullYear(), d.getMonth(), 1).getTime();
+  const end   = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999).getTime();
+  return { start, end };
+}
+function fmtShortDate(ms) {
+  return new Date(ms).toLocaleDateString('en-IN', {day:'2-digit', month:'short'});
+}
 
 // ── View switcher ──────────────────────────────────────────
 function switchView(v) {
   currentView = v;
-  document.getElementById('viewFeed').style.display   = v === 'feed'   ? '' : 'none';
-  document.getElementById('viewReport').style.display = v === 'report' ? '' : 'none';
-  document.getElementById('feedControls').style.display = v === 'feed' ? '' : 'none';
-  document.getElementById('tabFeed').classList.toggle('active', v === 'feed');
-  document.getElementById('tabReport').classList.toggle('active', v === 'report');
-  if (v === 'report' && allArticles.length) renderReport();
+  document.getElementById('viewFeed').style.display   = v==='feed'   ? '' : 'none';
+  document.getElementById('viewReport').style.display = v==='report' ? '' : 'none';
+  document.getElementById('feedControls').style.display = v==='feed' ? '' : 'none';
+  document.getElementById('tabFeed').classList.toggle('active',   v==='feed');
+  document.getElementById('tabReport').classList.toggle('active', v==='report');
+  if (v==='report' && allArticles.length) renderReport();
 }
 window.switchView = switchView;
 
@@ -512,133 +532,142 @@ function safeStr(val) {
   if (typeof val === 'string') return val.trim();
   if (Array.isArray(val)) return val.map(safeStr).filter(Boolean).join(', ');
   if (typeof val === 'object')
-    return (val.english_name || val.display_name || val.name || val.author_name || val.nicename || '').trim();
+    return (val.english_name||val.display_name||val.name||val.author_name||val.nicename||'').trim();
   return String(val).trim();
 }
 function getAuthors(art) {
   const b = art.author_byline;
   if (!b) return [];
   if (Array.isArray(b)) return b.map(x => safeStr(x)).filter(Boolean);
-  const s = safeStr(b);
-  return s ? [s] : [];
+  const s = safeStr(b); return s ? [s] : [];
 }
-function getMainAuthor(art) {
-  const a = getAuthors(art); return a.length === 1 ? a[0] : '';
-}
-function getCoAuthors(art) {
-  const a = getAuthors(art); return a.length > 1 ? a : [];
-}
+function getMainAuthor(art) { const a=getAuthors(art); return a.length===1?a[0]:''; }
+function getCoAuthors(art)  { const a=getAuthors(art); return a.length>1?a:[]; }
 function getSection(art) {
-  if (art.section && Array.isArray(art.section) && art.section.length) return art.section[0];
-  if (art.subsection && art.subsection.length) return art.subsection[0].name || '';
-  if (art.categories && art.categories.length) {
-    const parent = art.categories.find(c => c.parent === 0 || c.parent === '0');
-    return (parent || art.categories[0]).name || '';
+  if (art.section&&Array.isArray(art.section)&&art.section.length) return art.section[0];
+  if (art.subsection&&art.subsection.length) return art.subsection[0].name||'';
+  if (art.categories&&art.categories.length) {
+    const p = art.categories.find(c=>c.parent===0||c.parent==='0');
+    return (p||art.categories[0]).name||'';
   }
   return '';
 }
 function getAllSections(art) {
-  const s = new Set();
-  if (art.section && Array.isArray(art.section)) art.section.forEach(x => x && s.add(x));
-  if (art.subsection) art.subsection.forEach(x => x.name && s.add(x.name));
+  const s=new Set();
+  if (art.section&&Array.isArray(art.section)) art.section.forEach(x=>x&&s.add(x));
+  if (art.subsection) art.subsection.forEach(x=>x.name&&s.add(x.name));
   return [...s];
 }
 function getUrl(art) {
-  const u = art.state_url || art.weburl || art.weburl_r || '';
+  const u=art.state_url||art.weburl||art.weburl_r||'';
   if (!u) return '';
-  return u.startsWith('http') ? u : 'https://www.forbesindia.com' + (u.startsWith('/') ? u : '/' + u);
+  return u.startsWith('http')?u:'https://www.forbesindia.com'+(u.startsWith('/')?u:'/'+u);
 }
 function isBrandConnect(art) { return getUrl(art).toLowerCase().includes('brand-connect'); }
-function getImage(art) { return art.images?.url || (Array.isArray(art.images) ? art.images[0]?.url : null) || ''; }
-function getCaption(art) { return art.images?.caption || (Array.isArray(art.images) ? art.images[0]?.caption : '') || ''; }
-function getIntro(art) { return art.intro || ''; }
-function getDisplayHeadline(art) { return art.display_headline || ''; }
-function getMetaTitle(art) { return art.meta_title || art.meta_titile || ''; }
-function getMetaDesc(art) { return art.meta_description || ''; }
-function charCount(str) { const n = (str||'').trim().length; return n ? `<span style="font-size:10px;color:#bbb;margin-left:4px">(${n})</span>` : ''; }
-function cmsEditUrl(sid) { return CMS_EDIT.replace('{ID}', sid); }
+function getImage(art)   { return art.images?.url||(Array.isArray(art.images)?art.images[0]?.url:null)||''; }
+function getCaption(art) { return art.images?.caption||(Array.isArray(art.images)?art.images[0]?.caption:'')||''; }
+function getIntro(art)   { return art.intro||''; }
+function getMetaTitle(art){ return art.meta_title||art.meta_titile||''; }
+function getMetaDesc(art) { return art.meta_description||''; }
+function charCount(str)  { const n=(str||'').trim().length; return n?`<span style="font-size:10px;color:#bbb;margin-left:4px">(${n})</span>`:''; }
+function cmsEditUrl(sid) { return CMS_EDIT.replace('{ID}',sid); }
 function getPubMs(art) {
-  if (art.created_at) { const d = new Date(art.created_at.replace(' ','T')); if (!isNaN(d)) return d.getTime(); }
-  if (art.date_timestamp) { const ts = parseInt(art.date_timestamp,10); if (!isNaN(ts)) return ts < 1e12 ? ts*1000 : ts; }
-  if (art.publish_date) { const d = new Date(art.publish_date); if (!isNaN(d)) return d.getTime(); }
+  if (art.created_at) { const d=new Date(art.created_at.replace(' ','T')); if(!isNaN(d)) return d.getTime(); }
+  if (art.date_timestamp) { const ts=parseInt(art.date_timestamp,10); if(!isNaN(ts)) return ts<1e12?ts*1000:ts; }
+  if (art.publish_date) { const d=new Date(art.publish_date); if(!isNaN(d)) return d.getTime(); }
   return null;
 }
 function formatTime(art) {
-  const ms = getPubMs(art);
-  if (!ms) return { date:'—', time:'', isToday:false, isYesterday:false, full:'—' };
-  const d = new Date(ms), now = new Date();
-  const tod  = new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
-  const yest = tod - 86400000;
-  const isToday     = ms >= tod;
-  const isYesterday = ms >= yest && ms < tod;
-  const date = isToday ? 'Today' : isYesterday ? 'Yesterday'
-    : d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'});
-  const time = d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  return { date, time, isToday, isYesterday, full: d.toLocaleString('en-IN') };
+  const ms=getPubMs(art);
+  if (!ms) return {date:'—',time:'',isToday:false,isYesterday:false,full:'—'};
+  const d=new Date(ms), now=new Date();
+  const tod=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+  const yest=tod-86400000;
+  const isToday=ms>=tod, isYesterday=ms>=yest&&ms<tod;
+  const date=isToday?'Today':isYesterday?'Yesterday':d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'});
+  const time=d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  return {date,time,isToday,isYesterday,full:d.toLocaleString('en-IN')};
 }
 function typeInfo(pt) {
-  const t = (pt||'').toLowerCase();
-  if (t.includes('video')) return { label:'Video', cls:'t-video' };
-  if (t.includes('photo')||t.includes('gallery')) return { label:'Photo', cls:'t-photo' };
-  return { label:'Article', cls:'t-article' };
+  const t=(pt||'').toLowerCase();
+  if (t.includes('video')) return {label:'Video',cls:'t-video'};
+  if (t.includes('photo')||t.includes('gallery')) return {label:'Photo',cls:'t-photo'};
+  return {label:'Article',cls:'t-article'};
 }
 
 // ── Fetch ──────────────────────────────────────────────────
-async function fetchList() {
-  const res = await fetch(`${LIST_API}?count=50`);
-  if (!res.ok) throw new Error(`List API: HTTP ${res.status}`);
+async function fetchPage(offset) {
+  const url = offset > 0
+    ? `${LIST_API}?count=${PAGE_SIZE}&offset=${offset}`
+    : `${LIST_API}?count=${PAGE_SIZE}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`API: HTTP ${res.status}`);
   const json = await res.json();
-  return Array.isArray(json) ? json : Array.isArray(json.data) ? json.data : Array.isArray(json.articles) ? json.articles : [];
+  return Array.isArray(json)?json:Array.isArray(json.data)?json.data:Array.isArray(json.articles)?json.articles:[];
 }
 async function fetchDetail(article_id) {
   try {
-    const res = await fetch(`${DETAIL_API}?article_id=${article_id}`);
+    const res=await fetch(`${DETAIL_API}?article_id=${article_id}`);
     if (!res.ok) return null;
-    const json = await res.json();
-    return json.data || json;
+    const json=await res.json();
+    return json.data||json;
   } catch { return null; }
 }
-async function enrichArticles(list) {
-  const details = await Promise.all(list.map(a => fetchDetail(a.story_id)));
-  return list.map((a,i) => { const d = details[i]; return d ? {...a,...d,_enriched:true} : a; });
+async function enrichBatch(list) {
+  const details=await Promise.all(list.map(a=>fetchDetail(a.story_id)));
+  return list.map((a,i)=>{const d=details[i]; return d?{...a,...d,_enriched:true}:a;});
 }
 
 // ── Filters ────────────────────────────────────────────────
 function populateFilters() {
-  const sections = new Set(), authors = new Set();
-  allArticles.filter(a => !isBrandConnect(a)).forEach(a => {
-    getAllSections(a).forEach(s => s && sections.add(s));
-    getAuthors(a).forEach(x => x.trim() && authors.add(x.trim()));
+  const sections=new Set(), authors=new Set();
+  allArticles.filter(a=>!isBrandConnect(a)).forEach(a=>{
+    getAllSections(a).forEach(s=>s&&sections.add(s));
+    getAuthors(a).forEach(x=>x.trim()&&authors.add(x.trim()));
   });
-  const sc = $catF.value;
-  $catF.innerHTML = '<option value="">All sections</option>';
-  [...sections].sort().forEach(s => { const o = document.createElement('option'); o.value=s; o.textContent=s; if(s===sc)o.selected=true; $catF.appendChild(o); });
-  const sa = $authorF.value;
-  $authorF.innerHTML = '<option value="">All authors</option>';
-  [...authors].sort().forEach(a => { const o = document.createElement('option'); o.value=a; o.textContent=a; if(a===sa)o.selected=true; $authorF.appendChild(o); });
+  const sc=$catF.value;
+  $catF.innerHTML='<option value="">All sections</option>';
+  [...sections].sort().forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;if(s===sc)o.selected=true;$catF.appendChild(o);});
+  const sa=$authorF.value;
+  $authorF.innerHTML='<option value="">All authors</option>';
+  [...authors].sort().forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;if(a===sa)o.selected=true;$authorF.appendChild(o);});
 }
 
-// ── Stats — always exclude Brand Connect ────────────────────
-function updateStats(visible) {
-  const now  = new Date();
-  const tod  = new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
-  const yest = tod - 86400000;
-  // Exclude brand connect from all counts
-  const nonBC = allArticles.filter(a => !isBrandConnect(a));
-  const todayN = nonBC.filter(a => { const ms=getPubMs(a); return ms&&ms>=tod; }).length;
-  const yestN  = nonBC.filter(a => { const ms=getPubMs(a); return ms&&ms>=yest&&ms<tod; }).length;
+// ── Stats ──────────────────────────────────────────────────
+function updateStats(visibleCount) {
+  const now   = new Date();
+  const tod   = new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+  const yest  = tod - 86400000;
+  const week  = getWeekBounds(now);
+  const lw    = getWeekBounds(new Date(week.start - 86400000)); // prev Mon
+  const month = getMonthBounds(now);
+
+  const nonBC = allArticles.filter(a=>!isBrandConnect(a));
+
+  const todayN    = nonBC.filter(a=>{const ms=getPubMs(a);return ms&&ms>=tod;}).length;
+  const yestN     = nonBC.filter(a=>{const ms=getPubMs(a);return ms&&ms>=yest&&ms<tod;}).length;
+  const weekN     = nonBC.filter(a=>{const ms=getPubMs(a);return ms&&ms>=week.start&&ms<=week.end;}).length;
+  const lastWeekN = nonBC.filter(a=>{const ms=getPubMs(a);return ms&&ms>=lw.start&&ms<=lw.end;}).length;
+  const monthN    = nonBC.filter(a=>{const ms=getPubMs(a);return ms&&ms>=month.start&&ms<=month.end;}).length;
+
   document.getElementById('sToday').textContent    = todayN;
   document.getElementById('sTodaySub').textContent = `as of ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
   document.getElementById('sYest').textContent     = yestN;
   document.getElementById('sYestSub').textContent  = new Date(tod-1).toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
-  document.getElementById('sShowing').textContent  = visible.length;
-  document.getElementById('sShowingSub').textContent = `of ${nonBC.length} editorial`;
+  document.getElementById('sWeek').textContent     = weekN;
+  document.getElementById('sWeekSub').textContent  = `${fmtShortDate(week.start)} – ${fmtShortDate(week.end)}`;
+  document.getElementById('sLastWeek').textContent = lastWeekN;
+  document.getElementById('sLastWeekSub').textContent = `${fmtShortDate(lw.start)} – ${fmtShortDate(lw.end)}`;
+  document.getElementById('sMonth').textContent    = monthN;
+  document.getElementById('sMonthSub').textContent = now.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+  document.getElementById('sShowing').textContent  = visibleCount;
+  document.getElementById('sShowingSub').textContent=`of ${nonBC.length} editorial`;
   document.getElementById('sFetch').textContent    = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  $badge.innerHTML = `<strong>${visible.length}</strong> of ${nonBC.length}`;
+  $badge.innerHTML=`<strong>${visibleCount}</strong> of ${nonBC.length}`;
 }
 
-// ── Sort ────────────────────────────────────────────────────
-function getSortVal(a, col) {
+// ── Sort ───────────────────────────────────────────────────
+function getSortVal(a,col) {
   if (col==='story_id')         return Number(a.story_id)||0;
   if (col==='display_headline') return (a.display_headline||'').toLowerCase();
   if (col==='author')           return getMainAuthor(a).toLowerCase();
@@ -649,62 +678,50 @@ function getSortVal(a, col) {
   return '';
 }
 function updateSortHeaders() {
-  document.querySelectorAll('th[data-col]').forEach(th => {
-    th.classList.toggle('sorted', th.dataset.col===sortCol);
-    const sa = th.querySelector('.sa');
-    if (sa) sa.textContent = th.dataset.col===sortCol ? (sortDir===-1?'↓':'↑') : '↕';
+  document.querySelectorAll('th[data-col]').forEach(th=>{
+    th.classList.toggle('sorted',th.dataset.col===sortCol);
+    const sa=th.querySelector('.sa');
+    if (sa) sa.textContent=th.dataset.col===sortCol?(sortDir===-1?'↓':'↑'):'↕';
   });
 }
 
 // ── Render feed ────────────────────────────────────────────
 function getFiltered() {
-  const q      = $search.value.trim().toLowerCase();
-  const sec    = $catF.value;
-  const author = $authorF.value;
-  const type   = $typeF.value.toLowerCase();
-
-  return allArticles.filter(a => {
-    if (!showBC && isBrandConnect(a)) return false;
-    const title  = (a.display_headline||a.headline||'').toLowerCase();
-    const authors = getAuthors(a).join(' ').toLowerCase();
-    const secs   = getAllSections(a);
-    const pt     = (a.post_type||'').toLowerCase();
-    if (q && !title.includes(q) && !authors.includes(q)) return false;
-    if (sec && !secs.includes(sec)) return false;
-    if (author && !getAuthors(a).map(x=>x.toLowerCase()).includes(author.toLowerCase())) return false;
-    if (type && !pt.includes(type)) return false;
+  const q=$search.value.trim().toLowerCase(), sec=$catF.value,
+        author=$authorF.value, type=$typeF.value.toLowerCase();
+  return allArticles.filter(a=>{
+    if (!showBC&&isBrandConnect(a)) return false;
+    const title=(a.display_headline||a.headline||'').toLowerCase();
+    const aus=getAuthors(a).join(' ').toLowerCase();
+    const secs=getAllSections(a), pt=(a.post_type||'').toLowerCase();
+    if (q&&!title.includes(q)&&!aus.includes(q)) return false;
+    if (sec&&!secs.includes(sec)) return false;
+    if (author&&!getAuthors(a).map(x=>x.toLowerCase()).includes(author.toLowerCase())) return false;
+    if (type&&!pt.includes(type)) return false;
     return true;
-  }).sort((a,b) => {
-    const av=getSortVal(a,sortCol), bv=getSortVal(b,sortCol);
-    if (av<bv) return -sortDir; if (av>bv) return sortDir; return 0;
+  }).sort((a,b)=>{
+    const av=getSortVal(a,sortCol),bv=getSortVal(b,sortCol);
+    if(av<bv)return -sortDir; if(av>bv)return sortDir; return 0;
   });
 }
 
 function renderRows() {
-  const visible = getFiltered();
-  visibleArticles = visible;
-
+  const visible=getFiltered();
+  visibleArticles=visible;
   if (!visible.length) {
     $table.style.display='none'; $state.style.display='block';
     $state.innerHTML='<div class="icon">🔍</div><p>No articles match.</p>';
   } else {
     $state.style.display='none'; $table.style.display='table';
-    $tbody.innerHTML = visible.map((a,idx) => {
-      const isNew   = !knownIds.has(String(a.story_id)) && knownIds.size>0;
-      const title   = a.display_headline||a.headline||'(No title)';
-      const url     = getUrl(a);
-      const main    = getMainAuthor(a);
-      const coauths = getCoAuthors(a).join(', ');
-      const sec     = getSection(a);
-      const isBC    = isBrandConnect(a);
-      const img     = getImage(a);
-      const {date,time,isToday} = formatTime(a);
-      const ti      = typeInfo(a.post_type);
-      const escUrl  = url.replace(/"/g,'&quot;');
-      const sid     = String(a.story_id||'');
-      const editUrl = cmsEditUrl(sid);
+    $tbody.innerHTML=visible.map((a,idx)=>{
+      const isNew=!knownIds.has(String(a.story_id))&&knownIds.size>0;
+      const title=a.display_headline||a.headline||'(No title)';
+      const url=getUrl(a), main=getMainAuthor(a), coauths=getCoAuthors(a).join(', ');
+      const sec=getSection(a), isBC=isBrandConnect(a), img=getImage(a);
+      const {date,time,isToday}=formatTime(a), ti=typeInfo(a.post_type);
+      const escUrl=url.replace(/"/g,'&quot;'), sid=String(a.story_id||'');
       return `<tr${isNew?' class="new-row"':''} onclick="openDetail('${sid}')" data-idx="${idx}">
-        <td class="td-thumb">${img?`<img src="${img}" alt="" loading="lazy" onerror="this.style.display='none'">` : '<div class="no-img">📰</div>'}</td>
+        <td class="td-thumb">${img?`<img src="${img}" alt="" loading="lazy" onerror="this.style.display='none'">`:'<div class="no-img">📰</div>'}</td>
         <td class="td-id">${a.story_id||'—'}</td>
         <td class="td-title">
           <a class="title-link" href="${escUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${title}</a>${charCount(title)}
@@ -720,7 +737,7 @@ function renderRows() {
           ${time?`<div class="time-clock">${time}</div>`:''}
         </td>
         <td class="td-actions col-actions" onclick="event.stopPropagation()">
-          <a class="edit-btn" href="${editUrl}" target="_blank" rel="noopener" title="Edit in CMS">
+          <a class="edit-btn" href="${cmsEditUrl(sid)}" target="_blank" rel="noopener">
             <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l2 2-6 6H2V8L8 2z"/></svg>
             Edit
           </a>
@@ -730,45 +747,98 @@ function renderRows() {
         </td>
       </tr>`;
     }).join('');
-    visible.forEach(a => knownIds.add(String(a.story_id)));
+    visible.forEach(a=>knownIds.add(String(a.story_id)));
   }
-  updateStats(visible.filter(a => !isBrandConnect(a)));
+  updateStats(visible.filter(a=>!isBrandConnect(a)).length);
+  updateLoadMoreBtn();
 }
+
+// ── Load more button ───────────────────────────────────────
+function updateLoadMoreBtn() {
+  if (hasMore && allArticles.length >= PAGE_SIZE) {
+    $lmWrap.style.display='block';
+    $lmBtn.disabled=false;
+    $lmBtn.querySelector('.lm-text').textContent='Load 50 more articles';
+    $lmMeta.textContent=`${allArticles.length} articles loaded so far`;
+  } else {
+    $lmWrap.style.display = allArticles.length < PAGE_SIZE ? 'none' : 'block';
+    $lmBtn.disabled=true;
+    $lmBtn.querySelector('.lm-text').textContent='No more articles';
+    $lmMeta.textContent=`All ${allArticles.length} articles loaded`;
+  }
+}
+
+async function loadMore() {
+  $lmBtn.disabled=true;
+  $lmBtn.classList.add('loading');
+  try {
+    const batch=await fetchPage(currentOffset);
+    if (!batch.length) {
+      hasMore=false; updateLoadMoreBtn(); return;
+    }
+    // Deduplicate
+    const existingIds=new Set(allArticles.map(a=>String(a.story_id)));
+    const newItems=batch.filter(a=>!existingIds.has(String(a.story_id)));
+    if (!newItems.length) { hasMore=false; updateLoadMoreBtn(); return; }
+
+    // Show partial immediately
+    allArticles=[...allArticles,...newItems];
+    populateFilters(); renderRows();
+
+    // Then enrich in background
+    $progMsg.textContent=`Fetching details for ${newItems.length} new articles…`;
+    $progress.style.display='flex';
+    const enriched=await enrichBatch(newItems);
+    // Replace the unenriched batch with enriched
+    const enrichedMap=new Map(enriched.map(a=>[String(a.story_id),a]));
+    allArticles=allArticles.map(a=>enrichedMap.get(String(a.story_id))||a);
+    $progress.style.display='none';
+
+    currentOffset+=PAGE_SIZE;
+    // If batch was smaller than page size, no more pages
+    if (batch.length < PAGE_SIZE) hasMore=false;
+
+    populateFilters(); renderRows();
+    const ts=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    $sub.textContent=`${allArticles.length} articles loaded · updated ${ts}`;
+  } catch(e) {
+    console.error(e);
+    $err.style.display='flex'; $errMsg.textContent=`Load more failed: ${e.message}`;
+  } finally {
+    $lmBtn.classList.remove('loading');
+    updateLoadMoreBtn();
+  }
+}
+window.loadMore=loadMore;
 
 // ── Reporter Report ────────────────────────────────────────
 function buildReporterData() {
-  const map = {};
-  allArticles.forEach(a => {
-    if (isBrandConnect(a)) return;
-    const authors = getAuthors(a);
-    if (!authors.length) return;
-    const sec  = getSection(a);
-    const ti   = typeInfo(a.post_type).label;
-    const url  = getUrl(a);
-    const title = a.display_headline||a.headline||'(No title)';
-    const sid  = a.story_id;
-    authors.forEach((name) => {
-      if (!name) return;
-      if (!map[name]) map[name] = { name, total:0, asMain:0, asCoAuthor:0, sections:{}, types:{Article:0,Video:0,Photo:0}, articles:[] };
-      const r = map[name];
-      r.total++;
-      const isMain = authors.length === 1;
-      if (isMain) r.asMain++; else r.asCoAuthor++;
-      r.sections[sec] = (r.sections[sec]||0) + 1;
-      r.types[ti] = (r.types[ti]||0) + 1;
-      r.articles.push({sid, title, url, sec, ti, isMain});
+  const map={};
+  allArticles.filter(a=>!isBrandConnect(a)).forEach(a=>{
+    const authors=getAuthors(a); if(!authors.length) return;
+    const sec=getSection(a), ti=typeInfo(a.post_type).label;
+    const url=getUrl(a), title=a.display_headline||a.headline||'(No title)', sid=a.story_id;
+    const isMain=authors.length===1;
+    authors.forEach(name=>{
+      if(!name)return;
+      if(!map[name])map[name]={name,total:0,asMain:0,asCoAuthor:0,sections:{},types:{Article:0,Video:0,Photo:0},articles:[]};
+      const r=map[name]; r.total++;
+      if(isMain)r.asMain++;else r.asCoAuthor++;
+      r.sections[sec]=(r.sections[sec]||0)+1;
+      r.types[ti]=(r.types[ti]||0)+1;
+      r.articles.push({sid,title,url,sec,ti,isMain});
     });
   });
-  return Object.values(map).sort((a,b) => b.total - a.total);
+  return Object.values(map).sort((a,b)=>b.total-a.total);
 }
 
 function renderReport() {
-  const reporters = buildReporterData();
-  document.getElementById('summaryTbody').innerHTML = reporters.map((r, i) => {
-    const topSec = Object.entries(r.sections).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
-    const rankCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+  const reporters=buildReporterData();
+  document.getElementById('summaryTbody').innerHTML=reporters.map((r,i)=>{
+    const topSec=Object.entries(r.sections).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+    const rc=i===0?'gold':i===1?'silver':i===2?'bronze':'';
     return `<tr>
-      <td><span class="rank-badge ${rankCls}">${i+1}</span></td>
+      <td><span class="rank-badge ${rc}">${i+1}</span></td>
       <td style="font-weight:600">${r.name}</td>
       <td style="font-weight:700;color:var(--fi-red)">${r.total}</td>
       <td>${r.asMain}</td><td>${r.asCoAuthor}</td>
@@ -776,171 +846,121 @@ function renderReport() {
       <td style="font-size:11px;color:var(--ink-mid)">${r.types.Article||0} / ${r.types.Video||0} / ${r.types.Photo||0}</td>
     </tr>`;
   }).join('');
-  document.getElementById('repGrid').innerHTML = reporters.map(r => {
-    const topSecs  = Object.entries(r.sections).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    const maxSec   = topSecs[0]?.[1]||1;
-    const initials = r.name.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
-    const cardId   = 'card-' + r.name.replace(/\s+/g,'-');
-    const artList  = r.articles.slice(0,5).map(a =>
-      `<div class="rep-article-item">
-        <span class="rep-article-id">${a.sid}</span>
-        <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
-        ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
-      </div>`
-    ).join('');
-    const hasMore  = r.articles.length > 5;
+  document.getElementById('repGrid').innerHTML=reporters.map(r=>{
+    const topSecs=Object.entries(r.sections).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const maxSec=topSecs[0]?.[1]||1;
+    const initials=r.name.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+    const cardId='card-'+r.name.replace(/\s+/g,'-');
+    const artItems=arr=>arr.map(a=>`<div class="rep-article-item">
+      <span class="rep-article-id">${a.sid}</span>
+      <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
+      ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
+    </div>`).join('');
     return `<div class="rep-card">
       <div class="rep-card-hd">
         <div class="rep-avatar">${initials}</div>
-        <div>
-          <div class="rep-name">${r.name}</div>
-          <div style="font-size:11px;color:var(--ink-light);">${r.asMain} main · ${r.asCoAuthor} co-author</div>
-        </div>
-        <div style="text-align:right;margin-left:auto">
-          <div class="rep-total">${r.total}</div>
-          <div class="rep-total-label">articles</div>
-        </div>
+        <div><div class="rep-name">${r.name}</div><div style="font-size:11px;color:var(--ink-light)">${r.asMain} main · ${r.asCoAuthor} co-author</div></div>
+        <div style="text-align:right;margin-left:auto"><div class="rep-total">${r.total}</div><div class="rep-total-label">articles</div></div>
       </div>
       <div class="rep-card-body">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:8px;">By Section</div>
-        ${topSecs.map(([sec,n]) => `
-          <div class="rep-cat-row">
-            <span class="rep-cat-label" title="${sec}">${sec||'(none)'}</span>
-            <div class="rep-bar-wrap"><div class="rep-bar" style="width:${Math.round(n/maxSec*100)}%"></div></div>
-            <span class="rep-cat-n">${n}</span>
-          </div>`).join('')}
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin:10px 0 6px;">
-          Type: <span style="color:var(--ink-mid);font-weight:500;text-transform:none;letter-spacing:0">
-            ${r.types.Article||0} Article · ${r.types.Video||0} Video · ${r.types.Photo||0} Photo
-          </span>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:8px">By Section</div>
+        ${topSecs.map(([sec,n])=>`<div class="rep-cat-row">
+          <span class="rep-cat-label" title="${sec}">${sec||'(none)'}</span>
+          <div class="rep-bar-wrap"><div class="rep-bar" style="width:${Math.round(n/maxSec*100)}%"></div></div>
+          <span class="rep-cat-n">${n}</span>
+        </div>`).join('')}
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin:10px 0 6px">
+          Type: <span style="color:var(--ink-mid);font-weight:500;text-transform:none;letter-spacing:0">${r.types.Article||0} Article · ${r.types.Video||0} Video · ${r.types.Photo||0} Photo</span>
         </div>
         <div class="rep-articles">
-          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:5px;">Recent Articles</div>
-          <div id="${cardId}-list">${artList}</div>
-          ${hasMore?`<span class="rep-toggle" onclick="toggleArticles('${cardId}',${JSON.stringify(r.articles).replace(/'/g,"&#39;")})">+ Show all ${r.articles.length}</span>`:''}
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:5px">Recent Articles</div>
+          <div id="${cardId}-list">${artItems(r.articles.slice(0,5))}</div>
+          ${r.articles.length>5?`<span class="rep-toggle" onclick="toggleArticles('${cardId}',${JSON.stringify(r.articles).replace(/'/g,'&#39;')})">+ Show all ${r.articles.length}</span>`:''}
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-window.toggleArticles = function(cardId, articles) {
-  const el  = document.getElementById(cardId+'-list');
-  const btn = el.nextElementSibling;
-  const showing = el.dataset.expanded === '1';
-  const renderItems = (arr) => arr.map(a =>
-    `<div class="rep-article-item">
-      <span class="rep-article-id">${a.sid}</span>
-      <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
-      ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
-    </div>`
-  ).join('');
-  if (!showing) {
-    el.innerHTML = renderItems(articles);
-    el.dataset.expanded = '1';
-    if (btn) btn.textContent = '− Show less';
-  } else {
-    el.innerHTML = renderItems(articles.slice(0,5));
-    el.dataset.expanded = '0';
-    if (btn) btn.textContent = `+ Show all ${articles.length}`;
-  }
+window.toggleArticles=function(cardId,articles){
+  const el=document.getElementById(cardId+'-list'), btn=el.nextElementSibling;
+  const exp=el.dataset.expanded==='1';
+  const items=arr=>arr.map(a=>`<div class="rep-article-item">
+    <span class="rep-article-id">${a.sid}</span>
+    <span class="rep-article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></span>
+    ${!a.isMain?'<span style="font-size:9px;color:#bbb;flex-shrink:0">co</span>':''}
+  </div>`).join('');
+  if(!exp){el.innerHTML=items(articles);el.dataset.expanded='1';if(btn)btn.textContent='− Show less';}
+  else{el.innerHTML=items(articles.slice(0,5));el.dataset.expanded='0';if(btn)btn.textContent=`+ Show all ${articles.length}`;}
 };
 
-// ── Export feed CSV ────────────────────────────────────────
-function exportCSV() {
-  const rows = getFiltered();
+// ── Export ─────────────────────────────────────────────────
+function exportCSV(){
+  const rows=getFiltered();
   const esc=v=>`"${String(v||'').replace(/"/g,'""')}"`;
   const hdrs=['Story ID','Title','Display Headline','Main Author','Co-Author(s)','Section','Type','Published','Caption','Meta Title','Meta Description','URL','Image URL'];
   const lines=[hdrs.map(esc).join(','),...rows.map(a=>{
     const {full}=formatTime(a);
-    return [a.story_id,a.display_headline||a.headline,getDisplayHeadline(a),getMainAuthor(a),
+    return [a.story_id,a.display_headline||a.headline,a.display_headline||'',getMainAuthor(a),
       getCoAuthors(a).join('; '),getSection(a),typeInfo(a.post_type).label,full,
       getCaption(a),getMetaTitle(a),getMetaDesc(a),getUrl(a),getImage(a)].map(esc).join(',');
   })];
-  download(lines.join('\n'),`forbesindia-feed-${new Date().toISOString().slice(0,10)}.csv`);
+  dl(lines.join('\n'),`forbesindia-feed-${new Date().toISOString().slice(0,10)}.csv`);
 }
-
-function exportReportCSV() {
-  const reporters = buildReporterData();
+function exportReportCSV(){
+  const reporters=buildReporterData();
   const esc=v=>`"${String(v||'').replace(/"/g,'""')}"`;
-  const hdrs=['Rank','Reporter','Total Articles','As Main Author','As Co-Author','Article','Video','Photo','Top Section'];
+  const hdrs=['Rank','Reporter','Total','Main Author','Co-Author','Article','Video','Photo','Top Section'];
   const lines=[hdrs.map(esc).join(','),...reporters.map((r,i)=>{
-    const topSec=Object.entries(r.sections).sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
-    return [i+1,r.name,r.total,r.asMain,r.asCoAuthor,r.types.Article||0,r.types.Video||0,r.types.Photo||0,topSec].map(esc).join(',');
+    const top=Object.entries(r.sections).sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
+    return [i+1,r.name,r.total,r.asMain,r.asCoAuthor,r.types.Article||0,r.types.Video||0,r.types.Photo||0,top].map(esc).join(',');
   })];
-  download(lines.join('\n'),`forbesindia-reporter-report-${new Date().toISOString().slice(0,10)}.csv`);
+  dl(lines.join('\n'),`forbesindia-reporter-report-${new Date().toISOString().slice(0,10)}.csv`);
 }
-
-function download(csv, filename) {
-  const blob=new Blob([csv],{type:'text/csv'});
-  const link=document.createElement('a');
-  link.href=URL.createObjectURL(blob); link.download=filename; link.click();
-}
+function dl(csv,name){const b=new Blob([csv],{type:'text/csv'});const l=document.createElement('a');l.href=URL.createObjectURL(b);l.download=name;l.click();}
 
 // ── Detail panel ───────────────────────────────────────────
-function renderDetailPanel(art, idx) {
-  const url     = getUrl(art);
-  const img     = getImage(art);
-  const main    = getMainAuthor(art);
-  const coauths = getCoAuthors(art);
-  const secs    = getAllSections(art);
-  const ti      = typeInfo(art.post_type);
-  const {full}  = formatTime(art);
-  const isBC    = isBrandConnect(art);
-  const intro   = getIntro(art);
-  const caption = getCaption(art);
-  const title   = art.display_headline||art.headline||'(No title)';
-  const dh      = getDisplayHeadline(art);
-  const mt      = getMetaTitle(art);
-  const md      = getMetaDesc(art);
-  const sid     = String(art.story_id||'');
+function renderDetailPanel(art,idx){
+  const url=getUrl(art),img=getImage(art),main=getMainAuthor(art),
+        coauths=getCoAuthors(art),secs=getAllSections(art),
+        ti=typeInfo(art.post_type),{full}=formatTime(art),
+        isBC=isBrandConnect(art),intro=getIntro(art),
+        caption=getCaption(art),title=art.display_headline||art.headline||'(No title)',
+        mt=getMetaTitle(art),md=getMetaDesc(art),sid=String(art.story_id||'');
 
-  // header image + title
-  document.getElementById('dpImg').innerHTML = img
-    ? `<img class="dp-img" src="${img}" alt="">` : '<div class="dp-img-none">📰</div>';
-  document.getElementById('dpTitle').innerHTML = `${title}${charCount(title)}`;
-  document.getElementById('dpNavCount').textContent = `${idx+1} of ${visibleArticles.length}`;
+  document.getElementById('dpImg').innerHTML=img?`<img class="dp-img" src="${img}" alt="">`:'<div class="dp-img-none">📰</div>';
+  document.getElementById('dpTitle').innerHTML=`${title}${charCount(title)}`;
+  document.getElementById('dpNavCount').textContent=`${idx+1} of ${visibleArticles.length}`;
+  document.getElementById('dpPrev').disabled=idx<=0;
+  document.getElementById('dpNext').disabled=idx>=visibleArticles.length-1;
 
-  // nav buttons
-  document.getElementById('dpPrev').disabled = idx <= 0;
-  document.getElementById('dpNext').disabled = idx >= visibleArticles.length - 1;
+  const row=(label,val,cls='')=>`<div class="dp-row"><span class="dp-label">${label}</span><span class="dp-val ${cls}">${val||'—'}</span></div>`;
+  const escUrl=url.replace(/'/g,"\\'");
 
-  // body rows helper
-  const row = (label, val, cls='') =>
-    `<div class="dp-row"><span class="dp-label">${label}</span><span class="dp-val ${cls}">${val||'—'}</span></div>`;
-
-  const escUrl = url.replace(/'/g,"\\'");
-  const editUrl = cmsEditUrl(sid);
-
-  document.getElementById('dpBody').innerHTML = `
+  document.getElementById('dpBody').innerHTML=`
     <div class="dp-section-title">Article Info</div>
-    ${row('Story ID', sid)}
-    ${row('Main Author', main||'—')}
-    ${row('Co-Author', coauths.length ? coauths.join(', ') : '—')}
-    ${row('Section', secs.join(', ')||'—')}
-    ${row('Type', `<span class="type-tag ${ti.cls}">${ti.label}</span>${isBC?' <span class="bc-tag">Brand Connect</span>':''}`)}
-    ${row('Published', full||'—')}
-    ${row('URL', url?`<a href="${url}" target="_blank" rel="noopener">${url}</a>`:'—')}
-
+    ${row('Story ID',sid)}
+    ${row('Main Author',main||'—')}
+    ${row('Co-Author',coauths.length?coauths.join(', '):'—')}
+    ${row('Section',secs.join(', ')||'—')}
+    ${row('Type',`<span class="type-tag ${ti.cls}">${ti.label}</span>${isBC?' <span class="bc-tag">Brand Connect</span>':''}`)}
+    ${row('Published',full||'—')}
+    ${row('URL',url?`<a href="${url}" target="_blank" rel="noopener">${url}</a>`:'—')}
     <div class="dp-section-title">SEO & Meta</div>
-    ${row('Display Headline', dh ? `${dh}${charCount(dh)}` : '—')}
-    ${row('Meta Title', mt ? `${mt}${charCount(mt)}` : '—', 'meta-val')}
-    ${row('Meta Desc', md ? `${md}${charCount(md)}` : '—', 'meta-val')}
-    ${caption ? row('Caption', caption) : ''}
-
+    ${row('Display Headline',art.display_headline?`${art.display_headline}${charCount(art.display_headline)}`:'—')}
+    ${row('Meta Title',mt?`${mt}${charCount(mt)}`:'—','meta-val')}
+    ${row('Meta Desc',md?`${md}${charCount(md)}`:'—','meta-val')}
+    ${caption?row('Caption',caption):''}
     <div class="dp-section-title">Image</div>
-    ${row('Image URL', img?`<a href="${img}" target="_blank" rel="noopener">${img.split('/').pop()}</a>`:'—')}
-    ${intro ? `
-    <div class="dp-section-title">Intro</div>
-    <div class="intro-text">${intro}</div>` : ''}
-  `;
+    ${row('Image URL',img?`<a href="${img}" target="_blank" rel="noopener">${img.split('/').pop()}</a>`:'—')}
+    ${intro?`<div class="dp-section-title">Intro</div><div class="intro-text">${intro}</div>`:''}`;
 
   document.getElementById('dpFooter').innerHTML=`
     <button class="dp-btn" onclick="copyUrl('${escUrl}',this)">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M1 8V1h7v3"/></svg>
       Copy URL
     </button>
-    <a href="${editUrl}" target="_blank" rel="noopener" class="dp-btn edit">
+    <a href="${cmsEditUrl(sid)}" target="_blank" rel="noopener" class="dp-btn edit">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l2 2-6 6H2V8L8 2z"/></svg>
       Edit in CMS
     </a>
@@ -950,90 +970,83 @@ function renderDetailPanel(art, idx) {
     </a>`;
 }
 
-function openDetail(sid) {
-  const idx = visibleArticles.findIndex(a => String(a.story_id)===sid);
-  if (idx === -1) return;
-  detailIndex = idx;
-  renderDetailPanel(visibleArticles[idx], idx);
+function openDetail(sid){
+  const idx=visibleArticles.findIndex(a=>String(a.story_id)===sid);
+  if(idx===-1)return;
+  detailIndex=idx;
+  renderDetailPanel(visibleArticles[idx],idx);
   document.getElementById('detailOverlay').style.display='flex';
 }
-
-function navigateDetail(dir) {
-  const next = detailIndex + dir;
-  if (next < 0 || next >= visibleArticles.length) return;
-  detailIndex = next;
-  renderDetailPanel(visibleArticles[next], next);
+function navigateDetail(dir){
+  const next=detailIndex+dir;
+  if(next<0||next>=visibleArticles.length)return;
+  detailIndex=next;
+  renderDetailPanel(visibleArticles[next],next);
 }
-
-function closeDetail(e) { if(e.target===document.getElementById('detailOverlay')) document.getElementById('detailOverlay').style.display='none'; }
-function closeDetailBtn() { document.getElementById('detailOverlay').style.display='none'; }
-
-window.openDetail=openDetail; window.closeDetail=closeDetail; window.closeDetailBtn=closeDetailBtn;
-window.navigateDetail=navigateDetail;
+function closeDetail(e){if(e.target===document.getElementById('detailOverlay'))document.getElementById('detailOverlay').style.display='none';}
+function closeDetailBtn(){document.getElementById('detailOverlay').style.display='none';}
+window.openDetail=openDetail; window.closeDetail=closeDetail;
+window.closeDetailBtn=closeDetailBtn; window.navigateDetail=navigateDetail;
 
 // ── Load ───────────────────────────────────────────────────
-function setRefreshLoading(loading) {
-  $refreshBtn.disabled = loading;
-  $refreshBtn.classList.toggle('loading', loading);
-  if (loading) {
-    $pbar.style.transition='none'; $pbar.style.transform='scaleX(0)';
+function setRefreshLoading(on){
+  $refreshBtn.disabled=on; $refreshBtn.classList.toggle('loading',on);
+  if(on){
+    $pbar.style.transition='none';$pbar.style.transform='scaleX(0)';
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      $pbar.style.transition='transform 8s linear'; $pbar.style.transform='scaleX(.85)';
+      $pbar.style.transition='transform 8s linear';$pbar.style.transform='scaleX(.85)';
     }));
   } else {
-    $pbar.style.transition='transform .3s ease'; $pbar.style.transform='scaleX(1)';
-    setTimeout(()=>{ $pbar.style.transition='transform .5s ease'; $pbar.style.transform='scaleX(0)'; }, 400);
+    $pbar.style.transition='transform .3s ease';$pbar.style.transform='scaleX(1)';
+    setTimeout(()=>{$pbar.style.transition='transform .5s ease';$pbar.style.transform='scaleX(0)';},400);
   }
 }
 
-async function load(showLoader) {
-  if (showLoader) {
+async function load(showLoader){
+  if(showLoader){
     allArticles=[]; knownIds=new Set();
+    currentOffset=PAGE_SIZE; hasMore=true;
     $table.style.display='none'; $state.style.display='block';
     $state.innerHTML='<div class="icon">⟳</div><p>Fetching articles…</p>';
+    $lmWrap.style.display='none';
   }
   $err.style.display='none';
   setRefreshLoading(true);
   try {
-    const list = await fetchList();
+    const list=await fetchPage(0);
     $state.innerHTML='<div class="icon">⟳</div><p>Loading details…</p>';
     allArticles=list; populateFilters(); renderRows();
     $progress.style.display='flex';
     $progMsg.textContent=`Fetching details for ${list.length} articles…`;
-    const enriched = await enrichArticles(list);
+    const enriched=await enrichBatch(list);
     allArticles=enriched; $progress.style.display='none';
     populateFilters(); renderRows();
-    const now = new Date();
-    const ts = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-    $sub.textContent=`${allArticles.length} articles · enriched · updated ${ts}`;
+    const ts=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    $sub.textContent=`${allArticles.length} articles loaded · updated ${ts}`;
     document.getElementById('lastUpdated').textContent=`Updated ${ts}`;
-    if (currentView==='report') renderReport();
-  } catch(e) {
+    if(list.length<PAGE_SIZE) hasMore=false;
+    updateLoadMoreBtn();
+    if(currentView==='report') renderReport();
+  } catch(e){
     console.error(e); $progress.style.display='none';
-    $err.style.display='flex';
-    $errMsg.textContent=`${e.message} — click Refresh to retry`;
-    if (!allArticles.length) {
+    $err.style.display='flex'; $errMsg.textContent=`${e.message} — click Refresh to retry`;
+    if(!allArticles.length){
       $table.style.display='none'; $state.style.display='block';
       $state.innerHTML='<div class="icon">⚠️</div><p>Failed to load.</p>';
     }
-  } finally {
-    setRefreshLoading(false);
-  }
+  } finally { setRefreshLoading(false); }
 }
 
-function manualRefresh() {
-  if ($refreshBtn.disabled) return;
-  load(false);
-}
-window.manualRefresh = manualRefresh;
+function manualRefresh(){ if(!$refreshBtn.disabled) load(true); }
+window.manualRefresh=manualRefresh;
 
 // ── Events ─────────────────────────────────────────────────
-$search.addEventListener('input', () => { renderRows(); });
-$catF.addEventListener('change', () => { renderRows(); });
-$authorF.addEventListener('change', () => { renderRows(); });
-$typeF.addEventListener('change', () => { renderRows(); });
-$exportBtn.addEventListener('click', exportCSV);
-document.getElementById('exportReportBtn').addEventListener('click', exportReportCSV);
+$search.addEventListener('input',renderRows);
+$catF.addEventListener('change',renderRows);
+$authorF.addEventListener('change',renderRows);
+$typeF.addEventListener('change',renderRows);
+$exportBtn.addEventListener('click',exportCSV);
+document.getElementById('exportReportBtn').addEventListener('click',exportReportCSV);
 $toggleBC.addEventListener('click',()=>{
   showBC=!showBC; $toggleBC.classList.toggle('active',showBC);
   $toggleBC.innerHTML=showBC
@@ -1043,16 +1056,16 @@ $toggleBC.addEventListener('click',()=>{
 });
 document.querySelectorAll('th[data-col]').forEach(th=>{
   th.addEventListener('click',()=>{
-    if (th.dataset.col===sortCol) { sortDir*=-1; }
-    else { sortCol=th.dataset.col; sortDir = sortCol==='created_at'?-1:1; }
+    if(th.dataset.col===sortCol)sortDir*=-1;
+    else{sortCol=th.dataset.col;sortDir=sortCol==='created_at'?-1:1;}
     updateSortHeaders(); renderRows();
   });
 });
-document.addEventListener('keydown', e => {
-  if (e.key==='Escape') { document.getElementById('detailOverlay').style.display='none'; return; }
-  if (document.getElementById('detailOverlay').style.display!=='none') {
-    if (e.key==='ArrowLeft'||e.key==='ArrowUp') { e.preventDefault(); navigateDetail(-1); }
-    if (e.key==='ArrowRight'||e.key==='ArrowDown') { e.preventDefault(); navigateDetail(1); }
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){document.getElementById('detailOverlay').style.display='none';return;}
+  if(document.getElementById('detailOverlay').style.display!=='none'){
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();navigateDetail(-1);}
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();navigateDetail(1);}
   }
 });
 
