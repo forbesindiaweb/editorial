@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trend Monitor — Forbes India Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#111110;--ink2:#3d3d3a;--ink3:#6b6b67;--ink4:#9c9a92;
+  --rule:#e2dfd8;--rule-light:#f0ede8;
+  --paper:#fafaf8;--paper2:#f3f0eb;
+  --red:#cc2027;--red-bg:#f9edec;
+  --green:#1a6b3a;--green-bg:#e8f4ee;
+  --amber:#7a5100;--amber-bg:#fef3db;
+  --blue:#1a4a8a;--blue-bg:#e8f0fa;
+  --topbar-h:52px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── TOP BAR ── */
+.topbar{background:#0a0a09;color:#fff;padding:0 20px;height:var(--topbar-h);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;border-bottom:1px solid #2a2a28}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.brand-logo{height:24px;width:auto;display:block;flex-shrink:0}
+.brand-divider{width:1px;height:20px;background:rgba(255,255,255,.2)}
+.brand-text{font-family:'Playfair Display',serif;font-size:13px;font-weight:400;color:rgba(255,255,255,.75);letter-spacing:.03em;white-space:nowrap}
+.topbar-date{font-size:11px;color:rgba(255,255,255,.35);border-left:1px solid rgba(255,255,255,.12);padding-left:14px;white-space:nowrap}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.refresh-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);padding:5px 13px;border-radius:4px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap}
+.refresh-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4)}
+.refresh-btn:disabled{opacity:.4;cursor:not-allowed}
+.refresh-btn.spinning svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.last-updated{font-size:11px;color:rgba(255,255,255,.28)}
+.back-link{font-size:11px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:4px;text-decoration:none;padding:4px 8px;border-radius:4px;transition:color .15s}
+.back-link:hover{color:#fff}
+
+/* ── NAV TABS ── */
+.nav-tabs{background:var(--paper2);border-bottom:2px solid var(--rule);padding:0 20px;display:flex;gap:0;position:sticky;top:var(--topbar-h);z-index:100}
+.nav-tab{padding:12px 18px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;margin-bottom:-2px}
+.nav-tab:hover{color:var(--ink)}
+.nav-tab.active{color:var(--red);border-bottom-color:var(--red)}
+
+/* ── STATS BAR ── */
+.statsbar{background:#fff;border-bottom:1px solid var(--rule);padding:10px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.stat-item{display:flex;align-items:baseline;gap:5px}
+.stat-num{font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:var(--ink);line-height:1}
+.stat-num.red{color:var(--red)}.stat-num.green{color:var(--green)}.stat-num.amber{color:var(--amber)}
+.stat-label{font-size:10.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em}
+.stat-sep{width:1px;height:20px;background:var(--rule)}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - var(--topbar-h) - 44px - 52px)}
+
+/* ── SIDEBAR ── */
+.sidebar{border-right:1px solid var(--rule);background:var(--paper);padding:14px 0;position:sticky;top:calc(var(--topbar-h) + 44px + 52px);height:calc(100vh - var(--topbar-h) - 44px - 52px);overflow-y:auto}
+.sb-section{padding:0 12px;margin-bottom:18px}
+.sb-head{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--ink4);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--rule-light)}
+.sb-row{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:5px;cursor:pointer;font-size:12.5px;color:var(--ink2);transition:background .1s;margin-bottom:1px;user-select:none}
+.sb-row:hover{background:var(--paper2)}
+.sb-row.active{background:var(--ink);color:#fff}
+.sb-row.active .sb-cnt{background:rgba(255,255,255,.15);color:rgba(255,255,255,.65)}
+.sb-left{display:flex;align-items:center;gap:7px}
+.sb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--ink4)}
+.sb-cnt{font-size:10.5px;font-weight:500;background:var(--paper2);color:var(--ink3);padding:1px 6px;border-radius:10px;min-width:22px;text-align:center}
+.beat-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.beat-green{background:#22c55e}.beat-amber{background:#f59e0b}.beat-red{background:#ef4444}.beat-grey{background:var(--ink4)}
+
+/* ── MAIN ── */
+.main{min-width:0;padding:0}
+
+/* ── SECTION HEADERS ── */
+.section-header{padding:14px 20px 10px;border-bottom:1px solid var(--rule);background:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.section-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink)}
+.section-sub{font-size:12px;color:var(--ink3);margin-top:2px}
+.section-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid #f0b8b8}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid #e8c860}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid #a8d8b8}
+.badge-blue{background:var(--blue-bg);color:var(--blue);border:1px solid #b8cce8}
+
+/* ── BEAT PULSE ── */
+.beat-grid{padding:14px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.beat-card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:12px 14px;transition:border-color .15s,box-shadow .15s}
+.beat-card:hover{border-color:#c2bfb8;box-shadow:0 1px 5px rgba(17,17,16,.06)}
+.beat-card.status-red{border-left:3px solid #ef4444}
+.beat-card.status-amber{border-left:3px solid #f59e0b}
+.beat-card.status-green{border-left:3px solid #22c55e}
+.beat-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.beat-keyword{font-weight:600;font-size:13px;color:var(--ink)}
+.beat-badges{display:flex;gap:4px;flex-wrap:wrap}
+.beat-days{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.days-red{background:var(--red-bg);color:var(--red)}.days-amber{background:var(--amber-bg);color:var(--amber)}.days-green{background:var(--green-bg);color:var(--green)}.days-grey{background:var(--paper2);color:var(--ink4)}
+.beat-fi-article{font-size:11.5px;color:var(--ink2);line-height:1.35;margin-bottom:6px}
+.beat-fi-article a{color:var(--ink2);text-decoration:none}.beat-fi-article a:hover{color:var(--red)}
+.beat-fi-date{font-size:10.5px;color:var(--ink4);margin-top:2px}
+.beat-competitor-hits{margin-top:6px;padding-top:6px;border-top:1px solid var(--rule-light)}
+.beat-comp-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink4);margin-bottom:4px}
+.beat-comp-item{font-size:11px;color:var(--ink3);padding:2px 0;display:flex;align-items:baseline;gap:5px;line-height:1.3}
+.beat-comp-item a{color:var(--ink3);text-decoration:none}.beat-comp-item a:hover{color:var(--red)}
+.beat-pub-badge{font-size:9px;font-weight:700;padding:1px 5px;border-radius:2px;color:#fff;white-space:nowrap;flex-shrink:0}
+.pitch-btn{margin-top:8px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;border:1px solid var(--rule);background:var(--paper2);color:var(--ink2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s}
+.pitch-btn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* ── BURST DETECTOR ── */
+.burst-list{padding:14px 20px;display:flex;flex-direction:column;gap:10px}
+.burst-card{background:#fff;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.burst-hd{padding:10px 14px;background:var(--paper2);border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:10px}
+.burst-topic{font-weight:700;font-size:13px;color:var(--ink);flex:1}
+.burst-count-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--red-bg);color:var(--red);border:1px solid #f0b8b8;white-space:nowrap}
+.burst-fi-status{font-size:11px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.burst-covered{background:var(--green-bg);color:var(--green);border:1px solid #a8d8b8}
+.burst-gap{background:var(--red-bg);color:var(--red);border:1px solid #f0b8b8}
+.burst-stories{padding:0}
+.burst-story-row{display:flex;gap:10px;align-items:flex-start;padding:9px 14px;border-bottom:1px solid var(--rule-light)}
+.burst-story-row:last-child{border-bottom:none}
+.burst-story-pub{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:2px;color:#fff;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.burst-story-title{font-size:12.5px;color:var(--ink2);line-height:1.35;flex:1}
+.burst-story-title a{color:var(--ink2);text-decoration:none}.burst-story-title a:hover{color:var(--red)}
+.burst-story-time{font-size:11px;color:var(--ink4);white-space:nowrap;flex-shrink:0}
+
+/* ── TRENDING FEED ── */
+.trending-controls{padding:10px 20px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--paper)}
+.search-wrap{position:relative;flex:1;min-width:160px;max-width:300px}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--ink4);pointer-events:none}
+.search-input{width:100%;padding:7px 11px 7px 30px;border:1px solid var(--rule);border-radius:5px;font-family:'Inter',sans-serif;font-size:13px;background:var(--paper2);color:var(--ink);outline:none}
+.search-input:focus{border-color:var(--ink3);background:#fff}
+.filter-select{padding:6px 9px;border:1px solid var(--rule);border-radius:5px;font-family:'Inter',sans-serif;font-size:12px;background:var(--paper2);color:var(--ink2);outline:none;cursor:pointer}
+.trending-feed{padding:14px 20px;display:flex;flex-direction:column;gap:8px}
+.story-card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:12px 14px;transition:border-color .15s}
+.story-card:hover{border-color:#c2bfb8}
+.story-card.gap-story{border-left:3px solid var(--red)}
+.story-card.covered-story{border-left:3px solid #22c55e}
+.card-inner{display:flex;gap:12px;align-items:flex-start}
+.card-thumb{width:80px;height:60px;object-fit:cover;border-radius:4px;flex-shrink:0;background:var(--paper2)}
+.card-body{flex:1;min-width:0}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.story-title{font-size:13.5px;font-weight:500;color:var(--ink);line-height:1.4;text-decoration:none;display:block}
+.story-title:hover{color:var(--red)}
+.card-meta{display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.pub-badge{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;color:#fff}
+.time-ago{font-size:11px;color:var(--ink4);white-space:nowrap}
+.snippet{font-size:12px;color:var(--ink3);line-height:1.5;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:7px;border-top:1px solid var(--rule-light);gap:8px}
+.gap-ind{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500}
+.gap-ind.gap{color:var(--red)}.gap-ind.covered{color:var(--green)}.gap-ind.unknown{color:var(--ink4)}
+.gap-ind .gd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.gap .gd{background:var(--red)}.covered .gd{background:#22c55e}.unknown .gd{background:var(--ink4)}
+.card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.tag{font-size:10px;padding:2px 6px;border-radius:3px;background:var(--paper2);color:var(--ink3);border:1px solid var(--rule);text-transform:uppercase;letter-spacing:.04em;font-weight:500}
+.act-btn{background:none;border:1px solid var(--rule);color:var(--ink3);padding:3px 8px;border-radius:4px;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .1s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
+.act-btn:hover{background:var(--paper2);border-color:var(--ink3);color:var(--ink)}
+
+/* ── LOADING / EMPTY ── */
+.skeleton{background:var(--paper2);border:1px solid var(--rule);border-radius:6px;padding:13px 14px;margin-bottom:8px}
+.sk{background:var(--rule);border-radius:3px;margin-bottom:6px;animation:shimmer 1.4s ease-in-out infinite}
+@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.4}}
+.empty-state{padding:48px 20px;text-align:center;color:var(--ink3)}
+.empty-state strong{font-size:15px;display:block;margin-bottom:6px}
+.empty-state p{font-size:12px;color:var(--ink4)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:9px 15px;border-radius:5px;font-size:13px;z-index:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.err{background:var(--red)}
+
+/* ── LOADING OVERLAY ── */
+.loading-bar{height:3px;background:var(--rule);overflow:hidden;display:none}
+.loading-bar.active{display:block}
+.loading-bar-inner{height:100%;background:var(--red);animation:loadbar 1.8s ease-in-out infinite}
+@keyframes loadbar{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--rule)}
+  .topbar{padding:0 14px}
+  .topbar-date{display:none}
+  .beat-grid{grid-template-columns:1fr;padding:10px 14px}
+  .burst-list,.trending-feed{padding:10px 14px}
+  .section-header,.trending-controls,.statsbar{padding:8px 14px}
+}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--rule);border-radius:3px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <img src="https://images.forbesindia.com/blog/wp-content/uploads/2025/10/forbeslogo-1-2025-10-8c82c269e82b0027d98922ffd47a4f98.png" alt="Forbes India" class="brand-logo" onerror="this.style.display='none'">
+    <div class="brand-divider"></div>
+    <div class="brand-text">Trend Monitor</div>
+    <div class="topbar-date" id="topbar-date"></div>
+  </div>
+  <div class="topbar-right">
+    <a href="../news-tracker/" class="back-link">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7,2 3,6 7,10"/></svg>
+      Morning Brief
+    </a>
+    <div class="last-updated" id="last-updated"></div>
+    <button class="refresh-btn" id="refresh-btn" onclick="refreshAll()">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4s1-2 5-2a6 6 0 010 12c-3 0-5-2-5-2"/><polyline points="1 4 1 1 4 1"/></svg>
+      Refresh
+    </button>
+  </div>
+</header>
+
+<div class="loading-bar" id="loading-bar"><div class="loading-bar-inner"></div></div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab('beat')">🎯 Beat Pulse</button>
+  <button class="nav-tab" onclick="switchTab('burst')">🔥 Competitor Burst</button>
+  <button class="nav-tab" onclick="switchTab('feed')">📰 Full Feed</button>
+</div>
+
+<!-- STATS BAR -->
+<div class="statsbar">
+  <div class="stat-item"><span class="stat-num red" id="stat-hot">—</span><span class="stat-label">Beats uncovered</span></div>
+  <div class="stat-sep"></div>
+  <div class="stat-item"><span class="stat-num amber" id="stat-stale">—</span><span class="stat-label">Beats stale (3–7d)</span></div>
+  <div class="stat-sep"></div>
+  <div class="stat-item"><span class="stat-num" id="stat-burst">—</span><span class="stat-label">Burst topics</span></div>
+  <div class="stat-sep"></div>
+  <div class="stat-item"><span class="stat-num" id="stat-stories">—</span><span class="stat-label">Stories fetched</span></div>
+  <div class="stat-sep"></div>
+  <div class="stat-item"><span class="stat-num" id="stat-gaps">—</span><span class="stat-label">Coverage gaps</span></div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- Beat filter -->
+    <div class="sb-section">
+      <div class="sb-head">Beat Status</div>
+      <div class="sb-row active" id="beat-fil-all" onclick="setBeatFilter('all')">
+        <div class="sb-left"><div class="sb-dot"></div><span>All Beats</span></div>
+        <span class="sb-cnt" id="bf-cnt-all">—</span>
+      </div>
+      <div class="sb-row" id="beat-fil-hot" onclick="setBeatFilter('hot')">
+        <div class="sb-left"><div class="beat-status beat-red"></div><span>🔴 Not covered (7d+)</span></div>
+        <span class="sb-cnt" id="bf-cnt-hot">—</span>
+      </div>
+      <div class="sb-row" id="beat-fil-stale" onclick="setBeatFilter('stale')">
+        <div class="sb-left"><div class="beat-status beat-amber"></div><span>🟡 Stale (3–7 days)</span></div>
+        <span class="sb-cnt" id="bf-cnt-stale">—</span>
+      </div>
+      <div class="sb-row" id="beat-fil-ok" onclick="setBeatFilter('ok')">
+        <div class="sb-left"><div class="beat-status beat-green"></div><span>🟢 Recently covered</span></div>
+        <span class="sb-cnt" id="bf-cnt-ok">—</span>
+      </div>
+    </div>
+
+    <!-- Publications -->
+    <div class="sb-section">
+      <div class="sb-head">Publications</div>
+      <div id="pub-sidebar"></div>
+    </div>
+
+    <!-- Topic filter -->
+    <div class="sb-section">
+      <div class="sb-head">Topics</div>
+      <div id="topic-sidebar"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="main-content">
+    <div class="empty-state" style="padding:60px 20px">
+      <strong>Loading feeds…</strong>
+      <p>Fetching latest stories from all publications</p>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+const PROXY_URL = 'https://script.google.com/macros/s/AKfycbyRSUeAqFg-RoWGbv_tXZJ1xHYIE8T_AdgS4_L8pwVSDEwBnIjUJcYpMC_hUgVUkZY/exec';
+
+const STORY_TRACKER_URL = 'https://forbesindiaweb.github.io/editorial/story-tracker/';
+const FI_API = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article-list';
+
+const PUBLICATIONS = [
+  {id:'et',    name:'Economic Times',    color:'#e63900'},
+  {id:'bs',    name:'Business Standard', color:'#00529b'},
+  {id:'mint',  name:'Mint',              color:'#eb6200'},
+  {id:'mc',    name:'Morning Context',   color:'#222222'},
+  {id:'ken',   name:'The Ken',           color:'#5b2d8e'},
+  {id:'reu',   name:'Reuters',           color:'#ff8000'},
+  {id:'ft',    name:'Financial Times',   color:'#b8860b'},
+  {id:'bloom', name:'Bloomberg',         color:'#222222'},
+  {id:'fe',    name:'Financial Express', color:'#c00000'},
+  {id:'fi',    name:'Fortune India',     color:'#003087'},
+  {id:'bl',    name:'Business Line',     color:'#004225'},
+  {id:'bt',    name:'Business Today',    color:'#e20612'},
+  {id:'forbesindia', name:'Forbes India', color:'#cc2027'},
+];
+
+// Beat keywords — what Forbes India tracks
+const BEATS = [
+  {id:'rbi',       label:'RBI / Monetary Policy', keywords:['rbi','reserve bank','repo rate','monetary policy','interest rate','mpc']},
+  {id:'sebi',      label:'SEBI / Markets',         keywords:['sebi','stock market','sensex','nifty','ipo','bse','nse','equity','mutual fund']},
+  {id:'startup',   label:'Startups & Funding',     keywords:['startup','unicorn','funding','series a','series b','venture capital','seed round','valuation']},
+  {id:'ai',        label:'AI & Technology',         keywords:['artificial intelligence',' ai ','machine learning','openai','chatgpt','generative','llm','tech layoff']},
+  {id:'budget',    label:'Budget & Economy',        keywords:['budget','gdp','fiscal','economy','inflation','finance minister','nirmala','economic growth']},
+  {id:'adani',     label:'Adani Group',             keywords:['adani','adani group','gautam adani']},
+  {id:'tata',      label:'Tata Group',              keywords:['tata','tata group','ratan tata','tata motors','tata steel','tcs']},
+  {id:'reliance',  label:'Reliance / Ambani',       keywords:['reliance','ambani','mukesh ambani','jio','ril']},
+  {id:'crypto',    label:'Crypto & Web3',           keywords:['crypto','bitcoin','ethereum','blockchain','web3','nft','cbdc']},
+  {id:'realestate',label:'Real Estate',             keywords:['real estate','property','housing','realty','reit','dlf']},
+  {id:'pharma',    label:'Pharma & Healthcare',     keywords:['pharma','pharmaceutical','healthcare','drug','fda','cipla','sun pharma','biocon']},
+  {id:'electric',  label:'EV & Energy',             keywords:['electric vehicle','ev ','tesla','ola electric','solar','renewable energy','oil price']},
+  {id:'banking',   label:'Banking & Finance',       keywords:['bank','hdfc','icici','sbi','axis bank','kotak','nbfc','credit','npa','loan']},
+  {id:'trade',     label:'Trade & Geopolitics',     keywords:['tariff','trade war','export','import','china','us india','geopolit','fdi','sanctions']},
+  {id:'richlist',  label:'Billionaires & Wealth',   keywords:['billionaire','richest','wealth','net worth','forbes list','hurun']},
+];
+
+const TOPICS = {
+  'Markets':    ['sensex','nifty','stock','share','ipo','bse','nse','trading'],
+  'Startups':   ['startup','unicorn','funding','venture','series','valuation','founder'],
+  'Economy':    ['gdp','inflation','rbi','repo','rupee','fiscal','budget','economy'],
+  'Tech & AI':  ['artificial intelligence',' ai ','technology','digital','software','cloud','cyber','chip'],
+  'Corporate':  ['quarterly','results','revenue','profit','merger','acquisition','ceo','earnings'],
+  'Politics':   ['government','minister','policy','parliament','modi','bjp','congress','election'],
+  'Global':     ['us ','china','global','world','federal reserve','dollar','europe','trump','tariff'],
+  'Energy':     ['oil','gas','energy','solar','renewable','coal','power','electricity'],
+  'Finance':    ['bank','nbfc','insurance','mutual fund','credit','loan','interest rate'],
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let allStories      = [];
+let forbesArticles  = [];
+let forbesKeywords  = [];
+let beatData        = [];
+let burstData       = [];
+let currentTab      = 'beat';
+let beatFilter      = 'all';
+let activePub       = 'all';
+let activeTopic     = 'all';
+let feedSearch      = '';
+let feedPubFilter   = 'all';
+let feedTopicFilter = 'all';
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('topbar-date').textContent =
+    new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  refreshAll();
+});
+
+// ── REFRESH ───────────────────────────────────────────────────────────────
+async function refreshAll() {
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = true; btn.classList.add('spinning');
+  document.getElementById('last-updated').textContent = 'Fetching…';
+  document.getElementById('loading-bar').classList.add('active');
+  showLoading();
+
+  try {
+    // Fetch RSS feeds + Forbes India API in parallel
+    const [rssData, fiData] = await Promise.all([
+      fetchRSS(),
+      fetchForbesIndia()
+    ]);
+
+    processRSS(rssData);
+    processForbesIndia(fiData);
+    analyzeBeatPulse();
+    analyzeCompetitorBurst();
+    updateStats();
+    buildSidebars();
+    renderCurrentTab();
+
+    const now = new Date();
+    document.getElementById('last-updated').textContent =
+      `Updated ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+    showToast('Feeds refreshed');
+  } catch(e) {
+    console.error(e);
+    showToast('Error fetching feeds. Retrying…', 'err');
+    document.getElementById('main-content').innerHTML = `<div class="empty-state"><strong>Failed to load</strong><p>${e.message}</p></div>`;
+  }
+
+  btn.disabled = false; btn.classList.remove('spinning');
+  document.getElementById('loading-bar').classList.remove('active');
+}
+
+async function fetchRSS() {
+  const res = await fetch(PROXY_URL, {signal: AbortSignal.timeout(90000)});
+  if (!res.ok) throw new Error(`RSS proxy HTTP ${res.status}`);
+  return res.json();
+}
+
+async function fetchForbesIndia() {
+  try {
+    const res = await fetch(`${FI_API}?count=50`);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return Array.isArray(json) ? json : Array.isArray(json.data) ? json.data : [];
+  } catch { return []; }
+}
+
+// ── PROCESS DATA ──────────────────────────────────────────────────────────
+function processRSS(data) {
+  allStories = [];
+  PUBLICATIONS.forEach(pub => {
+    const res = data.results?.[pub.id];
+    if (!res?.ok || !res.items) return;
+    res.items.forEach((item, i) => {
+      allStories.push({
+        id: `${pub.id}_${i}`,
+        pubId: pub.id,
+        title: item.title || '',
+        link: item.link || '#',
+        snippet: item.snippet || '',
+        image: item.image || null,
+        pubDate: item.pubDate ? new Date(item.pubDate) : new Date(),
+        topic: detectTopic(item.title + ' ' + item.snippet),
+        gap: 'unknown',
+      });
+    });
+  });
+}
+
+function processForbesIndia(articles) {
+  forbesArticles = articles.filter(a => !isBC(a));
+  // Build keyword set from Forbes articles for gap detection
+  forbesKeywords = forbesArticles.flatMap(a =>
+    (a.display_headline || a.headline || '').toLowerCase()
+      .split(/\W+/).filter(w => w.length > 4 &&
+        !/^(about|their|there|which|would|could|after|india|with|from|that|this|have|been|will|were|more|than|also|into|when|over|they|says|said|its|and|the|for)$/.test(w))
+  );
+  // Tag gap status on all stories
+  allStories.forEach(s => { s.gap = checkGap(s.title + ' ' + s.snippet); });
+}
+
+function isBC(a) {
+  const u = a.weburl || a.weburl_r || '';
+  return u.toLowerCase().includes('brand-connect');
+}
+
+function checkGap(text) {
+  if (!forbesKeywords.length) return 'unknown';
+  const words = text.toLowerCase().split(/\W+/).filter(w => w.length > 4);
+  return words.filter(w => forbesKeywords.includes(w)).length >= 2 ? 'covered' : 'gap';
+}
+
+function detectTopic(text) {
+  const lower = text.toLowerCase();
+  for (const [t, kws] of Object.entries(TOPICS))
+    if (kws.some(k => lower.includes(k))) return t;
+  return null;
+}
+
+// ── BEAT PULSE ────────────────────────────────────────────────────────────
+function analyzeBeatPulse() {
+  const now = new Date();
+  beatData = BEATS.map(beat => {
+    // Find last Forbes India article matching this beat
+    const fiMatches = forbesArticles.filter(a => {
+      const text = (a.display_headline || a.headline || '').toLowerCase();
+      return beat.keywords.some(k => text.includes(k));
+    });
+
+    // Sort by date desc
+    fiMatches.sort((a, b) => {
+      const ta = getTs(a), tb = getTs(b);
+      return (tb || 0) - (ta || 0);
+    });
+
+    const lastFi = fiMatches[0] || null;
+    const lastFiMs = lastFi ? getTs(lastFi) : null;
+    const daysSince = lastFiMs ? Math.floor((now - lastFiMs) / 86400000) : null;
+
+    // Find competitor stories matching this beat (last 48h)
+    const cutoff = new Date(now - 48 * 3600000);
+    const compMatches = allStories.filter(s => {
+      if (s.pubId === 'forbesindia') return false;
+      const text = (s.title + ' ' + s.snippet).toLowerCase();
+      return beat.keywords.some(k => text.includes(k)) && s.pubDate > cutoff;
+    }).slice(0, 4);
+
+    // Status
+    let status = 'grey';
+    if (daysSince === null) status = 'red';
+    else if (daysSince > 7) status = 'red';
+    else if (daysSince > 3) status = 'amber';
+    else status = 'green';
+
+    return { ...beat, lastFi, daysSince, compMatches, status };
+  });
+}
+
+function getTs(art) {
+  if (!art) return null;
+  if (art.date_timestamp) {
+    const ts = parseInt(art.date_timestamp, 10);
+    return isNaN(ts) ? null : ts < 1e12 ? ts * 1000 : ts;
+  }
+  if (art.publish_date) { const d = new Date(art.publish_date); return isNaN(d) ? null : d.getTime(); }
+  return null;
+}
+
+function getFiUrl(art) {
+  const u = art.state_url || art.weburl || art.weburl_r || '';
+  if (!u) return '#';
+  return u.startsWith('http') ? u : 'https://www.forbesindia.com' + (u.startsWith('/') ? u : '/' + u);
+}
+
+// ── COMPETITOR BURST ──────────────────────────────────────────────────────
+function analyzeCompetitorBurst() {
+  const now = new Date();
+  const cutoff = new Date(now - 24 * 3600000);
+
+  // Get recent competitor stories (last 24h, non-Forbes India)
+  const recent = allStories.filter(s => s.pubId !== 'forbesindia' && s.pubDate > cutoff);
+
+  // Group by keyword clusters
+  const topicGroups = {};
+  recent.forEach(s => {
+    const text = (s.title + ' ' + s.snippet).toLowerCase();
+    for (const [topicName, kws] of Object.entries(TOPICS)) {
+      if (kws.some(k => text.includes(k))) {
+        if (!topicGroups[topicName]) topicGroups[topicName] = [];
+        // Only add if not already from same pub
+        const alreadyFromPub = topicGroups[topicName].some(x => x.pubId === s.pubId);
+        topicGroups[topicName].push(s);
+        break;
+      }
+    }
+  });
+
+  // Also cluster by shared keywords (more specific)
+  const wordGroups = {};
+  recent.forEach(s => {
+    const words = s.title.toLowerCase().split(/\W+/).filter(w =>
+      w.length > 5 &&
+      !/^(india|indian|global|world|market|stock|share|report|after|about|which|would|could|their|there|from|that|this|have|been|will|were|more|than|also|into|when|over|they|says|said|said|new|first|data|year|last|next|also|well|just|they|very)$/.test(w)
+    );
+    words.forEach(w => {
+      if (!wordGroups[w]) wordGroups[w] = [];
+      wordGroups[w].push(s);
+    });
+  });
+
+  // Find bursts: 3+ stories from different publications about same keyword
+  const bursts = [];
+  const seen = new Set();
+
+  // Topic-level bursts
+  Object.entries(topicGroups).forEach(([topic, stories]) => {
+    const pubs = new Set(stories.map(s => s.pubId));
+    if (pubs.size >= 3) {
+      const fiCovered = checkFiBeat(topic);
+      bursts.push({ topic, stories: stories.slice(0, 6), pubCount: pubs.size, fiCovered, type: 'topic' });
+      seen.add(topic);
+    }
+  });
+
+  // Keyword-level bursts (more specific)
+  Object.entries(wordGroups).forEach(([word, stories]) => {
+    if (stories.length < 3) return;
+    const pubs = new Set(stories.map(s => s.pubId));
+    if (pubs.size < 3) return;
+    // Check if already covered by a topic burst
+    const alreadyCovered = bursts.some(b => stories.some(s => b.stories.includes(s)));
+    if (alreadyCovered) return;
+    const fiCovered = checkFiBeat(word);
+    bursts.push({ topic: word, stories: stories.slice(0, 5), pubCount: pubs.size, fiCovered, type: 'keyword' });
+  });
+
+  burstData = bursts.sort((a, b) => b.pubCount - a.pubCount).slice(0, 12);
+}
+
+function checkFiBeat(keyword) {
+  const kl = keyword.toLowerCase();
+  return forbesArticles.some(a =>
+    (a.display_headline || a.headline || '').toLowerCase().includes(kl)
+  );
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────
+function updateStats() {
+  const hot   = beatData.filter(b => b.status === 'red').length;
+  const stale = beatData.filter(b => b.status === 'amber').length;
+  const gaps  = allStories.filter(s => s.gap === 'gap').length;
+  document.getElementById('stat-hot').textContent    = hot;
+  document.getElementById('stat-stale').textContent  = stale;
+  document.getElementById('stat-burst').textContent  = burstData.length;
+  document.getElementById('stat-stories').textContent= allStories.length;
+  document.getElementById('stat-gaps').textContent   = gaps;
+
+  // Beat filter counts
+  document.getElementById('bf-cnt-all').textContent   = beatData.length;
+  document.getElementById('bf-cnt-hot').textContent   = hot;
+  document.getElementById('bf-cnt-stale').textContent = stale;
+  document.getElementById('bf-cnt-ok').textContent    = beatData.filter(b => b.status === 'green').length;
+}
+
+// ── SIDEBARS ──────────────────────────────────────────────────────────────
+function buildSidebars() {
+  // Publications
+  const pubCounts = {};
+  allStories.forEach(s => { pubCounts[s.pubId] = (pubCounts[s.pubId] || 0) + 1; });
+  const livePubs = PUBLICATIONS.filter(p => pubCounts[p.id]);
+  document.getElementById('pub-sidebar').innerHTML =
+    `<div class="sb-row ${activePub==='all'?'active':''}" onclick="setFeedPub('all')">
+      <div class="sb-left"><div class="sb-dot"></div><span>All Publications</span></div>
+      <span class="sb-cnt">${allStories.length}</span>
+    </div>` +
+    livePubs.map(p => `
+      <div class="sb-row ${activePub===p.id?'active':''}" onclick="setFeedPub('${p.id}')">
+        <div class="sb-left">
+          <div class="sb-dot" style="background:${p.color}"></div>
+          <span>${p.name}</span>
+        </div>
+        <span class="sb-cnt">${pubCounts[p.id]||0}</span>
+      </div>`).join('');
+
+  // Topics
+  const topicCounts = {};
+  allStories.forEach(s => { if(s.topic) topicCounts[s.topic] = (topicCounts[s.topic]||0)+1; });
+  const sortedTopics = Object.entries(topicCounts).sort((a,b) => b[1]-a[1]);
+  document.getElementById('topic-sidebar').innerHTML =
+    `<div class="sb-row ${activeTopic==='all'?'active':''}" onclick="setFeedTopic('all')">
+      <div class="sb-left"><div class="sb-dot"></div><span>All Topics</span></div>
+      <span class="sb-cnt">${allStories.length}</span>
+    </div>` +
+    sortedTopics.map(([t,n]) => `
+      <div class="sb-row ${activeTopic===t?'active':''}" onclick="setFeedTopic('${t}')">
+        <div class="sb-left"><div class="sb-dot"></div><span>${t}</span></div>
+        <span class="sb-cnt">${n}</span>
+      </div>`).join('');
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['beat','burst','feed'][i] === tab);
+  });
+  renderCurrentTab();
+}
+window.switchTab = switchTab;
+
+function renderCurrentTab() {
+  if (currentTab === 'beat')  renderBeatPulse();
+  if (currentTab === 'burst') renderBurst();
+  if (currentTab === 'feed')  renderFeed();
+}
+
+// ── RENDER BEAT PULSE ─────────────────────────────────────────────────────
+function renderBeatPulse() {
+  let beats = beatData;
+  if (beatFilter === 'hot')   beats = beats.filter(b => b.status === 'red');
+  if (beatFilter === 'stale') beats = beats.filter(b => b.status === 'amber');
+  if (beatFilter === 'ok')    beats = beats.filter(b => b.status === 'green');
+
+  const main = document.getElementById('main-content');
+  if (!beats.length) {
+    main.innerHTML = `<div class="section-header"><div><div class="section-title">Beat Pulse</div><div class="section-sub">No beats match current filter</div></div></div><div class="empty-state"><strong>No beats found</strong></div>`;
+    return;
+  }
+
+  const hot   = beats.filter(b => b.status === 'red').length;
+  const stale = beats.filter(b => b.status === 'amber').length;
+
+  main.innerHTML = `
+    <div class="section-header">
+      <div>
+        <div class="section-title">🎯 Beat Pulse</div>
+        <div class="section-sub">How recently has Forbes India covered each key beat?</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${hot   ? `<span class="section-badge badge-red">🔴 ${hot} not covered</span>` : ''}
+        ${stale ? `<span class="section-badge badge-amber">🟡 ${stale} stale</span>` : ''}
+      </div>
+    </div>
+    <div class="beat-grid">
+      ${beats.map(b => renderBeatCard(b)).join('')}
+    </div>`;
+}
+
+function renderBeatCard(b) {
+  const dayLabel = b.daysSince === null ? 'Never covered'
+    : b.daysSince === 0 ? 'Today'
+    : b.daysSince === 1 ? 'Yesterday'
+    : `${b.daysSince} days ago`;
+  const daysCls = b.status === 'red' ? 'days-red' : b.status === 'amber' ? 'days-amber' : b.status === 'green' ? 'days-green' : 'days-grey';
+  const cardCls = b.status === 'red' ? 'status-red' : b.status === 'amber' ? 'status-amber' : b.status === 'green' ? 'status-green' : '';
+
+  const fiBlock = b.lastFi
+    ? `<div class="beat-fi-article">
+        <a href="${getFiUrl(b.lastFi)}" target="_blank" rel="noopener">${b.lastFi.display_headline || b.lastFi.headline || ''}</a>
+        <div class="beat-fi-date">Forbes India · ${dayLabel}</div>
+      </div>`
+    : `<div class="beat-fi-date" style="margin-bottom:6px">No recent Forbes India coverage found in last 50 articles</div>`;
+
+  const compBlock = b.compMatches.length
+    ? `<div class="beat-competitor-hits">
+        <div class="beat-comp-label">Competitors (last 48h) — ${b.compMatches.length} ${b.compMatches.length===1?'story':'stories'}</div>
+        ${b.compMatches.map(s => {
+          const pub = PUBLICATIONS.find(p => p.id === s.pubId);
+          return `<div class="beat-comp-item">
+            <span class="beat-pub-badge" style="background:${pub?.color||'#888'}">${pub?.name||s.pubId}</span>
+            <a href="${s.link}" target="_blank" rel="noopener">${s.title}</a>
+          </div>`;
+        }).join('')}
+      </div>` : '';
+
+  return `<div class="beat-card ${cardCls}">
+    <div class="beat-top">
+      <div class="beat-keyword">${b.label}</div>
+      <div class="beat-badges">
+        <span class="beat-days ${daysCls}">${dayLabel}</span>
+        ${b.compMatches.length ? `<span class="beat-days days-amber">⚡ ${b.compMatches.length} comp.</span>` : ''}
+      </div>
+    </div>
+    ${fiBlock}
+    ${compBlock}
+    <button class="pitch-btn" onclick="pitchBeat('${b.label.replace(/'/g,"\\'")}')" title="Open story tracker to pitch this beat">+ Pitch this beat</button>
+  </div>`;
+}
+
+window.pitchBeat = function(label) {
+  window.open(STORY_TRACKER_URL, '_blank');
+  showToast(`Opening story tracker for: ${label}`);
+};
+
+// ── RENDER BURST ──────────────────────────────────────────────────────────
+function renderBurst() {
+  const main = document.getElementById('main-content');
+  if (!burstData.length) {
+    main.innerHTML = `<div class="section-header"><div><div class="section-title">🔥 Competitor Burst</div><div class="section-sub">No burst topics detected in the last 24 hours</div></div></div><div class="empty-state"><strong>No bursts right now</strong><p>Check back later or refresh feeds</p></div>`;
+    return;
+  }
+
+  main.innerHTML = `
+    <div class="section-header">
+      <div>
+        <div class="section-title">🔥 Competitor Burst</div>
+        <div class="section-sub">Topics covered by 3+ publications in the last 24 hours</div>
+      </div>
+      <span class="section-badge badge-red">${burstData.length} burst ${burstData.length===1?'topic':'topics'}</span>
+    </div>
+    <div class="burst-list">
+      ${burstData.map(b => renderBurstCard(b)).join('')}
+    </div>`;
+}
+
+function renderBurstCard(b) {
+  const pubs = [...new Set(b.stories.map(s => s.pubId))];
+  const fiCls   = b.fiCovered ? 'burst-covered' : 'burst-gap';
+  const fiLabel = b.fiCovered ? '✓ Forbes India covered' : '⚡ Not on Forbes India';
+
+  return `<div class="burst-card">
+    <div class="burst-hd">
+      <div class="burst-topic">${b.topic.charAt(0).toUpperCase()+b.topic.slice(1)}</div>
+      <span class="burst-count-badge">🔥 ${b.pubCount} publications</span>
+      <span class="burst-fi-status ${fiCls}">${fiLabel}</span>
+    </div>
+    <div class="burst-stories">
+      ${b.stories.map(s => {
+        const pub = PUBLICATIONS.find(p => p.id === s.pubId);
+        return `<div class="burst-story-row">
+          <span class="burst-story-pub" style="background:${pub?.color||'#888'}">${pub?.name||s.pubId}</span>
+          <div class="burst-story-title"><a href="${s.link}" target="_blank" rel="noopener">${s.title}</a></div>
+          <span class="burst-story-time">${timeAgo(s.pubDate)}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+// ── RENDER FULL FEED ──────────────────────────────────────────────────────
+function renderFeed() {
+  const main = document.getElementById('main-content');
+  let stories = [...allStories];
+
+  if (feedPubFilter !== 'all')   stories = stories.filter(s => s.pubId === feedPubFilter);
+  if (feedTopicFilter !== 'all') stories = stories.filter(s => s.topic === feedTopicFilter);
+  if (feedSearch) {
+    const q = feedSearch.toLowerCase();
+    stories = stories.filter(s => s.title.toLowerCase().includes(q) || s.snippet.toLowerCase().includes(q));
+  }
+  stories.sort((a, b) => b.pubDate - a.pubDate);
+
+  const gapCount = stories.filter(s => s.gap === 'gap').length;
+
+  main.innerHTML = `
+    <div class="section-header">
+      <div>
+        <div class="section-title">📰 Full Feed</div>
+        <div class="section-sub">${stories.length} stories · ${gapCount} coverage gaps</div>
+      </div>
+      ${gapCount ? `<span class="section-badge badge-red">🔴 ${gapCount} gaps</span>` : ''}
+    </div>
+    <div class="trending-controls">
+      <div class="search-wrap">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+        <input type="text" class="search-input" placeholder="Search stories…" value="${feedSearch}" oninput="feedSearch=this.value;renderFeed()" />
+      </div>
+      <select class="filter-select" onchange="feedPubFilter=this.value;renderFeed()">
+        <option value="all">All publications</option>
+        ${PUBLICATIONS.map(p => `<option value="${p.id}" ${feedPubFilter===p.id?'selected':''}>${p.name}</option>`).join('')}
+      </select>
+      <select class="filter-select" onchange="feedTopicFilter=this.value;renderFeed()">
+        <option value="all">All topics</option>
+        ${Object.keys(TOPICS).map(t => `<option value="${t}" ${feedTopicFilter===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+      <select class="filter-select" onchange="sortFeed(this.value)">
+        <option value="time">Newest first</option>
+        <option value="gaps">Gaps first</option>
+        <option value="pub">By publication</option>
+      </select>
+    </div>
+    <div class="trending-feed" id="trending-feed-inner">
+      ${stories.length ? stories.map(renderStoryCard).join('') : '<div class="empty-state"><strong>No stories match</strong><p>Try a different filter</p></div>'}
+    </div>`;
+}
+
+window.sortFeed = function(val) {
+  let stories = [...allStories];
+  if (feedPubFilter !== 'all')   stories = stories.filter(s => s.pubId === feedPubFilter);
+  if (feedTopicFilter !== 'all') stories = stories.filter(s => s.topic === feedTopicFilter);
+  if (feedSearch) {
+    const q = feedSearch.toLowerCase();
+    stories = stories.filter(s => s.title.toLowerCase().includes(q)||s.snippet.toLowerCase().includes(q));
+  }
+  if (val === 'time')  stories.sort((a,b) => b.pubDate - a.pubDate);
+  if (val === 'gaps')  stories.sort((a,b) => (a.gap==='gap'?0:1)-(b.gap==='gap'?0:1));
+  if (val === 'pub')   stories.sort((a,b) => a.pubId.localeCompare(b.pubId));
+  const el = document.getElementById('trending-feed-inner');
+  if (el) el.innerHTML = stories.map(renderStoryCard).join('');
+};
+
+function renderStoryCard(s) {
+  const pub = PUBLICATIONS.find(p => p.id === s.pubId);
+  if (!pub) return '';
+  const gapCls = s.gap==='gap'?'gap-story':s.gap==='covered'?'covered-story':'';
+  const gapLabel = s.gap==='gap'
+    ? '<div class="gap-ind gap"><div class="gd"></div>Not on Forbes India</div>'
+    : s.gap==='covered'
+    ? '<div class="gap-ind covered"><div class="gd"></div>Covered</div>'
+    : '<div class="gap-ind unknown"><div class="gd"></div>Unknown</div>';
+  const thumb = s.image ? `<img class="card-thumb" src="${s.image}" alt="" loading="lazy" onerror="this.style.display='none'">` : '';
+  const topicTag = s.topic ? `<span class="tag">${s.topic}</span>` : '';
+  return `<div class="story-card ${gapCls}">
+    <div class="card-inner">
+      ${thumb}
+      <div class="card-body">
+        <div class="card-top">
+          <a href="${s.link}" target="_blank" rel="noopener" class="story-title">${s.title}</a>
+          <div class="card-meta">
+            <span class="pub-badge" style="background:${pub.color}">${pub.name}</span>
+            <span class="time-ago">${timeAgo(s.pubDate)}</span>
+          </div>
+        </div>
+        ${s.snippet ? `<div class="snippet">${s.snippet}</div>` : ''}
+        ${topicTag ? `<div class="card-tags">${topicTag}</div>` : ''}
+        <div class="card-footer">
+          ${gapLabel}
+          <div><a href="${s.link}" target="_blank" rel="noopener" class="act-btn">Open ↗</a></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── SIDEBAR FILTERS ───────────────────────────────────────────────────────
+function setBeatFilter(f) {
+  beatFilter = f;
+  ['all','hot','stale','ok'].forEach(x => {
+    document.getElementById('beat-fil-'+x)?.classList.toggle('active', x===f);
+  });
+  if (currentTab === 'beat') renderBeatPulse();
+}
+window.setBeatFilter = setBeatFilter;
+
+function setFeedPub(id) {
+  feedPubFilter = id; activePub = id;
+  buildSidebars();
+  if (currentTab === 'feed') renderFeed();
+  else { currentTab = 'feed'; switchTab('feed'); }
+}
+window.setFeedPub = setFeedPub;
+
+function setFeedTopic(t) {
+  feedTopicFilter = t; activeTopic = t;
+  buildSidebars();
+  if (currentTab === 'feed') renderFeed();
+  else { currentTab = 'feed'; switchTab('feed'); }
+}
+window.setFeedTopic = setFeedTopic;
+
+// ── LOADING STATE ─────────────────────────────────────────────────────────
+function showLoading() {
+  document.getElementById('main-content').innerHTML = `
+    <div style="padding:20px">
+      ${Array(5).fill(0).map(()=>`<div class="skeleton" style="margin-bottom:10px">
+        <div class="sk" style="width:${55+Math.random()*35}%;height:13px"></div>
+        <div class="sk" style="width:${35+Math.random()*40}%;height:11px;margin-top:7px"></div>
+        <div class="sk" style="width:28%;height:10px;margin-top:14px"></div>
+      </div>`).join('')}
+    </div>`;
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function timeAgo(d) {
+  if (!d||isNaN(d)) return '';
+  const m = Math.floor((Date.now()-d)/60000);
+  if (m<1) return 'Just now';
+  if (m<60) return `${m}m ago`;
+  const h = Math.floor(m/60);
+  if (h<24) return `${h}h ago`;
+  return `${Math.floor(h/24)}d ago`;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (type==='err'?' err':'');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
