@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>The Weekly Digest Newsletter</title>
+      <style type="text/css">
+         /* Client Resets (Crucial for Outlook and others) */
+         body, table, td, p, a {
+         font-family: Arial, Helvetica, sans-serif;
+         font-size: 16px;
+         line-height: 1.5;
+         color: #1f2937; /* Default body text color */
+         }
+         body { margin: 0; padding: 0; background-color: #f3f4f6; }
+         table { border-collapse: collapse !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+         img { border: 0; line-height: 100%; outline: none; text-decoration: none; display: block; }
+         a { text-decoration: none; color: #1d4ed8; }
+         /* Custom link style for articles */
+         .read-article-link {
+         color: #1d4ed8; 
+         text-decoration: none;
+         font-weight: bold;
+         border-bottom: 1px solid #1d4ed8;
+         }
+         /* --- NEW MAGAZINE WIDGET STYLES --- */
+         .magazine-outer {
+         background-color: #0a0a0a; /* Dark background for premium look */
+         color: #ffffff;
+         border-radius: 12px;
+         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+         padding: 0; /* Padding is now inside the inner tables */
+         }
+         .magazine-title {
+         color: #fca5a5; /* Light accent color for the title */
+         font-size: 12px;
+         font-weight: 700;
+         text-transform: uppercase;
+         }
+         .story-separator {
+         background-color: #1f2937; /* Dark separator line */
+         height: 1px;
+         line-height: 1px;
+         font-size: 1px;
+         }
+         .editor-note-card {
+         background-color: #ffffff; /* White card inside dark container */
+         color: #1f2937;
+         border-radius: 8px;
+         box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+         }
+         .editor-note-icon {
+         font-size: 40px; 
+         font-weight: 900; 
+         color: #1f2937;
+         line-height: 1;
+         }
+         .story-text a {
+         color: #93c5fd; /* Light blue links on dark background */
+         text-decoration: none;
+         border-bottom: 1px solid #93c5fd;
+         }
+         /* --- MOBILE/RESPONSIVE STYLES (Media Queries) --- */
+         @media screen and (max-width: 600px) {
+         .mobile-padding { padding: 12px !important; }
+         .mobile-content-padding { padding: 8px 12px 12px 12px !important; }
+         /* Header - Maintain 70%/30% width ratio to keep logo and date side-by-side */
+         .header-logo-col { 
+         width: 70% !important; 
+         max-width: 70% !important; 
+         }
+         .header-date-col { 
+         width: 30% !important; 
+         max-width: 30% !important; 
+         font-size: 12px !important; /* Smaller date font on tight mobile */
+         }
+         .mobile-h1 { font-size: 20px !important; }
+         /* MAGAZINE WIDGET FIX: Force image and text to use a defined split on mobile (35/65) */
+         .magazine-story-image-col {
+         width: 35% !important;
+         max-width: 35% !important;
+         padding-right: 8px !important; /* Reduced padding between image and text on mobile */
+         }
+         .magazine-story-text-col {
+         width: 65% !important;
+         max-width: 65% !important;
+         }
+         /* Ensure image scales cleanly within its container */
+         .magazine-story-image-col img {
+         width: 100% !important;
+         max-width: 100% !important;
+         height: auto !important; /* Allow height to adjust based on aspect-ratio */
+         }
+         /* Remove vertical padding from image cells on mobile (added to the image itself) */
+         .magazine-story-image-col {
+         padding-top: 0 !important;
+         padding-bottom: 0 !important;
+         }
+         /* Adjust spacing of text content */
+         .magazine-story-text-col p, 
+         .magazine-story-text-col h3 {
+         margin: 0 !important;
+         }
+         }
+         p img{
+         width: 100% !important;   
+         height: auto !important;
+         display: block !important;
+         }
+      </style>
+   </head>
+      <body style="margin: 0; padding: 0; background-color: #f3f4f6;">
+      <!-- Outer Container Table (600px max width) -->
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; margin: 20px auto; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
+         <tr>
+            <td align="center" valign="top">
+               <!-- 1. HEADER SECTION -->
+               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1f2937; color: #ffffff; border-radius: 12px 12px 0 0; border-bottom: 3px solid #1d4ed8;">
+                  <tr>
+                     <td class="mobile-padding" style="padding: 10px 24px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                           <tr>
+                              <td colspan="2" align="center" style="padding-bottom: 10px;">
+                                 <p style="font-size: 12px; color: #9ca3af; margin: 0; line-height: 1.2;">
+                                    <!-- <a target="_blank" href="https://www.forbesindia.com//" style="color: #9ca3af; text-decoration: underline;">View in Browser</a> | 
+                                       <a target="_blank" href="https://stg-mt.forbesindia.com/subscription" style="color: #9ca3af; text-decoration: underline;">Manage Subscription</a> -->
+                                 </p>
+                              </td>
+                           </tr>
+                           <tr>
+                              <!-- Logo and Title -->
+                              <td class="header-logo-col" width="70%" align="left" valign="bottom" style="width: 70%; max-width: 70%;">
+                                 <p style="margin: 0 0 4px 0; padding: 0;">
+                                    <img src="https://images.forbesindia.com/blog/wp-content/uploads/2025/10/forbeslogo-1-2025-10-8c82c269e82b0027d98922ffd47a4f98.png" alt="Forbes India Logo" width="120" height="28" style="display: block; border: 0; max-width: 120px;" onerror="this.src='https://placehold.co/120x28/1f2937/ffffff?text=Logo';">
+                                 </p>
+                                 <h1 class="mobile-h1" style="font-size: 24px; font-weight: 800; margin: 0; padding: 0; color: #ffffff; line-height: 1.2;">
+                                    <div style="line-height:22px; white-space:normal;"><div>Data Dive</div><div></div></div>                                    <span style="display: block; width: 60px; height: 3px; background-color: #1d4ed8; margin-top: 4px; border-radius: 1px;"></span>
+                                 </h1>
+                              </td>
+                              <!-- Date -->
+                              <td class="header-date-col" width="30%" align="right" valign="bottom" style="width: 30%; max-width: 30%;">
+                                 <p style="font-size: 14px; color: #9ca3af; margin: 0; line-height: 1.2; font-weight: 500;">Jul 3, 2026</p>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+               </table>
+               <!-- Email Body -->
+               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #ffffff;">
+                  <tr>
+                     <td class="mobile-padding" style="padding: 24px;">
+                        <!-- Email Summary -->
+                                                
+
+
+<img style="width: 100%;max-width: 700px;height: auto" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/04/data-dive-banner-2026-04-baaea69c8a4bdd588569648dee8f80c2.jpg" alt="AI related image" />
+
+
+
+<p><strong>Is the West Asia war shifting India’s billions?</strong></p>
+                                                <p>Dear reader,</p>
+                                                <p>The competition to become India’s data centre hub is officially in an overdrive. Aiming to outpace neighbouring Andhra Pradesh, Telangana is planning to build its first dedicated data centre city. The proposed site is roughly 55 km from Hyderabad which is already a hub for hyperscale facilities.</p>
+                                                <p>Some media reports suggest that Chief Minister Revanth Reddy has already asked officials to prepare a detailed report on the project’s water, power, and connectivity requirements as the move itself is part of the state’s larger push to build an estimated 11 GW of data centre capacity.</p>
+                                                <p>But this rush extends far beyond Telangana. It is a symptom of a shifting national investment landscape. As the West Asia war led to a cooling down in returns on manufacturing and renewables, this week we explore how investors are flocking to two hot sectors—data centres and nuclear energy.</p>
+                                                <p>Also catch our other stories which cover a weak monsoon and falling kharif sowing, stranded crude in the Gulf, Russia’s record share of India’s oil imports, and shifting commodity prices amid the Iran-US talks.</p>
+                                                <p>For our selection of candid interviews this week, we bring you actors Tamannaah Bhatia and Bhumi Pednekkar on their careers, personal journeys, and ventures beyond acting.</p>
+                                                <p>Until next time!</p>
+                                                <p>-<a href="https://www.forbesindia.com/author/samreen-wani/6225">Samreen</a></p>
+                                                                                                <!-- Graphic of the Week -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+                           <tr>
+                              <td height="1" style="background:#e5e7eb;font-size:1px;line-height:1px;">&nbsp;</td>
+                           </tr>
+                        </table>
+                                                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+                           <tr>
+                              <td class="mobile-h2" style="font-size: 24px; font-weight: bold; margin: 0; padding: 0 0 0 12px; border-left: 4px solid #1d4ed8; line-height: 1.1;">
+                                 <span style="display: block; font-size: 12px; font-weight: bold; color: #1d4ed8; text-transform: uppercase; margin-bottom: 2px; line-height: 1;">Graphic of the Week</span>
+                                 <span style="display: block; font-size: 24px; color: #1f2937;">Investment bets</span>
+                              </td>
+                           </tr>
+                        </table>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid #e5e7eb; border-radius: 12px; background-color: #f9fafb; margin-bottom: 32px;">
+                           <tr>
+                              <td style="padding: 20px;">
+                                                                                                   <p style="font-size: 14px; line-height: 1.6; color: #374151; margin-top:16px; padding-top:16px; ">
+                                    <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/06/InvestmentBetsGOD-2026-06-a87bfc7a456f5bbcc01da59046f732fa.jpg" alt="" width="1200" height="900" />New project investment proposals rose from Rs 11.3 lakh crore in Q1 FY26 to Rs 14.3 lakh crore in Q1 FY27 (till date), but the project mix has shifted sharply, shows data from economic and business database CMIE. Nuclear energy surged from under Rs 1 lakh crore in Q1FY26 to Rs 6.8 lakh crore in Q1FY27 and data centres to Rs 4.7 lakh crore in the same period. Maharashtra alone drew nearly 83 percent of announcements, hosting both clusters. Meanwhile, renewables, manufacturing, and transport services all fell steeply. The decline reflects the West Asia crisis, which has dampened trade-exposed, capital-sensitive sectors like manufacturing and transport.                                 </p>
+                                                                                                   <p style="margin-top:16px;">
+                                    <a target="_blank" href="https://www.forbesindia.com/article/upfront/news-by-numbers/graphic-of-the-day-investment-bets/2995473/1" style="color: #1d4ed8; text-decoration: none; font-weight: bold; font-size: 14px; line-height: 1.2; border-bottom: 2px solid #1d4ed8;">View story</a>
+                                 </p>
+                                                               </td>
+                           </tr>
+                        </table>
+                        <!-- Stories by Numbers -->
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:24px 0;">
+                           <tr>
+                              <td height="1" style="font-size:1px; line-height:1px; background-color:#d1d5db;">&nbsp;</td>
+                           </tr>
+                        </table>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
+                           <tbody>
+                              <tr>
+                                 <td class="mobile-h2" style="font-size: 24px; font-weight: bold; margin: 0; padding: 0 0 0 12px; border-left: 4px solid #1f2937;">
+                                    <span style="display: block; font-size: 24px; color: #1f2937;">
+                                    News by numbers</span>            </span>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="magazine-outer" style="margin-bottom: 24px;">
+                           <tbody>
+                              <tr>
+                                 <td style="padding: 16px;">
+                                                                        <!-- Title and Accent -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                       <tbody>
+                                          <tr>
+                                             <!-- Image Column (Desktop: 30%, Mobile: 35%) -->
+                                                                                                                                       <td width="30%" 
+                                                class="magazine-story-image-col"
+                                                align="left" 
+                                                valign="top" 
+                                                style="padding-right:12px;">
+                                                <a href="https://www.forbesindia.com/article/upfront/news-by-numbers/graphic-of-the-day-its-raining-but-its-not-enough/2995309/1"
+                                                   target="_blank"
+                                                   style="display:inline-block;text-decoration:none;">
+                                                <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/06/RainsRevised-2026-06-81248edf97e37923389d3d6a74059425.jpg"
+                                                   alt="It’s raining, but it’s not enough"
+                                                   width="180"
+                                                   style="display:block;
+                                                   width:100%;
+                                                   max-width:180px;
+                                                   height:auto;
+                                                   border:0;
+                                                   border-radius:6px;">
+                                                </a>
+                                             </td>
+                                                                                                                                       <!-- Text Column (Desktop: 70%, Mobile: 65%) -->
+                                             <td class="magazine-story-text-col" width="70%" align="left" valign="top" style="width: 70%;">
+                                                                                                <p style="font-size: 16px; font-weight: 700; margin: 4px 0 6px 0; line-height: 1.2; color: #ffffff;">It’s raining, but it’s not enough                                                </p>
+                                                                                                                                                <p style="font-size: 14px; font-weight: 100; margin: 4px 0 6px 0; line-height: 1.4; color: #ffffff;">
+                                                   Indian monsoon sees the worst June deficit in years, surpassing previous El Niño shortfalls                                                </p>
+                                                                                                <a target="_blank" href="https://www.forbesindia.com/article/upfront/news-by-numbers/graphic-of-the-day-its-raining-but-its-not-enough/2995309/1" style="font-size: 12px; font-weight: 700; display: block; margin-top: 8px;">
+                                                View story                                                </a>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- Separator Line -->
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 8px 0 16px 0;">
+                                       <tbody>
+                                          <tr>
+                                             <td colspan="2" class="story-separator" style="padding: 0 10%;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                                                                                <!-- End Stories by Numbers -->
+                                                            <!-- Title and Accent -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                       <tbody>
+                                          <tr>
+                                             <!-- Image Column (Desktop: 30%, Mobile: 35%) -->
+                                                                                                                                       <td width="30%" 
+                                                class="magazine-story-image-col"
+                                                align="left" 
+                                                valign="top" 
+                                                style="padding-right:12px;">
+                                                <a href="https://www.forbesindia.com/article/upfront/news-by-numbers/graphic-of-the-day-sowing-slips/2995498/1"
+                                                   target="_blank"
+                                                   style="display:inline-block;text-decoration:none;">
+                                                <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/Kharif-2026-07-40b31b1d24464309154ebae4a2d1d7b7.jpg"
+                                                   alt="Sowing slips"
+                                                   width="180"
+                                                   style="display:block;
+                                                   width:100%;
+                                                   max-width:180px;
+                                                   height:auto;
+                                                   border:0;
+                                                   border-radius:6px;">
+                                                </a>
+                                             </td>
+                                                                                                                                       <!-- Text Column (Desktop: 70%, Mobile: 65%) -->
+                                             <td class="magazine-story-text-col" width="70%" align="left" valign="top" style="width: 70%;">
+                                                                                                <p style="font-size: 16px; font-weight: 700; margin: 4px 0 6px 0; line-height: 1.2; color: #ffffff;">Sowing slips                                                </p>
+                                                                                                                                                <p style="font-size: 14px; font-weight: 100; margin: 4px 0 6px 0; line-height: 1.4; color: #ffffff;">
+                                                   Delayed monsoon drags kharif sowing 22.7 percent lower; soybean, cotton acreage worst hit                                                </p>
+                                                                                                <a target="_blank" href="https://www.forbesindia.com/article/upfront/news-by-numbers/graphic-of-the-day-sowing-slips/2995498/1" style="font-size: 12px; font-weight: 700; display: block; margin-top: 8px;">
+                                                View story                                                </a>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- Separator Line -->
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 8px 0 16px 0;">
+                                       <tbody>
+                                          <tr>
+                                             <td colspan="2" class="story-separator" style="padding: 0 10%;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                                                                                <!-- End Stories by Numbers -->
+                                                            <!-- Title and Accent -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                       <tbody>
+                                          <tr>
+                                             <!-- Image Column (Desktop: 30%, Mobile: 35%) -->
+                                                                                                                                       <td width="30%" 
+                                                class="magazine-story-image-col"
+                                                align="left" 
+                                                valign="top" 
+                                                style="padding-right:12px;">
+                                                <a href="https://www.forbesindia.com/article/upfront/news-by-numbers/graphic-of-the-day-stranded-crude-in-the-gulf/2995338/1"
+                                                   target="_blank"
+                                                   style="display:inline-block;text-decoration:none;">
+                                                <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/06/Crude-2026-06-319f49d0e15ca7255573ae61204d0647.jpg"
+                                                   alt="Stranded crude in the Gulf"
+                                                   width="180"
+                                                   style="display:block;
+                                                   width:100%;
+                                                   max-width:180px;
+                                                   height:auto;
+                                                   border:0;
+                                                   border-radius:6px;">
+                                                </a>
+                                             </td>
+                                                                                                                                       <!-- Text Column (Desktop: 70%, Mobile: 65%) -->
+                                             <td class="magazine-story-text-col" width="70%" align="left" valign="top" style="width: 70%;">
+                                                                                                <p style="font-size: 16px; font-weight: 700; margin: 4px 0 6px 0; line-height: 1.2; color: #ffffff;">Stranded crude in the Gulf                                                </p>
+                                                                                                                                                <p style="font-size: 14px; font-weight: 100; margin: 4px 0 6px 0; line-height: 1.4; color: #ffffff;">
+                                                   93 million non-Iranian barrels could clear Hormuz within 10-15 days, Kpler estimates                                                </p>
+                                                                                                <a target="_blank" href="https://www.forbesindia.com/article/upfront/news-by-numbers/graphic-of-the-day-stranded-crude-in-the-gulf/2995338/1" style="font-size: 12px; font-weight: 700; display: block; margin-top: 8px;">
+                                                View story                                                </a>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- Separator Line -->
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 8px 0 16px 0;">
+                                       <tbody>
+                                          <tr>
+                                             <td colspan="2" class="story-separator" style="padding: 0 10%;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                                                                                <!-- End Stories by Numbers -->
+                                                            <!-- Title and Accent -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                       <tbody>
+                                          <tr>
+                                             <!-- Image Column (Desktop: 30%, Mobile: 35%) -->
+                                                                                                                                       <td width="30%" 
+                                                class="magazine-story-image-col"
+                                                align="left" 
+                                                valign="top" 
+                                                style="padding-right:12px;">
+                                                <a href="https://www.forbesindia.com/article/news/at-over-50-russias-share-in-indias-oil-imports-hits-a-record-high-in-june/2995366/1"
+                                                   target="_blank"
+                                                   style="display:inline-block;text-decoration:none;">
+                                                <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/06/GettyImages513669180BG-2026-06-080f8bd11ffec9b2e4c2646475ffbdc7.jpg"
+                                                   alt="Russia’s share in crude imports hits r…"
+                                                   width="180"
+                                                   style="display:block;
+                                                   width:100%;
+                                                   max-width:180px;
+                                                   height:auto;
+                                                   border:0;
+                                                   border-radius:6px;">
+                                                </a>
+                                             </td>
+                                                                                                                                       <!-- Text Column (Desktop: 70%, Mobile: 65%) -->
+                                             <td class="magazine-story-text-col" width="70%" align="left" valign="top" style="width: 70%;">
+                                                                                                <p style="font-size: 16px; font-weight: 700; margin: 4px 0 6px 0; line-height: 1.2; color: #ffffff;">Russia’s share in crude imports hits r…                                                </p>
+                                                                                                                                                <p style="font-size: 14px; font-weight: 100; margin: 4px 0 6px 0; line-height: 1.4; color: #ffffff;">
+                                                   Supplies from Gulf countries decline; Venezuela returns after years of US sanctions                                                </p>
+                                                                                                <a target="_blank" href="https://www.forbesindia.com/article/news/at-over-50-russias-share-in-indias-oil-imports-hits-a-record-high-in-june/2995366/1" style="font-size: 12px; font-weight: 700; display: block; margin-top: 8px;">
+                                                View story                                                </a>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- Separator Line -->
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 8px 0 16px 0;">
+                                       <tbody>
+                                          <tr>
+                                             <td colspan="2" class="story-separator" style="padding: 0 10%;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                                                                                <!-- End Stories by Numbers -->
+                                                            <!-- Title and Accent -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                       <tbody>
+                                          <tr>
+                                             <!-- Image Column (Desktop: 30%, Mobile: 35%) -->
+                                                                                                                                       <td width="30%" 
+                                                class="magazine-story-image-col"
+                                                align="left" 
+                                                valign="top" 
+                                                style="padding-right:12px;">
+                                                <a href="https://www.forbesindia.com/photogallery/news/how-have-commodity-prices-moved-as-iran-and-the-us-begin-talks-in-europe/2995183/1"
+                                                   target="_blank"
+                                                   style="display:inline-block;text-decoration:none;">
+                                                <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/06/GettyImages2282654401BG-2026-06-6c586c3ef7d59f5dc4f687f78a6f0710.jpg"
+                                                   alt="Commodity prices shift amid Iran-US talk…"
+                                                   width="180"
+                                                   style="display:block;
+                                                   width:100%;
+                                                   max-width:180px;
+                                                   height:auto;
+                                                   border:0;
+                                                   border-radius:6px;">
+                                                </a>
+                                             </td>
+                                                                                                                                       <!-- Text Column (Desktop: 70%, Mobile: 65%) -->
+                                             <td class="magazine-story-text-col" width="70%" align="left" valign="top" style="width: 70%;">
+                                                                                                <p style="font-size: 16px; font-weight: 700; margin: 4px 0 6px 0; line-height: 1.2; color: #ffffff;">Commodity prices shift amid Iran-US talk…                                                </p>
+                                                                                                                                                <p style="font-size: 14px; font-weight: 100; margin: 4px 0 6px 0; line-height: 1.4; color: #ffffff;">
+                                                   A look at how oil, gas, food, and metal prices surged and eased through the West Asia war                                                </p>
+                                                                                                <a target="_blank" href="https://www.forbesindia.com/photogallery/news/how-have-commodity-prices-moved-as-iran-and-the-us-begin-talks-in-europe/2995183/1" style="font-size: 12px; font-weight: 700; display: block; margin-top: 8px;">
+                                                View story                                                </a>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- Separator Line -->
+                                                                                                         </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                                                <!-- End Stories by Numbers -->
+                                                <!-- Podcasts & Video -->
+                                                <!-- End Podcasts & Video -->
+                        <!-- Reading This Week -->
+                                                <!-- End Reading This Week -->
+                        <!-- Upcoming on Forbes India -->
+                                                <!-- End Upcoming on Forbes India -->
+                                                                        <!-- Graphic of the Week -->
+                                                <!-- Podcasts & Video -->
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:24px 0;">
+                           <tr>
+                              <td height="1" style="font-size:1px; line-height:1px; background-color:#d1d5db;">&nbsp;</td>
+                           </tr>
+                        </table>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
+                           <tbody>
+                              <tr>
+                                 <td class="mobile-h2" style="font-size: 24px; font-weight: bold; margin: 0; padding: 0 0 0 12px; border-left: 4px solid #1d4ed8; line-height: 1.1; color: #1f2937;">
+                                    <span style="display: block; font-size: 24px; color: #1f2937;">
+                                    Videos</span>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                           <tbody>
+                              <tr>
+                                                                                                   <td width="80" valign="top" style="padding-right:16px;">
+                                                                        <a href="https://www.youtube.com/watch?v=dTt8Gdtie_E&#038;t=544s"
+                                       target="_blank"
+                                       style="display:inline-block;text-decoration:none;">
+                                    <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/Tamannah-Bhatia-2026-07-fd0f381be419a0e73e903ea484a1b6c6.jpg"
+                                       alt="I was smitten: Tamannaah Bhatia"
+                                       width="100"
+                                       style="display:block;
+                                       border:0;
+                                       outline:none;
+                                       text-decoration:none;
+                                       height:auto;
+                                       border-radius:0 0 8px 8px;width: 100%">
+                                    </a>
+                                 </td>
+                                                                                                   <!-- Text Column (Desktop: 70%, Mobile: 65%) -->
+                                 <td width="*" valign="top">
+                                                                        <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 4px 0; line-height: 1.4; color: #1f2937;">I was smitten: Tamannaah Bhatia</h3>
+                                                                                                            <p style="font-size: 14px; color: #4b5563; margin: 0 0 8px 0;">
+                                       The Baahubali star on her affair with the movies, being an outsider in the industry and building a brand beyond acting.                                    </p>
+                                                                        <a target="_blank" href="https://www.youtube.com/watch?v=dTt8Gdtie_E&#038;t=544s" class="read-article-link" style="font-size: 12px; font-weight: bold; border-bottom: 1px solid #1d4ed8; color: #1d4ed8;">
+                                    Watch now                                    </a>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px; padding-bottom: 16px; ">
+                           <tbody>
+                              <tr>
+                                                                                                   <td width="80" valign="top" style="padding-right:16px;">
+                                                                        <a href="https://www.youtube.com/watch?v=7GSXAalcnmI"
+                                       target="_blank"
+                                       style="display:inline-block;text-decoration:none;">
+                                    <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/05/11-2026-05-91927ace79fa3bc32c8b157b446c0517.jpg"
+                                       alt="Done seeking validation: Bhumi Pednekar"
+                                       width="100"
+                                       style="display:block;
+                                       border:0;
+                                       outline:none;
+                                       text-decoration:none;
+                                       height:auto;
+                                       border-radius:0 0 8px 8px;width: 100%">
+                                    </a>
+                                 </td>
+                                                                                                   <!-- Text Column (Desktop: 70%, Mobile: 65%) -->
+                                 <td width="*" valign="top">
+                                                                        <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 4px 0; line-height: 1.4; color: #1f2937;">Done seeking validation: Bhumi Pednekar</h3>
+                                                                                                            <p style="font-size: 14px; color: #4b5563; margin: 0 0 8px 0;">
+                                       In a candid conversation with Forbes India, Pednekar talks about why she seeks imperfect female characters, co-founding an AI-led creative technology company, and more.                                    </p>
+                                                                        <a target="_blank" href="https://www.youtube.com/watch?v=7GSXAalcnmI" class="read-article-link" style="font-size: 12px; font-weight: bold; border-bottom: 1px solid #1d4ed8; color: #1d4ed8;">
+                                    Watch now                                    </a>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                                                                        <!-- End Podcasts & Video -->
+                        <!-- Reading This Week -->
+                                                <!-- End Reading This Week -->
+                        <!-- Upcoming on Forbes India -->
+                                                <!-- End Upcoming on Forbes India -->
+                                                                        <!-- <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;margin-top: 24px; background-color: #eff6ff; border-radius: 6px;">
+                           <tbody>
+                              <tr>
+                                 <td class="mobile-padding" style="padding: 16px;"> -->
+                        <!--                                                       <p style="font-size:14px;font-weight:bold;margin:0 0 4px 0;color:#1f2937;">
+                                                                                                 | , Forbes India
+                                                          </p>
+                            -->
+                        <!-- <p style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #1f2937;">Suveen Sinha | Editor, Forbes India</p> -->
+                        <!-- <p style="font-size: 14px; color: #4b5563; margin: 0;">Connect on <a target="_blank" href="https://beta-mt.forbesindia.com/" style="color: #1d4ed8; text-decoration: underline;">Our Website</a></p> -->
+                        <!--  </td>
+                           </tr>
+                           </tbody>
+                           </table> -->
+                     </td>
+                  </tr>
+               </table>
+               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1f2937; color: #ffffff; border-radius: 0 0 12px 12px;">
+                  <tbody>
+                     <tr>
+                        <td class="mobile-padding" align="center" style="padding: 32px 24px;">
+                           <p style="font-size: 12px; color: #9ca3af; font-weight: bold; margin: 0 0 16px 0; text-transform: uppercase;">CONNECT WITH US</p>
+                           <!-- Social Icons (Using text/emojis as a fallback) -->
+                           <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 2px 10px;">
+                              <tr>
+                                 <!-- X (Twitter) -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://twitter.com/ForbesIndia"
+                                       style="background-color:#1DA1F2;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">X</span>
+                                    </a>
+                                 </td>
+                                 <!-- LinkedIn -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://www.linkedin.com/company/forbes-india/"
+                                       style="background-color:#0A66C2;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">in</span>
+                                    </a>
+                                 </td>
+                                 <!-- Facebook -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://www.facebook.com/ForbesIndia/"
+                                       style="background-color:#3b5998;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">f</span>
+                                    </a>
+                                 </td>
+                                 <!-- Instagram -->
+                                 <td align="center" style="padding:0 4px;">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                       <tr>
+                                          <td align="center"
+                                             width="30"
+                                             height="30"
+                                             bgcolor="#C13584"
+                                             style="border-radius:50%;">
+                                             <a href="https://www.instagram.com/forbesindia/" target="_blank"
+                                                style="display:block;line-height:30px;text-decoration:none;">
+                                             <img
+                                                src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/instaicon-2026-02-798fa779ba75b8c19bdd34af8395a066.png"
+                                                alt="Instagram"
+                                                width="24"
+                                                height="24"
+                                                style="display:block;border:0;">
+                                             </a>
+                                          </td>
+                                       </tr>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </table>
+                           <p style="font-size: 12px; color: #6b7280; margin: 0 0 4px 0;">Copyright © 2026 Forbes India. All Rights Reserved</p>
+                           <p class="unsubscribe" style="font-size: 12px; margin: 0;">
+                              <a target="_blank" href="*|UNSUBSCRIBE|*" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a> | 
+                              <a target="_blank" href="https://forbesindia.com/newsletters" style="color: #6b7280; text-decoration: underline;">Manage preferences</a>
+                           </p>
+                        </td>
+                     </tr>
+                     <!-- Added a small bottom strip to emphasize the blue border used above -->
+                     <tr>
+                        <td height="3" style="font-size: 3px; line-height: 3px; background-color: #1d4ed8; border-radius: 0 0 12px 12px;">&nbsp;</td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </table>
+   </body>
+</html>
