@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Forbes India Weekly BUSINESS DIGEST</title>
+      <style>
+         /* Global & Reset Styles */
+         body, table, td, a {
+         -webkit-text-size-adjust: 100%;
+         -ms-text-size-adjust: 100%;
+         }
+         table, td {
+         mso-table-lspace: 0pt;
+         mso-table-rspace: 0pt;
+         /* Ensures no extra space in Outlook */
+         border-collapse: collapse !important; 
+         }
+         img {
+         -ms-interpolation-mode: bicubic;
+         /* Prevents image borders in some clients */
+         border: 0;
+         height: auto;
+         line-height: 100%;
+         outline: none;
+         text-decoration: none;
+         }
+         body {
+         margin: 0;
+         padding: 0;
+         font-family: Arial, sans-serif;
+         background-color: #F8F9FA; 
+         color: #333333;
+         }
+         h1, h2, h3, h4, h5, h6 {
+         font-family: 'Times New Roman', serif;
+         margin: 0;
+         line-height: 1.2;
+         color: #1a1a1a;
+         }
+         p {
+         font-family: Arial, sans-serif;
+         line-height: 1.6;
+         margin-bottom: 15px; 
+         color: #555555;
+         }
+         p:last-child {
+         margin-bottom: 0;
+         }
+         a {
+         text-decoration: none;
+         color: #0D3B66;
+         }
+         .container {
+         width: 100%;
+         max-width: 600px;
+         margin: auto;
+         border-radius: 16px; 
+         overflow: hidden;
+         background-color: #ffffff;
+         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); 
+         }
+         /* Important: Use specific classes for padding and background to avoid inline style conflicts */
+         .section {
+         padding: 40px 30px;
+         }
+         .divider {
+         border-bottom: 1px solid #e9ecef;
+         }
+         /* Specific Component Styles */
+         .header {
+         padding: 24px 30px;
+         background-color: #ffffff;
+         border-bottom: 1px solid #dee2e6;
+         }
+         .header-info {
+         font-family: Arial, sans-serif;
+         font-size: 14px;
+         color: #888888;
+         text-transform: uppercase;
+         }
+         .intro-text {
+         font-family: 'Times New Roman', serif;
+         font-size: 20px;
+         font-style: italic;
+         color: #6c757d;
+         }
+         .story-block {
+         padding: 20px 30px; 
+         border-bottom: 1px solid #e9ecef;
+         }
+         .story-image {
+         width: 100%;
+         height: auto;
+         border-radius: 8px;
+         margin: 20px 0;
+         }
+         .quote-section {
+         background-color: #E6EEF5;
+         color: #0D3B66;
+         font-family: 'Times New Roman', serif;
+         font-style: italic;
+         padding: 40px 30px;
+         border-radius: 0 0 16px 16px;
+         }
+         .footer {
+         padding: 40px 30px;
+         background-color: #ffffff;
+         }
+         /* Divider */
+         .stories-divider-container {
+         /*padding: 15px 30px 10px 30px; */
+         background-color: #ffffff; 
+         }
+         .stories-divider {
+         font-family: Arial, sans-serif;
+         font-size: 16px;
+         font-weight: 700;
+         color: #0D3B66; 
+         background-color: #F0F8FF; 
+         padding: 12px 20px;
+         text-align: center;
+         letter-spacing: 2px;
+         text-transform: uppercase;
+         border-radius: 8px; 
+         border-left: 5px solid #0D3B66; 
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+         }
+         /* Story Number Badge Styling */
+         .story-number-badge {
+         font-family: Arial, sans-serif; 
+         font-size: 20px; 
+         font-weight: 900;
+         color: #0D3B66; 
+         background-color: #E0EFFF; 
+         padding: 8px 12px;
+         line-height: 1;
+         border-radius: 6px; 
+         text-align: center;
+         white-space: nowrap;
+         }
+         /* Table of Contents (In this edition) Styling */
+         .toc-box {
+         background-color: #F7F7F7; 
+         padding: 15px 25px;
+         border-radius: 10px;
+         margin-top: 15px; 
+         margin-bottom: 25px; /* Added spacing after TOC */
+         border-left: 4px solid #0D3B66; 
+         }
+         /* New: Magazine Widget Styles */
+         .magazine-widget-container {
+         padding: 20px 20px;
+         background-color: #F0F8FF; /* Light blue background for emphasis */
+         border-radius: 12px;
+         margin-bottom: 25px; 
+         border: 1px solid #C4DFFD;
+         }
+         .cover-letter-headline {
+         font-size: 24px;
+         font-weight: 700;
+         color: #1a1a1a;
+         font-family: 'Times New Roman', serif;
+         margin: 10px 0 5px 0;
+         line-height: 1.2;
+         }
+         .story-thumbnail {
+         width: 100%; 
+         height: auto; 
+         display: block;
+         border-radius: 4px;
+         border: 1px solid #e9ecef;
+         }
+         /* Social Follow Styling */
+         .social-follow-title {
+         font-size: 18px;
+         font-weight: bold;
+         color: #0D3B66;
+         margin-bottom: 15px;
+         font-family: Arial, sans-serif;
+         }
+         /* Social Icon Styling (Shared) */
+         .social-icon {
+         display: block; /* Use block to ensure correct display in TD */
+         width: 30px;
+         height: 30px;
+         line-height: 30px;
+         text-align: center;
+         border-radius: 50%;
+         color: #ffffff;
+         font-size: 14px;
+         font-weight: bold;
+         text-decoration: none;
+         }
+         /* Specific Social Colors */
+         .icon-whatsapp { background-color: #25D366; }
+         .icon-linkedin { background-color: #0A66C2; }
+         .icon-twitter { background-color: #1DA1F2; }
+         .icon-facebook { background-color: #3b5998; }
+         .icon-instagram { background-color: #C13584; }
+         /* MARKET WIDGET: Replaced Flex with Table-based layout for robust compatibility */
+         .market-widget-table {
+         border: 1px solid #E9ECEF;
+         border-radius: 8px; /* May not render in all clients, but safe */
+         overflow: hidden; /* Safe wrapper */
+         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Fails gracefully */
+         background-color: #ffffff; /* Container background */
+         }
+         .market-item-td {
+         text-align: center;
+         background-color: #F8F9FA;
+         padding: 15px 5px;
+         border-right: 1px solid #E9ECEF;
+         }
+         .market-item-td:last-child {
+         border-right: none;
+         }
+         .market-item-td .label {
+         font-size: 11px; 
+         font-weight: bold;
+         color: #1a1a1a;
+         margin-bottom: 3px;
+         text-transform: uppercase;
+         line-height: 1.2;
+         }
+         .market-item-td .value {
+         font-size: 16px; 
+         font-weight: bold;
+         color: #333;
+         margin-bottom: 3px;
+         line-height: 1.2;
+         }
+         .market-item-td .change {
+         font-size: 12px; 
+         font-weight: bold;
+         line-height: 1.2;
+         }
+         .change.positive {
+         color: #28a745; 
+         }
+         .change.negative {
+         color: #dc3545; 
+         }
+         /* Mobile Responsive Styles */
+         @media only screen and (max-width: 480px) {
+         .container {
+         border-radius: 0;
+         }
+         .section {
+         padding: 20px 15px;
+         }
+         .story-block {
+         padding: 20px 15px;
+         }
+         /* --- CHANGE MADE HERE ---
+         Removed the mobile-specific styles that forced stacking 
+         for .story-img-col and .story-text-col in the Magazine Widget. 
+         This ensures the desktop side-by-side layout (image on left, text on right) 
+         persists on mobile, as requested.
+         */
+         /* .story-img-col {
+         display: block !important;
+         width: 100% !important;
+         padding-right: 0 !important; 
+         padding-bottom: 10px !important; 
+         }
+         .story-text-col {
+         display: block !important;
+         width: 100% !important;
+         }
+         .story-img-col img {
+         width: 100% !important;
+         height: auto !important;
+         max-width: 100% !important;
+         } */
+         /* IMPORTANT: On mobile, market items maintain column layout (safer for Outlook) */
+         .market-item-td {
+         width: 25% !important; /* Keep 4 columns across */
+         padding: 10px 5px !important;
+         }
+         }
+         p img{
+         width: 100% !important;   
+         height: auto !important;
+         display: block !important;
+         }
+      </style>
+   </head>
+      <body style="margin:0; padding:0; background-color:#F8F9FA;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#F8F9FA">
+         <tr>
+            <td align="center" style="padding:20px 0;">
+               <table class="container" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <!-- Header -->
+                  <tr>
+                     <td class="header" align="center">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                           <tr>
+                              <td align="left">
+                                 <img src="https://images.forbesindia.com/blog/wp-content/uploads/2025/11/ForbesIndiaLogo5-2025-11-8dd9c98df910d35f7144e2ab102cdacf.png"
+                                    alt="Forbes India Logo"
+                                    width="120" height="30"
+                                    style="display:block; border:0; outline:none; text-decoration:none;">
+                              </td>
+                              <td align="right" class="header-info">
+                                 <span style="font-size:12px; color:#6c757d;">
+                                 Monday, July 6, 2026                                 </span><br>
+                                 <span style="font-size:14px; font-weight:bold; color:#0D3B66; letter-spacing:1px;">
+                                 <div style="line-height:22px; white-space:normal;margin-left:20px;"><div>Weekly Digest</div><div></div></div>                                 </span>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                  <!-- Story Blocks -->
+                  <tr>
+                     <td class="story-block" style="padding-bottom:30px;">
+                        <!-- Email Summary -->
+                                                
+<!-- Image --></p>
+
+<img style="width: 100%;max-width: 700px;height: auto;border: 0" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/GettyImages1968504617BG-2026-07-b0e3562dc715788186590043710541c3.jpg" alt="Weekly Digest" />
+
+<p><!-- Caption --></p>
+
+
+<p style="margin: 0;font-size: 13px;line-height: 1.4;color: #777777;font-family: Arial, Helvetica, sans-serif;font-style: italic">Photo by Tom Williams/Getty Images</p>
+
+
+
+
+<p><em>Hello and welcome back to Forbes India Weekly Digest!</em></p>
+                                                <p>What’s in a (user)name? The possibility of impersonation, frauds, phishing and a lot more, if you ask the Ministry of Electronics and Information Technology (MeitY).</p>
+                                                <p>Meta-owned messaging and call platform WhatsApp came up with the feature of picking a unique username for those using the platform as an identifier in lieu of phone numbers last week. The username will be displayed as “@Userame” when an unknown person contacts someone over a call or text on WhatsApp, masking their phone number.</p>
+                                                <p>The immediate benefit is reducing spam and protecting privacy if you are part of WhatsApp groups. However, it also digs up the old traceability debate where the government of India mandates traceability for Significant Social Media Intermediaries (with over 5 million users) to offer a mechanism to trace the point of origination of text or speech to curb spread of misinformation.</p>
+                                                <p>The IT Rules, 2021 mandate traceability which seems to be at the centre of a notice sent by MeitY to Meta, asking it to address concerns on identity spoofing, and possibility of increase in online fraud, phishing, digital arrest scams and impersonation.</p>
+                                                <p>Meta has time till July 9 to come back with its response. While the username feature is global, India is the first country to have asked Meta to hold back on the roll out.</p>
+                                                <p>Just like the “forward” arrows on texts being shared with multiple users, WhatsApp might come up with new features or markers for the username debate.</p>
+                                                <p>Here is all that unfolded over the week:</p>
+                                                <!-- In This Edition -->
+                                                <div class="toc-box" style="margin-bottom:20px;">
+                           <p style="font-size:16px; font-weight:bold; color:#1a1a1a; margin-top:0; margin-bottom:10px;">
+                              In this edition:
+                           </p>
+                           <ul style="list-style-type:none; padding:0; margin:0;">
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/article/technology/designing-an-ev-where-do-designers-draw-the-line/2995564/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 🚘Automakers think fresh to design EVs of the future                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/article/life/i-influencer-the-rise-of-virtual-characters-on-social-media/2995552/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 🤹Are AI influencers coming for the creator economy                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/article/news/indias-middle-class-growing-at-6-3-percent-a-year-nirmala-sitharaman/2995608/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 ⏫Indian middle class powering growth says FM                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/article/leadership/the-goal-now-is-to-create-a-legacy-neeraj-chopra/2995426/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 🏅Neeraj Chopra eyes Commonwealth medals after injury                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/article/news/whatsapp-rolls-out-username-feature-not-all-users-are-happy/2995482/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 📨WhatsApp’s username feature needs to address key concerns                                 </a>
+                              </li>
+                                                         </ul>
+                        </div>
+                                                                        <!-- Render sections in the preserved order -->
+                                                <!-- If widgetKey is magazine_stories or similar, render magazine style -->
+                                                               </td></tr>
+                  <tr>
+                     <td align="center" class="stories-divider-container" style="padding: 15px 30px 10px 30px">
+                        <div class="stories-divider">FROM THE MAGAZINE</div>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    🚘Automakers think fresh to design EVs of the future                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           EVs are making automakers rethink the architecture of the vehicle as they face the reality of doing away with the constraints for which Internal Combustion Engine (ICE) vehicles were built. While it is challenging to continue to hold on to the emotional connect of the brand’s history and design language, the new crop of cars which are ‘EV-origin’ vehicles require brands to rethink what the car of the future looks like.                        </p>
+                                                                        <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/VOLKSWAGEN-GROUPANDY2-2026-07-ce9d8fb27d6605b7761c90a70396cfbe.jpg" alt="🚘Automakers think fresh to design EVs of the future" class="story-image" width="100" style="display:block; max-width:100%; height:auto;">
+                                                <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/article/technology/designing-an-ev-where-do-designers-draw-the-line/2995564/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           Read more                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=%F0%9F%9A%98Automakers+think+fresh+to+design+EVs+of+the+future%20https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Ftechnology%2Fdesigning-an-ev-where-do-designers-draw-the-line%2F2995564%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Ftechnology%2Fdesigning-an-ev-where-do-designers-draw-the-line%2F2995564%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=%F0%9F%9A%98Automakers+think+fresh+to+design+EVs+of+the+future"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=%F0%9F%9A%98Automakers+think+fresh+to+design+EVs+of+the+future&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Ftechnology%2Fdesigning-an-ev-where-do-designers-draw-the-line%2F2995564%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    🤹Are AI influencers coming for the creator economy                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           While Indian agencies work on their own versions of Lil’ Miquela and Mia Zulu – global AI influencers – the debate on productivity and consistency of make-believe influencers versus human connect of the real ones keep resurfacing. People follow influencers who they can relate to, and that’s the primary reason that both AI and real content creators will continue to share the growing influencer economy.                        </p>
+                                                                        <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/AIINFLUENCERSSTORY1200X900-2026-07-38af30f3b79a5e60fb924b64e65944e6.jpg" alt="🤹Are AI influencers coming for the creator economy" class="story-image" width="100" style="display:block; max-width:100%; height:auto;">
+                                                <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/article/life/i-influencer-the-rise-of-virtual-characters-on-social-media/2995552/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           Read more                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=%F0%9F%A4%B9Are+AI+influencers+coming+for+the+creator+economy%20https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Flife%2Fi-influencer-the-rise-of-virtual-characters-on-social-media%2F2995552%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Flife%2Fi-influencer-the-rise-of-virtual-characters-on-social-media%2F2995552%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=%F0%9F%A4%B9Are+AI+influencers+coming+for+the+creator+economy"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=%F0%9F%A4%B9Are+AI+influencers+coming+for+the+creator+economy&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Flife%2Fi-influencer-the-rise-of-virtual-characters-on-social-media%2F2995552%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                                               
+                                                            <!-- If widgetKey is magazine_stories or similar, render magazine style -->
+                                                               <tr>
+                     <td align="center" class="stories-divider-container" style="padding: 15px 30px 10px 30px">
+                        <div class="stories-divider">TOP STORIES</div>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    ⏫Indian middle class powering growth says FM                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           India’s middle class has been the engine of growth rather than just being a byproduct of it, said Finance Minister Nirmala Sitharaman recently during a discussion. The post-Covid consumption by the strata has been a primary driving force of growth, said the minister.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           ➤India is expected to overtake China in terms of size of the middle class between 2030 and 2035.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           ➤Nearly 93 percent of all Indian consumer spending is expected to come from middle class and affluent households by 2036.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           ➤The rise in number of middle classes spans urban centres and beyond, with 500 Indian cities poised to become hubs of economic activity in the future.                        </p>
+                                                                        <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/GettyImages2241504296BGjpg-2026-07-85e473da7a8059681c739c9f7d941fd1.jpg" alt="⏫Indian middle class powering growth says FM" class="story-image" width="100" style="display:block; max-width:100%; height:auto;">
+                                                <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/article/news/indias-middle-class-growing-at-6-3-percent-a-year-nirmala-sitharaman/2995608/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           Read more                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=%E2%8F%ABIndian+middle+class+powering+growth+says+FM%20https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fnews%2Findias-middle-class-growing-at-6-3-percent-a-year-nirmala-sitharaman%2F2995608%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fnews%2Findias-middle-class-growing-at-6-3-percent-a-year-nirmala-sitharaman%2F2995608%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=%E2%8F%ABIndian+middle+class+powering+growth+says+FM"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=%E2%8F%ABIndian+middle+class+powering+growth+says+FM&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fnews%2Findias-middle-class-growing-at-6-3-percent-a-year-nirmala-sitharaman%2F2995608%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    🏅Neeraj Chopra eyes Commonwealth medals after injury                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           Track and field athlete is not letting his nine-month layoff due to a back injury to get in the way of preparing for the upcoming Commonwealth Games. the first Indian track and field athlete to win an Olympic gold in Tokyo in 2020, Chopra insisted on competing for selections for javelin throw for selections for the CWG.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           ➤The javelin thrower is looking to train on his throw for the CWG scheduled in a month’s time, with tough competition to breach the 90m mark.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           ➤For Chopra, competing with elite global athletes and winning offers a greater sense of achievement than personal bests.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           ➤Injury and rehab have taught him to listen closely to his body and work on it rather than brave it through.                        </p>
+                                                                        <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/06/GettyImages2235891008BG-2026-06-eda790c0c3379d682269eb54c4cb018b.jpg" alt="🏅Neeraj Chopra eyes Commonwealth medals after injury" class="story-image" width="100" style="display:block; max-width:100%; height:auto;">
+                                                <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/article/leadership/the-goal-now-is-to-create-a-legacy-neeraj-chopra/2995426/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           Read more                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=%F0%9F%8F%85Neeraj+Chopra+eyes+Commonwealth+medals+after+injury%20https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fleadership%2Fthe-goal-now-is-to-create-a-legacy-neeraj-chopra%2F2995426%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fleadership%2Fthe-goal-now-is-to-create-a-legacy-neeraj-chopra%2F2995426%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=%F0%9F%8F%85Neeraj+Chopra+eyes+Commonwealth+medals+after+injury"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=%F0%9F%8F%85Neeraj+Chopra+eyes+Commonwealth+medals+after+injury&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fleadership%2Fthe-goal-now-is-to-create-a-legacy-neeraj-chopra%2F2995426%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                                               
+                                                            <!-- If widgetKey is magazine_stories or similar, render magazine style -->
+                                                               </td></tr>
+                  <tr>
+                     <td align="center" class="stories-divider-container" style="padding: 15px 30px 10px 30px">
+                        <div class="stories-divider">FORBES INDIA EXPLAINED</div>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    📨WhatsApp’s username feature needs to address key concerns                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           WhatsApp’s new username feature offers privacy from spam and unsolicited contact. The Indian government and industry leaders however spot the potential of scams and manipulation which this feature might unlock.                        </p>
+                                                                        <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/06/shutterstock2462664801BG-2026-06-b08e441a373d8f0526c1e5d1272c2c4c.jpg" alt="📨WhatsApp’s username feature needs to address key concerns" class="story-image" width="100" style="display:block; max-width:100%; height:auto;">
+                                                <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/article/news/whatsapp-rolls-out-username-feature-not-all-users-are-happy/2995482/1?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           Read more                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=%F0%9F%93%A8WhatsApp%E2%80%99s+username+feature+needs+to+address+key+concerns%20https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fnews%2Fwhatsapp-rolls-out-username-feature-not-all-users-are-happy%2F2995482%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fnews%2Fwhatsapp-rolls-out-username-feature-not-all-users-are-happy%2F2995482%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=%F0%9F%93%A8WhatsApp%E2%80%99s+username+feature+needs+to+address+key+concerns"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=%F0%9F%93%A8WhatsApp%E2%80%99s+username+feature+needs+to+address+key+concerns&url=https%3A%2F%2Fwww.forbesindia.com%2Farticle%2Fnews%2Fwhatsapp-rolls-out-username-feature-not-all-users-are-happy%2F2995482%2F1%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                                               
+                                                      <!-- Subscriber widget (unchanged) -->
+                  <tr>
+                     <td align="center" style="padding: 10px 30px 30px 30px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #E6EEF5; border-radius: 12px; padding: 15px; border: 1px solid #C4DFFD;">
+                           <tr>
+                                                            <td valign="middle" style="padding-right: 15px; width: 70px;">
+                                 <img src="https://images.forbesindia.com/blog/wp-content/uploads/assets/images/V18I13ForbesIndiaCoverFinal384X512.jpg"
+                                    alt="Forbes India Magazine Cover"
+                                    width="70" height="auto"
+                                    style="display:block; border:1px solid #ffffff; outline:none; text-decoration:none; border-radius: 4px;">
+                              </td>
+                                                            <td valign="middle">
+                                 <p style="font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: #0D3B66; margin: 0 0 5px 0; line-height: 1.2;">
+                                    Become a Subscriber
+                                 </p>
+                                 <p style="font-family: Arial, sans-serif; font-size: 14px; color: #444444; margin: 0 0 10px 0;">
+                                    Get your hands on our fortnightly editions for as less as Rs 1,129 a year!
+                                 </p>
+                                 <table border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                       <td align="center" bgcolor="#0D3B66" style="border-radius: 6px;">
+                                          <a target="_blank" href="https://www.forbesindia.com/subscription" target="_blank" style="font-size: 14px; font-family: Arial, sans-serif; color: #ffffff; text-align: center; text-decoration: none; padding: 8px 15px; display: block; border: 1px solid #0D3B66; border-radius: 6px; mso-padding-alt: 0; text-transform: uppercase; font-weight: bold;">
+                                          <span style="mso-text-raise: 15pt; color: #ffffff;">Subscribe Now &rarr;</span>
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                  <!-- Footer -->
+                  <tr>
+                     <td class="footer" align="center">
+                        <div style="padding-bottom: 25px;">
+                           <div class="social-follow-title" style="font-size: 18px; font-weight: bold; color: #0D3B66; margin-bottom: 15px; font-family: Arial, sans-serif;">
+                              Follow Forbes India
+                           </div>
+                           <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 2px 10px;">
+                              <tr>
+                                 <!-- X (Twitter) -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://twitter.com/ForbesIndia"
+                                       style="background-color:#1DA1F2;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">X</span>
+                                    </a>
+                                 </td>
+                                 <!-- LinkedIn -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://www.linkedin.com/company/forbes-india/"
+                                       style="background-color:#0A66C2;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">in</span>
+                                    </a>
+                                 </td>
+                                 <!-- Facebook -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://www.facebook.com/ForbesIndia/"
+                                       style="background-color:#3b5998;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">f</span>
+                                    </a>
+                                 </td>
+                                 <!-- Instagram -->
+                                 <td align="center" style="padding:0 4px;">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                       <tr>
+                                          <td align="center"
+                                             width="30"
+                                             height="30"
+                                             bgcolor="#C13584"
+                                             style="border-radius:50%;">
+                                             <a href="https://www.instagram.com/forbesindia/" target="_blank"
+                                                style="display:block;line-height:30px;text-decoration:none;">
+                                             <img
+                                                src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/instaicon-2026-02-798fa779ba75b8c19bdd34af8395a066.png"
+                                                alt="Instagram"
+                                                width="24"
+                                                height="24"
+                                                style="display:block;border:0;">
+                                             </a>
+                                          </td>
+                                       </tr>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </table>
+                        </div>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                           <tr>
+                              <td align="center" style="font-family: Arial, sans-serif; font-size: 12px; color: #888888; line-height: 1.5; border-top: 1px solid #e9ecef; padding-top: 20px;">
+                                 <p class="unsubscribe" style="margin: 0;">
+                                    You received this email because you signed up for the Forbes India Weekly Roundup newsletter. <br>
+                                    <a target="_blank" href="*|UNSUBSCRIBE|*" style="color: #0D3B66; text-decoration: underline;">Unsubscribe</a> | 
+                                    <a target="_blank" href="https://forbesindia.com/newsletters" style="color: #0D3B66; text-decoration: underline;">Manage preferences</a>
+                                 </p>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                  </td>
+                  </tr>
+               </table>
+            </td>
+         </tr>
+      </table>
+   </body>
+</html>
