@@ -263,9 +263,14 @@ function setKS(s){kdot.className="kdot"+(s===true?" ok":s===false?" err":"")}
 
 function switchTab(t){
   var tabs=["search","pinned","bydate"];
-  document.querySelectorAll(".tbtn").forEach(function(b,i){b.classList.toggle("active",tabs[i]===t)});
-  document.querySelectorAll(".tpanel").forEach(function(p,i){p.classList.toggle("active",tabs[i]===t)});
-  if(t==="pinned")renderPinned();
+  document.querySelectorAll(".tbtn").forEach(function(b,i){
+    b.classList.toggle("active", tabs[i]===t);
+  });
+  tabs.forEach(function(name){
+    var el=document.getElementById("tp-"+name);
+    if(el) el.classList.toggle("active", name===t);
+  });
+  if(t==="pinned") renderPinned();
 }
 
 async function doSearch(){
