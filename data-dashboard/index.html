@@ -44,6 +44,19 @@ header{border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-i
 .gobtn{background:var(--accent2);color:#fff;border:none;border-radius:4px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
 .gobtn:hover{opacity:.85} .gobtn:disabled{opacity:.4;cursor:not-allowed}
 
+.date-row{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.date-row label{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+.dateinput{background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11px;padding:6px 8px;border-radius:4px;outline:none;flex:1;min-width:0;color-scheme:dark}
+.dateinput:focus{border-color:var(--accent)}
+.date-tabs{display:flex;gap:4px;flex-wrap:wrap}
+.dtab{font-family:var(--mono);font-size:9px;padding:3px 7px;border-radius:3px;background:var(--bg);border:1px solid var(--border);color:var(--muted);cursor:pointer;white-space:nowrap}
+.dtab:hover{border-color:var(--accent);color:var(--accent)}
+.dtab.active{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.3);color:var(--accent)}
+.fetchbybtn{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;width:100%}
+.fetchbybtn:hover{opacity:.85} .fetchbybtn:disabled{opacity:.4;cursor:not-allowed}
+.date-results-meta{padding:7px 10px;font-family:var(--mono);font-size:10px;color:var(--muted);border-bottom:1px solid var(--border);display:none;flex-shrink:0}
+.dlist{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+
 .rmeta{padding:7px 10px;font-family:var(--mono);font-size:10px;color:var(--muted);border-bottom:1px solid var(--border);flex-shrink:0;display:none}
 .rlist{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .ritem{padding:9px 10px;border-bottom:1px solid rgba(37,43,59,.5);cursor:pointer;transition:background .1s}
@@ -151,6 +164,7 @@ pre.rawjson.vis{display:block}
     <div class="tab-row">
       <button class="tbtn active" onclick="switchTab('search')">🔍 Search</button>
       <button class="tbtn" onclick="switchTab('pinned')">📌 Pinned</button>
+      <button class="tbtn" onclick="switchTab('bydate')">📅 By Date</button>
     </div>
 
     <div class="tpanel active" id="tp-search">
@@ -189,6 +203,33 @@ pre.rawjson.vis{display:block}
     <div class="tpanel" id="tp-pinned">
       <div class="plist" id="plist"></div>
     </div>
+
+    <div class="tpanel" id="tp-bydate">
+      <div class="search-area">
+        <div class="date-tabs" id="dateShortcuts">
+          <button class="dtab" onclick="setDateRange('today')">Today</button>
+          <button class="dtab" onclick="setDateRange('yesterday')">Yesterday</button>
+          <button class="dtab" onclick="setDateRange('7d')">Last 7 days</button>
+          <button class="dtab" onclick="setDateRange('30d')">Last 30 days</button>
+        </div>
+        <div class="date-row">
+          <label>FROM</label>
+          <input class="dateinput" type="date" id="dateFrom" />
+        </div>
+        <div class="date-row">
+          <label>TO</label>
+          <input class="dateinput" type="date" id="dateTo" />
+        </div>
+        <button class="fetchbybtn" id="fetchByDateBtn" onclick="fetchByDate()">📅 Fetch Datasets</button>
+      </div>
+      <div class="date-results-meta" id="dateMeta"></div>
+      <div class="dlist" id="dlist">
+        <div class="muted-msg" style="padding-top:36px">
+          <div style="font-size:26px;margin-bottom:8px">📅</div>
+          Pick a date range and fetch all datasets<br>added or updated in that period.
+        </div>
+      </div>
+    </div>
   </aside>
 
   <main class="main">
@@ -221,8 +262,9 @@ function getKey(){return apiKeyEl.value.trim()}
 function setKS(s){kdot.className="kdot"+(s===true?" ok":s===false?" err":"")}
 
 function switchTab(t){
-  document.querySelectorAll(".tbtn").forEach(function(b,i){b.classList.toggle("active",["search","pinned"][i]===t)});
-  document.querySelectorAll(".tpanel").forEach(function(p,i){p.classList.toggle("active",["search","pinned"][i]===t)});
+  var tabs=["search","pinned","bydate"];
+  document.querySelectorAll(".tbtn").forEach(function(b,i){b.classList.toggle("active",tabs[i]===t)});
+  document.querySelectorAll(".tpanel").forEach(function(p,i){p.classList.toggle("active",tabs[i]===t)});
   if(t==="pinned")renderPinned();
 }
 
@@ -477,6 +519,113 @@ function unpin(id){
   renderPinned();
   var btn=document.getElementById("pbtn");
   if(btn&&curDs&&curDs.id===id){btn.textContent="\uD83D\uDCCC Pin";btn.className="pbtn"}
+}
+
+// ── DATE RANGE FETCH ──────────────────────────────────────────
+function todayStr() {
+  var now = new Date();
+  var ist = new Date(now.getTime() + 5.5*60*60*1000);
+  return ist.toISOString().slice(0,10);
+}
+function daysAgo(n) {
+  var now = new Date();
+  var ist = new Date(now.getTime() + 5.5*60*60*1000 - n*24*60*60*1000);
+  return ist.toISOString().slice(0,10);
+}
+function setDateRange(preset) {
+  document.querySelectorAll(".dtab").forEach(function(b){b.classList.remove("active")});
+  event&&event.currentTarget&&event.currentTarget.classList.add("active");
+  var f=document.getElementById("dateFrom"), t=document.getElementById("dateTo");
+  var today=todayStr();
+  if(preset==="today")     { f.value=today;       t.value=today; }
+  if(preset==="yesterday") { f.value=daysAgo(1);  t.value=daysAgo(1); }
+  if(preset==="7d")        { f.value=daysAgo(6);  t.value=today; }
+  if(preset==="30d")       { f.value=daysAgo(29); t.value=today; }
+}
+
+async function fetchByDate() {
+  var key=getKey();
+  if(!key){alert("Paste your API key in the header first.");return}
+  var fromDate=document.getElementById("dateFrom").value;
+  var toDate=document.getElementById("dateTo").value;
+  if(!fromDate||!toDate){alert("Please select both From and To dates.");return}
+  if(fromDate>toDate){alert("From date must be before To date.");return}
+
+  var btn=document.getElementById("fetchByDateBtn");
+  btn.disabled=true; btn.innerHTML="<span class='spinner'></span>Fetching…";
+  document.getElementById("dateMeta").style.display="none";
+  document.getElementById("dlist").innerHTML="<div class='muted-msg'><span class='spinner'></span> Fetching datasets…</div>";
+
+  // Convert dates to unix timestamps
+  var fromTs = new Date(fromDate+"T00:00:00Z").getTime()/1000;
+  var toTs   = new Date(toDate+"T23:59:59Z").getTime()/1000;
+
+  var all=[], seen={}, offset=0, limit=50, hasMore=true;
+
+  try {
+    while(hasMore) {
+      var url="https://api.data.gov.in/lists?format=json&filters[active]=1&sort[updated]=desc&limit="+limit+"&offset="+offset+"&api-key="+key;
+      var res=await fetch(url);
+      var json=await res.json();
+      if(json.message&&/invalid|unauthorized/i.test(json.message)){setKS(false);throw new Error("Invalid API key.")}
+      if(!json.records||!json.records.length) break;
+      setKS(true);
+
+      var recs=json.records;
+      var matched=recs.filter(function(r){
+        var upd=parseFloat(r.updated||0), cre=parseFloat(r.created||0);
+        return (upd>=fromTs&&upd<=toTs)||(cre>=fromTs&&cre<=toTs);
+      });
+      matched.forEach(function(r){
+        var id=r.index_name||r.id||"";
+        if(!seen[id]){seen[id]=true;all.push(r);}
+      });
+
+      var batchMin=recs.reduce(function(m,r){var u=parseFloat(r.updated||0);return u<m?u:m},Infinity);
+      var batchMax=recs.reduce(function(m,r){var u=parseFloat(r.updated||0);return u>m?u:m},0);
+
+      // Update live count
+      document.getElementById("dlist").innerHTML="<div class='muted-msg'><span class='spinner'></span> Found "+all.length+" so far… (scanning "+new Date(batchMin*1000).toISOString().slice(0,10)+")</div>";
+
+      if(batchMin<fromTs||recs.length<limit){ hasMore=false; }
+      else{ offset+=limit; await sleep(300); }
+    }
+    renderDateResults(all, fromDate, toDate);
+  } catch(e) {
+    document.getElementById("dlist").innerHTML="<div class='muted-msg' style='color:var(--red)'>&oplus; "+e.message+"</div>";
+  }
+  btn.disabled=false; btn.innerHTML="📅 Fetch Datasets";
+}
+
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+
+function renderDateResults(recs, fromDate, toDate) {
+  var meta=document.getElementById("dateMeta"), list=document.getElementById("dlist");
+  if(!recs.length){
+    meta.style.display="none";
+    list.innerHTML="<div class='muted-msg'>No datasets found for this date range.</div>";
+    return;
+  }
+  // Sort by updated desc
+  recs.sort(function(a,b){return parseFloat(b.updated||0)-parseFloat(a.updated||0)});
+  meta.style.display="block";
+  meta.textContent=recs.length+" dataset(s) updated "+fromDate+(fromDate!==toDate?" to "+toDate:"");
+
+  list.innerHTML=recs.map(function(r){
+    var id=r.index_name||r.id||"";
+    var title=r.title||r.name||"Untitled";
+    var sector=Array.isArray(r.sector)?r.sector[0]:(r.sector||"");
+    var org=Array.isArray(r.org)?r.org[0]:(r.org||"");
+    var updTs=parseFloat(r.updated||0);
+    var updStr=updTs?new Date(updTs*1000).toISOString().slice(0,10):"—";
+    return "<div class='ritem' onclick='selDs(""+id+"",""+esc(title)+"",""+esc(sector)+"",""+esc(org)+"")'>"+
+      "<div class='ri-t'>"+title+"</div>"+
+      "<div class='ri-m'>Updated: "+updStr+" · "+id.slice(0,8)+"…</div>"+
+      "<div class='ri-b'>"+
+        (sector?"<span class='badge b-s'>"+sector+"</span>":"")+
+        (org?"<span class='badge b-o'>"+org.slice(0,28)+"</span>":"")+
+      "</div></div>";
+  }).join("");
 }
 </script>
 </body>
