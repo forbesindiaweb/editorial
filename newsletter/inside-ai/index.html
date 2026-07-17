@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Forbes India Weekly BUSINESS DIGEST</title>
+      <style>
+         /* Global & Reset Styles */
+         body, table, td, a {
+         -webkit-text-size-adjust: 100%;
+         -ms-text-size-adjust: 100%;
+         }
+         table, td {
+         mso-table-lspace: 0pt;
+         mso-table-rspace: 0pt;
+         /* Ensures no extra space in Outlook */
+         border-collapse: collapse !important; 
+         }
+         img {
+         -ms-interpolation-mode: bicubic;
+         /* Prevents image borders in some clients */
+         border: 0;
+         height: auto;
+         line-height: 100%;
+         outline: none;
+         text-decoration: none;
+         }
+         body {
+         margin: 0;
+         padding: 0;
+         font-family: Arial, sans-serif;
+         background-color: #F8F9FA; 
+         color: #333333;
+         }
+         h1, h2, h3, h4, h5, h6 {
+         font-family: 'Times New Roman', serif;
+         margin: 0;
+         line-height: 1.2;
+         color: #1a1a1a;
+         }
+         p {
+         font-family: Arial, sans-serif;
+         line-height: 1.6;
+         margin-bottom: 15px; 
+         color: #555555;
+         }
+         p:last-child {
+         margin-bottom: 0;
+         }
+         a {
+         text-decoration: none;
+         color: #0D3B66;
+         }
+         .container {
+         width: 100%;
+         max-width: 600px;
+         margin: auto;
+         border-radius: 16px; 
+         overflow: hidden;
+         background-color: #ffffff;
+         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); 
+         }
+         /* Important: Use specific classes for padding and background to avoid inline style conflicts */
+         .section {
+         padding: 40px 30px;
+         }
+         .divider {
+         border-bottom: 1px solid #e9ecef;
+         }
+         /* Specific Component Styles */
+         .header {
+         padding: 24px 30px;
+         background-color: #ffffff;
+         border-bottom: 1px solid #dee2e6;
+         }
+         .header-info {
+         font-family: Arial, sans-serif;
+         font-size: 14px;
+         color: #888888;
+         text-transform: uppercase;
+         }
+         .intro-text {
+         font-family: 'Times New Roman', serif;
+         font-size: 20px;
+         font-style: italic;
+         color: #6c757d;
+         }
+         .story-block {
+         padding: 20px 30px; 
+         border-bottom: 1px solid #e9ecef;
+         }
+         .story-image {
+         width: 100%;
+         height: auto;
+         border-radius: 8px;
+         margin: 20px 0;
+         }
+         .quote-section {
+         background-color: #E6EEF5;
+         color: #0D3B66;
+         font-family: 'Times New Roman', serif;
+         font-style: italic;
+         padding: 40px 30px;
+         border-radius: 0 0 16px 16px;
+         }
+         .footer {
+         padding: 40px 30px;
+         background-color: #ffffff;
+         }
+         /* Divider */
+         .stories-divider-container {
+         /*padding: 15px 30px 10px 30px; */
+         background-color: #ffffff; 
+         }
+         .stories-divider {
+         font-family: Arial, sans-serif;
+         font-size: 16px;
+         font-weight: 700;
+         color: #0D3B66; 
+         background-color: #F0F8FF; 
+         padding: 12px 20px;
+         text-align: center;
+         letter-spacing: 2px;
+         text-transform: uppercase;
+         border-radius: 8px; 
+         border-left: 5px solid #0D3B66; 
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+         }
+         /* Story Number Badge Styling */
+         .story-number-badge {
+         font-family: Arial, sans-serif; 
+         font-size: 20px; 
+         font-weight: 900;
+         color: #0D3B66; 
+         background-color: #E0EFFF; 
+         padding: 8px 12px;
+         line-height: 1;
+         border-radius: 6px; 
+         text-align: center;
+         white-space: nowrap;
+         }
+         /* Table of Contents (In this edition) Styling */
+         .toc-box {
+         background-color: #F7F7F7; 
+         padding: 15px 25px;
+         border-radius: 10px;
+         margin-top: 15px; 
+         margin-bottom: 25px; /* Added spacing after TOC */
+         border-left: 4px solid #0D3B66; 
+         }
+         /* New: Magazine Widget Styles */
+         .magazine-widget-container {
+         padding: 20px 20px;
+         background-color: #F0F8FF; /* Light blue background for emphasis */
+         border-radius: 12px;
+         margin-bottom: 25px; 
+         border: 1px solid #C4DFFD;
+         }
+         .cover-letter-headline {
+         font-size: 24px;
+         font-weight: 700;
+         color: #1a1a1a;
+         font-family: 'Times New Roman', serif;
+         margin: 10px 0 5px 0;
+         line-height: 1.2;
+         }
+         .story-thumbnail {
+         width: 100%; 
+         height: auto; 
+         display: block;
+         border-radius: 4px;
+         border: 1px solid #e9ecef;
+         }
+         /* Social Follow Styling */
+         .social-follow-title {
+         font-size: 18px;
+         font-weight: bold;
+         color: #0D3B66;
+         margin-bottom: 15px;
+         font-family: Arial, sans-serif;
+         }
+         /* Social Icon Styling (Shared) */
+         .social-icon {
+         display: block; /* Use block to ensure correct display in TD */
+         width: 30px;
+         height: 30px;
+         line-height: 30px;
+         text-align: center;
+         border-radius: 50%;
+         color: #ffffff;
+         font-size: 14px;
+         font-weight: bold;
+         text-decoration: none;
+         }
+         /* Specific Social Colors */
+         .icon-whatsapp { background-color: #25D366; }
+         .icon-linkedin { background-color: #0A66C2; }
+         .icon-twitter { background-color: #1DA1F2; }
+         .icon-facebook { background-color: #3b5998; }
+         .icon-instagram { background-color: #C13584; }
+         /* MARKET WIDGET: Replaced Flex with Table-based layout for robust compatibility */
+         .market-widget-table {
+         border: 1px solid #E9ECEF;
+         border-radius: 8px; /* May not render in all clients, but safe */
+         overflow: hidden; /* Safe wrapper */
+         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Fails gracefully */
+         background-color: #ffffff; /* Container background */
+         }
+         .market-item-td {
+         text-align: center;
+         background-color: #F8F9FA;
+         padding: 15px 5px;
+         border-right: 1px solid #E9ECEF;
+         }
+         .market-item-td:last-child {
+         border-right: none;
+         }
+         .market-item-td .label {
+         font-size: 11px; 
+         font-weight: bold;
+         color: #1a1a1a;
+         margin-bottom: 3px;
+         text-transform: uppercase;
+         line-height: 1.2;
+         }
+         .market-item-td .value {
+         font-size: 16px; 
+         font-weight: bold;
+         color: #333;
+         margin-bottom: 3px;
+         line-height: 1.2;
+         }
+         .market-item-td .change {
+         font-size: 12px; 
+         font-weight: bold;
+         line-height: 1.2;
+         }
+         .change.positive {
+         color: #28a745; 
+         }
+         .change.negative {
+         color: #dc3545; 
+         }
+         /* Mobile Responsive Styles */
+         @media only screen and (max-width: 480px) {
+         .container {
+         border-radius: 0;
+         }
+         .section {
+         padding: 20px 15px;
+         }
+         .story-block {
+         padding: 20px 15px;
+         }
+         /* --- CHANGE MADE HERE ---
+         Removed the mobile-specific styles that forced stacking 
+         for .story-img-col and .story-text-col in the Magazine Widget. 
+         This ensures the desktop side-by-side layout (image on left, text on right) 
+         persists on mobile, as requested.
+         */
+         /* .story-img-col {
+         display: block !important;
+         width: 100% !important;
+         padding-right: 0 !important; 
+         padding-bottom: 10px !important; 
+         }
+         .story-text-col {
+         display: block !important;
+         width: 100% !important;
+         }
+         .story-img-col img {
+         width: 100% !important;
+         height: auto !important;
+         max-width: 100% !important;
+         } */
+         /* IMPORTANT: On mobile, market items maintain column layout (safer for Outlook) */
+         .market-item-td {
+         width: 25% !important; /* Keep 4 columns across */
+         padding: 10px 5px !important;
+         }
+         }
+         p img{
+         width: 100% !important;   
+         height: auto !important;
+         display: block !important;
+         }
+      </style>
+   </head>
+      <body style="margin:0; padding:0; background-color:#F8F9FA;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#F8F9FA">
+         <tr>
+            <td align="center" style="padding:20px 0;">
+               <table class="container" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <!-- Header -->
+                  <tr>
+                     <td class="header" align="center">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                           <tr>
+                              <td align="left">
+                                 <img src="https://images.forbesindia.com/blog/wp-content/uploads/2025/11/ForbesIndiaLogo5-2025-11-8dd9c98df910d35f7144e2ab102cdacf.png"
+                                    alt="Forbes India Logo"
+                                    width="120" height="30"
+                                    style="display:block; border:0; outline:none; text-decoration:none;">
+                              </td>
+                              <td align="right" class="header-info">
+                                 <span style="font-size:12px; color:#6c757d;">
+                                 Saturday, July 18, 2026                                 </span><br>
+                                 <span style="font-size:14px; font-weight:bold; color:#0D3B66; letter-spacing:1px;">
+                                 <div style="line-height:22px; white-space:normal;margin-left:20px;"><div>Inside.AI</div><div></div></div>                                 </span>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                  <!-- Story Blocks -->
+                  <tr>
+                     <td class="story-block" style="padding-bottom:30px;">
+                        <!-- Email Summary -->
+                                                
+
+
+<img style="width: 100%;max-width: 700px;height: auto" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/banner-2026-02-c9c06a27c3c37d72a17536bfa886fe92.jpg" alt="AI related image" />
+
+
+
+<p style="text-align: right">From <a href="https://www.forbesindia.com/author/naini-thaker/5173"><strong>Naini Thaker</strong></a> | Assistant Editor</p>
+<p>Dear Reader,</p>
+                                                <p>India’s semiconductor ambitions are entering a new phase. Under Semicon 2.0, the government plans to invest alongside venture capital firms by taking equity stakes in chip startups, before exiting those investments as the companies mature.</p>
+                                                <p>The model attempts to address a persistent challenge for semiconductor startups: Developing a chip is expensive, takes years and requires patient capital long before meaningful revenues appear. By matching private investments without seeking operational control, the government hopes to reduce the risk for investors while allowing founders to retain control.</p>
+                                                <p>The move also expands India’s chip strategy beyond attracting large manufacturing projects. The Rs 1.28 lakh crore programme will support chip design, intellectual property, advanced packaging, materials, equipment and research—parts of the semiconductor ecosystem in which domestic startups could play a larger role.</p>
+                                                <p>The semiconductor push is one of several developments reflecting India’s attempt to build more of the AI value chain.</p>
+                                                <p>Here’s what else happened in AI this week:</p>
+                                                <!-- In This Edition -->
+                                                <div class="toc-box" style="margin-bottom:20px;">
+                           <p style="font-size:16px; font-weight:bold; color:#1a1a1a; margin-top:0; margin-bottom:10px;">
+                              In this edition:
+                           </p>
+                           <ul style="list-style-type:none; padding:0; margin:0;">
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 1️⃣ TCS plans new AI deployment workforce                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 2️⃣ India expands semiconductor programme                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 3️⃣ China pitches a new global AI order                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 4️⃣ OpenAI launches ChatGPT Work                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 5️⃣ Emergent becomes India’s latest AI unicorn                                 </a>
+                              </li>
+                                                            <li style="margin-bottom:8px;">
+                                 <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="color:#2A67A3; text-decoration:underline; font-size:16px;">
+                                 6️⃣ Moonshot launches model rivalling US players                                 </a>
+                              </li>
+                                                         </ul>
+                        </div>
+                                                                        <!-- Render sections in the preserved order -->
+                                                <!-- If widgetKey is magazine_stories or similar, render magazine style -->
+                                                               </td></tr>
+                  <tr>
+                     <td align="center" class="stories-divider-container" style="padding: 15px 30px 10px 30px">
+                        <div class="stories-divider">TOP STORIES</div>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    1️⃣ TCS plans new AI deployment workforce                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           <a href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" target="_blank" style="text-decoration:none;display:block;"><img style="width: 100%;max-width: 700px;height: auto;border: 0" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/1GettyImages615340198BG-2026-07-c0f65367cd89e7c933b1e024e9daeee8.jpg" alt="Photo by Dhiraj Singh/Bloomberg via Getty Images" / width="560" style="display:block;border:0;outline:none;height:auto;"></a>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Caption -->
+<p style="margin: 0;font-size: 13px;line-height: 1.4;color: #777777;font-family: Arial, Helvetica, sans-serif;font-style: italic">Photo by Dhiraj Singh/Bloomberg via Getty Images</p>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           Tata Consultancy Services plans to create as many as 8,900 forward-deployed engineering roles to help customers integrate and customise AI systems. These engineers will work closely with clients to adapt AI tools to their specific operations and workflows.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           The IT major is also evaluating acquisitions in AI, data security and cybersecurity. The moves indicate how India’s traditional IT services companies are reshaping their business models as automation and AI agents begin handling more routine technology work.                        </p>
+                                                                        <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           More stories                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=1%EF%B8%8F%E2%83%A3+TCS+plans+new+AI+deployment+workforce%20https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=1%EF%B8%8F%E2%83%A3+TCS+plans+new+AI+deployment+workforce"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=1%EF%B8%8F%E2%83%A3+TCS+plans+new+AI+deployment+workforce&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    2️⃣ India expands semiconductor programme                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Image -->
+<a href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" target="_blank" style="text-decoration:none;display:block;"><img style="width: 100%;max-width: 700px;height: auto;border: 0" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/2AFP2025100174VD7CVv1HighResIndiaEconomyPoliticsSemiconductorsBG-2026-07-4d1234f8d15106e27c4d77ff097acaa3.jpg" alt="Photo by Sam Panthaky / AFP" / width="560" style="display:block;border:0;outline:none;height:auto;"></a>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Caption -->
+<p style="margin: 0;font-size: 13px;line-height: 1.4;color: #777777;font-family: Arial, Helvetica, sans-serif;font-style: italic">Photo by Sam Panthaky / AFP</p>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           The Indian government has approved an additional ₹1.28 lakh crore for the next phase of its semiconductor programme. The capital will support domestic chip design and intellectual-property development, research and development, and the establishment of more fabrication facilities.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           The expansion is intended to reduce India’s reliance on imported chips and build a more complete domestic semiconductor ecosystem. Local manufacturing capacity is becoming increasingly strategic as AI development drives demand for advanced chips and computing infrastructure.                        </p>
+                                                                        <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           More stories                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=2%EF%B8%8F%E2%83%A3+India+expands+semiconductor+programme%20https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=2%EF%B8%8F%E2%83%A3+India+expands+semiconductor+programme"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=2%EF%B8%8F%E2%83%A3+India+expands+semiconductor+programme&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    3️⃣ China pitches a new global AI order                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Image -->
+<a href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" target="_blank" style="text-decoration:none;display:block;"><img style="width: 100%;max-width: 700px;height: auto;border: 0" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/3GettyImages2269744411BG-2026-07-d179a2ed26dc8283419b3cdbb5efc1e5.jpg" alt="Photo by Kevin Frayer/Getty Images" / width="560" style="display:block;border:0;outline:none;height:auto;"></a>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Caption -->
+<p style="margin: 0;font-size: 13px;line-height: 1.4;color: #777777;font-family: Arial, Helvetica, sans-serif;font-style: italic">Photo by Kevin Frayer/Getty Images</p>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           President Xi Jinping has positioned China as a champion of open-source AI and wider access to the technology, particularly for developing economies. Beijing is also leading a new international AI cooperation organisation supported by 29 countries.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           The initiative signals China’s ambition to influence not only the development of AI but also the international standards governing it. Its pitch offers the Global South an alternative to an AI ecosystem largely shaped by American companies and US technology policy.                        </p>
+                                                                        <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           More stories                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=3%EF%B8%8F%E2%83%A3+China+pitches+a+new+global+AI+order%20https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=3%EF%B8%8F%E2%83%A3+China+pitches+a+new+global+AI+order"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=3%EF%B8%8F%E2%83%A3+China+pitches+a+new+global+AI+order&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    4️⃣ OpenAI launches ChatGPT Work                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Image -->
+<a href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" target="_blank" style="text-decoration:none;display:block;"><img style="width: 100%;max-width: 700px;height: auto;border: 0" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/4OpenAiChatgptWorkBG-2026-07-66bf62252935c5e0cc09282fa995d91c.jpg" alt="Photo courtesy ChatGPT" / width="560" style="display:block;border:0;outline:none;height:auto;"></a>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Caption -->
+<p style="margin: 0;font-size: 13px;line-height: 1.4;color: #777777;font-family: Arial, Helvetica, sans-serif;font-style: italic">Photo courtesy ChatGPT</p>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           OpenAI has launched ChatGPT Work, an AI agent designed to complete complex, multi-step projects across apps and files. Powered by GPT-5.6, it can create documents, presentations, spreadsheets, charts, analysis and web applications while maintaining continuity across longer assignments.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           The launch marks OpenAI’s attempt to move ChatGPT beyond answering questions or generating individual pieces of content. The company increasingly wants the product to function as an end-to-end work platform capable of independently executing entire workflows.                        </p>
+                                                                        <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           More stories                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=4%EF%B8%8F%E2%83%A3+OpenAI+launches+ChatGPT+Work%20https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=4%EF%B8%8F%E2%83%A3+OpenAI+launches+ChatGPT+Work"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=4%EF%B8%8F%E2%83%A3+OpenAI+launches+ChatGPT+Work&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    5️⃣ Emergent becomes India’s latest AI unicorn                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Image -->
+<a href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" target="_blank" style="text-decoration:none;display:block;"><img style="width: 100%;max-width: 700px;height: auto;border: 0" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/5EmergentaiBG-2026-07-63d858d6df1265495b6967117677b383.jpg" alt="Photo courtesy Emergent" / width="560" style="display:block;border:0;outline:none;height:auto;"></a>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Caption -->
+<p style="margin: 0;font-size: 13px;line-height: 1.4;color: #777777;font-family: Arial, Helvetica, sans-serif;font-style: italic">Photo courtesy Emergent</p>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           Bengaluru-based Emergent has raised $130 million in Series C funding, valuing the AI software-building startup at $1.5 billion. The company allows founders, entrepreneurs and other non-coders to create production-ready web and mobile applications using natural-language instructions.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           <a href="https://www.forbesindia.com/article/news/emergent-turns-unicorn-with-130-million-funding/2996003/1">Emergent reached unicorn status</a> within a year of publicly launching its platform. The startup now reports an annual revenue run rate of $120 million, highlighting the rapid adoption of AI tools that make software development more accessible.                        </p>
+                                                                        <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           More stories                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=5%EF%B8%8F%E2%83%A3+Emergent+becomes+India%E2%80%99s+latest+AI+unicorn%20https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=5%EF%B8%8F%E2%83%A3+Emergent+becomes+India%E2%80%99s+latest+AI+unicorn"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=5%EF%B8%8F%E2%83%A3+Emergent+becomes+India%E2%80%99s+latest+AI+unicorn&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                    <tr>
+                     <td class="story-block">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:15px;">
+                           <tr>
+                              <!-- <td valign="top" width="50" style="padding-right:10px;">
+                                 <div class="story-number-badge"></div>
+                                 </td> -->
+                              <td valign="top">
+                                 <h2 style="font-size:24px; font-weight:bold; margin:0; line-height:1.2; color:#1F4A7C;">
+                                    6️⃣ Moonshot launches model rivalling US players                                 </h2>
+                              </td>
+                           </tr>
+                        </table>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Image -->
+<a href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" target="_blank" style="text-decoration:none;display:block;"><img style="width: 100%;max-width: 700px;height: auto;border: 0" src="https://images.forbesindia.com/blog/wp-content/uploads/2026/07/6Moonshot-aiKimi3BG-2026-07-a6f71da0cf52ea9a9078cc49327434e6.jpg" alt="Photo courtesy Moonshot AI" / width="560" style="display:block;border:0;outline:none;height:auto;"></a>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           <!-- Caption -->
+<p style="margin: 0;font-size: 13px;line-height: 1.4;color: #777777;font-family: Arial, Helvetica, sans-serif;font-style: italic">Photo courtesy Moonshot AI</p>                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           Chinese startup Moonshot AI has unveiled Kimi K3, a 2.8-trillion-parameter open-weight model with a context window of one million tokens. The model reportedly competes with leading systems from US companies such as OpenAI and Anthropic on coding, reasoning and other complex tasks.                        </p>
+                                                <p style="font-size:16px; color:#555555;">
+                           Moonshot is also reportedly seeking $2 billion in funding at a valuation of around $30 billion. Its new model reflects how quickly Chinese AI companies are narrowing the performance gap with their American rivals while pursuing a more open approach to model distribution.                        </p>
+                                                                        <p style="margin-top:10px;">
+                           <a target="_blank" href="https://www.forbesindia.com/ai-tracker?utm_source=newsletter&#038;utm_medium=email&#038;utm_campaign=daily_newsletter" style="display:inline-block; font-size:14px; font-weight:bold; color:#0D3B66; text-decoration:none; border-bottom:2px solid #0D3B66; padding-bottom:3px;">
+                           More stories                           </a>
+                        </p>
+                        <!-- Share -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:25px;border-top:1px solid #f0f0f0;padding-top:15px;">
+                           <tr>
+                              <td align="left"
+                                 style="font-family:Arial,sans-serif;font-size:14px;color:#555555;font-weight:bold;">
+                                 Share This Story:
+                              </td>
+                                                            <td align="right">
+                                 <!-- WhatsApp -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#66bd56"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://wa.me/?text=6%EF%B8%8F%E2%83%A3+Moonshot+launches+model+rivalling+US+players%20https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;">
+                                          <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/Whatsapp-2026-02-6b86c034794a858610e5c57e91a3e1bc.png"
+                                             alt="WhatsApp"
+                                             width="18" height="18"
+                                             style="display:block;border:0;">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- LinkedIn -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-right:8px;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#0A66C2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter&title=6%EF%B8%8F%E2%83%A3+Moonshot+launches+model+rivalling+US+players"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          in
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <!-- X (Twitter) -->
+                                 <table border="0" cellpadding="0" cellspacing="0"
+                                    style="display:inline-block;margin-top:5px;">
+                                    <tr>
+                                       <td width="30" height="30" align="center" bgcolor="#1DA1F2"
+                                          style="border-radius:50%;">
+                                          <a target="_blank"
+                                             href="https://twitter.com/intent/tweet?text=6%EF%B8%8F%E2%83%A3+Moonshot+launches+model+rivalling+US+players&url=https%3A%2F%2Fwww.forbesindia.com%2Fai-tracker%3Futm_source%3Dnewsletter%26utm_medium%3Demail%26utm_campaign%3Ddaily_newsletter"
+                                             style="display:block;line-height:30px;text-decoration:none;
+                                             font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;">
+                                          X
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                                                               
+                                                      <!-- Subscriber widget (unchanged) -->
+                  <tr>
+                     <td align="center" style="padding: 10px 30px 30px 30px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #E6EEF5; border-radius: 12px; padding: 15px; border: 1px solid #C4DFFD;">
+                           <tr>
+                                                            <td valign="middle" style="padding-right: 15px; width: 70px;">
+                                 <img src="https://images.forbesindia.com/blog/wp-content/uploads/assets/images/33652997-4f1e-436f-b2e6-442bd075db70.jpg"
+                                    alt="Forbes India Magazine Cover"
+                                    width="70" height="auto"
+                                    style="display:block; border:1px solid #ffffff; outline:none; text-decoration:none; border-radius: 4px;">
+                              </td>
+                                                            <td valign="middle">
+                                 <p style="font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: #0D3B66; margin: 0 0 5px 0; line-height: 1.2;">
+                                    Become a Subscriber
+                                 </p>
+                                 <p style="font-family: Arial, sans-serif; font-size: 14px; color: #444444; margin: 0 0 10px 0;">
+                                    Get your hands on our fortnightly editions for as less as Rs 1,129 a year!
+                                 </p>
+                                 <table border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                       <td align="center" bgcolor="#0D3B66" style="border-radius: 6px;">
+                                          <a target="_blank" href="https://www.forbesindia.com/subscription" target="_blank" style="font-size: 14px; font-family: Arial, sans-serif; color: #ffffff; text-align: center; text-decoration: none; padding: 8px 15px; display: block; border: 1px solid #0D3B66; border-radius: 6px; mso-padding-alt: 0; text-transform: uppercase; font-weight: bold;">
+                                          <span style="mso-text-raise: 15pt; color: #ffffff;">Subscribe Now &rarr;</span>
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                  <!-- Footer -->
+                  <tr>
+                     <td class="footer" align="center">
+                        <div style="padding-bottom: 25px;">
+                           <div class="social-follow-title" style="font-size: 18px; font-weight: bold; color: #0D3B66; margin-bottom: 15px; font-family: Arial, sans-serif;">
+                              Follow Forbes India
+                           </div>
+                           <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 2px 10px;">
+                              <tr>
+                                 <!-- X (Twitter) -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://twitter.com/ForbesIndia"
+                                       style="background-color:#1DA1F2;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">X</span>
+                                    </a>
+                                 </td>
+                                 <!-- LinkedIn -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://www.linkedin.com/company/forbes-india/"
+                                       style="background-color:#0A66C2;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">in</span>
+                                    </a>
+                                 </td>
+                                 <!-- Facebook -->
+                                 <td align="center" style="padding: 0 4px;">
+                                    <a target="_blank" href="https://www.facebook.com/ForbesIndia/"
+                                       style="background-color:#3b5998;display:block;width:30px;height:30px;line-height:30px;
+                                       border-radius:50%;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">
+                                    <span style="font-family:Arial,sans-serif;font-size:14px;color:#ffffff;">f</span>
+                                    </a>
+                                 </td>
+                                 <!-- Instagram -->
+                                 <td align="center" style="padding:0 4px;">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                       <tr>
+                                          <td align="center"
+                                             width="30"
+                                             height="30"
+                                             bgcolor="#C13584"
+                                             style="border-radius:50%;">
+                                             <a href="https://www.instagram.com/forbesindia/" target="_blank"
+                                                style="display:block;line-height:30px;text-decoration:none;">
+                                             <img
+                                                src="https://images.forbesindia.com/blog/wp-content/uploads/2026/02/instaicon-2026-02-798fa779ba75b8c19bdd34af8395a066.png"
+                                                alt="Instagram"
+                                                width="24"
+                                                height="24"
+                                                style="display:block;border:0;">
+                                             </a>
+                                          </td>
+                                       </tr>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </table>
+                        </div>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                           <tr>
+                              <td align="center" style="font-family: Arial, sans-serif; font-size: 12px; color: #888888; line-height: 1.5; border-top: 1px solid #e9ecef; padding-top: 20px;">
+                                 <p class="unsubscribe" style="margin: 0;">
+                                    You received this email because you signed up for the Forbes India Weekly Roundup newsletter. <br>
+                                    <a target="_blank" href="*|UNSUBSCRIBE|*" style="color: #0D3B66; text-decoration: underline;">Unsubscribe</a> | 
+                                    <a target="_blank" href="https://forbesindia.com/newsletters" style="color: #0D3B66; text-decoration: underline;">Manage preferences</a>
+                                 </p>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+                  </td>
+                  </tr>
+               </table>
+            </td>
+         </tr>
+      </table>
+   </body>
+</html>
