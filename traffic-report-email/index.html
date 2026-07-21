@@ -212,12 +212,15 @@ function buildTableHTML(parsed){
   let html = '<div style="border:1px solid #e2e2e2; border-radius:8px; overflow:hidden;">';
   html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; table-layout:auto; font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px;">';
 
-  // header row
+  // header row — use <td>, not <th>. Outlook's Word rendering engine
+  // forces its own bold/black styling on <th> and ignores inline color
+  // overrides, which is why header text was showing black. <td> with
+  // an inner <span> for the color is the reliable pattern for Outlook.
   html += '<tr style="background-color:#0b2545;">';
   headers.forEach((h, i) => {
     const alignHeader = (i === 0) ? 'left' : 'right';
     const widthAttr = widths[i] ? ` width="${widths[i]}"` : '';
-    html += `<th align="${alignHeader}"${widthAttr} style="padding:12px 14px; color:#ffffff; font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; border:1px solid #0b2545; white-space:nowrap;">${escapeHtml(h)}</th>`;
+    html += `<td align="${alignHeader}"${widthAttr} style="padding:12px 14px; background-color:#0b2545; border:1px solid #0b2545; white-space:nowrap; mso-line-height-rule:exactly;"><span style="color:#ffffff; font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">${escapeHtml(h)}</span></td>`;
   });
   html += '</tr>';
 
@@ -232,7 +235,7 @@ function buildTableHTML(parsed){
       const numeric = isNumericCell(cell);
       const align = numeric ? 'right' : 'left';
       const nowrap = (numeric || i > 0) ? ' white-space:nowrap;' : '';
-      html += `<td align="${align}" style="padding:10px 14px; border:1px solid #e9edf1; color:${color}; font-weight:${weight};${nowrap}">${escapeHtml(cell)}</td>`;
+      html += `<td align="${align}" style="padding:10px 14px; background-color:${bg}; border:1px solid #e9edf1;${nowrap}"><span style="color:${color}; font-weight:${weight};">${escapeHtml(cell)}</span></td>`;
     });
     html += '</tr>';
   });
