@@ -212,15 +212,15 @@ function buildTableHTML(parsed){
   let html = '<div style="border:1px solid #e2e2e2; border-radius:8px; overflow:hidden;">';
   html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; table-layout:auto; font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px;">';
 
-  // header row — use <td>, not <th>. Outlook's Word rendering engine
-  // forces its own bold/black styling on <th> and ignores inline color
-  // overrides, which is why header text was showing black. <td> with
-  // an inner <span> for the color is the reliable pattern for Outlook.
+  // header row — use <td>, not <th>, and wrap text in the legacy
+  // <font color> attribute rather than CSS color. Outlook's paste
+  // sanitizer strips inline "color" styles (especially white text),
+  // but preserves the old-school font color attribute reliably.
   html += '<tr style="background-color:#0b2545;">';
   headers.forEach((h, i) => {
     const alignHeader = (i === 0) ? 'left' : 'right';
     const widthAttr = widths[i] ? ` width="${widths[i]}"` : '';
-    html += `<td align="${alignHeader}"${widthAttr} style="padding:12px 14px; background-color:#0b2545; border:1px solid #0b2545; white-space:nowrap; mso-line-height-rule:exactly;"><span style="color:#ffffff; font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">${escapeHtml(h)}</span></td>`;
+    html += `<td align="${alignHeader}"${widthAttr} bgcolor="#0b2545" style="padding:12px 14px; background-color:#0b2545; border:1px solid #0b2545; white-space:nowrap;"><font color="#ffffff"><span style="font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">${escapeHtml(h)}</span></font></td>`;
   });
   html += '</tr>';
 
@@ -235,7 +235,7 @@ function buildTableHTML(parsed){
       const numeric = isNumericCell(cell);
       const align = numeric ? 'right' : 'left';
       const nowrap = (numeric || i > 0) ? ' white-space:nowrap;' : '';
-      html += `<td align="${align}" style="padding:10px 14px; background-color:${bg}; border:1px solid #e9edf1;${nowrap}"><span style="color:${color}; font-weight:${weight};">${escapeHtml(cell)}</span></td>`;
+      html += `<td align="${align}" bgcolor="${bg}" style="padding:10px 14px; background-color:${bg}; border:1px solid #e9edf1;${nowrap}"><font color="${color}"><span style="font-weight:${weight};">${escapeHtml(cell)}</span></font></td>`;
     });
     html += '</tr>';
   });
@@ -251,7 +251,7 @@ function sectionBlock(title, tableHtml){
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td style="border-left:4px solid #c8102e; padding-left:12px;">
-            <span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:16px; font-weight:700; color:#0b2545; letter-spacing:0.01em;">${escapeHtml(title)}</span>
+            <font color="#0b2545"><span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:16px; font-weight:700; letter-spacing:0.01em;">${escapeHtml(title)}</span></font>
           </td>
         </tr>
       </table>
@@ -278,7 +278,7 @@ function generateReport(){
   const reportersHtml = buildTableHTML(reportersParsed);
 
   const introHtml = introText
-    ? `<tr><td style="padding:20px 32px 4px 32px;"><p style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:14px; color:#333333; margin:0; line-height:1.5;">${escapeHtml(introText).replace(/\n/g,'<br>')}</p></td></tr>`
+    ? `<tr><td style="padding:20px 32px 4px 32px;"><p style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:14px; margin:0; line-height:1.5;"><font color="#333333">${escapeHtml(introText).replace(/\n/g,'<br>')}</font></p></td></tr>`
     : '';
 
   const fullHtml = `
@@ -286,10 +286,10 @@ function generateReport(){
 <tr><td align="center">
 <table role="presentation" width="680" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff; border-radius:8px; overflow:hidden; font-family:Segoe UI, Arial, Helvetica, sans-serif;">
   <tr>
-    <td style="background-color:#0b2545; padding:28px 32px 24px 32px;">
-      <span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; color:#ffffff; font-size:21px; font-weight:700; letter-spacing:0.2px;">${escapeHtml(reportType)} Traffic Report</span>
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:10px 0 8px 0; line-height:0;"><div style="width:36px; height:3px; background-color:#c8102e; border-radius:2px; font-size:0; line-height:0;">&nbsp;</div></td></tr></table>
-      <span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; color:#aebdd6; font-size:13px; letter-spacing:0.02em;">${escapeHtml(dateRange)}</span>
+    <td bgcolor="#0b2545" style="background-color:#0b2545; padding:28px 32px 24px 32px;">
+      <font color="#ffffff"><span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:21px; font-weight:700; letter-spacing:0.2px;">${escapeHtml(reportType)} Traffic Report</span></font>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#c8102e" style="padding:10px 0 8px 0; line-height:0;"><div style="width:36px; height:3px; background-color:#c8102e; border-radius:2px; font-size:0; line-height:0;">&nbsp;</div></td></tr></table>
+      <font color="#aebdd6"><span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px; letter-spacing:0.02em;">${escapeHtml(dateRange)}</span></font>
     </td>
   </tr>
   ${introHtml}
@@ -297,8 +297,8 @@ function generateReport(){
   ${sectionBlock('Sections and Traffic', sectionsHtml)}
   ${sectionBlock('Number of Text Stories by Reporters', reportersHtml)}
   <tr>
-    <td style="background-color:#f0f2f5; padding:18px 32px; border-top:1px solid #e2e2e2;">
-      <span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:11px; color:#8a8f98; letter-spacing:0.02em;">Forbes India &middot; Google Analytics &middot; Auto-generated report</span>
+    <td bgcolor="#f0f2f5" style="background-color:#f0f2f5; padding:18px 32px; border-top:1px solid #e2e2e2;">
+      <font color="#8a8f98"><span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:11px; letter-spacing:0.02em;">Forbes India &middot; Google Analytics &middot; Auto-generated report</span></font>
     </td>
   </tr>
 </table>
