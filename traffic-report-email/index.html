@@ -5,9 +5,9 @@
 <title>Traffic Report Builder</title>
 <style>
   :root{
-    --navy:#0b2545;
-    --navy-light:#16335e;
-    --red:#c8102e;
+    --navy:#111111;
+    --navy-light:#333333;
+    --red:#000000;
     --stripe:#f7f9fc;
     --border:#e2e2e2;
     --bg:#eef1f5;
@@ -205,42 +205,42 @@ function computeColumnWidths(headers, dataRows){
 }
 
 function buildTableHTML(parsed){
-  if(!parsed) return '<p style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px; color:#888;">No data pasted for this section.</p>';
+  if(!parsed) return '<p style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px; color:#666666;">No data pasted for this section.</p>';
   const { headers, dataRows } = parsed;
   const widths = computeColumnWidths(headers, dataRows);
 
-  let html = '<div style="border:1px solid #e2e2e2; border-radius:8px; overflow:hidden;">';
-  html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; table-layout:auto; font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px;">';
+  let html = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; table-layout:auto; font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px;">';
 
-  // header row — use <td>, not <th>, and wrap text in the legacy
-  // <font color> attribute rather than CSS color. Outlook's paste
-  // sanitizer strips inline "color" styles (especially white text),
-  // but preserves the old-school font color attribute reliably.
-  html += '<tr style="background-color:#0b2545;">';
+  // header row — light gray background with bold black text. No dark
+  // background/white text combination anywhere, so there's nothing
+  // for a paste sanitizer to strip that would break legibility.
+  html += '<tr>';
   headers.forEach((h, i) => {
     const alignHeader = (i === 0) ? 'left' : 'right';
     const widthAttr = widths[i] ? ` width="${widths[i]}"` : '';
-    html += `<td align="${alignHeader}"${widthAttr} bgcolor="#0b2545" style="padding:12px 14px; background-color:#0b2545; border:1px solid #0b2545; white-space:nowrap;"><font color="#ffffff"><span style="font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">${escapeHtml(h)}</span></font></td>`;
+    html += `<td align="${alignHeader}"${widthAttr} bgcolor="#e8e8e8" style="padding:11px 14px; background-color:#e8e8e8; border:1px solid #000000; white-space:nowrap;"><b><span style="font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">${escapeHtml(h)}</span></b></td>`;
   });
   html += '</tr>';
 
-  // data rows
+  // data rows — plain black text throughout; only the background and
+  // border weight change to mark stripes / totals.
   dataRows.forEach((row, idx) => {
     const isTotalRow = row[0] && /total/i.test(row[0]);
-    const bg = isTotalRow ? '#0b2545' : (idx % 2 === 0 ? '#ffffff' : '#f6f9fc');
-    const color = isTotalRow ? '#ffffff' : '#222222';
-    const weight = isTotalRow ? '700' : '400';
-    html += `<tr style="background-color:${bg};">`;
+    const bg = isTotalRow ? '#d9d9d9' : (idx % 2 === 0 ? '#ffffff' : '#f5f5f5');
+    html += `<tr>`;
     row.forEach((cell, i) => {
       const numeric = isNumericCell(cell);
       const align = numeric ? 'right' : 'left';
       const nowrap = (numeric || i > 0) ? ' white-space:nowrap;' : '';
-      html += `<td align="${align}" bgcolor="${bg}" style="padding:10px 14px; background-color:${bg}; border:1px solid #e9edf1;${nowrap}"><font color="${color}"><span style="font-weight:${weight};">${escapeHtml(cell)}</span></font></td>`;
+      const border = isTotalRow ? 'border:2px solid #000000;' : 'border:1px solid #cccccc;';
+      const textOpen = isTotalRow ? '<b>' : '';
+      const textClose = isTotalRow ? '</b>' : '';
+      html += `<td align="${align}" bgcolor="${bg}" style="padding:9px 14px; background-color:${bg}; ${border}${nowrap}">${textOpen}${escapeHtml(cell)}${textClose}</td>`;
     });
     html += '</tr>';
   });
 
-  html += '</table></div>';
+  html += '</table>';
   return html;
 }
 
@@ -250,8 +250,8 @@ function sectionBlock(title, tableHtml){
     <td style="padding:26px 32px 10px 32px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td style="border-left:4px solid #c8102e; padding-left:12px;">
-            <font color="#0b2545"><span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:16px; font-weight:700; letter-spacing:0.01em;">${escapeHtml(title)}</span></font>
+          <td style="border-left:3px solid #000000; padding-left:12px;">
+            <span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:16px; font-weight:700; letter-spacing:0.01em;">${escapeHtml(title)}</span>
           </td>
         </tr>
       </table>
@@ -278,18 +278,18 @@ function generateReport(){
   const reportersHtml = buildTableHTML(reportersParsed);
 
   const introHtml = introText
-    ? `<tr><td style="padding:20px 32px 4px 32px;"><p style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:14px; margin:0; line-height:1.5;"><font color="#333333">${escapeHtml(introText).replace(/\n/g,'<br>')}</font></p></td></tr>`
+    ? `<tr><td style="padding:18px 32px 4px 32px;"><p style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:14px; margin:0; line-height:1.5;">${escapeHtml(introText).replace(/\n/g,'<br>')}</p></td></tr>`
     : '';
 
   const fullHtml = `
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4; padding:24px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff; padding:16px 0;">
 <tr><td align="center">
-<table role="presentation" width="680" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff; border-radius:8px; overflow:hidden; font-family:Segoe UI, Arial, Helvetica, sans-serif;">
+<table role="presentation" width="680" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff; font-family:Segoe UI, Arial, Helvetica, sans-serif;">
   <tr>
-    <td bgcolor="#0b2545" style="background-color:#0b2545; padding:28px 32px 24px 32px;">
-      <font color="#ffffff"><span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:21px; font-weight:700; letter-spacing:0.2px;">${escapeHtml(reportType)} Traffic Report</span></font>
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#c8102e" style="padding:10px 0 8px 0; line-height:0;"><div style="width:36px; height:3px; background-color:#c8102e; border-radius:2px; font-size:0; line-height:0;">&nbsp;</div></td></tr></table>
-      <font color="#aebdd6"><span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px; letter-spacing:0.02em;">${escapeHtml(dateRange)}</span></font>
+    <td style="padding:8px 32px 18px 32px; border-bottom:3px solid #000000;">
+      <span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:22px; font-weight:700; letter-spacing:0.2px;">${escapeHtml(reportType)} Traffic Report</span>
+      <br>
+      <span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:13px; color:#555555;">${escapeHtml(dateRange)}</span>
     </td>
   </tr>
   ${introHtml}
@@ -297,8 +297,8 @@ function generateReport(){
   ${sectionBlock('Sections and Traffic', sectionsHtml)}
   ${sectionBlock('Number of Text Stories by Reporters', reportersHtml)}
   <tr>
-    <td bgcolor="#f0f2f5" style="background-color:#f0f2f5; padding:18px 32px; border-top:1px solid #e2e2e2;">
-      <font color="#8a8f98"><span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:11px; letter-spacing:0.02em;">Forbes India &middot; Google Analytics &middot; Auto-generated report</span></font>
+    <td style="padding:16px 32px; border-top:1px solid #000000;">
+      <span style="font-family:Segoe UI, Arial, Helvetica, sans-serif; font-size:11px; color:#555555; letter-spacing:0.02em;">Forbes India &middot; Google Analytics &middot; Auto-generated report</span>
     </td>
   </tr>
 </table>
