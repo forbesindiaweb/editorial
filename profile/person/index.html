@@ -6,21 +6,66 @@
 <title>Mukesh Ambani — Forbes India Profiles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   /* ---------------------------------------------------------
      Forbes India — Profile Page Template
      Token system: ink/charcoal/steel greys, hairline borders,
      one brass accent reserved for wealth figures + chart line.
-     Swap the Google Fonts import for the FI CDN Gotham @font-face
-     block already used on the list-page templates when this
-     goes into production.
+     Type: real site font-face declarations below (Gotham +
+     Work Sans, from the Forbes India CDN). Work Sans is loaded
+     from Google Fonts here only as a preview stand-in until its
+     real CDN woff2 paths are dropped in — see the TODO on that block.
   --------------------------------------------------------- */
 
+  /* — Gotham — Forbes India's primary typeface (from site CDN) — */
   @font-face {
     font-family: "Gotham Book";
-    src: url("https://cdn.forbesindia.com/fonts/GothamBook.woff2") format("woff2");
+    src: url("https://images.forbesindia.com/assets/fonts/Gotham-Book.woff2") format("woff2"),
+         url("https://images.forbesindia.com/assets/fonts/GothamBook.woff2") format("woff2");
     font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Gotham";
+    src: url("https://images.forbesindia.com/assets/fonts/Gotham-Medium.woff2") format("woff2"),
+         url("https://images.forbesindia.com/assets/fonts/GothamMedium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Gotham";
+    src: url("https://images.forbesindia.com/assets/fonts/Gotham-Bold.woff2") format("woff2"),
+         url("https://images.forbesindia.com/assets/fonts/GothamBold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* — Work Sans — kept for global header/footer (matches site) —
+     TODO: swap these src paths for the real CDN woff2 URLs; the
+     Google Fonts <link> above is only a stand-in until then. */
+  @font-face {
+    font-family: "Work Sans";
+    src: url("https://images.forbesindia.com/assets/fonts/WorkSans-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Work Sans";
+    src: url("https://images.forbesindia.com/assets/fonts/WorkSans-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Work Sans";
+    src: url("https://images.forbesindia.com/assets/fonts/WorkSans-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
     font-display: swap;
   }
 
@@ -35,8 +80,9 @@
     --brass: #a2793f;
     --brass-soft: #efe6d8;
 
-    --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
-    --font-body: "Gotham Book", "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-display: "Gotham", "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-nav: "Work Sans", -apple-system, "Helvetica Neue", Arial, sans-serif;
 
     --header-h: 56px;
   }
@@ -72,7 +118,7 @@
     display:flex;
     align-items:center;
     gap:8px;
-    font-family: var(--font-display);
+    font-family: var(--font-nav);
     font-weight: 700;
     font-size: 19px;
     letter-spacing: 0.2px;
@@ -94,6 +140,7 @@
     border-bottom: 1px solid var(--hairline);
   }
   .fi-breadcrumb__inner{
+    font-family: var(--font-nav);
     max-width: 1180px;
     margin: 0 auto;
     padding: 12px 28px;
@@ -150,7 +197,7 @@
   .fi-photo--fallback{
     font-family: var(--font-display);
     font-size: 64px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--steel-light);
   }
 
@@ -216,7 +263,7 @@
     color: var(--charcoal);
     margin: 0 0 24px;
   }
-  .fi-role strong{ color: var(--ink); font-weight: 600; }
+  .fi-role strong{ color: var(--ink); font-weight: 700; }
 
   /* ---------- Net worth stat ---------- */
   .fi-networth{
@@ -252,7 +299,7 @@
   .fi-section__title{
     font-family: var(--font-display);
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--ink);
     margin: 0 0 14px;
   }
@@ -294,12 +341,19 @@
   }
   .fi-quote p{
     font-family: var(--font-display);
-    font-style: italic;
+    font-weight: 500;
+    font-style: normal;
     font-size: 21px;
     line-height: 1.5;
     color: var(--ink);
     margin: 0 0 10px;
     max-width: 62ch;
+  }
+  .fi-quote p::before{
+    content: "“";
+    color: var(--brass);
+    font-weight: 700;
+    margin-right: 2px;
   }
   .fi-quote cite{
     font-style: normal;
@@ -331,7 +385,7 @@
   }
   .fi-timeline__year{
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 15px;
     color: var(--ink);
     display:block;
@@ -365,13 +419,13 @@
   }
   .fi-coverage__tag{
     color: var(--brass);
-    font-weight: 600;
+    font-weight: 700;
   }
   .fi-coverage__title{
     display:block;
     font-family: var(--font-display);
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--ink);
     text-decoration: none;
     line-height: 1.35;
@@ -417,13 +471,13 @@
   .fi-related__avatar span{
     font-family: var(--font-display);
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--steel-light);
   }
   .fi-related__name{
     font-family: var(--font-display);
     font-size: 15.5px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--ink);
     margin: 0 0 3px;
     line-height: 1.3;
@@ -436,7 +490,7 @@
   .fi-related__networth{
     font-size: 13px;
     color: var(--brass);
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 8px;
   }
 </style>
