@@ -78,15 +78,41 @@
     letter-spacing: 0.2px;
   }
   .fi-topbar__mark svg{ height: 18px; width: auto; }
-  .fi-topbar__crumb{
+  .fi-topbar__logo{
+    height: 22px;
+    width: auto;
+    display:block;
+  }
+  /* Fallback shown only if the logo image fails to load (see onerror on the <img>) */
+  .fi-topbar__mark.fi-logo-missing img{ display:none; }
+  .fi-topbar__mark.fi-logo-missing svg,
+  .fi-topbar__mark.fi-logo-missing span{ display:inline-flex; }
+
+  /* ---------- Breadcrumb bar ---------- */
+  .fi-breadcrumb{
+    background: var(--panel);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .fi-breadcrumb__inner{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 12px 28px;
     font-size: 13px;
-    color: #b9b8b4;
+    color: var(--steel);
     display:flex;
     align-items:center;
-    gap:6px;
+    gap: 6px;
   }
-  .fi-topbar__crumb span:last-child{ color:#f2f2f0; }
-
+  .fi-breadcrumb a{
+    color: var(--charcoal);
+    text-decoration: none;
+  }
+  .fi-breadcrumb a:hover{ color: var(--brass); text-decoration: underline; }
+  .fi-breadcrumb__sep{ color: var(--steel-light); }
+  .fi-breadcrumb__current{ color: var(--ink); font-weight: 500; }
+  @media (max-width: 860px){
+    .fi-breadcrumb__inner{ padding: 10px 18px; }
+  }
   /* ---------- Layout ---------- */
   .fi-profile{
     max-width: 1180px;
@@ -358,22 +384,86 @@
     max-width: 68ch;
     margin: 0;
   }
+
+  /* ---------- Related people ---------- */
+  .fi-related__grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 720px){
+    .fi-related__grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .fi-related__card{
+    display:block;
+    text-decoration:none;
+    border: 1px solid var(--hairline);
+    padding: 16px;
+    transition: border-color .15s ease;
+  }
+  .fi-related__card:hover{ border-color: var(--ink); }
+  .fi-related__avatar{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--panel);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .fi-related__avatar img{ width:100%; height:100%; object-fit:cover; }
+  .fi-related__avatar span{
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--steel-light);
+  }
+  .fi-related__name{
+    font-family: var(--font-display);
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 3px;
+    line-height: 1.3;
+  }
+  .fi-related__role{
+    font-size: 12.5px;
+    color: var(--steel);
+    line-height: 1.4;
+  }
+  .fi-related__networth{
+    font-size: 13px;
+    color: var(--brass);
+    font-weight: 600;
+    margin-top: 8px;
+  }
 </style>
 </head>
 <body>
 
 <div class="fi-topbar">
-  <div class="fi-topbar__mark">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <div class="fi-topbar__mark" id="fi-logo-mark">
+    <!-- Point this at the real Forbes India logo asset. If it 404s, onerror
+         swaps in the SVG monogram + wordmark fallback below automatically. -->
+    <img class="fi-topbar__logo" src="/assets/forbes-india-logo.png" alt="Forbes India"
+         onerror="this.closest('#fi-logo-mark').classList.add('fi-logo-missing')">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
       <rect x="1" y="1" width="22" height="22" stroke="#f2f2f0" stroke-width="1.4"/>
       <path d="M7 7H17V9.2H9.4V11.6H15.6V13.8H9.4V17H7V7Z" fill="#f2f2f0"/>
     </svg>
-    Forbes India
-  </div>
-  <div class="fi-topbar__crumb">
-    <span>Profiles</span> / <span>Mukesh Ambani</span>
+    <span style="display:none">Forbes India</span>
   </div>
 </div>
+
+<nav class="fi-breadcrumb" aria-label="Breadcrumb">
+  <div class="fi-breadcrumb__inner">
+    <a href="/profiles">Profiles</a>
+    <span class="fi-breadcrumb__sep">/</span>
+    <span class="fi-breadcrumb__current">Mukesh Ambani</span>
+  </div>
+</nav>
 
 <div class="fi-profile">
 
@@ -477,6 +567,36 @@
         <li><span class="fi-timeline__year">2016</span><span class="fi-timeline__text">Launches Jio, reshaping India's telecom market.</span></li>
         <li><span class="fi-timeline__year">2025</span><span class="fi-timeline__text">Tops the Forbes India Rich List.</span></li>
       </ul>
+    </section>
+
+    <section class="fi-section" style="margin-bottom:0;">
+      <h2 class="fi-section__title">Related people</h2>
+      <div class="fi-related__grid">
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>GA</span></div>
+          <p class="fi-related__name">Gautam Adani</p>
+          <p class="fi-related__role">Chairman, Adani Group</p>
+          <p class="fi-related__networth">$74.2 B</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>SN</span></div>
+          <p class="fi-related__name">Shiv Nadar</p>
+          <p class="fi-related__role">Founder, HCLTech</p>
+          <p class="fi-related__networth">$36.9 B</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>RD</span></div>
+          <p class="fi-related__name">Radhakishan Damani</p>
+          <p class="fi-related__role">Founder, Avenue Supermarts (DMart)</p>
+          <p class="fi-related__networth">$21.3 B</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>CP</span></div>
+          <p class="fi-related__name">Cyrus Poonawalla</p>
+          <p class="fi-related__role">Chairman, Serum Institute of India</p>
+          <p class="fi-related__networth">$21.1 B</p>
+        </a>
+      </div>
     </section>
   </main>
 
