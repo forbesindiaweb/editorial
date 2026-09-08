@@ -317,6 +317,47 @@
   }
 
   .fi-bio p{ max-width: 68ch; font-size: 15.5px; color: var(--charcoal); }
+
+  /* ---------- Article coverage ---------- */
+  .fi-coverage{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .fi-coverage li{
+    border-top: 1px solid var(--hairline);
+    padding: 18px 0;
+  }
+  .fi-coverage li:last-child{ border-bottom: 1px solid var(--hairline); }
+  .fi-coverage__meta{
+    display:flex;
+    gap: 10px;
+    align-items:baseline;
+    font-size: 12px;
+    color: var(--steel);
+    margin-bottom: 6px;
+  }
+  .fi-coverage__tag{
+    color: var(--brass);
+    font-weight: 600;
+  }
+  .fi-coverage__title{
+    display:block;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+  .fi-coverage__title:hover{ color: var(--brass); }
+  .fi-coverage__dek{
+    font-size: 14px;
+    color: var(--charcoal);
+    max-width: 68ch;
+    margin: 0;
+  }
 </style>
 </head>
 <body>
@@ -405,6 +446,27 @@
         <p>"Sample pull quote goes here — pull a real line from an interview or earnings call, editorial-approved."</p>
         <cite>— From an interview, sample source, 2024</cite>
       </div>
+    </section>
+
+    <section class="fi-section">
+      <h2 class="fi-section__title">Article coverage</h2>
+      <ul class="fi-coverage">
+        <li>
+          <div class="fi-coverage__meta"><span class="fi-coverage__tag">Billionaires</span><span>Forbes India</span></div>
+          <a class="fi-coverage__title" href="https://www.forbesindia.com/article/billionaires/mukesh-ambani-indias-richest-man-strengthens-his-lead/94730/1" target="_blank" rel="noopener">Mukesh Ambani, India's richest man, strengthens his lead</a>
+          <p class="fi-coverage__dek">A look at how Reliance's oil-to-chemicals, telecom and retail arms keep Ambani at the top of the Rich List, and what could unlock further value.</p>
+        </li>
+        <li>
+          <div class="fi-coverage__meta"><span class="fi-coverage__tag">News</span><span>Forbes India</span></div>
+          <a class="fi-coverage__title" href="https://www.forbesindia.com/article/news/reliance-retail-will-be-our-fastest-growing-business-in-revenues-and-ebitda-mukesh-ambani/87819/1" target="_blank" rel="noopener">"Reliance Retail will be our fastest growing business in revenues and Ebitda": Mukesh Ambani</a>
+          <p class="fi-coverage__dek">Comments from Reliance's 46th AGM on why retail is set to overtake the group's other businesses in revenue and earnings growth.</p>
+        </li>
+        <li>
+          <div class="fi-coverage__meta"><span class="fi-coverage__tag">Photo gallery</span><span>Samreen Wani</span></div>
+          <a class="fi-coverage__title" href="https://www.forbesindia.com/photogallery/billionaires/all-that-glitters-a-closer-look-at-indias-billionaires/2994059/1" target="_blank" rel="noopener">All that glitters: A closer look at India's billionaires</a>
+          <p class="fi-coverage__dek">A visual round-up of India's wealthiest, from established conglomerate heirs to a new generation of under-45 founders.</p>
+        </li>
+      </ul>
     </section>
 
     <section class="fi-section">
