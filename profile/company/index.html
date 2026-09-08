@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reliance Industries — Forbes India Profiles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------------------------------------------------------
+     Forbes India — Company Profile Page Template
+     Same token system, fonts and layout grid as the person
+     profile template, so the two feel like one product.
+     No Featured in / list-rank / market-cap fields here per
+     current scope — see the Leadership block for the
+     cross-link back to the person page.
+  --------------------------------------------------------- */
+
+  /* — Gotham — Forbes India's primary typeface (from site CDN) — */
+  @font-face {
+    font-family: "Gotham Book";
+    src: url("https://images.forbesindia.com/assets/fonts/Gotham-Book.woff2") format("woff2"),
+         url("https://images.forbesindia.com/assets/fonts/GothamBook.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Gotham";
+    src: url("https://images.forbesindia.com/assets/fonts/Gotham-Medium.woff2") format("woff2"),
+         url("https://images.forbesindia.com/assets/fonts/GothamMedium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Gotham";
+    src: url("https://images.forbesindia.com/assets/fonts/Gotham-Bold.woff2") format("woff2"),
+         url("https://images.forbesindia.com/assets/fonts/GothamBold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* — Work Sans — kept for global header/footer (matches site) —
+     TODO: swap these src paths for the real CDN woff2 URLs; the
+     Google Fonts <link> above is only a stand-in until then. */
+  @font-face {
+    font-family: "Work Sans";
+    src: url("https://images.forbesindia.com/assets/fonts/WorkSans-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Work Sans";
+    src: url("https://images.forbesindia.com/assets/fonts/WorkSans-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Work Sans";
+    src: url("https://images.forbesindia.com/assets/fonts/WorkSans-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root{
+    --ink: #111111;
+    --charcoal: #383838;
+    --steel: #767676;
+    --steel-light: #9a9a9a;
+    --hairline: #e3e2df;
+    --paper: #ffffff;
+    --panel: #f7f6f4;
+    --brass: #a2793f;
+    --brass-soft: #efe6d8;
+
+    --font-display: "Gotham", "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-nav: "Work Sans", -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+    --header-h: 56px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--charcoal);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: inherit; }
+  img{ max-width:100%; display:block; }
+
+  /* ---------- Top bar ---------- */
+  .fi-topbar{
+    font-family: var(--font-nav);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: var(--header-h);
+    display:flex;
+    align-items:center;
+    gap: 18px;
+    padding: 0 28px;
+    background: var(--ink);
+    color: #f2f2f0;
+  }
+  .fi-topbar__mark{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family: var(--font-nav);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: 0.2px;
+  }
+  .fi-topbar__mark svg{ height: 18px; width: auto; }
+  .fi-topbar__logo{
+    height: 22px;
+    width: auto;
+    display:block;
+  }
+  .fi-topbar__mark.fi-logo-missing img{ display:none; }
+  .fi-topbar__mark.fi-logo-missing svg,
+  .fi-topbar__mark.fi-logo-missing span{ display:inline-flex; }
+
+  /* ---------- Breadcrumb bar ---------- */
+  .fi-breadcrumb{
+    background: var(--panel);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .fi-breadcrumb__inner{
+    font-family: var(--font-nav);
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 12px 28px;
+    font-size: 13px;
+    color: var(--steel);
+    display:flex;
+    align-items:center;
+    gap: 6px;
+  }
+  .fi-breadcrumb a{
+    color: var(--charcoal);
+    text-decoration: none;
+  }
+  .fi-breadcrumb a:hover{ color: var(--brass); text-decoration: underline; }
+  .fi-breadcrumb__sep{ color: var(--steel-light); }
+  .fi-breadcrumb__current{ color: var(--ink); font-weight: 500; }
+  @media (max-width: 860px){
+    .fi-breadcrumb__inner{ padding: 10px 18px; }
+  }
+
+  /* ---------- Layout ---------- */
+  .fi-profile{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 28px 96px;
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    gap: 56px;
+    align-items:start;
+  }
+  @media (max-width: 860px){
+    .fi-profile{ grid-template-columns: 1fr; padding: 28px 18px 64px; gap: 32px; }
+  }
+
+  /* ---------- Sidebar ---------- */
+  .fi-sidebar{
+    position: sticky;
+    top: calc(var(--header-h) + 28px);
+  }
+  @media (max-width: 860px){ .fi-sidebar{ position: static; } }
+
+  .fi-logo-box{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--panel);
+    border: 1px solid var(--hairline);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+  }
+  .fi-logo-box img{ max-width:100%; max-height:100%; object-fit: contain; }
+  .fi-logo-box--fallback{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    color: var(--steel-light);
+    text-align: center;
+  }
+
+  .fi-facts{
+    margin-top: 22px;
+    border-top: 1px solid var(--hairline);
+  }
+  .fi-facts dl{ margin:0; }
+  .fi-fact{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .fi-fact dt{
+    font-size: 12.5px;
+    color: var(--steel);
+    font-weight: 500;
+  }
+  .fi-fact dd{
+    margin: 0;
+    font-size: 14.5px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .fi-fact dd a{
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--hairline);
+  }
+  .fi-fact dd a:hover{ color: var(--brass); text-decoration-color: var(--brass); }
+
+  .fi-share{
+    margin-top: 20px;
+    display:flex;
+    gap: 10px;
+  }
+  .fi-share a{
+    width: 32px; height: 32px;
+    border: 1px solid var(--hairline);
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    color: var(--steel);
+    text-decoration:none;
+    font-size: 13px;
+    transition: border-color .15s ease, color .15s ease;
+  }
+  .fi-share a:hover{ border-color: var(--ink); color: var(--ink); }
+
+  /* ---------- Main column ---------- */
+  .fi-main{ min-width: 0; }
+
+  .fi-eyebrow{
+    font-size: 13px;
+    color: var(--steel);
+    margin: 0 0 8px;
+  }
+  .fi-name{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 0 0 10px;
+  }
+  .fi-role{
+    font-size: 17px;
+    color: var(--charcoal);
+    margin: 0 0 24px;
+    max-width: 62ch;
+  }
+
+  /* ---------- Leadership stat ---------- */
+  .fi-leadership{
+    padding: 20px 24px;
+    background: var(--panel);
+    border-left: 3px solid var(--brass);
+    margin-bottom: 28px;
+    display:flex;
+    flex-wrap: wrap;
+    gap: 20px 40px;
+  }
+  .fi-leadership__item{
+    display:flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fi-leadership__label{
+    font-size: 12.5px;
+    color: var(--steel);
+  }
+  .fi-leadership__name{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .fi-leadership__name.is-link{ color: var(--brass); }
+  .fi-leadership__name.is-link:hover{ text-decoration: underline; }
+
+  /* ---------- Sections (shared) ---------- */
+  .fi-section{ margin-bottom: 40px; }
+  .fi-section__title{
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 14px;
+  }
+  .fi-bio p{ max-width: 68ch; font-size: 15.5px; color: var(--charcoal); }
+
+  .fi-chips{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .fi-chip{
+    font-size: 13.5px;
+    padding: 7px 14px;
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    color: var(--charcoal);
+    text-decoration: none;
+    background: var(--paper);
+    transition: border-color .15s ease;
+  }
+  .fi-chip:hover{ border-color: var(--ink); }
+
+  /* ---------- Promoter / holding structure ---------- */
+  .fi-holding{
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    border-left: 1px solid var(--hairline);
+  }
+  .fi-holding li{
+    position: relative;
+    padding: 0 0 16px 26px;
+  }
+  .fi-holding li::before{
+    content:"";
+    position:absolute;
+    left: -5px;
+    top: 4px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--brass);
+  }
+  .fi-holding__name{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--ink);
+    display:block;
+    margin-bottom: 2px;
+  }
+  .fi-holding__stake{
+    font-size: 12.5px;
+    color: var(--steel);
+  }
+
+  /* ---------- Article coverage ---------- */
+  .fi-coverage{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .fi-coverage li{
+    border-top: 1px solid var(--hairline);
+    padding: 18px 0;
+  }
+  .fi-coverage li:last-child{ border-bottom: 1px solid var(--hairline); }
+  .fi-coverage__meta{
+    display:flex;
+    gap: 10px;
+    align-items:baseline;
+    font-size: 12px;
+    color: var(--steel);
+    margin-bottom: 6px;
+  }
+  .fi-coverage__tag{
+    color: var(--brass);
+    font-weight: 700;
+  }
+  .fi-coverage__title{
+    display:block;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+  .fi-coverage__title:hover{ color: var(--brass); }
+  .fi-coverage__dek{
+    font-size: 14px;
+    color: var(--charcoal);
+    max-width: 68ch;
+    margin: 0;
+  }
+
+  /* ---------- Timeline ---------- */
+  .fi-timeline{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--hairline);
+  }
+  .fi-timeline li{
+    position: relative;
+    padding: 0 0 22px 26px;
+  }
+  .fi-timeline li::before{
+    content:"";
+    position:absolute;
+    left: -5px;
+    top: 4px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--brass);
+  }
+  .fi-timeline__year{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+    display:block;
+    margin-bottom: 2px;
+  }
+  .fi-timeline__text{
+    font-size: 14.5px;
+    color: var(--charcoal);
+  }
+
+  /* ---------- Card grids (board / related companies) ---------- */
+  .fi-related__grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 720px){
+    .fi-related__grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .fi-related__card{
+    display:block;
+    text-decoration:none;
+    border: 1px solid var(--hairline);
+    padding: 16px;
+    transition: border-color .15s ease;
+  }
+  .fi-related__card:hover{ border-color: var(--ink); }
+  .fi-related__avatar{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--panel);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .fi-related__avatar img{ width:100%; height:100%; object-fit:cover; }
+  .fi-related__avatar span{
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--steel-light);
+  }
+  .fi-related__name{
+    font-family: var(--font-display);
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 3px;
+    line-height: 1.3;
+  }
+  .fi-related__role{
+    font-size: 12.5px;
+    color: var(--steel);
+    line-height: 1.4;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="fi-topbar">
+  <div class="fi-topbar__mark" id="fi-logo-mark">
+    <!-- Point this at the real Forbes India logo asset. If it 404s, onerror
+         swaps in the SVG monogram + wordmark fallback below automatically. -->
+    <img class="fi-topbar__logo" src="/assets/forbes-india-logo.png" alt="Forbes India"
+         onerror="this.closest('#fi-logo-mark').classList.add('fi-logo-missing')">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+      <rect x="1" y="1" width="22" height="22" stroke="#f2f2f0" stroke-width="1.4"/>
+      <path d="M7 7H17V9.2H9.4V11.6H15.6V13.8H9.4V17H7V7Z" fill="#f2f2f0"/>
+    </svg>
+    <span style="display:none">Forbes India</span>
+  </div>
+</div>
+
+<nav class="fi-breadcrumb" aria-label="Breadcrumb">
+  <div class="fi-breadcrumb__inner">
+    <a href="/profiles">Profiles</a>
+    <span class="fi-breadcrumb__sep">/</span>
+    <span class="fi-breadcrumb__current">Reliance Industries</span>
+  </div>
+</nav>
+
+<div class="fi-profile">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="fi-sidebar">
+    <div class="fi-logo-box">
+      <!-- Swap for <img src="..." alt="Reliance Industries logo"> when the asset is ready -->
+      <div class="fi-logo-box--fallback">RELIANCE</div>
+    </div>
+
+    <div class="fi-facts">
+      <dl>
+        <div class="fi-fact"><dt>Ticker / exchange</dt><dd>RELIANCE · NSE, BSE</dd></div>
+        <div class="fi-fact"><dt>Sector</dt><dd>Conglomerate — energy, retail, telecom</dd></div>
+        <div class="fi-fact"><dt>Founded</dt><dd>1966</dd></div>
+        <div class="fi-fact"><dt>Headquarters</dt><dd>Mumbai, Maharashtra</dd></div>
+        <div class="fi-fact"><dt>Listed since</dt><dd>1977</dd></div>
+        <div class="fi-fact"><dt>Website</dt><dd><a href="https://www.ril.com" target="_blank" rel="noopener">ril.com</a></dd></div>
+        <div class="fi-fact"><dt>Investor relations</dt><dd><a href="https://www.ril.com/InvestorRelations.aspx" target="_blank" rel="noopener">Investor relations →</a></dd></div>
+      </dl>
+    </div>
+
+    <div class="fi-share" aria-label="Share this profile">
+      <a href="#" aria-label="Share on X">𝕏</a>
+      <a href="#" aria-label="Share on LinkedIn">in</a>
+      <a href="#" aria-label="Copy link">🔗</a>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="fi-main">
+    <p class="fi-eyebrow">Conglomerate · Energy, Retail, Telecom</p>
+    <h1 class="fi-name">Reliance Industries Limited</h1>
+    <p class="fi-role">India's largest private-sector company, spanning oil-to-chemicals, digital services and retail.</p>
+
+    <!-- Cross-link to the person page: this is the integration point between
+         company and person profiles. Resolve `chairman`/`ceo`/`founder`
+         fields from a shared person/company reference table rather than
+         hardcoding names, so this block updates itself when leadership changes. -->
+    <div class="fi-leadership">
+      <div class="fi-leadership__item">
+        <span class="fi-leadership__label">Founder</span>
+        <span class="fi-leadership__name">Dhirubhai Ambani</span>
+      </div>
+      <div class="fi-leadership__item">
+        <span class="fi-leadership__label">Chairman &amp; Managing Director</span>
+        <a class="fi-leadership__name is-link" href="forbes-india-profile-page.html">Mukesh Ambani →</a>
+      </div>
+    </div>
+
+    <section class="fi-section fi-bio">
+      <h2 class="fi-section__title">About</h2>
+      <p>Sample company bio — two or three sentences on what the company does, its scale, and what it's best known for. Sentence case, specific, no filler.</p>
+    </section>
+
+    <section class="fi-section">
+      <h2 class="fi-section__title">Key subsidiaries</h2>
+      <div class="fi-chips">
+        <a href="#" class="fi-chip">Reliance Retail Ventures</a>
+        <a href="#" class="fi-chip">Jio Platforms</a>
+        <a href="#" class="fi-chip">Reliance Jio Infocomm</a>
+        <a href="#" class="fi-chip">Network18 Group</a>
+        <a href="#" class="fi-chip">Reliance New Energy</a>
+      </div>
+    </section>
+
+    <section class="fi-section">
+      <h2 class="fi-section__title">Promoter &amp; holding structure</h2>
+      <p>Reliance Industries is promoted by the Ambani family. Its group entities include:</p>
+      <ul class="fi-holding">
+        <li>
+          <span class="fi-holding__name">Reliance Retail Ventures Ltd</span>
+          <span class="fi-holding__stake">Subsidiary of Reliance Industries</span>
+        </li>
+        <li>
+          <span class="fi-holding__name">Jio Platforms Ltd</span>
+          <span class="fi-holding__stake">Subsidiary of Reliance Industries</span>
+        </li>
+        <li>
+          <span class="fi-holding__name">Reliance Jio Infocomm Ltd</span>
+          <span class="fi-holding__stake">Subsidiary of Jio Platforms</span>
+        </li>
+        <li>
+          <span class="fi-holding__name">Network18 Group</span>
+          <span class="fi-holding__stake">Held via Independent Media Trust</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="fi-section">
+      <h2 class="fi-section__title">Article coverage</h2>
+      <ul class="fi-coverage">
+        <li>
+          <div class="fi-coverage__meta"><span class="fi-coverage__tag">Billionaires</span><span>Forbes India</span></div>
+          <a class="fi-coverage__title" href="https://www.forbesindia.com/article/billionaires/mukesh-ambani-indias-richest-man-strengthens-his-lead/94730/1" target="_blank" rel="noopener">Mukesh Ambani, India's richest man, strengthens his lead</a>
+          <p class="fi-coverage__dek">How the oil-to-chemicals, telecom and retail businesses support Reliance's valuation, and what could unlock further upside.</p>
+        </li>
+        <li>
+          <div class="fi-coverage__meta"><span class="fi-coverage__tag">News</span><span>Forbes India</span></div>
+          <a class="fi-coverage__title" href="https://www.forbesindia.com/article/news/reliance-retail-will-be-our-fastest-growing-business-in-revenues-and-ebitda-mukesh-ambani/87819/1" target="_blank" rel="noopener">"Reliance Retail will be our fastest growing business in revenues and Ebitda": Mukesh Ambani</a>
+          <p class="fi-coverage__dek">Comments from Reliance's 46th AGM on why retail is set to overtake the group's other businesses in revenue and earnings growth.</p>
+        </li>
+      </ul>
+      <!-- Same two articles also appear on the person page — a live example of
+           coverage tagged to both a person ID and a company ID rendering on
+           each profile automatically. -->
+    </section>
+
+    <section class="fi-section">
+      <h2 class="fi-section__title">Board of directors</h2>
+      <div class="fi-related__grid">
+        <a class="fi-related__card" href="forbes-india-profile-page.html">
+          <div class="fi-related__avatar"><span>MA</span></div>
+          <p class="fi-related__name">Mukesh Ambani</p>
+          <p class="fi-related__role">Chairman &amp; Managing Director</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>NA</span></div>
+          <p class="fi-related__name">Nita Ambani</p>
+          <p class="fi-related__role">Non-Executive Director</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>IA</span></div>
+          <p class="fi-related__name">Isha Ambani</p>
+          <p class="fi-related__role">Executive Director</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>AA</span></div>
+          <p class="fi-related__name">Akash Ambani</p>
+          <p class="fi-related__role">Non-Executive Director</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="fi-section">
+      <h2 class="fi-section__title">Major milestones</h2>
+      <ul class="fi-timeline">
+        <li><span class="fi-timeline__year">1966</span><span class="fi-timeline__text">Reliance Industries is founded by Dhirubhai Ambani.</span></li>
+        <li><span class="fi-timeline__year">1977</span><span class="fi-timeline__text">Lists on the Bombay Stock Exchange.</span></li>
+        <li><span class="fi-timeline__year">2002</span><span class="fi-timeline__text">Mukesh Ambani becomes Chairman &amp; Managing Director.</span></li>
+        <li><span class="fi-timeline__year">2016</span><span class="fi-timeline__text">Launches Reliance Jio, reshaping India's telecom market.</span></li>
+        <li><span class="fi-timeline__year">2023</span><span class="fi-timeline__text">Reliance Retail crosses 18,000 stores nationwide.</span></li>
+      </ul>
+    </section>
+
+    <section class="fi-section" style="margin-bottom:0;">
+      <h2 class="fi-section__title">Related companies</h2>
+      <div class="fi-related__grid">
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>AE</span></div>
+          <p class="fi-related__name">Adani Enterprises</p>
+          <p class="fi-related__role">Ports, energy, infrastructure</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>TS</span></div>
+          <p class="fi-related__name">Tata Steel</p>
+          <p class="fi-related__role">Steel &amp; mining</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>HC</span></div>
+          <p class="fi-related__name">HCLTech</p>
+          <p class="fi-related__role">Information technology</p>
+        </a>
+        <a class="fi-related__card" href="#">
+          <div class="fi-related__avatar"><span>AS</span></div>
+          <p class="fi-related__name">Avenue Supermarts</p>
+          <p class="fi-related__role">Retail (DMart)</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+</div>
+
+</body>
+</html>
