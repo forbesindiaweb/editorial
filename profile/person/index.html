@@ -256,13 +256,12 @@
     justify-content:center;
   }
   .fi-photo img{ width:100%; height:100%; object-fit: cover; }
-  /* Avatar fallback (photo missing) — reuse of the initials pattern from the list-page templates */
+  /* Avatar fallback (photo missing) — generic placeholder image, sized to fill the box */
   .fi-photo--fallback{
-    font-family: var(--font-display);
-    font-size: 64px;
-    font-weight: 700;
-    color: var(--steel-light);
+    width: 100%;
+    height: 100%;
   }
+  .fi-photo--fallback img{ width:100%; height:100%; object-fit: cover; }
 
   .fi-facts{
     margin-top: 22px;
@@ -595,8 +594,8 @@
   .fi-related__card:hover{ border-color: var(--ink); }
   .fi-related__avatar{
     width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
+    aspect-ratio: 4 / 3;
+    border-radius: 2px;
     background: var(--panel);
     display:flex;
     align-items:center;
@@ -606,10 +605,9 @@
   }
   .fi-related__avatar img{ width:100%; height:100%; object-fit:cover; }
   .fi-related__avatar span{
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--steel-light);
+    font-size: 30px;
+    line-height: 1;
+    filter: grayscale(35%) opacity(0.55);
   }
   .fi-related__name{
     font-family: var(--font-display);
@@ -765,7 +763,7 @@
     <div class="fi-photo">
       <!-- Swap for <img src="..." alt="Mukesh Ambani"> when a photograph is available -->
       <img src="https://images.forbesindia.com/blog/wp-content/uploads/media/images/2023/Oct/img_220363_mukeshambanirilsm.jpg" alt="Mukesh Ambani" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="fi-photo--fallback" style="display:none">MA</div>
+      <div class="fi-photo--fallback" style="display:none"><img src="placeholder-male.png" alt="No photograph available"></div>
     </div>
 
     <div class="fi-facts">
@@ -853,30 +851,28 @@
 
     <section class="fi-section">
       <h2 class="fi-section__title">Related people</h2>
+      <!-- Fallback avatar uses a gender-matched placeholder image when no
+           real photo is available — swap for a real <img> per person once one exists. -->
       <div class="fi-related__grid">
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>GA</span></div>
+          <div class="fi-related__avatar"><img src="placeholder-male.png" alt="No photograph available"></div>
           <p class="fi-related__name">Gautam Adani</p>
           <p class="fi-related__role">Chairman, Adani Group</p>
-          <p class="fi-related__networth">$74.2 B</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>SN</span></div>
+          <div class="fi-related__avatar"><img src="placeholder-male.png" alt="No photograph available"></div>
           <p class="fi-related__name">Shiv Nadar</p>
           <p class="fi-related__role">Founder, HCLTech</p>
-          <p class="fi-related__networth">$36.9 B</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>RD</span></div>
+          <div class="fi-related__avatar"><img src="placeholder-male.png" alt="No photograph available"></div>
           <p class="fi-related__name">Radhakishan Damani</p>
           <p class="fi-related__role">Founder, Avenue Supermarts (DMart)</p>
-          <p class="fi-related__networth">$21.3 B</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>CP</span></div>
+          <div class="fi-related__avatar"><img src="placeholder-male.png" alt="No photograph available"></div>
           <p class="fi-related__name">Cyrus Poonawalla</p>
           <p class="fi-related__role">Chairman, Serum Institute of India</p>
-          <p class="fi-related__networth">$21.1 B</p>
         </a>
       </div>
     </section>
