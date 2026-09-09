@@ -553,6 +553,54 @@
     margin: 0;
   }
 
+  /* ---------- Board of directors — compact "stamp" cards, more per row,
+     rectangular 4:3 photo to match the profile/logo photo boxes ---------- */
+  .fi-board-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+  }
+  .fi-board-card{
+    display:block;
+    text-decoration:none;
+    border: 1px solid var(--hairline);
+    padding: 10px;
+    transition: border-color .15s ease;
+  }
+  .fi-board-card:hover{ border-color: var(--ink); }
+  .fi-board-avatar{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 2px;
+    background: var(--panel);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .fi-board-avatar img{ width:100%; height:100%; object-fit: cover; }
+  .fi-board-avatar span{
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--steel-light);
+  }
+  .fi-board-name{
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 2px;
+    line-height: 1.25;
+  }
+  .fi-board-role{
+    font-size: 10.5px;
+    color: var(--steel);
+    line-height: 1.3;
+    margin: 0;
+  }
+
   /* ---------- Ad rails (reserve space for standard skyscraper units) ---------- */
   .fi-page-wrap{
     display:flex;
@@ -773,26 +821,26 @@
 
     <section class="fi-section">
       <h2 class="fi-section__title">Board of directors</h2>
-      <div class="fi-related__grid">
-        <a class="fi-related__card" href="forbes-india-profile-page.html">
-          <div class="fi-related__avatar"><span>MA</span></div>
-          <p class="fi-related__name">Mukesh Ambani</p>
-          <p class="fi-related__role">Chairman &amp; Managing Director</p>
+      <div class="fi-board-grid">
+        <a class="fi-board-card" href="forbes-india-profile-page.html">
+          <div class="fi-board-avatar"><span>MA</span></div>
+          <p class="fi-board-name">Mukesh Ambani</p>
+          <p class="fi-board-role">Chairman &amp; Managing Director</p>
         </a>
-        <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>NA</span></div>
-          <p class="fi-related__name">Nita Ambani</p>
-          <p class="fi-related__role">Non-Executive Director</p>
+        <a class="fi-board-card" href="#">
+          <div class="fi-board-avatar"><span>NA</span></div>
+          <p class="fi-board-name">Nita Ambani</p>
+          <p class="fi-board-role">Non-Executive Director</p>
         </a>
-        <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>IA</span></div>
-          <p class="fi-related__name">Isha Ambani</p>
-          <p class="fi-related__role">Executive Director</p>
+        <a class="fi-board-card" href="#">
+          <div class="fi-board-avatar"><span>IA</span></div>
+          <p class="fi-board-name">Isha Ambani</p>
+          <p class="fi-board-role">Executive Director</p>
         </a>
-        <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>AA</span></div>
-          <p class="fi-related__name">Akash Ambani</p>
-          <p class="fi-related__role">Non-Executive Director</p>
+        <a class="fi-board-card" href="#">
+          <div class="fi-board-avatar"><span>AA</span></div>
+          <p class="fi-board-name">Akash Ambani</p>
+          <p class="fi-board-role">Non-Executive Director</p>
         </a>
       </div>
     </section>
