@@ -77,8 +77,8 @@
     --hairline: #e3e2df;
     --paper: #ffffff;
     --panel: #f7f6f4;
-    --brass: #a2793f;
-    --brass-soft: #efe6d8;
+    --brass: #4a56fb;
+    --brass-soft: #e4e6fe;
 
     --font-display: "Gotham", "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif;
     --font-body: "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -338,7 +338,7 @@
   .fi-networth{
     padding: 20px 24px;
     background: var(--panel);
-    border-left: 3px solid #4a56fb;
+    border-left: 3px solid var(--brass);
     margin-bottom: 28px;
     display:flex;
     flex-wrap: wrap;
@@ -354,7 +354,7 @@
     font-family: var(--font-display);
     font-size: 30px;
     font-weight: 700;
-    color: #4a56fb;
+    color: var(--brass);
   }
   .fi-networth__delta{
     font-size: 14px;
@@ -694,12 +694,11 @@
 
   <!-- ============ SIDEBAR ============ -->
   <aside class="fi-sidebar">
-<div class="fi-photo">
-  <img
-    src="https://images.forbesindia.com/blog/wp-content/uploads/media/images/2023/Oct/img_220363_mukeshambanirilsm.jpg"
-    alt="Mukesh Ambani"
-  >
-</div>
+    <div class="fi-photo">
+      <!-- Swap for <img src="..." alt="Mukesh Ambani"> when a photograph is available -->
+      <img src="https://images.forbesindia.com/blog/wp-content/uploads/media/images/2023/Oct/img_220363_mukeshambanirilsm.jpg" alt="Mukesh Ambani" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="fi-photo--fallback" style="display:none">MA</div>
+    </div>
 
     <div class="fi-facts">
       <dl>
@@ -879,7 +878,7 @@
     var polyline = document.createElementNS(ns, 'polyline');
     polyline.setAttribute('points', points);
     polyline.setAttribute('fill', 'none');
-    polyline.setAttribute('stroke', '#a2793f');
+    polyline.setAttribute('stroke', '#4a56fb');
     polyline.setAttribute('stroke-width', '2.5');
     polyline.setAttribute('stroke-linecap', 'round');
     polyline.setAttribute('stroke-linejoin', 'round');
@@ -890,7 +889,7 @@
       var cx = x(d.year), cy = y(d.value);
       var circle = document.createElementNS(ns, 'circle');
       circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', 3.2);
-      circle.setAttribute('fill', '#a2793f');
+      circle.setAttribute('fill', '#4a56fb');
       svg.appendChild(circle);
 
       if (i === 0 || i === data.length - 1) {
