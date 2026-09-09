@@ -227,7 +227,7 @@
   .fi-profile{
     max-width: 1180px;
     margin: 0 auto;
-    padding: 48px 28px 96px;
+    padding: 48px 40px 96px;
     display:grid;
     grid-template-columns: 300px 1fr;
     gap: 56px;
@@ -616,6 +616,10 @@
     .fi-profile{ padding-left: 14px; padding-right: 14px; }
   }
 
+  @media (max-width: 860px){
+    #fi-heading{ margin-top: 20px; }
+  }
+
 </style>
 </head>
 <body>
@@ -716,9 +720,11 @@
 
   <!-- ============ MAIN ============ -->
   <main class="fi-main">
+    <div id="fi-heading">
     <p class="fi-eyebrow">Rich List 2025 · Rank #1</p>
     <h1 class="fi-name">Mukesh Ambani</h1>
     <p class="fi-role"><strong>Chairman &amp; Managing Director</strong>, Reliance Industries</p>
+    </div>
 
     <div class="fi-networth">
       <span class="fi-networth__label">Net worth (2025)</span>
@@ -942,6 +948,33 @@
   }
   setNavTop();
   window.addEventListener('resize', setNavTop, { passive: true });
+</script>
+
+<script>
+  // Mobile-only reorder: move the heading (photo caption/name/role) to sit
+  // between the photo and the quick-facts list on narrow screens, matching
+  // the standard photo -> name -> details order. Restores to its normal
+  // position above the stat block on wider screens. Moves the real node
+  // (no duplicated <h1>) so there's only ever one heading in the DOM.
+  (function () {
+    var heading = document.getElementById('fi-heading');
+    var facts = document.querySelector('.fi-facts');
+    var mainCol = document.querySelector('.fi-main');
+    if (!heading || !facts || !mainCol) return;
+    var originalNext = heading.nextElementSibling;
+    var mq = window.matchMedia('(max-width: 860px)');
+    function place(e) {
+      if (e.matches) {
+        facts.parentNode.insertBefore(heading, facts);
+      } else if (originalNext) {
+        mainCol.insertBefore(heading, originalNext);
+      } else {
+        mainCol.appendChild(heading);
+      }
+    }
+    place(mq);
+    mq.addEventListener('change', place);
+  })();
 </script>
 
 </body>
