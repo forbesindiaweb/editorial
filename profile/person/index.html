@@ -394,6 +394,38 @@
     border: 1px solid var(--hairline);
     padding: 20px 20px 12px;
   }
+  .fi-chart-svg-wrap{
+    position: relative;
+  }
+  .fi-chart-svg-wrap svg{ display:block; }
+  .fi-chart-point{ cursor: pointer; }
+  .fi-chart-point:focus{ outline: none; }
+  .fi-chart-tooltip{
+    position: absolute;
+    transform: translate(-50%, -125%);
+    background: var(--ink);
+    color: #f7f6f4;
+    font-family: var(--font-nav);
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 6px 10px;
+    border-radius: 3px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .12s ease;
+    z-index: 5;
+  }
+  .fi-chart-tooltip.is-visible{ opacity: 1; }
+  .fi-chart-tooltip::after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
   .fi-chart-caption{
     display:flex;
     justify-content: space-between;
@@ -751,7 +783,10 @@
     <section class="fi-section">
       <h2 class="fi-section__title">Net worth movement, 2013–2025</h2>
       <div class="fi-chart-wrap">
-        <svg id="fi-networth-chart" viewBox="0 0 640 220" width="100%" role="img" aria-label="Net worth line chart from 2013 to 2025"></svg>
+        <div class="fi-chart-svg-wrap">
+          <svg id="fi-networth-chart" viewBox="0 0 640 240" width="100%" role="img" aria-label="Net worth line chart from 2013 to 2025"></svg>
+          <div class="fi-chart-tooltip" id="fi-chart-tooltip"></div>
+        </div>
         <div class="fi-chart-caption">
           <span>2013</span><span>2025</span>
         </div>
@@ -836,8 +871,10 @@
 </div>
 
 <script>
-  // Dependency-free line chart, drawn straight into the inline SVG above.
-  // Replace `data` with the real year → net worth ($B) series per profile.
+  // Dependency-free interactive line chart, drawn straight into the inline
+  // SVG above. Replace `data` with the real year → net worth ($B) series
+  // per profile. Every point is hoverable/tappable and shows a tooltip;
+  // extra top padding keeps the highest point's label from clipping.
   (function () {
     var data = [
       { year: 2013, value: 21.6 },
@@ -850,7 +887,8 @@
     ];
 
     var svg = document.getElementById('fi-networth-chart');
-    var W = 640, H = 220, padL = 34, padR = 12, padT = 14, padB = 14;
+    var tooltip = document.getElementById('fi-chart-tooltip');
+    var W = 640, H = 240, padL = 34, padR = 12, padT = 34, padB = 14;
     var innerW = W - padL - padR, innerH = H - padT - padB;
 
     var years = data.map(function (d) { return d.year; });
@@ -884,24 +922,86 @@
     polyline.setAttribute('stroke-linejoin', 'round');
     svg.appendChild(polyline);
 
-    // point markers + value labels (first/last always shown, others on hover-free static labels)
+    function showTooltip(d, cx, cy) {
+      tooltip.textContent = d.year + ': $' + d.value + 'B';
+      tooltip.style.left = (cx / W * 100) + '%';
+      tooltip.style.top = (cy / H * 100) + '%';
+      tooltip.classList.add('is-visible');
+    }
+    function hideTooltip() {
+      tooltip.classList.remove('is-visible');
+    }
+
+    // point markers + always-on end labels + interactive hit areas
     data.forEach(function (d, i) {
       var cx = x(d.year), cy = y(d.value);
+
       var circle = document.createElementNS(ns, 'circle');
       circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', 3.2);
       circle.setAttribute('fill', '#4a56fb');
       svg.appendChild(circle);
 
+      // First/last points keep a permanent label; place it below the point
+      // instead of above whenever there isn't enough headroom, so it never
+      // clips against the top of the chart.
       if (i === 0 || i === data.length - 1) {
+        var labelAbove = cy - padT > 16;
         var label = document.createElementNS(ns, 'text');
         label.setAttribute('x', cx);
-        label.setAttribute('y', cy - 10);
+        label.setAttribute('y', labelAbove ? cy - 10 : cy + 20);
         label.setAttribute('text-anchor', i === 0 ? 'start' : 'end');
         label.setAttribute('font-size', '12');
-        label.setAttribute('font-family', 'Inter, sans-serif');
+        label.setAttribute('font-family', 'Gotham, "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif');
+        label.setAttribute('font-weight', '700');
         label.setAttribute('fill', '#111111');
         label.textContent = '$' + d.value + 'B';
         svg.appendChild(label);
+      }
+
+      // Invisible, larger hit target so hover/tap is easy on touch devices too
+      var hit = document.createElementNS(ns, 'circle');
+      hit.setAttribute('cx', cx); hit.setAttribute('cy', cy); hit.setAttribute('r', 12);
+      hit.setAttribute('fill', 'transparent');
+      hit.setAttribute('class', 'fi-chart-point');
+      hit.setAttribute('tabindex', '0');
+      hit.setAttribute('role', 'img');
+      hit.setAttribute('aria-label', d.year + ': $' + d.value + ' billion');
+
+      var ring = document.createElementNS(ns, 'circle');
+      ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', 6);
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', '#4a56fb');
+      ring.setAttribute('stroke-width', '2');
+      ring.setAttribute('opacity', '0');
+      ring.style.transition = 'opacity .12s ease';
+      svg.appendChild(ring);
+
+      function activate() {
+        ring.setAttribute('opacity', '1');
+        showTooltip(d, cx, cy);
+      }
+      function deactivate() {
+        ring.setAttribute('opacity', '0');
+        hideTooltip();
+      }
+
+      hit.addEventListener('pointerenter', activate);
+      hit.addEventListener('pointerleave', deactivate);
+      hit.addEventListener('focus', activate);
+      hit.addEventListener('blur', deactivate);
+      hit.addEventListener('click', function (e) {
+        e.stopPropagation();
+        activate();
+      });
+
+      svg.appendChild(hit);
+    });
+
+    // Tapping anywhere else on the page dismisses an open tooltip on mobile
+    document.addEventListener('pointerdown', function (e) {
+      if (!e.target.classList || !e.target.classList.contains('fi-chart-point')) {
+        svg.querySelectorAll('circle[stroke]').forEach(function (r) { r.setAttribute('opacity', '0'); });
+        hideTooltip();
       }
     });
   })();
