@@ -76,8 +76,8 @@
     --hairline: #e3e2df;
     --paper: #ffffff;
     --panel: #f7f6f4;
-    --brass: #a2793f;
-    --brass-soft: #efe6d8;
+    --brass: #4a56fb;
+    --brass-soft: #e4e6fe;
 
     --font-display: "Gotham", "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif;
     --font-body: "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -338,8 +338,8 @@
   /* ---------- Leadership stat ---------- */
   .fi-leadership{
     padding: 20px 24px;
-    background: #ffffff;
-    border-left: 3px solid #4a56fb;
+    background: var(--panel);
+    border-left: 3px solid var(--brass);
     margin-bottom: 28px;
     display:flex;
     flex-wrap: wrap;
@@ -361,7 +361,7 @@
     color: var(--ink);
     text-decoration: none;
   }
-  .fi-leadership__name.is-link{ color: #4a56fb; }
+  .fi-leadership__name.is-link{ color: var(--brass); }
   .fi-leadership__name.is-link:hover{ text-decoration: underline; }
 
   /* ---------- Sections (shared) ---------- */
@@ -685,10 +685,9 @@
   <!-- ============ SIDEBAR ============ -->
   <aside class="fi-sidebar">
     <div class="fi-logo-box">
-  <img
-    src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Reliance_Industries.svg/250px-Reliance_Industries.svg.png"
-    alt="Mukesh Ambani"
-  >
+      <!-- Swap for <img src="..." alt="Reliance Industries logo"> when the asset is ready -->
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Reliance_Industries.svg/250px-Reliance_Industries.svg.png" alt="Reliance Industries logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="fi-logo-box--fallback" style="display:none">RELIANCE</div>
     </div>
 
     <div class="fi-facts">
