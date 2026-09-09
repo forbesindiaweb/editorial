@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reliance Industries — Forbes India Profiles</title>
+<title>Mukesh Ambani — Forbes India Profiles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   /* ---------------------------------------------------------
-     Forbes India — Company Profile Page Template
-     Same token system, fonts and layout grid as the person
-     profile template, so the two feel like one product.
-     No Featured in / list-rank / market-cap fields here per
-     current scope — see the Leadership block for the
-     cross-link back to the person page.
+     Forbes India — Profile Page Template
+     Token system: ink/charcoal/steel greys, hairline borders,
+     one brass accent reserved for wealth figures + chart line.
+     Type: real site font-face declarations below (Gotham +
+     Work Sans, from the Forbes India CDN). Work Sans is loaded
+     from Google Fonts here only as a preview stand-in until its
+     real CDN woff2 paths are dropped in — see the TODO on that block.
   --------------------------------------------------------- */
 
   /* — Gotham — Forbes India's primary typeface (from site CDN) — */
@@ -243,7 +244,7 @@
   }
   @media (max-width: 860px){ .fi-sidebar{ position: static; } }
 
-  .fi-logo-box{
+  .fi-photo{
     width: 100%;
     aspect-ratio: 4 / 3;
     border-radius: 2px;
@@ -253,16 +254,14 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    padding: 24px;
   }
-  .fi-logo-box img{ max-width:100%; max-height:100%; object-fit: contain; }
-  .fi-logo-box--fallback{
+  .fi-photo img{ width:100%; height:100%; object-fit: cover; }
+  /* Avatar fallback (photo missing) — reuse of the initials pattern from the list-page templates */
+  .fi-photo--fallback{
     font-family: var(--font-display);
+    font-size: 64px;
     font-weight: 700;
-    font-size: 22px;
-    letter-spacing: 0.5px;
     color: var(--steel-light);
-    text-align: center;
   }
 
   .fi-facts{
@@ -323,8 +322,8 @@
   .fi-name{
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(30px, 4vw, 42px);
-    line-height: 1.1;
+    font-size: clamp(32px, 4vw, 46px);
+    line-height: 1.08;
     color: var(--ink);
     margin: 0 0 10px;
   }
@@ -332,39 +331,39 @@
     font-size: 17px;
     color: var(--charcoal);
     margin: 0 0 24px;
-    max-width: 62ch;
   }
+  .fi-role strong{ color: var(--ink); font-weight: 700; }
 
-  /* ---------- Leadership stat ---------- */
-  .fi-leadership{
+  /* ---------- Net worth stat ---------- */
+  .fi-networth{
     padding: 20px 24px;
     background: var(--panel);
     border-left: 3px solid var(--brass);
     margin-bottom: 28px;
     display:flex;
     flex-wrap: wrap;
-    gap: 20px 40px;
+    align-items: baseline;
+    gap: 6px 14px;
   }
-  .fi-leadership__item{
-    display:flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .fi-leadership__label{
-    font-size: 12.5px;
+  .fi-networth__label{
+    font-size: 13px;
     color: var(--steel);
+    width: 100%;
   }
-  .fi-leadership__name{
+  .fi-networth__value{
     font-family: var(--font-display);
+    font-size: 30px;
     font-weight: 700;
-    font-size: 16px;
-    color: var(--ink);
-    text-decoration: none;
+    color: var(--brass);
   }
-  .fi-leadership__name.is-link{ color: var(--brass); }
-  .fi-leadership__name.is-link:hover{ text-decoration: underline; }
+  .fi-networth__delta{
+    font-size: 14px;
+    color: var(--charcoal);
+  }
+  .fi-networth__delta.is-up::before{ content: "▲ "; color: #3f7a52; }
+  .fi-networth__delta.is-down::before{ content: "▼ "; color: #a34141; }
 
-  /* ---------- Sections (shared) ---------- */
+  /* ---------- Featured lists ---------- */
   .fi-section{ margin-bottom: 40px; }
   .fi-section__title{
     font-family: var(--font-display);
@@ -373,8 +372,6 @@
     color: var(--ink);
     margin: 0 0 14px;
   }
-  .fi-bio p{ max-width: 68ch; font-size: 15.5px; color: var(--charcoal); }
-
   .fi-chips{
     display:flex;
     flex-wrap: wrap;
@@ -392,18 +389,91 @@
   }
   .fi-chip:hover{ border-color: var(--ink); }
 
-  /* ---------- Promoter / holding structure ---------- */
-  .fi-holding{
+  /* ---------- Chart ---------- */
+  .fi-chart-wrap{
+    border: 1px solid var(--hairline);
+    padding: 20px 20px 12px;
+  }
+  .fi-chart-svg-wrap{
+    position: relative;
+  }
+  .fi-chart-svg-wrap svg{ display:block; }
+  .fi-chart-point{ cursor: pointer; }
+  .fi-chart-point:focus{ outline: none; }
+  .fi-chart-tooltip{
+    position: absolute;
+    transform: translate(-50%, -125%);
+    background: var(--ink);
+    color: #f7f6f4;
+    font-family: var(--font-nav);
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 6px 10px;
+    border-radius: 3px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .12s ease;
+    z-index: 5;
+  }
+  .fi-chart-tooltip.is-visible{ opacity: 1; }
+  .fi-chart-tooltip::after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
+  .fi-chart-caption{
+    display:flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--steel);
+    margin-top: 6px;
+  }
+
+  /* ---------- Quote ---------- */
+  .fi-quote{
+    position: relative;
+    padding: 6px 0 6px 28px;
+    border-left: 2px solid var(--brass);
+  }
+  .fi-quote p{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-style: normal;
+    font-size: 21px;
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 0 0 10px;
+    max-width: 62ch;
+  }
+  .fi-quote p::before{
+    content: "“";
+    color: var(--brass);
+    font-weight: 700;
+    margin-right: 2px;
+  }
+  .fi-quote cite{
+    font-style: normal;
+    font-size: 13px;
+    color: var(--steel);
+  }
+
+  /* ---------- Timeline ---------- */
+  .fi-timeline{
     list-style: none;
-    margin: 12px 0 0;
+    margin: 0;
     padding: 0;
     border-left: 1px solid var(--hairline);
   }
-  .fi-holding li{
+  .fi-timeline li{
     position: relative;
-    padding: 0 0 16px 26px;
+    padding: 0 0 22px 26px;
   }
-  .fi-holding li::before{
+  .fi-timeline li::before{
     content:"";
     position:absolute;
     left: -5px;
@@ -414,18 +484,20 @@
     background: var(--paper);
     border: 2px solid var(--brass);
   }
-  .fi-holding__name{
+  .fi-timeline__year{
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 14.5px;
+    font-size: 15px;
     color: var(--ink);
     display:block;
     margin-bottom: 2px;
   }
-  .fi-holding__stake{
-    font-size: 12.5px;
-    color: var(--steel);
+  .fi-timeline__text{
+    font-size: 14.5px;
+    color: var(--charcoal);
   }
+
+  .fi-bio p{ max-width: 68ch; font-size: 15.5px; color: var(--charcoal); }
 
   /* ---------- Article coverage ---------- */
   .fi-coverage{
@@ -468,42 +540,7 @@
     margin: 0;
   }
 
-  /* ---------- Timeline ---------- */
-  .fi-timeline{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-left: 1px solid var(--hairline);
-  }
-  .fi-timeline li{
-    position: relative;
-    padding: 0 0 22px 26px;
-  }
-  .fi-timeline li::before{
-    content:"";
-    position:absolute;
-    left: -5px;
-    top: 4px;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--paper);
-    border: 2px solid var(--brass);
-  }
-  .fi-timeline__year{
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--ink);
-    display:block;
-    margin-bottom: 2px;
-  }
-  .fi-timeline__text{
-    font-size: 14.5px;
-    color: var(--charcoal);
-  }
-
-  /* ---------- Card grids (board / related companies) ---------- */
+  /* ---------- Related people ---------- */
   .fi-related__grid{
     display:grid;
     grid-template-columns: repeat(4, 1fr);
@@ -534,7 +571,7 @@
   .fi-related__avatar img{ width:100%; height:100%; object-fit:cover; }
   .fi-related__avatar span{
     font-family: var(--font-display);
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--steel-light);
   }
@@ -550,7 +587,12 @@
     font-size: 12.5px;
     color: var(--steel);
     line-height: 1.4;
-    margin: 0;
+  }
+  .fi-related__networth{
+    font-size: 13px;
+    color: var(--brass);
+    font-weight: 700;
+    margin-top: 8px;
   }
 
   /* ---------- Ad rails (reserve space for standard skyscraper units) ---------- */
@@ -671,7 +713,7 @@
   <ol class="ms-breadcrumb" aria-label="Breadcrumb">
     <li><a href="https://www.forbesindia.com/">Home</a></li>
     <li><a href="/profiles">Profiles</a></li>
-    <li aria-current="page">Reliance Industries</li>
+    <li aria-current="page">Mukesh Ambani</li>
   </ol>
 </div>
 
@@ -684,21 +726,21 @@
 
   <!-- ============ SIDEBAR ============ -->
   <aside class="fi-sidebar">
-    <div class="fi-logo-box">
-      <!-- Swap for <img src="..." alt="Reliance Industries logo"> when the asset is ready -->
-      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Reliance_Industries.svg/250px-Reliance_Industries.svg.png" alt="Reliance Industries logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="fi-logo-box--fallback" style="display:none">RELIANCE</div>
+    <div class="fi-photo">
+      <!-- Swap for <img src="..." alt="Mukesh Ambani"> when a photograph is available -->
+      <img src="https://images.forbesindia.com/blog/wp-content/uploads/media/images/2023/Oct/img_220363_mukeshambanirilsm.jpg" alt="Mukesh Ambani" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="fi-photo--fallback" style="display:none">MA</div>
     </div>
 
     <div class="fi-facts">
       <dl>
-        <div class="fi-fact"><dt>Ticker / exchange</dt><dd>RELIANCE · NSE, BSE</dd></div>
-        <div class="fi-fact"><dt>Sector</dt><dd>Conglomerate — energy, retail, telecom</dd></div>
-        <div class="fi-fact"><dt>Founded</dt><dd>1966</dd></div>
-        <div class="fi-fact"><dt>Headquarters</dt><dd>Mumbai, Maharashtra</dd></div>
-        <div class="fi-fact"><dt>Listed since</dt><dd>1977</dd></div>
-        <div class="fi-fact"><dt>Website</dt><dd><a href="https://www.ril.com" target="_blank" rel="noopener">ril.com</a></dd></div>
-        <div class="fi-fact"><dt>Investor relations</dt><dd><a href="https://www.ril.com/InvestorRelations.aspx" target="_blank" rel="noopener">Investor relations →</a></dd></div>
+        <div class="fi-fact"><dt>Age</dt><dd>68</dd></div>
+        <div class="fi-fact"><dt>Company</dt><dd><a href="forbes-india-company-profile-page.html">Reliance Industries</a></dd></div>
+        <div class="fi-fact"><dt>Designation</dt><dd>Chairman &amp; Managing Director</dd></div>
+        <div class="fi-fact"><dt>Education</dt><dd>B.Chem Eng, UDCT Mumbai</dd></div>
+        <div class="fi-fact"><dt>Source of wealth</dt><dd>Petrochemicals, retail, telecom</dd></div>
+        <div class="fi-fact"><dt>Citizenship</dt><dd>India</dd></div>
+        <div class="fi-fact"><dt>Marital status</dt><dd>Married</dd></div>
       </dl>
     </div>
 
@@ -712,124 +754,94 @@
   <!-- ============ MAIN ============ -->
   <main class="fi-main">
     <div id="fi-heading">
-    <p class="fi-eyebrow">Conglomerate · Energy, Retail, Telecom</p>
-    <h1 class="fi-name">Reliance Industries Limited</h1>
-    <p class="fi-role">India's largest private-sector company, spanning oil-to-chemicals, digital services and retail.</p>
+    <h1 class="fi-name">Mukesh Ambani</h1>
+    <p class="fi-role"><strong>Chairman &amp; Managing Director</strong>, Reliance Industries</p>
     </div>
 
-    <!-- Cross-link to the person page: this is the integration point between
-         company and person profiles. Resolve `chairman`/`ceo`/`founder`
-         fields from a shared person/company reference table rather than
-         hardcoding names, so this block updates itself when leadership changes. -->
-    <div class="fi-leadership">
-      <div class="fi-leadership__item">
-        <span class="fi-leadership__label">Founder</span>
-        <span class="fi-leadership__name">Dhirubhai Ambani</span>
-      </div>
-      <div class="fi-leadership__item">
-        <span class="fi-leadership__label">Chairman &amp; Managing Director</span>
-        <a class="fi-leadership__name is-link" href="forbes-india-profile-page.html">Mukesh Ambani →</a>
-      </div>
+    <div class="fi-networth">
+      <span class="fi-networth__label">Net worth (2025)</span>
+      <span class="fi-networth__value">$92.5 B</span>
+      <span class="fi-networth__delta is-up">+6.4% vs 2024</span>
     </div>
 
     <section class="fi-section fi-bio">
       <h2 class="fi-section__title">About</h2>
-      <p>Sample company bio — two or three sentences on what the company does, its scale, and what it's best known for. Sentence case, specific, no filler.</p>
+      <p>Sample bio copy — two to three sentences on the person's role, the business they built or lead, and what they're best known for. Written in sentence case, plain and specific, no filler.</p>
     </section>
 
+    <div class="fi-networth">
+      <span class="fi-networth__label">Current ranking</span>
+      <span class="fi-networth__value">Rank #1</span>
+      <span class="fi-networth__delta">Rich List 2025</span>
+    </div>
+
     <section class="fi-section">
-      <h2 class="fi-section__title">Key subsidiaries</h2>
+      <h2 class="fi-section__title">Featured in</h2>
       <div class="fi-chips">
-        <a href="#" class="fi-chip">Reliance Retail Ventures</a>
-        <a href="#" class="fi-chip">Jio Platforms</a>
-        <a href="#" class="fi-chip">Reliance Jio Infocomm</a>
-        <a href="#" class="fi-chip">Network18 Group</a>
-        <a href="#" class="fi-chip">Reliance New Energy</a>
+        <a href="#" class="fi-chip">Rich List 2025</a>
+        <a href="#" class="fi-chip">Rich List 2024</a>
+        <a href="#" class="fi-chip">India's Most Powerful CEOs</a>
+        <a href="#" class="fi-chip">W-Power 2025</a>
       </div>
     </section>
 
     <section class="fi-section">
-      <h2 class="fi-section__title">Promoter &amp; holding structure</h2>
-      <p>Reliance Industries is promoted by the Ambani family. Its group entities include:</p>
-      <ul class="fi-holding">
-        <li>
-          <span class="fi-holding__name">Reliance Retail Ventures Ltd</span>
-          <span class="fi-holding__stake">Subsidiary of Reliance Industries</span>
-        </li>
-        <li>
-          <span class="fi-holding__name">Jio Platforms Ltd</span>
-          <span class="fi-holding__stake">Subsidiary of Reliance Industries</span>
-        </li>
-        <li>
-          <span class="fi-holding__name">Reliance Jio Infocomm Ltd</span>
-          <span class="fi-holding__stake">Subsidiary of Jio Platforms</span>
-        </li>
-        <li>
-          <span class="fi-holding__name">Network18 Group</span>
-          <span class="fi-holding__stake">Held via Independent Media Trust</span>
-        </li>
-      </ul>
-    </section>
-
-    <section class="fi-section">
-      <h2 class="fi-section__title">Board of directors</h2>
-      <div class="fi-related__grid">
-        <a class="fi-related__card" href="forbes-india-profile-page.html">
-          <div class="fi-related__avatar"><span>MA</span></div>
-          <p class="fi-related__name">Mukesh Ambani</p>
-          <p class="fi-related__role">Chairman &amp; Managing Director</p>
-        </a>
-        <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>NA</span></div>
-          <p class="fi-related__name">Nita Ambani</p>
-          <p class="fi-related__role">Non-Executive Director</p>
-        </a>
-        <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>IA</span></div>
-          <p class="fi-related__name">Isha Ambani</p>
-          <p class="fi-related__role">Executive Director</p>
-        </a>
-        <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>AA</span></div>
-          <p class="fi-related__name">Akash Ambani</p>
-          <p class="fi-related__role">Non-Executive Director</p>
-        </a>
+      <h2 class="fi-section__title">Net worth movement, 2013–2025</h2>
+      <div class="fi-chart-wrap">
+        <div class="fi-chart-svg-wrap">
+          <svg id="fi-networth-chart" viewBox="0 0 640 240" width="100%" role="img" aria-label="Net worth line chart from 2013 to 2025"></svg>
+          <div class="fi-chart-tooltip" id="fi-chart-tooltip"></div>
+        </div>
+        <div class="fi-chart-caption">
+          <span>2013</span><span>2025</span>
+        </div>
       </div>
     </section>
 
     <section class="fi-section">
-      <h2 class="fi-section__title">Major milestones</h2>
+      <h2 class="fi-section__title">In their words</h2>
+      <div class="fi-quote">
+        <p>"Sample pull quote goes here — pull a real line from an interview or earnings call, editorial-approved."</p>
+        <cite>— From an interview, sample source, 2024</cite>
+      </div>
+    </section>
+
+    <section class="fi-section">
+      <h2 class="fi-section__title">Career timeline</h2>
       <ul class="fi-timeline">
-        <li><span class="fi-timeline__year">1966</span><span class="fi-timeline__text">Reliance Industries is founded by Dhirubhai Ambani.</span></li>
-        <li><span class="fi-timeline__year">1977</span><span class="fi-timeline__text">Lists on the Bombay Stock Exchange.</span></li>
-        <li><span class="fi-timeline__year">2002</span><span class="fi-timeline__text">Mukesh Ambani becomes Chairman &amp; Managing Director.</span></li>
-        <li><span class="fi-timeline__year">2016</span><span class="fi-timeline__text">Launches Reliance Jio, reshaping India's telecom market.</span></li>
-        <li><span class="fi-timeline__year">2023</span><span class="fi-timeline__text">Reliance Retail crosses 18,000 stores nationwide.</span></li>
+        <li><span class="fi-timeline__year">1981</span><span class="fi-timeline__text">Joins Reliance Industries.</span></li>
+        <li><span class="fi-timeline__year">2002</span><span class="fi-timeline__text">Becomes Chairman &amp; Managing Director.</span></li>
+        <li><span class="fi-timeline__year">2016</span><span class="fi-timeline__text">Launches Jio, reshaping India's telecom market.</span></li>
+        <li><span class="fi-timeline__year">2025</span><span class="fi-timeline__text">Tops the Forbes India Rich List.</span></li>
       </ul>
     </section>
 
     <section class="fi-section">
-      <h2 class="fi-section__title">Related companies</h2>
+      <h2 class="fi-section__title">Related people</h2>
       <div class="fi-related__grid">
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>AE</span></div>
-          <p class="fi-related__name">Adani Enterprises</p>
-          <p class="fi-related__role">Ports, energy, infrastructure</p>
+          <div class="fi-related__avatar"><span>GA</span></div>
+          <p class="fi-related__name">Gautam Adani</p>
+          <p class="fi-related__role">Chairman, Adani Group</p>
+          <p class="fi-related__networth">$74.2 B</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>TS</span></div>
-          <p class="fi-related__name">Tata Steel</p>
-          <p class="fi-related__role">Steel &amp; mining</p>
+          <div class="fi-related__avatar"><span>SN</span></div>
+          <p class="fi-related__name">Shiv Nadar</p>
+          <p class="fi-related__role">Founder, HCLTech</p>
+          <p class="fi-related__networth">$36.9 B</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>HC</span></div>
-          <p class="fi-related__name">HCLTech</p>
-          <p class="fi-related__role">Information technology</p>
+          <div class="fi-related__avatar"><span>RD</span></div>
+          <p class="fi-related__name">Radhakishan Damani</p>
+          <p class="fi-related__role">Founder, Avenue Supermarts (DMart)</p>
+          <p class="fi-related__networth">$21.3 B</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>AS</span></div>
-          <p class="fi-related__name">Avenue Supermarts</p>
-          <p class="fi-related__role">Retail (DMart)</p>
+          <div class="fi-related__avatar"><span>CP</span></div>
+          <p class="fi-related__name">Cyrus Poonawalla</p>
+          <p class="fi-related__role">Chairman, Serum Institute of India</p>
+          <p class="fi-related__networth">$21.1 B</p>
         </a>
       </div>
     </section>
@@ -840,17 +852,19 @@
         <li>
           <div class="fi-coverage__meta"><span class="fi-coverage__tag">Billionaires</span><span>Forbes India</span></div>
           <a class="fi-coverage__title" href="https://www.forbesindia.com/article/billionaires/mukesh-ambani-indias-richest-man-strengthens-his-lead/94730/1" target="_blank" rel="noopener">Mukesh Ambani, India's richest man, strengthens his lead</a>
-          <p class="fi-coverage__dek">How the oil-to-chemicals, telecom and retail businesses support Reliance's valuation, and what could unlock further upside.</p>
+          <p class="fi-coverage__dek">A look at how Reliance's oil-to-chemicals, telecom and retail arms keep Ambani at the top of the Rich List, and what could unlock further value.</p>
         </li>
         <li>
           <div class="fi-coverage__meta"><span class="fi-coverage__tag">News</span><span>Forbes India</span></div>
           <a class="fi-coverage__title" href="https://www.forbesindia.com/article/news/reliance-retail-will-be-our-fastest-growing-business-in-revenues-and-ebitda-mukesh-ambani/87819/1" target="_blank" rel="noopener">"Reliance Retail will be our fastest growing business in revenues and Ebitda": Mukesh Ambani</a>
           <p class="fi-coverage__dek">Comments from Reliance's 46th AGM on why retail is set to overtake the group's other businesses in revenue and earnings growth.</p>
         </li>
+        <li>
+          <div class="fi-coverage__meta"><span class="fi-coverage__tag">Photo gallery</span><span>Samreen Wani</span></div>
+          <a class="fi-coverage__title" href="https://www.forbesindia.com/photogallery/billionaires/all-that-glitters-a-closer-look-at-indias-billionaires/2994059/1" target="_blank" rel="noopener">All that glitters: A closer look at India's billionaires</a>
+          <p class="fi-coverage__dek">A visual round-up of India's wealthiest, from established conglomerate heirs to a new generation of under-45 founders.</p>
+        </li>
       </ul>
-      <!-- Same two articles also appear on the person page — a live example of
-           coverage tagged to both a person ID and a company ID rendering on
-           each profile automatically. -->
     </section>
   </main>
 
@@ -860,6 +874,143 @@
     <div class="fi-ad-rail__slot">Ad<br>160 &times; 600</div>
   </div>
 </div>
+
+<script>
+  // Dependency-free interactive line chart, drawn straight into the inline
+  // SVG above. Replace `data` with the real year → net worth ($B) series
+  // per profile. Every point is hoverable/tappable and shows a tooltip;
+  // extra top padding keeps the highest point's label from clipping.
+  (function () {
+    var data = [
+      { year: 2013, value: 21.6 },
+      { year: 2015, value: 19.3 },
+      { year: 2017, value: 38.3 },
+      { year: 2019, value: 51.4 },
+      { year: 2021, value: 84.5 },
+      { year: 2023, value: 83.4 },
+      { year: 2025, value: 92.5 }
+    ];
+
+    var svg = document.getElementById('fi-networth-chart');
+    var tooltip = document.getElementById('fi-chart-tooltip');
+    var W = 640, H = 240, padL = 34, padR = 12, padT = 34, padB = 14;
+    var innerW = W - padL - padR, innerH = H - padT - padB;
+
+    var years = data.map(function (d) { return d.year; });
+    var values = data.map(function (d) { return d.value; });
+    var minY = Math.min.apply(null, values), maxY = Math.max.apply(null, values);
+    var minYear = Math.min.apply(null, years), maxYear = Math.max.apply(null, years);
+
+    function x(year) { return padL + ((year - minYear) / (maxYear - minYear)) * innerW; }
+    function y(val) { return padT + innerH - ((val - minY) / (maxY - minY)) * innerH; }
+
+    var ns = 'http://www.w3.org/2000/svg';
+
+    // gridlines
+    [0, 0.5, 1].forEach(function (t) {
+      var gy = padT + innerH * t;
+      var line = document.createElementNS(ns, 'line');
+      line.setAttribute('x1', padL); line.setAttribute('x2', W - padR);
+      line.setAttribute('y1', gy); line.setAttribute('y2', gy);
+      line.setAttribute('stroke', '#e3e2df'); line.setAttribute('stroke-width', '1');
+      svg.appendChild(line);
+    });
+
+    // line path
+    var points = data.map(function (d) { return x(d.year) + ',' + y(d.value); }).join(' ');
+    var polyline = document.createElementNS(ns, 'polyline');
+    polyline.setAttribute('points', points);
+    polyline.setAttribute('fill', 'none');
+    polyline.setAttribute('stroke', '#4a56fb');
+    polyline.setAttribute('stroke-width', '2.5');
+    polyline.setAttribute('stroke-linecap', 'round');
+    polyline.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(polyline);
+
+    function showTooltip(d, cx, cy) {
+      tooltip.textContent = d.year + ': $' + d.value + 'B';
+      tooltip.style.left = (cx / W * 100) + '%';
+      tooltip.style.top = (cy / H * 100) + '%';
+      tooltip.classList.add('is-visible');
+    }
+    function hideTooltip() {
+      tooltip.classList.remove('is-visible');
+    }
+
+    // point markers + always-on end labels + interactive hit areas
+    data.forEach(function (d, i) {
+      var cx = x(d.year), cy = y(d.value);
+
+      var circle = document.createElementNS(ns, 'circle');
+      circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', 3.2);
+      circle.setAttribute('fill', '#4a56fb');
+      svg.appendChild(circle);
+
+      // First/last points keep a permanent label; place it below the point
+      // instead of above whenever there isn't enough headroom, so it never
+      // clips against the top of the chart.
+      if (i === 0 || i === data.length - 1) {
+        var labelAbove = cy - padT > 16;
+        var label = document.createElementNS(ns, 'text');
+        label.setAttribute('x', cx);
+        label.setAttribute('y', labelAbove ? cy - 10 : cy + 20);
+        label.setAttribute('text-anchor', i === 0 ? 'start' : 'end');
+        label.setAttribute('font-size', '12');
+        label.setAttribute('font-family', 'Gotham, "Gotham Book", -apple-system, "Helvetica Neue", Arial, sans-serif');
+        label.setAttribute('font-weight', '700');
+        label.setAttribute('fill', '#111111');
+        label.textContent = '$' + d.value + 'B';
+        svg.appendChild(label);
+      }
+
+      // Invisible, larger hit target so hover/tap is easy on touch devices too
+      var hit = document.createElementNS(ns, 'circle');
+      hit.setAttribute('cx', cx); hit.setAttribute('cy', cy); hit.setAttribute('r', 12);
+      hit.setAttribute('fill', 'transparent');
+      hit.setAttribute('class', 'fi-chart-point');
+      hit.setAttribute('tabindex', '0');
+      hit.setAttribute('role', 'img');
+      hit.setAttribute('aria-label', d.year + ': $' + d.value + ' billion');
+
+      var ring = document.createElementNS(ns, 'circle');
+      ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', 6);
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', '#4a56fb');
+      ring.setAttribute('stroke-width', '2');
+      ring.setAttribute('opacity', '0');
+      ring.style.transition = 'opacity .12s ease';
+      svg.appendChild(ring);
+
+      function activate() {
+        ring.setAttribute('opacity', '1');
+        showTooltip(d, cx, cy);
+      }
+      function deactivate() {
+        ring.setAttribute('opacity', '0');
+        hideTooltip();
+      }
+
+      hit.addEventListener('pointerenter', activate);
+      hit.addEventListener('pointerleave', deactivate);
+      hit.addEventListener('focus', activate);
+      hit.addEventListener('blur', deactivate);
+      hit.addEventListener('click', function (e) {
+        e.stopPropagation();
+        activate();
+      });
+
+      svg.appendChild(hit);
+    });
+
+    // Tapping anywhere else on the page dismisses an open tooltip on mobile
+    document.addEventListener('pointerdown', function (e) {
+      if (!e.target.classList || !e.target.classList.contains('fi-chart-point')) {
+        svg.querySelectorAll('circle[stroke]').forEach(function (r) { r.setAttribute('opacity', '0'); });
+        hideTooltip();
+      }
+    });
+  })();
+</script>
 
 <footer class="fbftr">
   <div class="ft-inner">
