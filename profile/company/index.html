@@ -225,7 +225,7 @@
   /* ---------- Layout ---------- */
   .fi-profile{
     max-width: 1180px;
-    margin: 0 102px;
+    margin: 0 auto;
     padding: 48px 28px 96px;
     display:grid;
     grid-template-columns: 300px 1fr;
@@ -552,6 +552,60 @@
     line-height: 1.4;
     margin: 0;
   }
+
+  /* ---------- Ad rails (reserve space for standard skyscraper units) ---------- */
+  .fi-page-wrap{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap: 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  .fi-ad-rail{
+    display:none;
+    flex-shrink: 0;
+    width: 160px;
+    position: sticky;
+    top: calc(var(--header-h) + 28px);
+  }
+  @media (min-width: 1500px){
+    .fi-ad-rail{ display:block; }
+  }
+  .fi-ad-rail__slot{
+    width: 160px;
+    height: 600px;
+    border: 1px dashed var(--hairline);
+    background: var(--panel);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 12px;
+    font-family: var(--font-nav);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  /* ---------- Mobile refinements ---------- */
+  html, body{ overflow-x: hidden; max-width: 100%; }
+  .fi-fact dd,
+  .fi-related__role,
+  .fi-coverage__dek,
+  .fi-holding__name,
+  .fi-timeline__text,
+  .fi-chip{
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  @media (max-width: 420px){
+    .fi-related__grid{ grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fi-related__card{ padding: 12px; }
+    .fi-profile{ padding-left: 14px; padding-right: 14px; }
+  }
+
 </style>
 </head>
 <body>
@@ -616,6 +670,11 @@
     <li aria-current="page">Reliance Industries</li>
   </ol>
 </div>
+
+<div class="fi-page-wrap">
+  <div class="fi-ad-rail" aria-hidden="true">
+    <div class="fi-ad-rail__slot">Ad<br>160 &times; 600</div>
+  </div>
 
 <div class="fi-profile">
 
@@ -788,6 +847,11 @@
     </section>
   </main>
 
+</div>
+
+  <div class="fi-ad-rail" aria-hidden="true">
+    <div class="fi-ad-rail__slot">Ad<br>160 &times; 600</div>
+  </div>
 </div>
 
 <footer class="fbftr">
