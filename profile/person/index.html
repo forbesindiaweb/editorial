@@ -363,6 +363,42 @@
   .fi-networth__delta.is-up::before{ content: "▲ "; color: #3f7a52; }
   .fi-networth__delta.is-down::before{ content: "▼ "; color: #a34141; }
 
+  /* ---------- Rank badge (deliberately lighter/smaller than the net worth
+     stat card, so the two don't read as duplicate components) ---------- */
+  .fi-rank-badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--brass-soft);
+    border: 1px solid var(--brass);
+    border-radius: 999px;
+    padding: 8px 18px 8px 14px;
+    margin-bottom: 28px;
+  }
+  .fi-rank-badge__icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--brass);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .fi-rank-badge__text{
+    font-size: 14px;
+    color: var(--charcoal);
+  }
+  .fi-rank-badge__text strong{
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
   /* ---------- Featured lists ---------- */
   .fi-section{ margin-bottom: 40px; }
   .fi-section__title{
@@ -769,10 +805,9 @@
       <p>Sample bio copy — two to three sentences on the person's role, the business they built or lead, and what they're best known for. Written in sentence case, plain and specific, no filler.</p>
     </section>
 
-    <div class="fi-networth">
-      <span class="fi-networth__label">Current ranking</span>
-      <span class="fi-networth__value">Rank #1</span>
-      <span class="fi-networth__delta">Rich List 2025</span>
+    <div class="fi-rank-badge">
+      <span class="fi-rank-badge__icon">#1</span>
+      <span class="fi-rank-badge__text"><strong>Rank #1</strong> · Rich List 2025</span>
     </div>
 
     <section class="fi-section">
