@@ -522,8 +522,8 @@
   .fi-related__card:hover{ border-color: var(--ink); }
   .fi-related__avatar{
     width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
+    aspect-ratio: 4 / 3;
+    border-radius: 2px;
     background: var(--panel);
     display:flex;
     align-items:center;
@@ -533,10 +533,9 @@
   }
   .fi-related__avatar img{ width:100%; height:100%; object-fit:cover; }
   .fi-related__avatar span{
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--steel-light);
+    font-size: 28px;
+    line-height: 1;
+    filter: grayscale(35%) opacity(0.6);
   }
   .fi-related__name{
     font-family: var(--font-display);
@@ -821,24 +820,26 @@
 
     <section class="fi-section">
       <h2 class="fi-section__title">Board of directors</h2>
+      <!-- Fallback avatar uses a gender-matched placeholder image when no
+           real photo is available — swap for a real <img> per director once one exists. -->
       <div class="fi-board-grid">
         <a class="fi-board-card" href="forbes-india-profile-page.html">
-          <div class="fi-board-avatar"><span>MA</span></div>
+          <div class="fi-board-avatar"><img src="placeholder-male.png" alt="No photograph available"></div>
           <p class="fi-board-name">Mukesh Ambani</p>
           <p class="fi-board-role">Chairman &amp; Managing Director</p>
         </a>
         <a class="fi-board-card" href="#">
-          <div class="fi-board-avatar"><span>NA</span></div>
+          <div class="fi-board-avatar"><img src="placeholder-female.png" alt="No photograph available"></div>
           <p class="fi-board-name">Nita Ambani</p>
           <p class="fi-board-role">Non-Executive Director</p>
         </a>
         <a class="fi-board-card" href="#">
-          <div class="fi-board-avatar"><span>IA</span></div>
+          <div class="fi-board-avatar"><img src="placeholder-female.png" alt="No photograph available"></div>
           <p class="fi-board-name">Isha Ambani</p>
           <p class="fi-board-role">Executive Director</p>
         </a>
         <a class="fi-board-card" href="#">
-          <div class="fi-board-avatar"><span>AA</span></div>
+          <div class="fi-board-avatar"><img src="placeholder-male.png" alt="No photograph available"></div>
           <p class="fi-board-name">Akash Ambani</p>
           <p class="fi-board-role">Non-Executive Director</p>
         </a>
@@ -858,24 +859,26 @@
 
     <section class="fi-section">
       <h2 class="fi-section__title">Related companies</h2>
+      <!-- Fallback avatar uses a generic company placeholder image when no
+           logo is available — swap for a real <img> once one exists. -->
       <div class="fi-related__grid">
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>AE</span></div>
+          <div class="fi-related__avatar"><img src="placeholder-company.png" alt="No logo available"></div>
           <p class="fi-related__name">Adani Enterprises</p>
           <p class="fi-related__role">Ports, energy, infrastructure</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>TS</span></div>
+          <div class="fi-related__avatar"><img src="placeholder-company.png" alt="No logo available"></div>
           <p class="fi-related__name">Tata Steel</p>
           <p class="fi-related__role">Steel &amp; mining</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>HC</span></div>
+          <div class="fi-related__avatar"><img src="placeholder-company.png" alt="No logo available"></div>
           <p class="fi-related__name">HCLTech</p>
           <p class="fi-related__role">Information technology</p>
         </a>
         <a class="fi-related__card" href="#">
-          <div class="fi-related__avatar"><span>AS</span></div>
+          <div class="fi-related__avatar"><img src="placeholder-company.png" alt="No logo available"></div>
           <p class="fi-related__name">Avenue Supermarts</p>
           <p class="fi-related__role">Retail (DMart)</p>
         </a>
