@@ -178,13 +178,22 @@
         <input type="text" id="nameGate" required>
       </div>
       <div class="field" style="margin-bottom:0;">
-        <label for="dobGate">What is your date of birth?<span class="required">*</span></label>
-        <!-- Removed min constraint to allow older years to be selected, error message will handle the rest -->
-        <input type="date" id="dobGate" required>
+        <label>What is your date of birth?<span class="required">*</span></label>
+        <div style="display:flex; gap:10px;">
+          <select id="dobDay" required style="flex:1;">
+            <option value="" disabled selected>Day</option>
+          </select>
+          <select id="dobMonth" required style="flex:1;">
+            <option value="" disabled selected>Month</option>
+          </select>
+          <select id="dobYear" required style="flex:1;">
+            <option value="" disabled selected>Year</option>
+          </select>
+        </div>
         <span class="hint">You must be under 30 years of age as of December 31, 2026 to register.</span>
       </div>
       <div class="submit-status error" id="dobGateMsg" style="display:none; margin-top:10px;">
-        Registrations are open only for people under 30 years of age as of December 31, 2026.
+        Based on the date of birth entered, you don't meet the eligibility criteria — under 30 years of age as of December 31, 2026.
       </div>
     </div>
 
@@ -482,49 +491,71 @@ const CATEGORIES = [
    GLOBAL IDENTITY GATE (Name + Date of birth)
    ============================================================ */
 const nameGate = document.getElementById('nameGate');
-const dobGate = document.getElementById('dobGate');
+const dobDay = document.getElementById('dobDay');
+const dobMonth = document.getElementById('dobMonth');
+const dobYear = document.getElementById('dobYear');
 const dobGateMsg = document.getElementById('dobGateMsg');
 const afterDobGate = document.getElementById('afterDobGate');
 
-// Set max to current date so they can't pick future dates, but remove min/prefill
-dobGate.max = new Date().toISOString().split('T')[0];
-// dobGate.value = ''; // No longer prefilling to force user input
+// Populate Date of Birth Dropdowns
+for(let i=1; i<=31; i++) {
+  const opt = document.createElement('option');
+  opt.value = i.toString().padStart(2, '0');
+  opt.textContent = i;
+  dobDay.appendChild(opt);
+}
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+months.forEach((m, i) => {
+  const opt = document.createElement('option');
+  opt.value = (i+1).toString().padStart(2, '0');
+  opt.textContent = m;
+  dobMonth.appendChild(opt);
+});
+const currentYear = new Date().getFullYear();
+// Populate years down to 1950
+for(let i=currentYear; i>=1950; i--) {
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = i;
+  dobYear.appendChild(opt);
+}
 
 let globalName = '';
 let globalDob = '';
 
 function checkIdentityGate(){
   const name = nameGate.value.trim();
-  const dobVal = dobGate.value;
+  const d = dobDay.value;
+  const m = dobMonth.value;
+  const y = dobYear.value;
 
-  // Wait for both name and dob to have values
-  if (!name || !dobVal) {
+  if (!d || !m || !y) {
     afterDobGate.style.display = 'none';
     dobGateMsg.style.display = 'none';
     globalDob = '';
-    globalName = '';
     return;
   }
 
-  // Eligible if DOB is on or after December 31, 1996 (under 30 as of Dec 31, 2026)
+  const dobVal = `${y}-${m}-${d}`;
   const eligible = dobVal >= '1996-12-31';
+
   if (!eligible) {
     afterDobGate.style.display = 'none';
-    dobGateMsg.style.display = 'block';
+    dobGateMsg.style.display = '';
     globalDob = '';
-    globalName = '';
     return;
   }
 
-  // If we reach here, both name and DOB are valid and eligible
   dobGateMsg.style.display = 'none';
   globalDob = dobVal;
   globalName = name;
-  afterDobGate.style.display = 'block';
+  afterDobGate.style.display = name ? '' : 'none';
 }
 
 nameGate.addEventListener('input', checkIdentityGate);
-dobGate.addEventListener('change', checkIdentityGate);
+dobDay.addEventListener('change', checkIdentityGate);
+dobMonth.addEventListener('change', checkIdentityGate);
+dobYear.addEventListener('change', checkIdentityGate);
 
 /* ============================================================
    RENDER
