@@ -707,7 +707,7 @@ form.addEventListener('submit', async (e) => {
     submitStatus.className = 'submit-status error';
     return;
   }
-  if (!fieldsContainer.checkValidity()) {
+  if (!form.checkValidity()) {
     form.reportValidity();
     return;
   }
