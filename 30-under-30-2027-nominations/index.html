@@ -3,241 +3,302 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Forbes India 30 Under 30 — Registration</title>
+<title>Forbes India 30 Under 30 2027 - Registrations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink:#15181d;
-    --bg:#ffffff;
-    --panel:#f4f6f8;
-    --line:#dce0e4;
-    --muted:#63676d;
-    --accent:#2c5d8f;      /* Forbes wordmark blue */
-    --accent-dark:#1e4166;
-    --on-accent:#ffffff;
-    --error:#a4302a;
-    --ok:#276b40;
-    --radius:2px;
-    --maxw:660px;
+  :root {
+    --ink: #111827;         /* Deep almost-black for text */
+    --bg: #f4f5f7;          /* Soft background outside the form */
+    --surface: #ffffff;     /* White card background */
+    --panel: #f9fafb;       /* Slightly off-white for filled areas */
+    --line: #e5e7eb;        /* Borders */
+    --muted: #6b7280;       /* Secondary text */
+    --accent: #00427a;      /* Premium Forbes Blue */
+    --accent-dark: #002d54;
+    --on-accent: #ffffff;
+    --focus-ring: rgba(0, 66, 122, 0.15);
+    --error: #dc2626;
+    --error-bg: #fef2f2;
+    --radius: 6px;
+    --maxw: 720px;
   }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 20px;
   }
-  a{color:var(--accent-dark);}
+  
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
-  header.masthead{
-    border-bottom:1px solid var(--line);
-    padding:30px 24px 26px;
+  .page-wrapper {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    border: 1px solid var(--line);
+    overflow: hidden;
   }
-  .masthead-inner{ max-width:var(--maxw); margin:0 auto; }
-  .wordmark{
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    letter-spacing:0.16em;
-    color:var(--accent);
-    margin:0 0 10px;
-    text-transform:uppercase;
-  }
-  h1{
-    font-family:'Playfair Display',Georgia,serif;
-    font-weight:700;
-    font-size:33px;
-    line-height:1.15;
-    margin:0 0 10px;
-  }
-  .lede{ color:var(--muted); font-size:15.5px; max-width:56ch; margin:0 0 16px; }
 
-  .eligibility{
-    background:var(--panel);
-    border-left:3px solid var(--accent);
-    padding:12px 14px;
-    font-size:13.5px;
-    color:var(--ink);
-    border-radius:var(--radius);
+  header.masthead {
+    border-bottom: 1px solid var(--line);
+    padding: 48px 48px 32px;
   }
-  .eligibility strong{ color:var(--accent-dark); }
-
-  main{ max-width:var(--maxw); margin:0 auto; padding:32px 24px 90px; }
-
-  .field{ margin-bottom:22px; }
-  .field label{
-    display:block; font-size:14px; font-weight:500; margin-bottom:6px;
+  
+  .logo {
+    height: 38px;
+    width: auto;
+    margin: 0 0 28px 0;
+    display: block;
   }
-  .field .hint{ display:block; font-size:12.5px; color:var(--muted); margin-top:5px; }
-  .field .required{ color:var(--error); margin-left:2px; }
-  .field .wordcount{ font-size:12px; color:var(--muted); margin-top:4px; text-align:right; }
-  .field .wordcount.over{ color:var(--error); }
+  
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 16px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  
+  .lede { 
+    color: var(--muted); 
+    font-size: 16px; 
+    max-width: 60ch; 
+    margin: 0 0 24px; 
+  }
+
+  .eligibility {
+    background: #f0f5fa;
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    font-size: 14.5px;
+    color: var(--ink);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .eligibility strong { color: var(--accent-dark); }
+
+  main { 
+    padding: 40px 48px 60px; 
+  }
+
+  .field { margin-bottom: 28px; }
+  .field label {
+    display: block; 
+    font-size: 14.5px; 
+    font-weight: 600; 
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .field .hint { display: block; font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .field .required { color: var(--error); margin-left: 3px; }
+  .field .wordcount { font-size: 12.5px; color: var(--muted); margin-top: 6px; text-align: right; }
+  .field .wordcount.over { color: var(--error); font-weight: 500; }
 
   input[type="text"], input[type="email"], input[type="tel"], input[type="number"],
-  input[type="url"], input[type="date"], select, textarea{
-    width:100%; padding:11px 12px; font-family:'Inter',sans-serif; font-size:15px;
-    color:var(--ink); background:var(--panel); border:1px solid var(--line);
-    border-radius:var(--radius); transition:border-color .15s ease, background .15s ease;
+  input[type="url"], input[type="date"], select, textarea {
+    width: 100%; 
+    padding: 12px 16px; 
+    font-family: 'Inter', sans-serif; 
+    font-size: 15px;
+    color: var(--ink); 
+    background: var(--surface); 
+    border: 1px solid #d1d5db;
+    border-radius: var(--radius); 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
   }
-  textarea{ min-height:92px; resize:vertical; }
-  input:focus, select:focus, textarea:focus{
-    outline:none; border-color:var(--accent); background:#fff;
-  }
-
-  .option-group{ display:flex; flex-direction:column; gap:8px; }
-  .option-group label.opt{
-    display:flex; align-items:center; gap:9px; font-size:14.5px; font-weight:400;
-    padding:9px 11px; background:var(--panel); border:1px solid var(--line);
-    border-radius:var(--radius); cursor:pointer;
-  }
-  .option-group input[type="radio"], .option-group input[type="checkbox"]{
-    accent-color:var(--accent); width:16px; height:16px; flex:none;
-  }
-  .other-specify{ margin-top:8px; display:none; }
-  .other-specify.show{ display:block; }
-
-  .file-drop{
-    border:1px dashed var(--line); border-radius:var(--radius); background:var(--panel);
-    padding:18px 14px; text-align:center; font-size:14px; color:var(--muted); cursor:pointer;
-  }
-  .file-drop.has-file{ border-color:var(--accent); color:var(--ink); }
-  .file-drop input{ display:none; }
-
-  .step{ margin-bottom:32px; }
-  .step-label{
-    font-family:'Inter',sans-serif; font-weight:600; font-size:12px;
-    letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;
+  textarea { min-height: 110px; resize: vertical; }
+  input:focus, select:focus, textarea:focus {
+    outline: none; 
+    border-color: var(--accent); 
+    box-shadow: 0 0 0 3px var(--focus-ring);
   }
 
-  .track-switch{
-    display:flex; border:1px solid var(--ink); border-radius:var(--radius); overflow:hidden;
+  .option-group { display: flex; flex-direction: column; gap: 10px; }
+  .option-group label.opt {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 15px; font-weight: 400;
+    padding: 14px 16px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); cursor: pointer; transition: background 0.15s ease;
   }
-  .track-switch button{
-    flex:1; padding:14px 12px; border:none; background:var(--bg); color:var(--ink);
-    font-family:'Inter',sans-serif; font-size:14.5px; font-weight:500; cursor:pointer;
+  .option-group label.opt:hover { background: var(--panel); }
+  .option-group input[type="radio"], .option-group input[type="checkbox"] {
+    accent-color: var(--accent); width: 18px; height: 18px; flex: none; margin-top: 2px;
   }
-  .track-switch button + button{ border-left:1px solid var(--ink); }
-  .track-switch button[aria-pressed="true"]{ background:var(--ink); color:#fff; }
+  .other-specify { margin-top: 10px; display: none; }
+  .other-specify.show { display: block; animation: fadeIn 0.3s ease; }
 
-  .section-heading{
-    font-family:'Playfair Display',Georgia,serif; font-size:19px; font-weight:600;
-    margin:30px 0 16px; padding-top:18px; border-top:1px solid var(--line);
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .section-heading:first-child{ margin-top:0; padding-top:0; border-top:none; }
 
-  #fieldsContainer{ display:none; }
-  #fieldsContainer.active{ display:block; }
-
-  .submit-row{ margin-top:34px; display:flex; align-items:center; gap:16px; }
-  button.submit{
-    background:var(--accent); color:var(--on-accent); border:none; padding:14px 28px;
-    font-family:'Inter',sans-serif; font-size:15px; font-weight:600; border-radius:var(--radius);
-    cursor:pointer;
+  .file-drop {
+    border: 2px dashed #cbd5e1; 
+    border-radius: 8px; 
+    background: #f8fafc;
+    padding: 36px 20px; 
+    text-align: center; 
+    font-size: 15px; 
+    color: var(--muted); 
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
-  button.submit:hover{ background:var(--accent-dark); }
-  button.submit:disabled{ opacity:0.5; cursor:not-allowed; }
-  .submit-status{ font-size:14px; color:var(--muted); }
-  .submit-status.error{ color:var(--error); }
+  .file-drop:hover { background: #f1f5f9; border-color: #94a3b8; }
+  .file-drop.has-file { border-color: var(--accent); color: var(--accent-dark); background: #f0f5fa; font-weight: 500; }
+  .file-drop input { display: none; }
 
-  .confirm{ display:none; text-align:center; padding:70px 20px; }
-  .confirm.active{ display:block; }
-  .confirm h2{ font-family:'Playfair Display',Georgia,serif; font-size:26px; margin-bottom:10px; }
-  .confirm p{ color:var(--muted); }
+  .step { margin-bottom: 40px; }
+  .step-label {
+    font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 16px;
+  }
 
-  @media (max-width:480px){
-    h1{ font-size:26px; }
-    header.masthead{ padding:24px 18px 20px; }
-    main{ padding:26px 18px 60px; }
+  .track-switch {
+    display: flex; 
+    background: var(--panel); 
+    padding: 5px; 
+    border-radius: 8px; 
+    border: 1px solid var(--line);
+  }
+  .track-switch button {
+    flex: 1; padding: 14px 12px; border: none; background: transparent; color: var(--muted);
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;
+    border-radius: 6px; transition: all 0.2s ease;
+  }
+  .track-switch button[aria-pressed="true"] { 
+    background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 600;
+    margin: 40px 0 24px; padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .section-heading:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+
+  #fieldsContainer { display: none; }
+  #fieldsContainer.active { display: block; animation: fadeIn 0.4s ease; }
+
+  .submit-row { margin-top: 48px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  button.submit {
+    background: var(--accent); color: var(--on-accent); border: none; padding: 16px 36px;
+    font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; border-radius: 50px;
+    cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(0, 66, 122, 0.2);
+  }
+  button.submit:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 12px -2px rgba(0, 66, 122, 0.25); }
+  button.submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+  
+  .submit-status { font-size: 14.5px; color: var(--muted); font-weight: 500; }
+  .submit-status.error { color: var(--error); background: var(--error-bg); padding: 12px 16px; border-radius: 6px; border-left: 4px solid var(--error); width: 100%; margin-top: 12px; }
+
+  .confirm { display: none; text-align: center; padding: 80px 20px; }
+  .confirm.active { display: block; animation: fadeIn 0.5s ease; }
+  .confirm h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 32px; margin-bottom: 16px; }
+  .confirm p { color: var(--muted); font-size: 16px; }
+
+  @media (max-width: 640px) {
+    body { padding: 16px; }
+    header.masthead { padding: 32px 24px 24px; }
+    h1 { font-size: 28px; }
+    main { padding: 32px 24px 48px; }
+    .track-switch { flex-direction: column; }
+    .submit-row { flex-direction: column; align-items: stretch; }
+    button.submit { width: 100%; }
+    .submit-status { text-align: center; }
   }
 </style>
 </head>
 <body>
 
-<header class="masthead">
-  <div class="masthead-inner">
-    <p class="wordmark">Forbes India</p>
-    <h1>30 Under 30 — Registration</h1>
-    <p class="lede">Start with your name and date of birth — once we've confirmed you're eligible, the rest of the form will open up.</p>
+<div class="page-wrapper">
+  <header class="masthead">
+    <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/03/filogo-2026-03-39594d67c5b728e3e7849b334c790a11.png" alt="Forbes India Logo" class="logo">
+    <h1>30 Under 30 2027 - Registrations</h1>
+    <p class="lede">Start by verifying your date of birth — once we've confirmed you're eligible, the rest of the form will open up.</p>
     <div class="eligibility">
       <strong>Eligibility:</strong> You will be eligible to nominate yourself only if you are under 30 years of age as of December 31, 2026.
     </div>
-  </div>
-</header>
+  </header>
 
-<main>
-  <div id="formWrap">
+  <main>
+    <div id="formWrap">
 
-    <div class="step" id="dobStep">
-      <p class="step-label">Step 1 — Your details</p>
-      <div class="field">
-        <label for="nameGate">What is your name?<span class="required">*</span></label>
-        <input type="text" id="nameGate" required>
-      </div>
-      <div class="field" style="margin-bottom:0;">
-        <label>What is your date of birth?<span class="required">*</span></label>
-        <div style="display:flex; gap:10px;">
-          <select id="dobDay" required style="flex:1;">
-            <option value="" disabled selected>Day</option>
-          </select>
-          <select id="dobMonth" required style="flex:1;">
-            <option value="" disabled selected>Month</option>
-          </select>
-          <select id="dobYear" required style="flex:1;">
-            <option value="" disabled selected>Year</option>
-          </select>
+      <div class="step" id="dobStep">
+        <p class="step-label">Step 1 — Your details</p>
+        <div class="field">
+          <label for="nameGate">What is your name?<span class="required">*</span></label>
+          <input type="text" id="nameGate" placeholder="Enter your full name" required>
         </div>
-        <span class="hint">You must be under 30 years of age as of December 31, 2026 to register.</span>
-      </div>
-      <div class="submit-status error" id="dobGateMsg" style="display:none; margin-top:10px;">
-        Based on the date of birth entered, you don't meet the eligibility criteria — under 30 years of age as of December 31, 2026.
-      </div>
-    </div>
-
-    <div id="afterDobGate" style="display:none;">
-
-      <div class="step" id="categoryStep">
-        <p class="step-label">Step 2 — Category</p>
         <div class="field" style="margin-bottom:0;">
-          <label for="categorySelect">In which category are you registering?<span class="required">*</span></label>
-          <select id="categorySelect" required>
-            <option value="" disabled selected>Select a category</option>
-          </select>
+          <label>What is your date of birth?<span class="required">*</span></label>
+          <div style="display:flex; gap:12px;">
+            <select id="dobDay" required style="flex:1;">
+              <option value="" disabled selected>Day</option>
+            </select>
+            <select id="dobMonth" required style="flex:1;">
+              <option value="" disabled selected>Month</option>
+            </select>
+            <select id="dobYear" required style="flex:1;">
+              <option value="" disabled selected>Year</option>
+            </select>
+          </div>
+          <span class="hint">You must be under 30 years of age as of December 31, 2026 to register.</span>
+        </div>
+        <div class="submit-status error" id="dobGateMsg" style="display:none;">
+          Based on the date of birth entered, you don't meet the eligibility criteria — under 30 years of age as of December 31, 2026.
         </div>
       </div>
 
-      <div class="step" id="trackStep" style="display:none;">
-        <p class="step-label">Step 3 — Track</p>
-        <div class="track-switch" role="tablist" aria-label="Registration track">
-          <button type="button" id="btnEntrepreneur" role="tab" aria-pressed="true">Entrepreneur</button>
-          <button type="button" id="btnProfessional" role="tab" aria-pressed="false">Professional (nominating)</button>
+      <div id="afterDobGate" style="display:none;">
+
+        <div class="step" id="categoryStep">
+          <p class="step-label">Step 2 — Category</p>
+          <div class="field" style="margin-bottom:0;">
+            <label for="categorySelect">In which category are you registering?<span class="required">*</span></label>
+            <select id="categorySelect" required>
+              <option value="" disabled selected>Select a category</option>
+            </select>
+          </div>
         </div>
+
+        <div class="step" id="trackStep" style="display:none;">
+          <p class="step-label">Step 3 — Track</p>
+          <div class="track-switch" role="tablist" aria-label="Registration track">
+            <button type="button" id="btnEntrepreneur" role="tab" aria-pressed="true">Entrepreneur</button>
+            <button type="button" id="btnProfessional" role="tab" aria-pressed="false">Professional (nominating)</button>
+          </div>
+        </div>
+
+        <form id="regForm" novalidate>
+          <div id="fieldsContainer"></div>
+
+          <div class="submit-row">
+            <button type="submit" class="submit" id="submitBtn">Submit registration</button>
+            <span class="submit-status" id="submitStatus"></span>
+          </div>
+        </form>
       </div>
-
-      <form id="regForm" novalidate>
-        <div id="fieldsContainer"></div>
-
-        <div class="submit-row">
-          <button type="submit" class="submit" id="submitBtn">Submit registration</button>
-          <span class="submit-status" id="submitStatus"></span>
-        </div>
-      </form>
     </div>
-  </div>
 
-  <div class="confirm" id="confirmPanel">
-    <h2>You're in.</h2>
-    <p>Thanks — we've received the registration. We'll be in touch if we need anything else.</p>
-  </div>
-</main>
+    <div class="confirm" id="confirmPanel">
+      <h2>You're in.</h2>
+      <p>Thanks — we've received the registration. We'll be in touch if we need anything else.</p>
+    </div>
+  </main>
+</div>
 
 <script>
-/* ============================================================
-   CONFIG
-   ============================================================ */
 const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyFB6l7DVekuVx9kX_7W8TiVbWopuxf4fwjb0YhYTkwJZ2ETztQUanCV0w5PQEG07Vh/exec";
 
 function f(id, label, type, opts){
@@ -248,7 +309,6 @@ const LEGAL_STATUS_OPTIONS = ['Private limited company','Public limited company'
 const FUNDING_SOURCE_OPTIONS = ['Private equity','VC funding','Bootstrapped','Angel investors','Bank loans','Personal savings','Debt capital','Government programs','Other'];
 const OPERATE_FROM_OPTIONS = ['Corporate office','Co-working space','Remote work','Factory','Home','Other'];
 
-// Documents + images only — no video, no software/executable files
 const ALLOWED_FILE_EXTENSIONS = ['pdf','doc','docx','odt','rtf','txt','ppt','pptx','jpg','jpeg','png','gif','webp','bmp','heic','heif'];
 const FILE_ACCEPT = ALLOWED_FILE_EXTENSIONS.map(ext => '.' + ext).join(',');
 const MAX_FILE_SIZE_MB = 20;
@@ -257,8 +317,6 @@ const FILE_HINT = 'Click to choose a file — document or image, max 20MB';
 function resumeField(){
   return f('resume','Please upload your resume','file');
 }
-
-// Name and Date of birth are asked once, up front (Step 1) — not repeated below.
 
 const DEFAULT_ENTREPRENEUR_FIELDS = [
   f('email','Email address','email'),
@@ -438,32 +496,6 @@ const ART_FIELDS = [
   f('awards','Awards received','textarea',{required:false})
 ];
 
-const SPORTS_FIELDS = [
-  f('email','Email address','email'),
-  f('phone','Phone number','tel'),
-  f('sport','Sport/discipline','text'),
-  f('team_club','Current team/club or affiliation','text',{required:false}),
-  f('highlights','Career highlights and major titles/medals','textarea'),
-  f('personal_bests','Personal bests or key performance stats','textarea',{required:false}),
-  f('coaches','Coaches or mentors who shaped your career','textarea',{required:false}),
-  f('sponsorships','Sponsorships or endorsements, if any','textarea',{required:false}),
-  f('next_12','What\'s next — upcoming tournaments/goals for the next 12 months','textarea'),
-  f('reference','References','textarea')
-];
-
-const BOOKS_FIELDS = [
-  f('email','Email address','email'),
-  f('phone','Phone number','tel'),
-  f('languages','Language(s) you write in','text'),
-  f('published_works','Notable published works (titles, publishers, years)','textarea'),
-  f('genres','Genre(s) you work in','text'),
-  f('awards','Awards, recognitions, or bestseller status','textarea',{required:false}),
-  f('bio_cv','Upload bio / CV','file'),
-  f('links','Links to your work or author profile','textarea',{required:false}),
-  f('why_list','Why do you think you should be on the list?','textarea',{wordLimit:100}),
-  f('reference','References','textarea')
-];
-
 const CATEGORIES = [
   { name:'AI', split:false, fields:AI_FIELDS },
   { name:'Art', split:false, fields:ART_FIELDS },
@@ -487,9 +519,6 @@ const CATEGORIES = [
   { name:'Robotics', split:false, fields:ROBOTICS_FIELDS }
 ];
 
-/* ============================================================
-   GLOBAL IDENTITY GATE (Name + Date of birth)
-   ============================================================ */
 const nameGate = document.getElementById('nameGate');
 const dobDay = document.getElementById('dobDay');
 const dobMonth = document.getElementById('dobMonth');
@@ -541,7 +570,7 @@ function checkIdentityGate(){
 
   if (!eligible) {
     afterDobGate.style.display = 'none';
-    dobGateMsg.style.display = '';
+    dobGateMsg.style.display = 'block';
     globalDob = '';
     return;
   }
@@ -549,7 +578,7 @@ function checkIdentityGate(){
   dobGateMsg.style.display = 'none';
   globalDob = dobVal;
   globalName = name;
-  afterDobGate.style.display = name ? '' : 'none';
+  afterDobGate.style.display = name ? 'block' : 'none';
 }
 
 nameGate.addEventListener('input', checkIdentityGate);
@@ -557,9 +586,6 @@ dobDay.addEventListener('change', checkIdentityGate);
 dobMonth.addEventListener('change', checkIdentityGate);
 dobYear.addEventListener('change', checkIdentityGate);
 
-/* ============================================================
-   RENDER
-   ============================================================ */
 const categorySelect = document.getElementById('categorySelect');
 const trackStep = document.getElementById('trackStep');
 const btnEntrepreneur = document.getElementById('btnEntrepreneur');
@@ -725,7 +751,6 @@ function renderField(field){
     if (field.min !== undefined) input.min = field.min;
     if (field.max !== undefined) input.max = field.max;
     if (field.type === 'date' && field.isDob) {
-      // For nominee date of birth, we might still want the constraint
       input.max = '2026-12-31';
     }
     wrap.appendChild(input);
@@ -750,9 +775,6 @@ function buildOtherSpecify(fieldId){
   return el;
 }
 
-/* ============================================================
-   VALUE COLLECTION
-   ============================================================ */
 function fileToBase64(file){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -815,9 +837,6 @@ async function collectData(){
   return { data, files };
 }
 
-/* ============================================================
-   SUBMIT
-   ============================================================ */
 const form = document.getElementById('regForm');
 const submitBtn = document.getElementById('submitBtn');
 const submitStatus = document.getElementById('submitStatus');
