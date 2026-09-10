@@ -172,11 +172,15 @@
   <div id="formWrap">
 
     <div class="step" id="dobStep">
-      <p class="step-label">Step 1 — Date of birth</p>
+      <p class="step-label">Step 1 — Your details</p>
+      <div class="field">
+        <label for="nameGate">What is your name?<span class="required">*</span></label>
+        <input type="text" id="nameGate" required>
+      </div>
       <div class="field" style="margin-bottom:0;">
         <label for="dobGate">What is your date of birth?<span class="required">*</span></label>
         <input type="date" id="dobGate" min="1996-12-31" required>
-        <span class="hint">You must be under 30 years of age as of December 31, 2026 to register.</span>
+        <span class="hint">You must be under 30 years of age as of December 31, 2026 to register. Defaults to 31 Dec 1996 — please change it to your actual date of birth.</span>
       </div>
       <div class="submit-status error" id="dobGateMsg" style="display:none; margin-top:10px;">
         Based on the date of birth entered, you don't meet the eligibility criteria — under 30 years of age as of December 31, 2026.
@@ -224,7 +228,7 @@
 /* ============================================================
    CONFIG
    ============================================================ */
-const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyFB6l7DVekuVx9kX_7W8TiVbWopuxf4fwjb0YhYTkwJZ2ETztQUanCV0w5PQEG07Vh/exec";
+const ENDPOINT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 function f(id, label, type, opts){
   return Object.assign({ id, label, type, required: true }, opts || {});
@@ -234,8 +238,19 @@ const LEGAL_STATUS_OPTIONS = ['Private limited company','Public limited company'
 const FUNDING_SOURCE_OPTIONS = ['Private equity','VC funding','Bootstrapped','Angel investors','Bank loans','Personal savings','Debt capital','Government programs','Other'];
 const OPERATE_FROM_OPTIONS = ['Corporate office','Co-working space','Remote work','Factory','Home','Other'];
 
+// Documents + images only — no video, no software/executable files
+const ALLOWED_FILE_EXTENSIONS = ['pdf','doc','docx','odt','rtf','txt','ppt','pptx','jpg','jpeg','png','gif','webp','bmp','heic','heif'];
+const FILE_ACCEPT = ALLOWED_FILE_EXTENSIONS.map(ext => '.' + ext).join(',');
+const MAX_FILE_SIZE_MB = 20;
+const FILE_HINT = 'Click to choose a file — document or image, max 20MB';
+
+function resumeField(){
+  return f('resume','Please upload your resume','file');
+}
+
+// Name and Date of birth are asked once, up front (Step 1) — not repeated below.
+
 const DEFAULT_ENTREPRENEUR_FIELDS = [
-  f('name','Name','text'),
   f('email','Email address','email'),
   f('phone','Your phone number','tel'),
   f('cofounders','If you have co-founders, please mention their names and ages here','textarea',{required:false}),
@@ -260,7 +275,7 @@ const DEFAULT_ENTREPRENEUR_FIELDS = [
 
 const DEFAULT_PROFESSIONAL_FIELDS = [
   f('email','Your email ID','email'),
-  f('name','Your name','text'),
+  f('phone','Your phone number','tel'),
   f('nominating_who','Whom are you nominating?','radio',{options:['Self','Someone else']}),
   f('nominee_name',"Nominee's name",'text'),
   f('nominee_dob',"Nominee's date of birth",'date',{isDob:true}),
@@ -273,7 +288,8 @@ const DEFAULT_PROFESSIONAL_FIELDS = [
 ];
 
 const DEEPTECH_FIELDS = [
-  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('company_name','Name of your company','text'),
   f('founded_year','Company founded in','number',{min:1980,max:2026}),
   f('website','Official website','url',{required:false}),
@@ -299,7 +315,8 @@ const DEEPTECH_FIELDS = [
 ];
 
 const AI_FIELDS = [
-  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('company_name','Name of your company','text'),
   f('founded_year','Company founded in','number',{min:1980,max:2026}),
   f('website','Official website','url',{required:false}),
@@ -322,7 +339,8 @@ const AI_FIELDS = [
 ];
 
 const D2C_FIELDS = [
-  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('company_name','Name of your company','text'),
   f('founded_year','Company founded in','number',{min:1980,max:2026}),
   f('website','Official website','url',{required:false}),
@@ -345,7 +363,8 @@ const D2C_FIELDS = [
 ];
 
 const ROBOTICS_FIELDS = [
-  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('company_name','Name of your company','text'),
   f('founded_year','Company founded in','number',{min:1980,max:2026}),
   f('website','Official website','url',{required:false}),
@@ -370,7 +389,8 @@ const ROBOTICS_FIELDS = [
 ];
 
 const MUSIC_FIELDS = [
-  f('full_name','Full name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('stage_name','Stage name of the artist or act','text',{required:false}),
   f('career_start_year','In which year did you start your music career?','number',{min:1950,max:2026}),
   f('city','Which city are you based out of?','text'),
@@ -387,9 +407,10 @@ const MUSIC_FIELDS = [
 ];
 
 const ENTERTAINMENT_FIELDS = [
-  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('age','Age','number',{min:1,max:120}),
-  f('bio','Upload bio','file',{hint:'PDF or Word doc, max 5MB'}),
+  f('bio','Upload bio','file'),
   f('portfolio','Links to portfolio (or IMDb profile)','textarea'),
   f('sub_category','Sub-category','select',{options:['Actor','Producer','Director','Screenwriter','Comedy','Dance','Other'], other:true}),
   f('notable_projects','Notable projects/productions worked on','textarea'),
@@ -398,7 +419,8 @@ const ENTERTAINMENT_FIELDS = [
 ];
 
 const ART_FIELDS = [
-  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('bio_cv','Upload bio / CV','file'),
   f('artwork_links','Links to websites with images of artworks','textarea'),
   f('residencies','Scholarship and residency programmes attended','textarea',{required:false}),
@@ -408,7 +430,8 @@ const ART_FIELDS = [
 
 // PLACEHOLDER — replace once final question list is shared
 const SPORTS_FIELDS = [
-  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('sport','Sport/discipline','text'),
   f('team_club','Current team/club or affiliation','text',{required:false}),
   f('highlights','Career highlights and major titles/medals','textarea'),
@@ -421,7 +444,8 @@ const SPORTS_FIELDS = [
 
 // PLACEHOLDER — replace once final question list is shared
 const BOOKS_FIELDS = [
-  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Phone number','tel'),
   f('languages','Language(s) you write in','text'),
   f('published_works','Notable published works (titles, publishers, years)','textarea'),
   f('genres','Genre(s) you work in','text'),
@@ -439,11 +463,11 @@ const CATEGORIES = [
   { name:'Clean energy & climate change', split:true },
   { name:'Deeptech/frontier tech', split:false, fields:DEEPTECH_FIELDS },
   { name:'Defence & space', split:true },
-  { name:'Design & architecture', split:true },
+  { name:'Design & architecture', split:true, extraEntrepreneurFields:[resumeField()], extraProfessionalFields:[resumeField()] },
   { name:'D2C', split:false, fields:D2C_FIELDS },
   { name:'Ecommerce & retail', split:true },
   { name:'Entertainment', split:false, fields:ENTERTAINMENT_FIELDS },
-  { name:'Fashion', split:true },
+  { name:'Fashion', split:true, extraEntrepreneurFields:[resumeField()], extraProfessionalFields:[resumeField()] },
   { name:'Finance', split:true },
   { name:'Food & hospitality', split:true },
   { name:'Grassroots entrepreneur', split:true },
@@ -456,33 +480,45 @@ const CATEGORIES = [
 ];
 
 /* ============================================================
-   GLOBAL DOB GATE
+   GLOBAL IDENTITY GATE (Name + Date of birth)
    ============================================================ */
+const nameGate = document.getElementById('nameGate');
 const dobGate = document.getElementById('dobGate');
 const dobGateMsg = document.getElementById('dobGateMsg');
 const afterDobGate = document.getElementById('afterDobGate');
 dobGate.max = new Date().toISOString().split('T')[0];
+dobGate.value = '1996-12-31'; // prefilled to the eligibility cutoff so the picker opens near the right year, not today
 
+let globalName = '';
 let globalDob = '';
 
-dobGate.addEventListener('change', () => {
-  if (!dobGate.value) {
+function checkIdentityGate(){
+  const name = nameGate.value.trim();
+  const dobVal = dobGate.value;
+
+  if (!dobVal) {
     afterDobGate.style.display = 'none';
     dobGateMsg.style.display = 'none';
     globalDob = '';
     return;
   }
-  const eligible = dobGate.value >= '1996-12-31';
-  if (eligible) {
-    globalDob = dobGate.value;
-    dobGateMsg.style.display = 'none';
-    afterDobGate.style.display = '';
-  } else {
-    globalDob = '';
-    dobGateMsg.style.display = '';
+
+  const eligible = dobVal >= '1996-12-31';
+  if (!eligible) {
     afterDobGate.style.display = 'none';
+    dobGateMsg.style.display = '';
+    globalDob = '';
+    return;
   }
-});
+
+  dobGateMsg.style.display = 'none';
+  globalDob = dobVal;
+  globalName = name;
+  afterDobGate.style.display = name ? '' : 'none';
+}
+
+nameGate.addEventListener('input', checkIdentityGate);
+dobGate.addEventListener('change', checkIdentityGate);
 
 /* ============================================================
    RENDER
@@ -523,7 +559,10 @@ function setTrack(track){
   const isEnt = track === 'Entrepreneur';
   btnEntrepreneur.setAttribute('aria-pressed', isEnt);
   btnProfessional.setAttribute('aria-pressed', !isEnt);
-  renderFields(isEnt ? DEFAULT_ENTREPRENEUR_FIELDS : DEFAULT_PROFESSIONAL_FIELDS);
+
+  const base = isEnt ? DEFAULT_ENTREPRENEUR_FIELDS : DEFAULT_PROFESSIONAL_FIELDS;
+  const extra = (isEnt ? currentCategory.extraEntrepreneurFields : currentCategory.extraProfessionalFields) || [];
+  renderFields(base.concat(extra));
 }
 btnEntrepreneur.addEventListener('click', () => setTrack('Entrepreneur'));
 btnProfessional.addEventListener('click', () => setTrack('Professional'));
@@ -624,11 +663,11 @@ function renderField(field){
     const drop = document.createElement('div');
     drop.className = 'file-drop';
     const labelSpan = document.createElement('span');
-    labelSpan.textContent = field.hint || 'Click to choose a file (JPG, PNG, or PDF — max 5MB)';
+    labelSpan.textContent = field.hint || FILE_HINT;
     input = document.createElement('input');
     input.type = 'file';
     input.id = field.id;
-    input.accept = '.jpg,.jpeg,.png,.pdf,.doc,.docx';
+    input.accept = FILE_ACCEPT;
     if (field.required) input.required = true;
     drop.appendChild(labelSpan);
     drop.appendChild(input);
@@ -719,8 +758,12 @@ async function collectData(){
       const file = el.files && el.files[0];
       data[field.label] = '';
       if (file) {
-        if (file.size > 5 * 1024 * 1024) {
-          throw new Error(`"${field.label}" must be under 5MB.`);
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!ALLOWED_FILE_EXTENSIONS.includes(ext)) {
+          throw new Error(`"${field.label}" must be a document or image file (video and software files aren't accepted).`);
+        }
+        if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+          throw new Error(`"${field.label}" must be under ${MAX_FILE_SIZE_MB}MB.`);
         }
         files.push({
           fieldLabel: field.label,
@@ -749,6 +792,11 @@ form.addEventListener('submit', async (e) => {
   submitStatus.textContent = '';
   submitStatus.className = 'submit-status';
 
+  if (!globalName) {
+    submitStatus.textContent = 'Please enter your name first.';
+    submitStatus.className = 'submit-status error';
+    return;
+  }
   if (!globalDob || globalDob < '1996-12-31') {
     submitStatus.textContent = 'Please enter an eligible date of birth first.';
     submitStatus.className = 'submit-status error';
@@ -775,6 +823,8 @@ form.addEventListener('submit', async (e) => {
 
   try {
     const { data, files } = await collectData();
+    const nameLabel = currentTrack === 'Professional' ? 'Your name' : 'Name';
+    data[nameLabel] = globalName;
     data['Date of birth'] = globalDob;
     data['Timestamp'] = new Date().toISOString();
 
