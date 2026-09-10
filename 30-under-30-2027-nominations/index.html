@@ -161,7 +161,7 @@
   <div class="masthead-inner">
     <p class="wordmark">Forbes India</p>
     <h1>30 Under 30 — Registration</h1>
-    <p class="lede">Start by choosing your category — the form will adjust to ask exactly what we need for it.</p>
+    <p class="lede">Start with your date of birth — once we've confirmed you're eligible, the rest of the form will open up.</p>
     <div class="eligibility">
       <strong>Eligibility:</strong> You will be eligible to nominate yourself only if you are under 30 years of age as of December 31, 2026.
     </div>
@@ -171,32 +171,47 @@
 <main>
   <div id="formWrap">
 
-    <div class="step" id="categoryStep">
-      <p class="step-label">Step 1 — Category</p>
+    <div class="step" id="dobStep">
+      <p class="step-label">Step 1 — Date of birth</p>
       <div class="field" style="margin-bottom:0;">
-        <label for="categorySelect">In which category are you registering?<span class="required">*</span></label>
-        <select id="categorySelect" required>
-          <option value="" disabled selected>Select a category</option>
-        </select>
+        <label for="dobGate">What is your date of birth?<span class="required">*</span></label>
+        <input type="date" id="dobGate" min="1996-12-31" required>
+        <span class="hint">You must be under 30 years of age as of December 31, 2026 to register.</span>
+      </div>
+      <div class="submit-status error" id="dobGateMsg" style="display:none; margin-top:10px;">
+        Based on the date of birth entered, you don't meet the eligibility criteria — under 30 years of age as of December 31, 2026.
       </div>
     </div>
 
-    <div class="step" id="trackStep" style="display:none;">
-      <p class="step-label">Step 2 — Track</p>
-      <div class="track-switch" role="tablist" aria-label="Registration track">
-        <button type="button" id="btnEntrepreneur" role="tab" aria-pressed="true">Entrepreneur</button>
-        <button type="button" id="btnProfessional" role="tab" aria-pressed="false">Professional (nominating)</button>
+    <div id="afterDobGate" style="display:none;">
+
+      <div class="step" id="categoryStep">
+        <p class="step-label">Step 2 — Category</p>
+        <div class="field" style="margin-bottom:0;">
+          <label for="categorySelect">In which category are you registering?<span class="required">*</span></label>
+          <select id="categorySelect" required>
+            <option value="" disabled selected>Select a category</option>
+          </select>
+        </div>
       </div>
+
+      <div class="step" id="trackStep" style="display:none;">
+        <p class="step-label">Step 3 — Track</p>
+        <div class="track-switch" role="tablist" aria-label="Registration track">
+          <button type="button" id="btnEntrepreneur" role="tab" aria-pressed="true">Entrepreneur</button>
+          <button type="button" id="btnProfessional" role="tab" aria-pressed="false">Professional (nominating)</button>
+        </div>
+      </div>
+
+      <form id="regForm" novalidate>
+        <div id="fieldsContainer"></div>
+
+        <div class="submit-row">
+          <button type="submit" class="submit" id="submitBtn">Submit registration</button>
+          <span class="submit-status" id="submitStatus"></span>
+        </div>
+      </form>
     </div>
-
-    <form id="regForm" novalidate>
-      <div id="fieldsContainer"></div>
-
-      <div class="submit-row">
-        <button type="submit" class="submit" id="submitBtn">Submit registration</button>
-        <span class="submit-status" id="submitStatus"></span>
-      </div>
-    </form>
   </div>
 
   <div class="confirm" id="confirmPanel">
@@ -220,7 +235,6 @@ const FUNDING_SOURCE_OPTIONS = ['Private equity','VC funding','Bootstrapped','An
 const OPERATE_FROM_OPTIONS = ['Corporate office','Co-working space','Remote work','Factory','Home','Other'];
 
 const DEFAULT_ENTREPRENEUR_FIELDS = [
-  f('dob','Date of birth','date'),
   f('name','Name','text'),
   f('email','Email address','email'),
   f('phone','Your phone number','tel'),
@@ -249,7 +263,7 @@ const DEFAULT_PROFESSIONAL_FIELDS = [
   f('name','Your name','text'),
   f('nominating_who','Whom are you nominating?','radio',{options:['Self','Someone else']}),
   f('nominee_name',"Nominee's name",'text'),
-  f('nominee_dob',"Nominee's date of birth",'date'),
+  f('nominee_dob',"Nominee's date of birth",'date',{isDob:true}),
   f('nominee_phone',"Nominee's phone number",'tel'),
   f('nominee_email',"Nominee's email ID",'email'),
   f('nominee_achievements','Now, tell us more about the nominee — what are their achievements and what makes them exceptional.','textarea'),
@@ -259,6 +273,7 @@ const DEFAULT_PROFESSIONAL_FIELDS = [
 ];
 
 const DEEPTECH_FIELDS = [
+  f('name','Name','text'),
   f('company_name','Name of your company','text'),
   f('founded_year','Company founded in','number',{min:1980,max:2026}),
   f('website','Official website','url',{required:false}),
@@ -284,6 +299,7 @@ const DEEPTECH_FIELDS = [
 ];
 
 const AI_FIELDS = [
+  f('name','Name','text'),
   f('company_name','Name of your company','text'),
   f('founded_year','Company founded in','number',{min:1980,max:2026}),
   f('website','Official website','url',{required:false}),
@@ -306,6 +322,7 @@ const AI_FIELDS = [
 ];
 
 const D2C_FIELDS = [
+  f('name','Name','text'),
   f('company_name','Name of your company','text'),
   f('founded_year','Company founded in','number',{min:1980,max:2026}),
   f('website','Official website','url',{required:false}),
@@ -328,6 +345,7 @@ const D2C_FIELDS = [
 ];
 
 const ROBOTICS_FIELDS = [
+  f('name','Name','text'),
   f('company_name','Name of your company','text'),
   f('founded_year','Company founded in','number',{min:1980,max:2026}),
   f('website','Official website','url',{required:false}),
@@ -370,7 +388,6 @@ const MUSIC_FIELDS = [
 
 const ENTERTAINMENT_FIELDS = [
   f('name','Name','text'),
-  f('dob','Date of birth','date'),
   f('age','Age','number',{min:1,max:120}),
   f('bio','Upload bio','file',{hint:'PDF or Word doc, max 5MB'}),
   f('portfolio','Links to portfolio (or IMDb profile)','textarea'),
@@ -382,7 +399,6 @@ const ENTERTAINMENT_FIELDS = [
 
 const ART_FIELDS = [
   f('name','Name','text'),
-  f('dob','Date of birth','date'),
   f('bio_cv','Upload bio / CV','file'),
   f('artwork_links','Links to websites with images of artworks','textarea'),
   f('residencies','Scholarship and residency programmes attended','textarea',{required:false}),
@@ -393,7 +409,6 @@ const ART_FIELDS = [
 // PLACEHOLDER — replace once final question list is shared
 const SPORTS_FIELDS = [
   f('name','Name','text'),
-  f('dob','Date of birth','date'),
   f('sport','Sport/discipline','text'),
   f('team_club','Current team/club or affiliation','text',{required:false}),
   f('highlights','Career highlights and major titles/medals','textarea'),
@@ -407,7 +422,6 @@ const SPORTS_FIELDS = [
 // PLACEHOLDER — replace once final question list is shared
 const BOOKS_FIELDS = [
   f('name','Name','text'),
-  f('dob','Date of birth','date'),
   f('languages','Language(s) you write in','text'),
   f('published_works','Notable published works (titles, publishers, years)','textarea'),
   f('genres','Genre(s) you work in','text'),
@@ -440,6 +454,35 @@ const CATEGORIES = [
   { name:'Sports', split:false, fields:SPORTS_FIELDS },
   { name:'Robotics', split:false, fields:ROBOTICS_FIELDS }
 ];
+
+/* ============================================================
+   GLOBAL DOB GATE
+   ============================================================ */
+const dobGate = document.getElementById('dobGate');
+const dobGateMsg = document.getElementById('dobGateMsg');
+const afterDobGate = document.getElementById('afterDobGate');
+dobGate.max = new Date().toISOString().split('T')[0];
+
+let globalDob = '';
+
+dobGate.addEventListener('change', () => {
+  if (!dobGate.value) {
+    afterDobGate.style.display = 'none';
+    dobGateMsg.style.display = 'none';
+    globalDob = '';
+    return;
+  }
+  const eligible = dobGate.value >= '1996-12-31';
+  if (eligible) {
+    globalDob = dobGate.value;
+    dobGateMsg.style.display = 'none';
+    afterDobGate.style.display = '';
+  } else {
+    globalDob = '';
+    dobGateMsg.style.display = '';
+    afterDobGate.style.display = 'none';
+  }
+});
 
 /* ============================================================
    RENDER
@@ -605,6 +648,10 @@ function renderField(field){
     if (field.required) input.required = true;
     if (field.min !== undefined) input.min = field.min;
     if (field.max !== undefined) input.max = field.max;
+    if (field.type === 'date' && field.isDob) {
+      input.min = '1996-12-31';
+      input.max = new Date().toISOString().split('T')[0];
+    }
     wrap.appendChild(input);
   }
 
@@ -702,11 +749,17 @@ form.addEventListener('submit', async (e) => {
   submitStatus.textContent = '';
   submitStatus.className = 'submit-status';
 
+  if (!globalDob || globalDob < '1996-12-31') {
+    submitStatus.textContent = 'Please enter an eligible date of birth first.';
+    submitStatus.className = 'submit-status error';
+    return;
+  }
   if (!currentCategory) {
     submitStatus.textContent = 'Please select a category first.';
     submitStatus.className = 'submit-status error';
     return;
   }
+
   if (!form.checkValidity()) {
     form.reportValidity();
     return;
@@ -722,6 +775,7 @@ form.addEventListener('submit', async (e) => {
 
   try {
     const { data, files } = await collectData();
+    data['Date of birth'] = globalDob;
     data['Timestamp'] = new Date().toISOString();
 
     const payload = {
