@@ -429,7 +429,6 @@ const ART_FIELDS = [
   f('awards','Awards received','textarea',{required:false})
 ];
 
-// PLACEHOLDER — replace once final question list is shared
 const SPORTS_FIELDS = [
   f('email','Email address','email'),
   f('phone','Phone number','tel'),
@@ -443,7 +442,6 @@ const SPORTS_FIELDS = [
   f('reference','References','textarea')
 ];
 
-// PLACEHOLDER — replace once final question list is shared
 const BOOKS_FIELDS = [
   f('email','Email address','email'),
   f('phone','Phone number','tel'),
@@ -460,7 +458,7 @@ const BOOKS_FIELDS = [
 const CATEGORIES = [
   { name:'AI', split:false, fields:AI_FIELDS },
   { name:'Art', split:false, fields:ART_FIELDS },
-  { name:'Books & publishing (fiction & non-fiction; all Indian languages)', split:false, fields:BOOKS_FIELDS },
+  { name:'Books & publishing (fiction & non-fiction; all Indian languages)', split:true, extraEntrepreneurFields:[resumeField()], extraProfessionalFields:[resumeField()] },
   { name:'Clean energy & climate change', split:true },
   { name:'Deeptech/frontier tech', split:false, fields:DEEPTECH_FIELDS },
   { name:'Defence & space', split:true },
@@ -476,7 +474,7 @@ const CATEGORIES = [
   { name:'Law & public policy', split:true },
   { name:'Music', split:false, fields:MUSIC_FIELDS },
   { name:'Social impact', split:true },
-  { name:'Sports', split:false, fields:SPORTS_FIELDS },
+  { name:'Sports', split:true, extraEntrepreneurFields:[resumeField()], extraProfessionalFields:[resumeField()] },
   { name:'Robotics', split:false, fields:ROBOTICS_FIELDS }
 ];
 
