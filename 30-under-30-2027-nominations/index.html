@@ -223,6 +223,24 @@
   .confirm h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 36px; margin-bottom: 16px; color: var(--accent); }
   .confirm p { color: var(--muted); font-size: 16px; }
 
+  .site-footer {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid var(--line);
+    background: var(--panel);
+    font-size: 14.5px;
+    color: var(--muted);
+  }
+  .site-footer a {
+    color: var(--accent-gold);
+    font-weight: 600;
+    margin-top: 8px;
+    display: inline-block;
+  }
+  .site-footer a:hover {
+    color: var(--accent);
+  }
+
   @media (max-width: 640px) {
     body { padding: 16px; }
     header.masthead { padding: 40px 24px 32px; }
@@ -312,10 +330,15 @@
       <p>Thanks — we've received the registration. We'll be in touch if we need anything else.</p>
     </div>
   </main>
+
+  <footer class="site-footer">
+    Explore past Forbes India 30 Under 30 lists (2017&ndash;2026)<br>
+    <a href="https://www.forbesindia.com/lists/30-under-30" target="_blank" rel="noopener noreferrer">View Past Lists &rarr;</a>
+  </footer>
 </div>
 
 <script>
-const ENDPOINT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyFB6l7DVekuVx9kX_7W8TiVbWopuxf4fwjb0YhYTkwJZ2ETztQUanCV0w5PQEG07Vh/exec";
 
 function f(id, label, type, opts){
   return Object.assign({ id, label, type, required: true }, opts || {});
@@ -774,6 +797,14 @@ function renderField(field){
     if (field.type === 'date' && field.isDob) {
       input.min = '1997-01-01';
       input.max = new Date().toISOString().split('T')[0];
+    }
+    if (field.type === 'url') {
+      input.placeholder = "e.g. www.website.com";
+      input.addEventListener('blur', function() {
+        if (this.value && !/^https?:\/\//i.test(this.value)) {
+          this.value = 'https://' + this.value;
+        }
+      });
     }
     wrap.appendChild(input);
   }
