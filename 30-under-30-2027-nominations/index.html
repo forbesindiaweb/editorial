@@ -9,16 +9,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #111827;         /* Deep almost-black for text */
-    --bg: #f4f5f7;          /* Soft background outside the form */
+    --ink: #1e293b;         /* Deep slate for text */
+    --bg: #f1f5f9;          /* Cool-gray background */
     --surface: #ffffff;     /* White card background */
-    --panel: #f9fafb;       /* Slightly off-white for filled areas */
-    --line: #e5e7eb;        /* Borders */
-    --muted: #6b7280;       /* Secondary text */
-    --accent: #00427a;      /* Premium Forbes Blue */
-    --accent-dark: #002d54;
+    --panel: #f8fafc;       /* Slightly off-white for filled areas */
+    --line: #cbd5e1;        /* Borders */
+    --muted: #64748b;       /* Secondary text */
+    --accent: #0f172a;      /* Almost black - premium editorial */
+    --accent-gold: #b9935a; /* Refined Forbes Gold */
+    --accent-dark: #000000;
     --on-accent: #ffffff;
-    --focus-ring: rgba(0, 66, 122, 0.15);
+    --focus-ring: rgba(15, 23, 42, 0.12);
     --error: #dc2626;
     --error-bg: #fef2f2;
     --radius: 6px;
@@ -30,67 +31,82 @@
   body {
     margin: 0;
     background: var(--bg);
+    background-image: radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 70%);
     color: var(--ink);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    padding: 40px 20px;
+    padding: 60px 20px;
   }
   
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  a { color: var(--accent-gold); text-decoration: none; font-weight: 500; }
+  a:hover { text-decoration: underline; color: var(--accent); }
 
   .page-wrapper {
     max-width: var(--maxw);
     margin: 0 auto;
     background: var(--surface);
-    border-radius: 12px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.05);
     overflow: hidden;
+    position: relative;
+  }
+
+  .page-wrapper::before {
+    content: '';
+    display: block;
+    height: 6px;
+    width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-gold) 100%);
   }
 
   header.masthead {
     border-bottom: 1px solid var(--line);
-    padding: 48px 48px 32px;
+    padding: 56px 56px 40px;
+    text-align: center;
+    background: #ffffff;
   }
   
   .logo {
-    height: 38px;
+    height: 42px;
     width: auto;
-    margin: 0 0 28px 0;
+    margin: 0 auto 32px auto;
     display: block;
   }
   
   h1 {
     font-family: 'Playfair Display', Georgia, serif;
     font-weight: 700;
-    font-size: 34px;
+    font-size: 36px;
     line-height: 1.2;
     margin: 0 0 16px;
-    color: var(--ink);
-    letter-spacing: -0.02em;
+    color: var(--accent);
+    letter-spacing: -0.01em;
   }
   
   .lede { 
     color: var(--muted); 
-    font-size: 16px; 
-    max-width: 60ch; 
-    margin: 0 0 24px; 
+    font-size: 16.5px; 
+    max-width: 52ch; 
+    margin: 0 auto 32px auto; 
   }
 
   .eligibility {
-    background: #f0f5fa;
-    border-left: 4px solid var(--accent);
-    padding: 16px 20px;
+    background: #fdfbf7;
+    border: 1px solid #f1e9d9;
+    border-left: 4px solid var(--accent-gold);
+    padding: 16px 24px;
     font-size: 14.5px;
     color: var(--ink);
-    border-radius: 0 var(--radius) var(--radius) 0;
+    border-radius: var(--radius);
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   }
-  .eligibility strong { color: var(--accent-dark); }
+  .eligibility strong { color: var(--accent); font-weight: 700; }
 
   main { 
-    padding: 40px 48px 60px; 
+    padding: 48px 56px 64px; 
   }
 
   .field { margin-bottom: 28px; }
@@ -99,7 +115,7 @@
     font-size: 14.5px; 
     font-weight: 600; 
     margin-bottom: 8px;
-    color: var(--ink);
+    color: var(--accent);
   }
   .field .hint { display: block; font-size: 13px; color: var(--muted); margin-top: 6px; }
   .field .required { color: var(--error); margin-left: 3px; }
@@ -109,30 +125,30 @@
   input[type="text"], input[type="email"], input[type="tel"], input[type="number"],
   input[type="url"], input[type="date"], select, textarea {
     width: 100%; 
-    padding: 12px 16px; 
+    padding: 14px 16px; 
     font-family: 'Inter', sans-serif; 
     font-size: 15px;
     color: var(--ink); 
     background: var(--surface); 
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--line);
     border-radius: var(--radius); 
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
     transition: all 0.2s ease;
   }
-  textarea { min-height: 110px; resize: vertical; }
+  textarea { min-height: 120px; resize: vertical; }
   input:focus, select:focus, textarea:focus {
     outline: none; 
     border-color: var(--accent); 
-    box-shadow: 0 0 0 3px var(--focus-ring);
+    box-shadow: 0 0 0 4px var(--focus-ring);
   }
 
   .option-group { display: flex; flex-direction: column; gap: 10px; }
   .option-group label.opt {
     display: flex; align-items: flex-start; gap: 12px; font-size: 15px; font-weight: 400;
     padding: 14px 16px; background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--radius); cursor: pointer; transition: background 0.15s ease;
+    border-radius: var(--radius); cursor: pointer; transition: all 0.2s ease;
   }
-  .option-group label.opt:hover { background: var(--panel); }
+  .option-group label.opt:hover { border-color: #94a3b8; background: var(--panel); }
   .option-group input[type="radio"], .option-group input[type="checkbox"] {
     accent-color: var(--accent); width: 18px; height: 18px; flex: none; margin-top: 2px;
   }
@@ -146,29 +162,29 @@
 
   .file-drop {
     border: 2px dashed #cbd5e1; 
-    border-radius: 8px; 
-    background: #f8fafc;
-    padding: 36px 20px; 
+    border-radius: var(--radius); 
+    background: var(--surface);
+    padding: 40px 20px; 
     text-align: center; 
     font-size: 15px; 
     color: var(--muted); 
     cursor: pointer;
     transition: all 0.2s ease;
   }
-  .file-drop:hover { background: #f1f5f9; border-color: #94a3b8; }
-  .file-drop.has-file { border-color: var(--accent); color: var(--accent-dark); background: #f0f5fa; font-weight: 500; }
+  .file-drop:hover { background: var(--panel); border-color: var(--accent-gold); color: var(--accent); }
+  .file-drop.has-file { border-color: var(--accent); color: var(--accent); background: #f8fafc; font-weight: 600; border-style: solid; }
   .file-drop input { display: none; }
 
   .step { margin-bottom: 40px; }
   .step-label {
     font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px;
-    letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 16px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-gold); margin: 0 0 20px;
   }
 
   .track-switch {
     display: flex; 
     background: var(--panel); 
-    padding: 5px; 
+    padding: 6px; 
     border-radius: 8px; 
     border: 1px solid var(--line);
   }
@@ -178,12 +194,12 @@
     border-radius: 6px; transition: all 0.2s ease;
   }
   .track-switch button[aria-pressed="true"] { 
-    background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+    background: var(--surface); color: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,0.08); 
   }
 
   .section-heading {
-    font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 600;
-    margin: 40px 0 24px; padding-top: 24px; border-top: 1px solid var(--line);
+    font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: 600; color: var(--accent);
+    margin: 48px 0 24px; padding-top: 32px; border-top: 1px solid var(--line);
   }
   .section-heading:first-child { margin-top: 0; padding-top: 0; border-top: none; }
 
@@ -192,25 +208,25 @@
 
   .submit-row { margin-top: 48px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
   button.submit {
-    background: var(--accent); color: var(--on-accent); border: none; padding: 16px 36px;
-    font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; border-radius: 50px;
-    cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(0, 66, 122, 0.2);
+    background: var(--accent); color: var(--on-accent); border: none; padding: 18px 40px;
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    border-radius: 4px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.2);
   }
-  button.submit:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 12px -2px rgba(0, 66, 122, 0.25); }
+  button.submit:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(15, 23, 42, 0.3); }
   button.submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
   
   .submit-status { font-size: 14.5px; color: var(--muted); font-weight: 500; }
-  .submit-status.error { color: var(--error); background: var(--error-bg); padding: 12px 16px; border-radius: 6px; border-left: 4px solid var(--error); width: 100%; margin-top: 12px; }
+  .submit-status.error { color: var(--error); background: var(--error-bg); padding: 14px 16px; border-radius: var(--radius); border-left: 4px solid var(--error); width: 100%; margin-top: 12px; }
 
   .confirm { display: none; text-align: center; padding: 80px 20px; }
   .confirm.active { display: block; animation: fadeIn 0.5s ease; }
-  .confirm h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 32px; margin-bottom: 16px; }
+  .confirm h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 36px; margin-bottom: 16px; color: var(--accent); }
   .confirm p { color: var(--muted); font-size: 16px; }
 
   @media (max-width: 640px) {
     body { padding: 16px; }
-    header.masthead { padding: 32px 24px 24px; }
-    h1 { font-size: 28px; }
+    header.masthead { padding: 40px 24px 32px; }
+    h1 { font-size: 30px; }
     main { padding: 32px 24px 48px; }
     .track-switch { flex-direction: column; }
     .submit-row { flex-direction: column; align-items: stretch; }
@@ -299,7 +315,7 @@
 </div>
 
 <script>
-const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyFB6l7DVekuVx9kX_7W8TiVbWopuxf4fwjb0YhYTkwJZ2ETztQUanCV0w5PQEG07Vh/exec";
+const ENDPOINT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 function f(id, label, type, opts){
   return Object.assign({ id, label, type, required: true }, opts || {});
@@ -519,35 +535,37 @@ const CATEGORIES = [
   { name:'Robotics', split:false, fields:ROBOTICS_FIELDS }
 ];
 
-const nameGate = document.getElementById('nameGate');
 const dobDay = document.getElementById('dobDay');
 const dobMonth = document.getElementById('dobMonth');
 const dobYear = document.getElementById('dobYear');
-const dobGateMsg = document.getElementById('dobGateMsg');
-const afterDobGate = document.getElementById('afterDobGate');
 
-// Populate Date of Birth Dropdowns
 for(let i=1; i<=31; i++) {
   const opt = document.createElement('option');
-  opt.value = i.toString().padStart(2, '0');
+  opt.value = i < 10 ? '0'+i : i;
   opt.textContent = i;
   dobDay.appendChild(opt);
 }
+
 const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 months.forEach((m, i) => {
   const opt = document.createElement('option');
-  opt.value = (i+1).toString().padStart(2, '0');
+  let mVal = i + 1;
+  opt.value = mVal < 10 ? '0'+mVal : mVal;
   opt.textContent = m;
   dobMonth.appendChild(opt);
 });
+
 const currentYear = new Date().getFullYear();
-// Populate years down to 1950
-for(let i=currentYear; i>=1950; i--) {
+for(let i = currentYear; i >= 1980; i--) {
   const opt = document.createElement('option');
   opt.value = i;
   opt.textContent = i;
   dobYear.appendChild(opt);
 }
+
+const nameGate = document.getElementById('nameGate');
+const dobGateMsg = document.getElementById('dobGateMsg');
+const afterDobGate = document.getElementById('afterDobGate');
 
 let globalName = '';
 let globalDob = '';
@@ -566,8 +584,11 @@ function checkIdentityGate(){
   }
 
   const dobVal = `${y}-${m}-${d}`;
-  const eligible = dobVal >= '1996-12-31';
-
+  
+  // Cutoff is under 30 as of Dec 31, 2026. 
+  // Meaning they must be born after Dec 31, 1996 (Jan 1, 1997 or later)
+  const eligible = dobVal > '1996-12-31';
+  
   if (!eligible) {
     afterDobGate.style.display = 'none';
     dobGateMsg.style.display = 'block';
@@ -608,7 +629,7 @@ categorySelect.addEventListener('change', () => {
   if (!currentCategory) return;
 
   if (currentCategory.split) {
-    trackStep.style.display = '';
+    trackStep.style.display = 'block';
     setTrack('Entrepreneur');
   } else {
     trackStep.style.display = 'none';
@@ -751,7 +772,8 @@ function renderField(field){
     if (field.min !== undefined) input.min = field.min;
     if (field.max !== undefined) input.max = field.max;
     if (field.type === 'date' && field.isDob) {
-      input.max = '2026-12-31';
+      input.min = '1997-01-01';
+      input.max = new Date().toISOString().split('T')[0];
     }
     wrap.appendChild(input);
   }
@@ -853,7 +875,7 @@ form.addEventListener('submit', async (e) => {
     submitStatus.className = 'submit-status error';
     return;
   }
-  if (!globalDob || globalDob < '1996-12-31') {
+  if (!globalDob || globalDob <= '1996-12-31') {
     submitStatus.textContent = 'Please enter an eligible date of birth first.';
     submitStatus.className = 'submit-status error';
     return;
