@@ -161,7 +161,7 @@
   <div class="masthead-inner">
     <p class="wordmark">Forbes India</p>
     <h1>30 Under 30 — Registration</h1>
-    <p class="lede">Start with your date of birth — once we've confirmed you're eligible, the rest of the form will open up.</p>
+    <p class="lede">Start with your name and date of birth — once we've confirmed you're eligible, the rest of the form will open up.</p>
     <div class="eligibility">
       <strong>Eligibility:</strong> You will be eligible to nominate yourself only if you are under 30 years of age as of December 31, 2026.
     </div>
@@ -179,11 +179,12 @@
       </div>
       <div class="field" style="margin-bottom:0;">
         <label for="dobGate">What is your date of birth?<span class="required">*</span></label>
-        <input type="date" id="dobGate" min="1996-12-31" required>
-        <span class="hint">You must be under 30 years of age as of December 31, 2026 to register. Defaults to 31 Dec 1996 — please change it to your actual date of birth.</span>
+        <!-- Removed min constraint to allow older years to be selected, error message will handle the rest -->
+        <input type="date" id="dobGate" required>
+        <span class="hint">You must be under 30 years of age as of December 31, 2026 to register.</span>
       </div>
       <div class="submit-status error" id="dobGateMsg" style="display:none; margin-top:10px;">
-        Based on the date of birth entered, you don't meet the eligibility criteria — under 30 years of age as of December 31, 2026.
+        Registrations are open only for people under 30 years of age as of December 31, 2026.
       </div>
     </div>
 
@@ -486,8 +487,10 @@ const nameGate = document.getElementById('nameGate');
 const dobGate = document.getElementById('dobGate');
 const dobGateMsg = document.getElementById('dobGateMsg');
 const afterDobGate = document.getElementById('afterDobGate');
+
+// Set max to current date so they can't pick future dates, but remove min/prefill
 dobGate.max = new Date().toISOString().split('T')[0];
-dobGate.value = '1996-12-31'; // prefilled to the eligibility cutoff so the picker opens near the right year, not today
+// dobGate.value = ''; // No longer prefilling to force user input
 
 let globalName = '';
 let globalDob = '';
@@ -496,25 +499,30 @@ function checkIdentityGate(){
   const name = nameGate.value.trim();
   const dobVal = dobGate.value;
 
-  if (!dobVal) {
+  // Wait for both name and dob to have values
+  if (!name || !dobVal) {
     afterDobGate.style.display = 'none';
     dobGateMsg.style.display = 'none';
     globalDob = '';
+    globalName = '';
     return;
   }
 
+  // Eligible if DOB is on or after December 31, 1996 (under 30 as of Dec 31, 2026)
   const eligible = dobVal >= '1996-12-31';
   if (!eligible) {
     afterDobGate.style.display = 'none';
-    dobGateMsg.style.display = '';
+    dobGateMsg.style.display = 'block';
     globalDob = '';
+    globalName = '';
     return;
   }
 
+  // If we reach here, both name and DOB are valid and eligible
   dobGateMsg.style.display = 'none';
   globalDob = dobVal;
   globalName = name;
-  afterDobGate.style.display = name ? '' : 'none';
+  afterDobGate.style.display = 'block';
 }
 
 nameGate.addEventListener('input', checkIdentityGate);
@@ -688,8 +696,8 @@ function renderField(field){
     if (field.min !== undefined) input.min = field.min;
     if (field.max !== undefined) input.max = field.max;
     if (field.type === 'date' && field.isDob) {
-      input.min = '1996-12-31';
-      input.max = new Date().toISOString().split('T')[0];
+      // For nominee date of birth, we might still want the constraint
+      input.max = '2026-12-31';
     }
     wrap.appendChild(input);
   }
