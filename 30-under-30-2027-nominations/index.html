@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forbes India 30 Under 30 — Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15181d;
+    --bg:#ffffff;
+    --panel:#f4f6f8;
+    --line:#dce0e4;
+    --muted:#63676d;
+    --accent:#2c5d8f;      /* Forbes wordmark blue */
+    --accent-dark:#1e4166;
+    --on-accent:#ffffff;
+    --error:#a4302a;
+    --ok:#276b40;
+    --radius:2px;
+    --maxw:660px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent-dark);}
+
+  header.masthead{
+    border-bottom:1px solid var(--line);
+    padding:30px 24px 26px;
+  }
+  .masthead-inner{ max-width:var(--maxw); margin:0 auto; }
+  .wordmark{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:0.16em;
+    color:var(--accent);
+    margin:0 0 10px;
+    text-transform:uppercase;
+  }
+  h1{
+    font-family:'Playfair Display',Georgia,serif;
+    font-weight:700;
+    font-size:33px;
+    line-height:1.15;
+    margin:0 0 10px;
+  }
+  .lede{ color:var(--muted); font-size:15.5px; max-width:56ch; margin:0 0 16px; }
+
+  .eligibility{
+    background:var(--panel);
+    border-left:3px solid var(--accent);
+    padding:12px 14px;
+    font-size:13.5px;
+    color:var(--ink);
+    border-radius:var(--radius);
+  }
+  .eligibility strong{ color:var(--accent-dark); }
+
+  main{ max-width:var(--maxw); margin:0 auto; padding:32px 24px 90px; }
+
+  .field{ margin-bottom:22px; }
+  .field label{
+    display:block; font-size:14px; font-weight:500; margin-bottom:6px;
+  }
+  .field .hint{ display:block; font-size:12.5px; color:var(--muted); margin-top:5px; }
+  .field .required{ color:var(--error); margin-left:2px; }
+  .field .wordcount{ font-size:12px; color:var(--muted); margin-top:4px; text-align:right; }
+  .field .wordcount.over{ color:var(--error); }
+
+  input[type="text"], input[type="email"], input[type="tel"], input[type="number"],
+  input[type="url"], input[type="date"], select, textarea{
+    width:100%; padding:11px 12px; font-family:'Inter',sans-serif; font-size:15px;
+    color:var(--ink); background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); transition:border-color .15s ease, background .15s ease;
+  }
+  textarea{ min-height:92px; resize:vertical; }
+  input:focus, select:focus, textarea:focus{
+    outline:none; border-color:var(--accent); background:#fff;
+  }
+
+  .option-group{ display:flex; flex-direction:column; gap:8px; }
+  .option-group label.opt{
+    display:flex; align-items:center; gap:9px; font-size:14.5px; font-weight:400;
+    padding:9px 11px; background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); cursor:pointer;
+  }
+  .option-group input[type="radio"], .option-group input[type="checkbox"]{
+    accent-color:var(--accent); width:16px; height:16px; flex:none;
+  }
+  .other-specify{ margin-top:8px; display:none; }
+  .other-specify.show{ display:block; }
+
+  .file-drop{
+    border:1px dashed var(--line); border-radius:var(--radius); background:var(--panel);
+    padding:18px 14px; text-align:center; font-size:14px; color:var(--muted); cursor:pointer;
+  }
+  .file-drop.has-file{ border-color:var(--accent); color:var(--ink); }
+  .file-drop input{ display:none; }
+
+  .step{ margin-bottom:32px; }
+  .step-label{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:12px;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;
+  }
+
+  .track-switch{
+    display:flex; border:1px solid var(--ink); border-radius:var(--radius); overflow:hidden;
+  }
+  .track-switch button{
+    flex:1; padding:14px 12px; border:none; background:var(--bg); color:var(--ink);
+    font-family:'Inter',sans-serif; font-size:14.5px; font-weight:500; cursor:pointer;
+  }
+  .track-switch button + button{ border-left:1px solid var(--ink); }
+  .track-switch button[aria-pressed="true"]{ background:var(--ink); color:#fff; }
+
+  .section-heading{
+    font-family:'Playfair Display',Georgia,serif; font-size:19px; font-weight:600;
+    margin:30px 0 16px; padding-top:18px; border-top:1px solid var(--line);
+  }
+  .section-heading:first-child{ margin-top:0; padding-top:0; border-top:none; }
+
+  #fieldsContainer{ display:none; }
+  #fieldsContainer.active{ display:block; }
+
+  .submit-row{ margin-top:34px; display:flex; align-items:center; gap:16px; }
+  button.submit{
+    background:var(--accent); color:var(--on-accent); border:none; padding:14px 28px;
+    font-family:'Inter',sans-serif; font-size:15px; font-weight:600; border-radius:var(--radius);
+    cursor:pointer;
+  }
+  button.submit:hover{ background:var(--accent-dark); }
+  button.submit:disabled{ opacity:0.5; cursor:not-allowed; }
+  .submit-status{ font-size:14px; color:var(--muted); }
+  .submit-status.error{ color:var(--error); }
+
+  .confirm{ display:none; text-align:center; padding:70px 20px; }
+  .confirm.active{ display:block; }
+  .confirm h2{ font-family:'Playfair Display',Georgia,serif; font-size:26px; margin-bottom:10px; }
+  .confirm p{ color:var(--muted); }
+
+  @media (max-width:480px){
+    h1{ font-size:26px; }
+    header.masthead{ padding:24px 18px 20px; }
+    main{ padding:26px 18px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <p class="wordmark">Forbes India</p>
+    <h1>30 Under 30 — Registration</h1>
+    <p class="lede">Start by choosing your category — the form will adjust to ask exactly what we need for it.</p>
+    <div class="eligibility">
+      <strong>Eligibility:</strong> You will be eligible to nominate yourself only if you are under 30 years of age as of December 31, 2026.
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="formWrap">
+
+    <div class="step" id="categoryStep">
+      <p class="step-label">Step 1 — Category</p>
+      <div class="field" style="margin-bottom:0;">
+        <label for="categorySelect">In which category are you registering?<span class="required">*</span></label>
+        <select id="categorySelect" required>
+          <option value="" disabled selected>Select a category</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="step" id="trackStep" style="display:none;">
+      <p class="step-label">Step 2 — Track</p>
+      <div class="track-switch" role="tablist" aria-label="Registration track">
+        <button type="button" id="btnEntrepreneur" role="tab" aria-pressed="true">Entrepreneur</button>
+        <button type="button" id="btnProfessional" role="tab" aria-pressed="false">Professional (nominating)</button>
+      </div>
+    </div>
+
+    <form id="regForm" novalidate>
+      <div id="fieldsContainer"></div>
+
+      <div class="submit-row">
+        <button type="submit" class="submit" id="submitBtn">Submit registration</button>
+        <span class="submit-status" id="submitStatus"></span>
+      </div>
+    </form>
+  </div>
+
+  <div class="confirm" id="confirmPanel">
+    <h2>You're in.</h2>
+    <p>Thanks — we've received the registration. We'll be in touch if we need anything else.</p>
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const ENDPOINT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+function f(id, label, type, opts){
+  return Object.assign({ id, label, type, required: true }, opts || {});
+}
+
+const LEGAL_STATUS_OPTIONS = ['Private limited company','Public limited company','Partnership','LLP','Other'];
+const FUNDING_SOURCE_OPTIONS = ['Private equity','VC funding','Bootstrapped','Angel investors','Bank loans','Personal savings','Debt capital','Government programs','Other'];
+const OPERATE_FROM_OPTIONS = ['Corporate office','Co-working space','Remote work','Factory','Home','Other'];
+
+const DEFAULT_ENTREPRENEUR_FIELDS = [
+  f('dob','Date of birth','date'),
+  f('name','Name','text'),
+  f('email','Email address','email'),
+  f('phone','Your phone number','tel'),
+  f('cofounders','If you have co-founders, please mention their names and ages here','textarea',{required:false}),
+  f('venture_name',"What is the name of your venture?",'text'),
+  f('venture_year','In which year did your venture start?','date'),
+  f('address',"Please give us your venture's street address.",'textarea'),
+  f('website',"Your venture's website",'url',{required:false}),
+  f('legal_status','What is the legal status of your venture?','select',{options:LEGAL_STATUS_OPTIONS, other:true}),
+  f('about_venture','Tell us about your venture.','textarea',{wordLimit:100}),
+  f('revenue_model','How does your venture generate revenue?','textarea'),
+  f('funding_sources','What are your sources of funding?','checkboxes',{options:FUNDING_SOURCE_OPTIONS, other:true}),
+  f('total_invested','As of 2026, what is the total sum of money invested in your company from any of the above sources?','text'),
+  f('operates_from','Where does your company operate out of?','checkboxes',{options:OPERATE_FROM_OPTIONS, other:true}),
+  f('staff_size','What is your current staff size?','number'),
+  f('revenue_fy26',"What were your venture's revenues from operations as of FY26?",'text',{hint:'Please specify if not generating revenue'}),
+  f('pipeline','What does your project pipeline look like for the next 12 months?','textarea'),
+  f('milestones','Your biggest milestones since starting out.','textarea'),
+  f('reference','Who could we ask about you?','textarea'),
+  f('media','Have you been written about in the media? If so, please give us links to the articles.','textarea',{required:false}),
+  f('gov_id','Please upload a government photo ID.','file')
+];
+
+const DEFAULT_PROFESSIONAL_FIELDS = [
+  f('email','Your email ID','email'),
+  f('name','Your name','text'),
+  f('nominating_who','Whom are you nominating?','radio',{options:['Self','Someone else']}),
+  f('nominee_name',"Nominee's name",'text'),
+  f('nominee_dob',"Nominee's date of birth",'date'),
+  f('nominee_phone',"Nominee's phone number",'tel'),
+  f('nominee_email',"Nominee's email ID",'email'),
+  f('nominee_achievements','Now, tell us more about the nominee — what are their achievements and what makes them exceptional.','textarea'),
+  f('nominee_social',"The nominee's social media profiles and website, if any.",'textarea',{required:false}),
+  f('nominee_reference','Whom can we ask more about the nominee? Please give their contact details.','textarea'),
+  f('nominee_media','Has the nominee been written about in the media? If yes, please share the links.','textarea',{required:false})
+];
+
+const DEEPTECH_FIELDS = [
+  f('company_name','Name of your company','text'),
+  f('founded_year','Company founded in','number',{min:1980,max:2026}),
+  f('website','Official website','url',{required:false}),
+  f('legal_status','Legal status of your venture','select',{options:LEGAL_STATUS_OPTIONS, other:true}),
+  f('team_size','Current team size','number'),
+  f('cofounders','Details of co-founders (if any) and their background','textarea',{required:false}),
+  f('funding_sources','Sources of funding (Private equity, VC funding etc) — please include round details (round name, amount, year, key investors)','textarea'),
+  f('total_funding','Total funding raised to date','text'),
+  f('about_venture','Tell us about your venture — what it does, and what makes it stand out.','textarea'),
+  f('core_innovation','What is the core deeptech/frontier innovation here, and what problem does it solve?','textarea'),
+  f('revenue_model','Revenue model','textarea'),
+  f('revenue_fy26','Revenues from operations as of FY26','text'),
+  f('ip','Do you have any proprietary technology, IP, or patents? Please describe.','textarea'),
+  f('tech_stage','What stage is your technology at?','select',{options:['R&D','Prototype','Pilot','Commercial deployment']}),
+  f('manufacturing','Do you manufacture/build in-house or outsource? Where is this based?','textarea'),
+  f('markets','Major markets you operate in / are targeting','textarea'),
+  f('clients','Notable clients, partnerships, or deployments','textarea',{required:false}),
+  f('pipeline','Project pipeline for the next 12 months','textarea'),
+  f('milestones','Biggest milestones since starting out','textarea'),
+  f('reference','References','textarea'),
+  f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
+  f('gov_id','Please upload a government photo ID','file')
+];
+
+const AI_FIELDS = [
+  f('company_name','Name of your company','text'),
+  f('founded_year','Company founded in','number',{min:1980,max:2026}),
+  f('website','Official website','url',{required:false}),
+  f('legal_status','Legal status of your venture','select',{options:LEGAL_STATUS_OPTIONS, other:true}),
+  f('sector','Which sector does your venture operate in? (Eg: Healthtech, Fintech etc)','text'),
+  f('team_size','Current team size','number'),
+  f('cofounders','Details of co-founders (if any) and their background','textarea',{required:false}),
+  f('funding_sources','Sources of funding (Private equity, VC funding etc) — please include round details (round name, amount, year, key investors)','textarea'),
+  f('total_funding','Total funding raised to date','text'),
+  f('about_venture','Tell us about your venture — what it does, and what makes it stand out.','textarea'),
+  f('revenue_model','Revenue model','textarea'),
+  f('revenue_fy26','Revenues from operations as of FY26','text'),
+  f('ip','Do you have any proprietary technology, models, or patents? Please describe.','textarea'),
+  f('clients','Notable clients, partnerships, or deployments','textarea',{required:false}),
+  f('pipeline','Project pipeline for the next 12 months','textarea'),
+  f('milestones','Biggest milestones since starting out','textarea'),
+  f('reference','References','textarea'),
+  f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
+  f('gov_id','Please upload a government photo ID','file')
+];
+
+const D2C_FIELDS = [
+  f('company_name','Name of your company','text'),
+  f('founded_year','Company founded in','number',{min:1980,max:2026}),
+  f('website','Official website','url',{required:false}),
+  f('legal_status','Legal status of your venture','select',{options:LEGAL_STATUS_OPTIONS, other:true}),
+  f('brand_category','Which category does your brand operate in? (Eg: Beauty & personal care, Food & beverage, Fashion & apparel, Home & living, Health & wellness, etc.)','text'),
+  f('team_size','Current team size','number'),
+  f('cofounders','Details of co-founders (if any) and their background','textarea',{required:false}),
+  f('funding_sources','Sources of funding (Private equity, VC funding etc) — please include round details (round name, amount, year, key investors)','textarea'),
+  f('total_funding','Total funding raised to date','text'),
+  f('about_venture','Tell us about your venture — what it does, and what makes it stand out.','textarea'),
+  f('revenue_model','Revenue model','textarea'),
+  f('channel_mix','Sales channel mix — what % of your revenue comes through your own website/app (D2C) vs marketplaces (Amazon, Flipkart), quick commerce, or offline retail?','textarea'),
+  f('revenue_fy26','Revenues from operations as of FY26','text'),
+  f('key_metrics','Key metrics — customers served, repeat purchase rate, cities/markets present in','textarea'),
+  f('partnerships','Notable retail partnerships and collaborations','textarea',{required:false}),
+  f('milestones','Biggest milestones since starting out','textarea'),
+  f('reference','References','textarea'),
+  f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
+  f('gov_id','Please upload a government photo ID','file')
+];
+
+const ROBOTICS_FIELDS = [
+  f('company_name','Name of your company','text'),
+  f('founded_year','Company founded in','number',{min:1980,max:2026}),
+  f('website','Official website','url',{required:false}),
+  f('legal_status','Legal status of your venture','select',{options:LEGAL_STATUS_OPTIONS, other:true}),
+  f('team_size','Current team size','number'),
+  f('cofounders','Details of co-founders (if any) and their background','textarea',{required:false}),
+  f('funding_sources','Sources of funding (Private equity, VC funding etc) — please include round details (round name, amount, year, key investors)','textarea'),
+  f('total_funding','Total funding raised to date','text'),
+  f('about_venture','Tell us about your venture — what it does, and what makes it stand out.','textarea'),
+  f('revenue_model','Revenue model','textarea'),
+  f('revenue_fy26','Revenues from operations as of FY26','text'),
+  f('full_stack','Do you own the full stack — from software to hardware? Please describe.','textarea'),
+  f('ip','Do you have any proprietary hardware, technology, models, or patents? Please describe.','textarea'),
+  f('manufacturing','Do you manufacture in-house or outsource? Where is manufacturing based?','textarea'),
+  f('markets','Major markets you operate in / are targeting','textarea'),
+  f('clients','Notable clients, partnerships, or deployments','textarea',{required:false}),
+  f('pipeline','Project pipeline for the next 12 months','textarea'),
+  f('milestones','Biggest milestones since starting out','textarea'),
+  f('reference','References','textarea'),
+  f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
+  f('gov_id','Please upload a government photo ID','file')
+];
+
+const MUSIC_FIELDS = [
+  f('full_name','Full name','text'),
+  f('stage_name','Stage name of the artist or act','text',{required:false}),
+  f('career_start_year','In which year did you start your music career?','number',{min:1950,max:2026}),
+  f('city','Which city are you based out of?','text'),
+  f('links','Your website/social links (Spotify, Instagram, YouTube, etc.)','textarea'),
+  f('genre','How would you describe your music/genre?','text'),
+  f('journey','Tell us more about your journey as a musician — influences, how you got started.','textarea'),
+  f('standout','What according to you makes you stand out as an artist?','textarea'),
+  f('next_12','What\'s on your slate for the next 12 months? (albums, tours, collaborations, releases)','textarea'),
+  f('collaborations','Any notable collaborations, awards, or chart positions?','textarea',{required:false}),
+  f('milestones','Your biggest milestones since starting out.','textarea'),
+  f('reference','References','textarea'),
+  f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
+  f('gov_id','Please upload a government photo ID.','file')
+];
+
+const ENTERTAINMENT_FIELDS = [
+  f('name','Name','text'),
+  f('dob','Date of birth','date'),
+  f('age','Age','number',{min:1,max:120}),
+  f('bio','Upload bio','file',{hint:'PDF or Word doc, max 5MB'}),
+  f('portfolio','Links to portfolio (or IMDb profile)','textarea'),
+  f('sub_category','Sub-category','select',{options:['Actor','Producer','Director','Screenwriter','Comedy','Dance','Other'], other:true}),
+  f('notable_projects','Notable projects/productions worked on','textarea'),
+  f('awards','Awards and nominations','textarea',{required:false}),
+  f('why_list','Why do you think you should be on the list?','textarea',{wordLimit:100})
+];
+
+const ART_FIELDS = [
+  f('name','Name','text'),
+  f('dob','Date of birth','date'),
+  f('bio_cv','Upload bio / CV','file'),
+  f('artwork_links','Links to websites with images of artworks','textarea'),
+  f('residencies','Scholarship and residency programmes attended','textarea',{required:false}),
+  f('exhibitions','Exhibitions where artworks have been showcased','textarea'),
+  f('awards','Awards received','textarea',{required:false})
+];
+
+// PLACEHOLDER — replace once final question list is shared
+const SPORTS_FIELDS = [
+  f('name','Name','text'),
+  f('dob','Date of birth','date'),
+  f('sport','Sport/discipline','text'),
+  f('team_club','Current team/club or affiliation','text',{required:false}),
+  f('highlights','Career highlights and major titles/medals','textarea'),
+  f('personal_bests','Personal bests or key performance stats','textarea',{required:false}),
+  f('coaches','Coaches or mentors who shaped your career','textarea',{required:false}),
+  f('sponsorships','Sponsorships or endorsements, if any','textarea',{required:false}),
+  f('next_12','What\'s next — upcoming tournaments/goals for the next 12 months','textarea'),
+  f('reference','References','textarea')
+];
+
+// PLACEHOLDER — replace once final question list is shared
+const BOOKS_FIELDS = [
+  f('name','Name','text'),
+  f('dob','Date of birth','date'),
+  f('languages','Language(s) you write in','text'),
+  f('published_works','Notable published works (titles, publishers, years)','textarea'),
+  f('genres','Genre(s) you work in','text'),
+  f('awards','Awards, recognitions, or bestseller status','textarea',{required:false}),
+  f('bio_cv','Upload bio / CV','file'),
+  f('links','Links to your work or author profile','textarea',{required:false}),
+  f('why_list','Why do you think you should be on the list?','textarea',{wordLimit:100}),
+  f('reference','References','textarea')
+];
+
+const CATEGORIES = [
+  { name:'AI', split:false, fields:AI_FIELDS },
+  { name:'Art', split:false, fields:ART_FIELDS },
+  { name:'Books & publishing (fiction & non-fiction; all Indian languages)', split:false, fields:BOOKS_FIELDS },
+  { name:'Clean energy & climate change', split:true },
+  { name:'Deeptech/frontier tech', split:false, fields:DEEPTECH_FIELDS },
+  { name:'Defence & space', split:true },
+  { name:'Design & architecture', split:true },
+  { name:'D2C', split:false, fields:D2C_FIELDS },
+  { name:'Ecommerce & retail', split:true },
+  { name:'Entertainment', split:false, fields:ENTERTAINMENT_FIELDS },
+  { name:'Fashion', split:true },
+  { name:'Finance', split:true },
+  { name:'Food & hospitality', split:true },
+  { name:'Grassroots entrepreneur', split:true },
+  { name:'Healthcare', split:true },
+  { name:'Law & public policy', split:true },
+  { name:'Music', split:false, fields:MUSIC_FIELDS },
+  { name:'Social impact', split:true },
+  { name:'Sports', split:false, fields:SPORTS_FIELDS },
+  { name:'Robotics', split:false, fields:ROBOTICS_FIELDS }
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const categorySelect = document.getElementById('categorySelect');
+const trackStep = document.getElementById('trackStep');
+const btnEntrepreneur = document.getElementById('btnEntrepreneur');
+const btnProfessional = document.getElementById('btnProfessional');
+const fieldsContainer = document.getElementById('fieldsContainer');
+
+let currentCategory = null;
+let currentTrack = null;
+let currentFields = [];
+
+CATEGORIES.forEach(cat => {
+  const opt = document.createElement('option');
+  opt.value = cat.name;
+  opt.textContent = cat.name;
+  categorySelect.appendChild(opt);
+});
+
+categorySelect.addEventListener('change', () => {
+  currentCategory = CATEGORIES.find(c => c.name === categorySelect.value);
+  if (!currentCategory) return;
+
+  if (currentCategory.split) {
+    trackStep.style.display = '';
+    setTrack('Entrepreneur');
+  } else {
+    trackStep.style.display = 'none';
+    currentTrack = null;
+    renderFields(currentCategory.fields);
+  }
+});
+
+function setTrack(track){
+  currentTrack = track;
+  const isEnt = track === 'Entrepreneur';
+  btnEntrepreneur.setAttribute('aria-pressed', isEnt);
+  btnProfessional.setAttribute('aria-pressed', !isEnt);
+  renderFields(isEnt ? DEFAULT_ENTREPRENEUR_FIELDS : DEFAULT_PROFESSIONAL_FIELDS);
+}
+btnEntrepreneur.addEventListener('click', () => setTrack('Entrepreneur'));
+btnProfessional.addEventListener('click', () => setTrack('Professional'));
+
+function renderFields(fields){
+  currentFields = fields;
+  fieldsContainer.innerHTML = '';
+  fieldsContainer.classList.add('active');
+
+  const heading = document.createElement('p');
+  heading.className = 'section-heading';
+  heading.textContent = 'Your details';
+  fieldsContainer.appendChild(heading);
+
+  fields.forEach(field => fieldsContainer.appendChild(renderField(field)));
+}
+
+function renderField(field){
+  const wrap = document.createElement('div');
+  wrap.className = 'field';
+
+  const label = document.createElement('label');
+  label.setAttribute('for', field.id);
+  label.innerHTML = field.label + (field.required ? ' <span class="required">*</span>' : '');
+  wrap.appendChild(label);
+
+  let input;
+
+  if (field.type === 'textarea') {
+    input = document.createElement('textarea');
+    input.id = field.id;
+    if (field.required) input.required = true;
+    wrap.appendChild(input);
+
+    if (field.wordLimit) {
+      const counter = document.createElement('div');
+      counter.className = 'wordcount';
+      counter.textContent = `0 / ${field.wordLimit} words`;
+      input.addEventListener('input', () => {
+        const words = input.value.trim().split(/\s+/).filter(Boolean).length;
+        counter.textContent = `${words} / ${field.wordLimit} words`;
+        counter.classList.toggle('over', words > field.wordLimit);
+      });
+      wrap.appendChild(counter);
+    }
+
+  } else if (field.type === 'select') {
+    input = document.createElement('select');
+    input.id = field.id;
+    if (field.required) input.required = true;
+    const blank = document.createElement('option');
+    blank.value = ''; blank.disabled = true; blank.selected = true; blank.textContent = 'Select one';
+    input.appendChild(blank);
+    field.options.forEach(opt => {
+      const o = document.createElement('option');
+      o.value = opt; o.textContent = opt;
+      input.appendChild(o);
+    });
+    wrap.appendChild(input);
+
+    if (field.other) {
+      const otherInput = buildOtherSpecify(field.id);
+      wrap.appendChild(otherInput);
+      input.addEventListener('change', () => {
+        otherInput.classList.toggle('show', input.value === 'Other');
+      });
+    }
+
+  } else if (field.type === 'radio' || field.type === 'checkboxes') {
+    input = document.createElement('div');
+    input.className = 'option-group';
+    input.id = field.id;
+    const inputType = field.type === 'radio' ? 'radio' : 'checkbox';
+    field.options.forEach(opt => {
+      const optLabel = document.createElement('label');
+      optLabel.className = 'opt';
+      const optInput = document.createElement('input');
+      optInput.type = inputType;
+      optInput.name = field.id;
+      optInput.value = opt;
+      if (field.required && inputType === 'radio') optInput.required = true;
+      optLabel.appendChild(optInput);
+      optLabel.appendChild(document.createTextNode(opt));
+      input.appendChild(optLabel);
+    });
+    wrap.appendChild(input);
+
+    if (field.other) {
+      const otherInput = buildOtherSpecify(field.id);
+      wrap.appendChild(otherInput);
+      input.addEventListener('change', () => {
+        const checked = Array.from(input.querySelectorAll('input:checked')).some(el => el.value === 'Other');
+        otherInput.classList.toggle('show', checked);
+      });
+    }
+
+  } else if (field.type === 'file') {
+    const drop = document.createElement('div');
+    drop.className = 'file-drop';
+    const labelSpan = document.createElement('span');
+    labelSpan.textContent = field.hint || 'Click to choose a file (JPG, PNG, or PDF — max 5MB)';
+    input = document.createElement('input');
+    input.type = 'file';
+    input.id = field.id;
+    input.accept = '.jpg,.jpeg,.png,.pdf,.doc,.docx';
+    if (field.required) input.required = true;
+    drop.appendChild(labelSpan);
+    drop.appendChild(input);
+    drop.addEventListener('click', () => input.click());
+    input.addEventListener('change', () => {
+      if (input.files && input.files[0]) {
+        labelSpan.textContent = input.files[0].name;
+        drop.classList.add('has-file');
+      }
+    });
+    wrap.appendChild(drop);
+
+  } else {
+    input = document.createElement('input');
+    input.type = field.type;
+    input.id = field.id;
+    if (field.required) input.required = true;
+    if (field.min !== undefined) input.min = field.min;
+    if (field.max !== undefined) input.max = field.max;
+    wrap.appendChild(input);
+  }
+
+  if (field.hint && field.type !== 'file') {
+    const hint = document.createElement('span');
+    hint.className = 'hint';
+    hint.textContent = field.hint;
+    wrap.appendChild(hint);
+  }
+
+  return wrap;
+}
+
+function buildOtherSpecify(fieldId){
+  const el = document.createElement('input');
+  el.type = 'text';
+  el.className = 'other-specify';
+  el.id = fieldId + '_other';
+  el.placeholder = 'Please specify';
+  return el;
+}
+
+/* ============================================================
+   VALUE COLLECTION
+   ============================================================ */
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function collectData(){
+  const data = {};
+  const files = [];
+
+  for (const field of currentFields) {
+    if (field.type === 'textarea' || field.type === 'select' ||
+        (['text','email','tel','number','url','date'].includes(field.type))) {
+      const el = document.getElementById(field.id);
+      let value = el.value.trim();
+      if (field.type === 'select' && value === 'Other') {
+        const otherEl = document.getElementById(field.id + '_other');
+        if (otherEl && otherEl.value.trim()) value = 'Other: ' + otherEl.value.trim();
+      }
+      data[field.label] = value;
+
+    } else if (field.type === 'radio') {
+      const checked = document.querySelector(`input[name="${field.id}"]:checked`);
+      data[field.label] = checked ? checked.value : '';
+
+    } else if (field.type === 'checkboxes') {
+      const checked = Array.from(document.querySelectorAll(`input[name="${field.id}"]:checked`)).map(el => el.value);
+      let values = checked.filter(v => v !== 'Other');
+      if (checked.includes('Other')) {
+        const otherEl = document.getElementById(field.id + '_other');
+        values.push('Other: ' + (otherEl && otherEl.value.trim() ? otherEl.value.trim() : ''));
+      }
+      data[field.label] = values.join(', ');
+
+    } else if (field.type === 'file') {
+      const el = document.getElementById(field.id);
+      const file = el.files && el.files[0];
+      data[field.label] = '';
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          throw new Error(`"${field.label}" must be under 5MB.`);
+        }
+        files.push({
+          fieldLabel: field.label,
+          base64: await fileToBase64(file),
+          mimeType: file.type,
+          fileName: file.name
+        });
+      }
+    }
+  }
+
+  return { data, files };
+}
+
+/* ============================================================
+   SUBMIT
+   ============================================================ */
+const form = document.getElementById('regForm');
+const submitBtn = document.getElementById('submitBtn');
+const submitStatus = document.getElementById('submitStatus');
+const formWrap = document.getElementById('formWrap');
+const confirmPanel = document.getElementById('confirmPanel');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  submitStatus.textContent = '';
+  submitStatus.className = 'submit-status';
+
+  if (!currentCategory) {
+    submitStatus.textContent = 'Please select a category first.';
+    submitStatus.className = 'submit-status error';
+    return;
+  }
+  if (!fieldsContainer.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  if (ENDPOINT_URL.indexOf('PASTE_YOUR') === 0) {
+    submitStatus.textContent = 'Set ENDPOINT_URL to your Apps Script Web App URL first.';
+    submitStatus.className = 'submit-status error';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitStatus.textContent = 'Submitting…';
+
+  try {
+    const { data, files } = await collectData();
+    data['Timestamp'] = new Date().toISOString();
+
+    const payload = {
+      category: currentCategory.name,
+      track: currentTrack,
+      data,
+      files
+    };
+
+    const res = await fetch(ENDPOINT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+    if (!result.ok) throw new Error(result.error || 'Something went wrong. Please try again.');
+
+    formWrap.style.display = 'none';
+    confirmPanel.classList.add('active');
+
+  } catch (err) {
+    submitStatus.textContent = err.message || 'Submission failed. Please try again.';
+    submitStatus.className = 'submit-status error';
+    submitBtn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
