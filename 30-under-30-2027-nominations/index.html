@@ -102,8 +102,22 @@
     border-radius: var(--radius);
     text-align: left;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    margin-bottom: 16px;
   }
   .eligibility strong { color: var(--accent); font-weight: 700; }
+
+  .deadline-banner {
+    background: #fff1f2;
+    border: 1px solid #ffe4e6;
+    border-left: 4px solid #e11d48;
+    padding: 16px 24px;
+    font-size: 14.5px;
+    color: var(--ink);
+    border-radius: var(--radius);
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .deadline-banner strong { color: #be123c; font-weight: 700; }
 
   main { 
     padding: 48px 56px 64px; 
@@ -260,8 +274,13 @@
     <img src="https://images.forbesindia.com/blog/wp-content/uploads/2026/03/filogo-2026-03-39594d67c5b728e3e7849b334c790a11.png" alt="Forbes India Logo" class="logo">
     <h1>30 Under 30 2027 - Registration</h1>
     <p class="lede">Start by verifying your date of birth — once we've confirmed you're eligible, the rest of the form will open up.</p>
+    
     <div class="eligibility">
       <strong>Eligibility:</strong> You will be eligible to nominate yourself only if you are under 30 years of age as of December 31, 2026.
+    </div>
+    
+    <div class="deadline-banner">
+      <strong>Important:</strong> The last date for registration is October 1, 2026.
     </div>
   </header>
 
@@ -310,7 +329,7 @@
           <p class="step-label">Step 3 — Track</p>
           <div class="track-switch" role="tablist" aria-label="Registration track">
             <button type="button" id="btnEntrepreneur" role="tab" aria-pressed="true">Entrepreneur</button>
-            <button type="button" id="btnProfessional" role="tab" aria-pressed="false">Professional (nominating)</button>
+            <button type="button" id="btnProfessional" role="tab" aria-pressed="false">Professional</button>
           </div>
         </div>
 
@@ -356,6 +375,9 @@ const FILE_HINT = 'Click to choose a file — document or image, max 20MB';
 function resumeField(){
   return f('resume','Please upload your resume','file');
 }
+function idField(){
+  return f('gov_id','Please upload a government photo ID.','file');
+}
 
 const DEFAULT_ENTREPRENEUR_FIELDS = [
   f('email','Email address','email'),
@@ -370,14 +392,14 @@ const DEFAULT_ENTREPRENEUR_FIELDS = [
   f('revenue_model','How does your venture generate revenue?','textarea'),
   f('funding_sources','What are your sources of funding?','checkboxes',{options:FUNDING_SOURCE_OPTIONS, other:true}),
   f('total_invested','As of 2026, what is the total sum of money invested in your company from any of the above sources?','text'),
-  f('operates_from','Where does your company operate out of?','checkboxes',{options:OPERATE_FROM_OPTIONS, other:true}),
   f('staff_size','What is your current staff size?','number'),
   f('revenue_fy26',"What were your venture's revenues from operations as of FY26?",'text',{hint:'Please specify if not generating revenue'}),
   f('pipeline','What does your project pipeline look like for the next 12 months?','textarea'),
   f('milestones','Your biggest milestones since starting out.','textarea'),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150}),
   f('reference','Who could we ask about you?','textarea'),
   f('media','Have you been written about in the media? If so, please give us links to the articles.','textarea',{required:false}),
-  f('gov_id','Please upload a government photo ID.','file')
+  idField()
 ];
 
 const DEFAULT_PROFESSIONAL_FIELDS = [
@@ -389,9 +411,11 @@ const DEFAULT_PROFESSIONAL_FIELDS = [
   f('nominee_phone',"Nominee's phone number",'tel'),
   f('nominee_email',"Nominee's email ID",'email'),
   f('nominee_achievements','Now, tell us more about the nominee — what are their achievements and what makes them exceptional.','textarea'),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150, required:false}),
   f('nominee_social',"The nominee's social media profiles and website, if any.",'textarea',{required:false}),
   f('nominee_reference','Whom can we ask more about the nominee? Please give their contact details.','textarea'),
-  f('nominee_media','Has the nominee been written about in the media? If yes, please share the links.','textarea',{required:false})
+  f('nominee_media','Has the nominee been written about in the media? If yes, please share the links.','textarea',{required:false}),
+  idField()
 ];
 
 const DEEPTECH_FIELDS = [
@@ -416,9 +440,10 @@ const DEEPTECH_FIELDS = [
   f('clients','Notable clients, partnerships, or deployments','textarea',{required:false}),
   f('pipeline','Project pipeline for the next 12 months','textarea'),
   f('milestones','Biggest milestones since starting out','textarea'),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150}),
   f('reference','References','textarea'),
   f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
-  f('gov_id','Please upload a government photo ID','file')
+  idField()
 ];
 
 const AI_FIELDS = [
@@ -440,9 +465,10 @@ const AI_FIELDS = [
   f('clients','Notable clients, partnerships, or deployments','textarea',{required:false}),
   f('pipeline','Project pipeline for the next 12 months','textarea'),
   f('milestones','Biggest milestones since starting out','textarea'),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150}),
   f('reference','References','textarea'),
   f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
-  f('gov_id','Please upload a government photo ID','file')
+  idField()
 ];
 
 const D2C_FIELDS = [
@@ -464,9 +490,10 @@ const D2C_FIELDS = [
   f('key_metrics','Key metrics — customers served, repeat purchase rate, cities/markets present in','textarea'),
   f('partnerships','Notable retail partnerships and collaborations','textarea',{required:false}),
   f('milestones','Biggest milestones since starting out','textarea'),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150}),
   f('reference','References','textarea'),
   f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
-  f('gov_id','Please upload a government photo ID','file')
+  idField()
 ];
 
 const ROBOTICS_FIELDS = [
@@ -490,9 +517,10 @@ const ROBOTICS_FIELDS = [
   f('clients','Notable clients, partnerships, or deployments','textarea',{required:false}),
   f('pipeline','Project pipeline for the next 12 months','textarea'),
   f('milestones','Biggest milestones since starting out','textarea'),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150}),
   f('reference','References','textarea'),
   f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
-  f('gov_id','Please upload a government photo ID','file')
+  idField()
 ];
 
 const MUSIC_FIELDS = [
@@ -508,9 +536,10 @@ const MUSIC_FIELDS = [
   f('next_12','What\'s on your slate for the next 12 months? (albums, tours, collaborations, releases)','textarea'),
   f('collaborations','Any notable collaborations, awards, or chart positions?','textarea',{required:false}),
   f('milestones','Your biggest milestones since starting out.','textarea'),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150}),
   f('reference','References','textarea'),
   f('media','Media links (have you been written about? Share links)','textarea',{required:false}),
-  f('gov_id','Please upload a government photo ID.','file')
+  idField()
 ];
 
 const ENTERTAINMENT_FIELDS = [
@@ -522,7 +551,12 @@ const ENTERTAINMENT_FIELDS = [
   f('sub_category','Sub-category','select',{options:['Actor','Producer','Director','Screenwriter','Comedy','Dance','Other'], other:true}),
   f('notable_projects','Notable projects/productions worked on','textarea'),
   f('awards','Awards and nominations','textarea',{required:false}),
-  f('why_list','Why do you think you should be on the list?','textarea',{wordLimit:100})
+  f('next_12','What\'s on your slate for the next 12 months? (albums, tours, collaborations, releases)','textarea'),
+  f('milestones','Your biggest milestones since starting out.','textarea'),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150}),
+  f('why_list','Why do you think you should be on the list?','textarea',{wordLimit:100}),
+  f('reference','References','textarea'),
+  idField()
 ];
 
 const ART_FIELDS = [
@@ -532,11 +566,13 @@ const ART_FIELDS = [
   f('artwork_links','Links to websites with images of artworks','textarea'),
   f('residencies','Scholarship and residency programmes attended','textarea',{required:false}),
   f('exhibitions','Exhibitions where artworks have been showcased','textarea'),
-  f('awards','Awards received','textarea',{required:false})
+  f('awards','Awards received','textarea',{required:false}),
+  f('motivation','What is your main motivation?','textarea',{wordLimit:150}),
+  idField()
 ];
 
 const CATEGORIES = [
-  { name:'AI', split:false, fields:AI_FIELDS },
+  { name:'AI', split:true, baseEntrepreneurFields:AI_FIELDS },
   { name:'Art', split:false, fields:ART_FIELDS },
   { name:'Books & publishing (fiction & non-fiction; all Indian languages)', split:true, extraEntrepreneurFields:[resumeField()], extraProfessionalFields:[resumeField()] },
   { name:'Clean energy & climate change', split:true },
@@ -546,10 +582,10 @@ const CATEGORIES = [
   { name:'D2C', split:false, fields:D2C_FIELDS },
   { name:'Ecommerce & retail', split:true },
   { name:'Entertainment', split:false, fields:ENTERTAINMENT_FIELDS },
-  { name:'Fashion', split:true, extraEntrepreneurFields:[resumeField()], extraProfessionalFields:[resumeField()] },
+  { name:'Fashion', split:true, extraEntrepreneurFields:[resumeField()], extraProfessionalFields:[f('nominee_milestones', "Nominee's biggest milestones since starting out", 'textarea'), f('nominee_exceptional', 'What do you think makes the nominee exceptional?', 'textarea'), resumeField()] },
   { name:'Finance', split:true },
   { name:'Food & hospitality', split:true },
-  { name:'Grassroots entrepreneur', split:true },
+  { name:'Grassroots entrepreneur', split:false, fields:DEFAULT_ENTREPRENEUR_FIELDS },
   { name:'Healthcare', split:true },
   { name:'Law & public policy', split:true },
   { name:'Music', split:false, fields:MUSIC_FIELDS },
@@ -667,8 +703,12 @@ function setTrack(track){
   btnEntrepreneur.setAttribute('aria-pressed', isEnt);
   btnProfessional.setAttribute('aria-pressed', !isEnt);
 
-  const base = isEnt ? DEFAULT_ENTREPRENEUR_FIELDS : DEFAULT_PROFESSIONAL_FIELDS;
+  let base = isEnt ? 
+    (currentCategory.baseEntrepreneurFields || DEFAULT_ENTREPRENEUR_FIELDS) : 
+    (currentCategory.baseProfessionalFields || DEFAULT_PROFESSIONAL_FIELDS);
+    
   const extra = (isEnt ? currentCategory.extraEntrepreneurFields : currentCategory.extraProfessionalFields) || [];
+  
   renderFields(base.concat(extra));
 }
 btnEntrepreneur.addEventListener('click', () => setTrack('Entrepreneur'));
@@ -685,6 +725,27 @@ function renderFields(fields){
   fieldsContainer.appendChild(heading);
 
   fields.forEach(field => fieldsContainer.appendChild(renderField(field)));
+  
+  // Conditionally toggle 'motivation' field if available (for Professional nominating Self)
+  const nomRadios = document.querySelectorAll('input[name="nominating_who"]');
+  const motInput = document.getElementById('motivation');
+  
+  if (nomRadios.length && motInput) {
+    const motFieldWrap = motInput.closest('.field');
+    const toggleMotivation = () => {
+      const selected = document.querySelector('input[name="nominating_who"]:checked');
+      if (selected && selected.value === 'Self') {
+        motFieldWrap.style.display = 'block';
+        motInput.required = true;
+      } else {
+        motFieldWrap.style.display = 'none';
+        motInput.required = false;
+        motInput.value = ''; 
+      }
+    };
+    nomRadios.forEach(r => r.addEventListener('change', toggleMotivation));
+    toggleMotivation(); 
+  }
 }
 
 function renderField(field){
