@@ -16,7 +16,7 @@
     --line: #cbd5e1;        /* Borders */
     --muted: #64748b;       /* Secondary text */
     --accent: #0f172a;      /* Almost black - premium editorial */
-    --accent-gold: #b9935a; /* Refined Forbes Gold */
+    --accent-blue: #2c5d8f; /* Professional Forbes Blue */
     --accent-dark: #000000;
     --on-accent: #ffffff;
     --focus-ring: rgba(15, 23, 42, 0.12);
@@ -39,9 +39,10 @@
     padding: 60px 20px;
   }
   
-  a { color: var(--accent-gold); text-decoration: none; font-weight: 500; }
+  a { color: var(--accent-blue); text-decoration: none; font-weight: 500; }
   a:hover { text-decoration: underline; color: var(--accent); }
 
+  .page-wrapper {
   .page-wrapper {
     max-width: var(--maxw);
     margin: 0 auto;
@@ -58,7 +59,7 @@
     display: block;
     height: 6px;
     width: 100%;
-    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-gold) 100%);
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-blue) 100%);
   }
 
   header.masthead {
@@ -93,9 +94,9 @@
   }
 
   .eligibility {
-    background: #fdfbf7;
-    border: 1px solid #f1e9d9;
-    border-left: 4px solid var(--accent-gold);
+    background: #f0f7ff;
+    border: 1px solid #dbeafe;
+    border-left: 4px solid var(--accent-blue);
     padding: 16px 24px;
     font-size: 14.5px;
     color: var(--ink);
@@ -171,14 +172,14 @@
     cursor: pointer;
     transition: all 0.2s ease;
   }
-  .file-drop:hover { background: var(--panel); border-color: var(--accent-gold); color: var(--accent); }
+  .file-drop:hover { background: var(--panel); border-color: var(--accent-blue); color: var(--accent); }
   .file-drop.has-file { border-color: var(--accent); color: var(--accent); background: #f8fafc; font-weight: 600; border-style: solid; }
   .file-drop input { display: none; }
 
   .step { margin-bottom: 40px; }
   .step-label {
     font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px;
-    letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-gold); margin: 0 0 20px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-blue); margin: 0 0 20px;
   }
 
   .track-switch {
@@ -232,7 +233,7 @@
     color: var(--muted);
   }
   .site-footer a {
-    color: var(--accent-gold);
+    color: var(--accent-blue);
     font-weight: 600;
     margin-top: 8px;
     display: inline-block;
