@@ -646,7 +646,7 @@ function checkIdentityGate(){
   
   // Cutoff is under 30 as of Dec 31, 2026. 
   // Meaning they must be born after Dec 31, 1996 (Jan 1, 1997 or later)
-  const eligible = dobVal > '1996-12-31';
+  const eligible = dobVal >= '1996-12-31';
   
   if (!eligible) {
     afterDobGate.style.display = 'none';
