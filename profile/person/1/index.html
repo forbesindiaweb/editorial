@@ -38,9 +38,6 @@
 </script>
 
 <style>
-  /* ---------------------------------------------------------
-     Forbes India — Profile Page Template
-  --------------------------------------------------------- */
   @font-face {
     font-family: "Gotham Book";
     src: url("https://images.forbesindia.com/assets/fonts/Gotham-Book.woff2") format("woff2"),
@@ -99,7 +96,7 @@
   img{ max-width:100%; display:block; height: auto; }
 
   /* ══════════════════════════════════════════
-     GLOBAL HEADER
+     GLOBAL HEADER (Unchanged)
      ══════════════════════════════════════════ */
   .stckyhdr { position: sticky; top: 0; background: #fff; z-index: 100; }
   .fbhdr { position: relative; }
@@ -159,42 +156,38 @@
   .ms-breadcrumb li a:hover { color: #dc0000; }
   .ms-breadcrumb li + li::before { content: "›"; padding: 0 4px; color: #bbb; }
 
-  /* ---------- Layout ---------- */
+  /* ---------- Layout & Enhanced Forbes Design Polish ---------- */
   .fi-profile{ max-width: 1180px; margin: 0 auto; padding: 48px 80px 96px; display:grid; grid-template-columns: 300px 1fr; gap: 56px; align-items:start; }
   @media (max-width: 860px){ .fi-profile{ grid-template-columns: 1fr; padding: 28px 18px 64px; gap: 32px; } }
 
-  /* ---------- Sidebar ---------- */
-  .fi-sidebar{ position: sticky; top: calc(var(--header-h) + 28px); }
+  /* ---------- Sidebar Polish ---------- */
+  .fi-sidebar{ position: sticky; top: calc(var(--header-h) + 28px); background: #fdfdfc; padding: 16px; border: 1px solid var(--hairline); border-radius: 4px; }
   @media (max-width: 860px){ .fi-sidebar{ position: static; } }
   .fi-photo{ width: 100%; aspect-ratio: 4 / 3; border-radius: 2px; overflow: hidden; background: var(--panel); border: 1px solid var(--hairline); display:flex; align-items:center; justify-content:center; }
   .fi-photo img{ width:100%; height:100%; object-fit: cover; }
-  .fi-photo--fallback{ width: 100%; height: 100%; }
-  .fi-photo--fallback img{ width:100%; height:100%; object-fit: cover; }
-  .fi-facts{ margin-top: 22px; border-top: 1px solid var(--hairline); }
+  .fi-facts{ margin-top: 16px; border-top: 1px solid var(--hairline); }
   .fi-facts dl{ margin:0; }
-  .fi-fact{ display:grid; grid-template-columns: 1fr; gap: 2px; padding: 13px 0; border-bottom: 1px solid var(--hairline); }
-  .fi-fact dt{ font-size: 12.5px; color: var(--steel); font-weight: 500; }
-  .fi-fact dd{ margin: 0; font-size: 14.5px; color: var(--ink); font-weight: 500; }
+  .fi-fact{ display:grid; grid-template-columns: 1fr; gap: 2px; padding: 11px 0; border-bottom: 1px solid var(--hairline); }
+  .fi-fact dt{ font-size: 12px; color: var(--steel); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .fi-fact dd{ margin: 0; font-size: 14px; color: var(--ink); font-weight: 600; }
   .fi-fact dd a{ color: var(--ink); text-decoration: underline; text-decoration-color: var(--hairline); }
   .fi-fact dd a:hover{ color: var(--brass); text-decoration-color: var(--brass); }
-  .fi-share{ margin-top: 20px; display:flex; gap: 10px; }
-  .fi-share a{ width: 32px; height: 32px; border: 1px solid var(--hairline); border-radius: 50%; display:flex; align-items:center; justify-content:center; color: var(--steel); text-decoration:none; font-size: 13px; transition: border-color .15s ease, color .15s ease; }
-  .fi-share a:hover{ border-color: var(--ink); color: var(--ink); }
+  .fi-share{ margin-top: 16px; display:flex; gap: 10px; }
+  .fi-share a{ width: 32px; height: 32px; border: 1px solid var(--hairline); border-radius: 50%; display:flex; align-items:center; justify-content:center; color: var(--steel); text-decoration:none; font-size: 13px; transition: all .15s ease; }
+  .fi-share a:hover{ border-color: var(--ink); color: var(--ink); background: var(--panel); }
 
   /* ---------- Main column ---------- */
   .fi-main{ min-width: 0; }
-  .fi-eyebrow{ font-size: 13px; color: var(--steel); margin: 0 0 8px; }
   .fi-name{ font-family: var(--font-display); font-weight: 700; font-size: clamp(32px, 4vw, 46px); line-height: 1.08; color: var(--ink); margin: 0 0 10px; }
   .fi-role{ font-size: 17px; color: var(--charcoal); margin: 0 0 24px; }
   .fi-role strong{ color: var(--ink); font-weight: 700; }
 
-  /* ---------- Net worth stat ---------- */
-  .fi-networth{ padding: 20px 24px; background: var(--panel); border-left: 3px solid var(--brass); margin-bottom: 28px; display:flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
-  .fi-networth__label{ font-size: 13px; color: var(--steel); width: 100%; }
-  .fi-networth__value{ font-family: var(--font-display); font-size: 30px; font-weight: 700; color: var(--brass); }
-  .fi-networth__delta{ font-size: 14px; color: var(--charcoal); }
-  .fi-networth__delta.is-up::before{ content: "▲ "; color: #3f7a52; }
-  .fi-networth__delta.is-down::before{ content: "▼ "; color: #a34141; }
+  /* ---------- Net Worth Stat Card Polish ---------- */
+  .fi-networth{ padding: 22px 26px; background: linear-gradient(135deg, var(--panel) 0%, #fff 100%); border: 1px solid var(--hairline); border-left: 4px solid var(--brass); border-radius: 4px; margin-bottom: 28px; display:flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+  .fi-networth__label{ font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--steel); width: 100%; font-weight: 600; }
+  .fi-networth__value{ font-family: var(--font-display); font-size: 34px; font-weight: 700; color: var(--ink); }
+  .fi-networth__delta{ font-size: 13px; font-weight: 600; background: #eaf3ec; color: #2e693b; padding: 2px 8px; border-radius: 4px; }
+  .fi-networth__delta.is-up::before{ content: "▲ "; }
 
   .fi-rank-badge{ display: inline-flex; align-items: center; gap: 10px; background: var(--brass-soft); border: 1px solid var(--brass); border-radius: 999px; padding: 8px 18px 8px 14px; margin-bottom: 28px; }
   .fi-rank-badge__icon{ display:flex; align-items:center; justify-content:center; width: 22px; height: 22px; border-radius: 50%; background: var(--brass); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 12px; flex-shrink: 0; }
@@ -202,55 +195,52 @@
   .fi-rank-badge__text strong{ font-family: var(--font-display); font-weight: 700; color: var(--ink); }
 
   .fi-section{ margin-bottom: 40px; }
-  .fi-section__title{ font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); margin: 0 0 14px; }
+  .fi-section__title{ font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); margin: 0 0 14px; border-bottom: 2px solid var(--ink); padding-bottom: 6px; display: inline-block; }
   .fi-chips{ display:flex; flex-wrap: wrap; gap: 10px; }
-  .fi-chip{ font-size: 13.5px; padding: 7px 14px; border: 1px solid var(--hairline); border-radius: 3px; color: var(--charcoal); text-decoration: none; background: var(--paper); transition: border-color .15s ease; }
-  .fi-chip:hover{ border-color: var(--ink); }
+  .fi-chip{ font-size: 13.5px; padding: 7px 14px; border: 1px solid var(--hairline); border-radius: 3px; color: var(--charcoal); text-decoration: none; background: var(--paper); transition: all .15s ease; font-weight: 500; }
+  .fi-chip:hover{ border-color: var(--ink); background: var(--panel); transform: translateY(-1px); }
 
-  /* ---------- Chart ---------- */
-  .fi-chart-wrap{ border: 1px solid var(--hairline); padding: 20px 20px 12px; }
+  /* ---------- Chart Polish ---------- */
+  .fi-chart-wrap{ border: 1px solid var(--hairline); padding: 20px 20px 12px; background: #fff; border-radius: 4px; }
   .fi-chart-svg-wrap{ position: relative; }
   .fi-chart-svg-wrap svg{ display:block; }
   .fi-chart-point{ cursor: pointer; }
-  .fi-chart-point:focus{ outline: none; }
-  .fi-chart-tooltip{ position: absolute; transform: translate(-50%, -125%); background: var(--ink); color: #f7f6f4; font-family: var(--font-nav); font-size: 12px; line-height: 1.4; padding: 6px 10px; border-radius: 3px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .12s ease; z-index: 5; }
+  .fi-chart-tooltip{ position: absolute; transform: translate(-50%, -125%); background: var(--ink); color: #f7f6f4; font-family: var(--font-nav); font-size: 12px; padding: 6px 10px; border-radius: 3px; pointer-events: none; opacity: 0; transition: opacity .12s ease; z-index: 5; }
   .fi-chart-tooltip.is-visible{ opacity: 1; }
-  .fi-chart-tooltip::after{ content: ""; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--ink); }
-  .fi-chart-caption{ display:flex; justify-content: space-between; font-size: 12.5px; color: var(--steel); margin-top: 6px; }
+  .fi-chart-caption{ display:flex; justify-content: space-between; font-size: 12.5px; color: var(--steel); margin-top: 6px; font-weight: 600; }
 
-  /* ---------- Quote ---------- */
-  .fi-quote{ position: relative; padding: 6px 0 6px 28px; border-left: 2px solid var(--brass); }
-  .fi-quote p{ font-family: var(--font-display); font-weight: 500; font-style: normal; font-size: 21px; line-height: 1.5; color: var(--ink); margin: 0 0 10px; max-width: 62ch; }
-  .fi-quote p::before{ content: "“"; color: var(--brass); font-weight: 700; margin-right: 2px; }
-  .fi-quote cite{ font-style: normal; font-size: 13px; color: var(--steel); }
+  /* ---------- Quote Polish ---------- */
+  .fi-quote{ position: relative; padding: 12px 0 12px 28px; border-left: 3px solid var(--brass); background: var(--panel); border-radius: 0 4px 4px 0; }
+  .fi-quote p{ font-family: var(--font-display); font-weight: 500; font-size: 19px; line-height: 1.5; color: var(--ink); margin: 0 0 8px 12px; max-width: 60ch; }
+  .fi-quote cite{ font-style: normal; font-size: 13px; color: var(--steel); margin-left: 12px; display: block; font-weight: 600; }
 
-  /* ---------- Timeline ---------- */
-  .fi-timeline{ list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--hairline); }
-  .fi-timeline li{ position: relative; padding: 0 0 22px 26px; }
-  .fi-timeline li::before{ content:""; position:absolute; left: -5px; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--paper); border: 2px solid var(--brass); }
+  /* ---------- Timeline Polish ---------- */
+  .fi-timeline{ list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--hairline); margin-left: 6px; }
+  .fi-timeline li{ position: relative; padding: 0 0 24px 28px; }
+  .fi-timeline li::before{ content:""; position:absolute; left: -7px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 3px solid var(--brass); }
   .fi-timeline__year{ font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--ink); display:block; margin-bottom: 2px; }
   .fi-timeline__text{ font-size: 14.5px; color: var(--charcoal); }
   .fi-bio p{ max-width: 68ch; font-size: 15.5px; color: var(--charcoal); }
 
-  /* ---------- Article coverage ---------- */
+  /* ---------- Article Coverage Polish ---------- */
   .fi-coverage{ list-style: none; margin: 0; padding: 0; }
-  .fi-coverage li{ border-top: 1px solid var(--hairline); padding: 18px 0; }
+  .fi-coverage li{ border-top: 1px solid var(--hairline); padding: 18px 0; transition: background .15s; }
   .fi-coverage li:last-child{ border-bottom: 1px solid var(--hairline); }
-  .fi-coverage__meta{ display:flex; gap: 10px; align-items:baseline; font-size: 12px; color: var(--steel); margin-bottom: 6px; }
-  .fi-coverage__tag{ color: var(--brass); font-weight: 700; }
-  .fi-coverage__title{ display:block; font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ink); text-decoration: none; line-height: 1.35; margin-bottom: 5px; transition: color .15s ease; }
+  .fi-coverage__meta{ display:flex; gap: 10px; align-items:baseline; font-size: 12px; color: var(--steel); margin-bottom: 6px; font-weight: 600; }
+  .fi-coverage__tag{ color: var(--brass); font-weight: 700; text-transform: uppercase; }
+  .fi-coverage__title{ display:block; font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ink); text-decoration: none; line-height: 1.35; margin-bottom: 5px; }
   .fi-coverage__title:hover{ color: var(--brass); }
   .fi-coverage__dek{ font-size: 14px; color: var(--charcoal); max-width: 68ch; margin: 0; }
 
-  /* ---------- Related people ---------- */
+  /* ---------- Related People Card Polish ---------- */
   .fi-related__grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
   @media (max-width: 720px){ .fi-related__grid{ grid-template-columns: repeat(2, 1fr); } }
-  .fi-related__card{ display:block; text-decoration:none; border: 1px solid var(--hairline); padding: 16px; transition: border-color .15s ease, box-shadow .15s ease; }
-  .fi-related__card:hover{ border-color: var(--ink); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .fi-related__card{ display:block; text-decoration:none; border: 1px solid var(--hairline); border-radius: 4px; padding: 16px; background: #fff; transition: all .2s ease; }
+  .fi-related__card:hover{ border-color: var(--ink); transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
   .fi-related__avatar{ width: 100%; aspect-ratio: 4 / 3; border-radius: 2px; background: var(--panel); display:flex; align-items:center; justify-content:center; margin-bottom: 12px; overflow: hidden; }
   .fi-related__avatar img{ width:100%; height:100%; object-fit:cover; }
-  .fi-related__name{ font-family: var(--font-display); font-size: 15.5px; font-weight: 700; color: var(--ink); margin: 0 0 3px; line-height: 1.3; }
-  .fi-related__role{ font-size: 12.5px; color: var(--steel); line-height: 1.4; }
+  .fi-related__name{ font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ink); margin: 0 0 3px; line-height: 1.3; }
+  .fi-related__role{ font-size: 12px; color: var(--steel); line-height: 1.4; }
 
   /* ---------- Ad rails ---------- */
   .fi-page-wrap{ display:flex; justify-content:center; align-items:flex-start; gap: 24px; max-width: 1600px; margin: 0 auto; }
@@ -258,14 +248,8 @@
   @media (min-width: 1500px){ .fi-ad-rail{ display:block; } }
   .fi-ad-rail__slot{ width: 160px; height: 600px; border: 1px dashed var(--hairline); background: var(--panel); display:flex; align-items:center; justify-content:center; text-align:center; padding: 12px; font-family: var(--font-nav); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--steel); }
 
-  /* ---------- Mobile refinements ---------- */
-  html, body{ overflow-x: hidden; max-width: 100%; }
-  .fi-fact dd, .fi-related__role, .fi-coverage__dek, .fi-timeline__text, .fi-chip{ overflow-wrap: break-word; word-break: break-word; }
-  @media (max-width: 420px){ .fi-related__grid{ grid-template-columns: 1fr 1fr; gap: 12px; } .fi-related__card{ padding: 12px; } .fi-profile{ padding-left: 14px; padding-right: 14px; } }
-  @media (max-width: 860px){ #fi-heading{ margin-top: 20px; } }
-
   /* ══════════════════════════════════════════
-     GLOBAL FOOTER
+     GLOBAL FOOTER (Unchanged)
      ══════════════════════════════════════════ */
   .fbftr { background: #000; padding: 36px 20px 24px; }
   .ft-inner { max-width: 1160px; margin: 0 auto; }
@@ -369,9 +353,7 @@
   <!-- ============ SIDEBAR ============ -->
   <aside class="fi-sidebar">
     <div class="fi-photo">
-      <!-- Web Vitals: loading="eager" & fetchpriority="high" for hero LCP image -->
-      <img src="https://images.forbesindia.com/blog/wp-content/uploads/media/images/2023/Oct/img_220363_mukeshambanirilsm.jpg" alt="Mukesh Ambani" loading="eager" fetchpriority="high" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="fi-photo--fallback" style="display:none"><img src="placeholder-male.png" alt="No photograph available"></div>
+      <img src="https://images.forbesindia.com/blog/wp-content/uploads/media/images/2023/Oct/img_220363_mukeshambanirilsm.jpg" alt="Mukesh Ambani" loading="eager" fetchpriority="high">
     </div>
 
     <div class="fi-facts">
@@ -408,7 +390,7 @@
 
     <section class="fi-section fi-bio">
       <h2 class="fi-section__title">About</h2>
-      <p>Mukesh Ambani leads Reliance Industries, India's most valuable corporation by market value, with diverse business interests spanning petrochemicals, oil and gas, telecommunications through Jio, and organized retail. He is currently ranked among the top global billionaires.</p>
+      <p>Sample bio copy — two to three sentences on the person's role, the business they built or lead, and what they're best known for. Written in sentence case, plain and specific, no filler.</p>
     </section>
 
     <div class="fi-rank-badge">
@@ -417,7 +399,7 @@
     </div>
 
     <section class="fi-section">
-      <h2 class="fi-section__title">Featured in Lists</h2>
+      <h2 class="fi-section__title">Featured in</h2>
       <div class="fi-chips">
         <a href="#" class="fi-chip">Rich List 2025</a>
         <a href="#" class="fi-chip">Rich List 2024</a>
@@ -442,8 +424,8 @@
     <section class="fi-section">
       <h2 class="fi-section__title">In their words</h2>
       <div class="fi-quote">
-        <p>"Reliance Retail will be our fastest growing business in revenues and Ebitda. It is well on its way to cementing its position as India's largest, most profitable, and most respected retail company."</p>
-        <cite>— From Reliance Industries 46th AGM, 2023</cite>
+        <p>"Sample pull quote goes here — pull a real line from an interview or earnings call, editorial-approved."</p>
+        <cite>— From an interview, sample source, 2024</cite>
       </div>
     </section>
 
@@ -453,7 +435,7 @@
         <li><span class="fi-timeline__year">1981</span><span class="fi-timeline__text">Joins Reliance Industries.</span></li>
         <li><span class="fi-timeline__year">2002</span><span class="fi-timeline__text">Becomes Chairman &amp; Managing Director.</span></li>
         <li><span class="fi-timeline__year">2016</span><span class="fi-timeline__text">Launches Jio, reshaping India's telecom market.</span></li>
-        <li><span class="fi-timeline__year">2025</span><span class="fi-timeline__text">Tops the Forbes India Rich List once again.</span></li>
+        <li><span class="fi-timeline__year">2025</span><span class="fi-timeline__text">Tops the Forbes India Rich List.</span></li>
       </ul>
     </section>
 
@@ -504,7 +486,6 @@
       </ul>
     </section>
   </article>
-
 </main>
 
   <div class="fi-ad-rail" aria-hidden="true">
@@ -542,7 +523,6 @@
 </footer>
 
 <script>
-  // Mobile Nav Scripts
   function openSidebar()  { document.getElementById('sidebar').classList.add('active'); document.body.style.overflow='hidden'; }
   function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.body.style.overflow=''; }
   document.querySelectorAll('.sdmenu .sbmnuli > a').forEach(a => {
@@ -556,7 +536,6 @@
   setNavTop();
   window.addEventListener('resize', setNavTop, { passive: true });
 
-  // DOM Layout Shifting for Mobile
   (function () {
     var heading = document.getElementById('fi-heading');
     var facts = document.querySelector('.fi-facts');
@@ -577,7 +556,6 @@
     mq.addEventListener('change', place);
   })();
 
-  // Interactive Chart Script
   (function () {
     var data = [
       { year: 2013, value: 21.6 },
