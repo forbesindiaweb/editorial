@@ -334,6 +334,13 @@ td.r-total { font-family:var(--mono); font-size:12px; text-align:right; padding-
         </div>
       </div>
 
+      <!-- Article details proxy -->
+      <div class="setup-group" style="flex:1;min-width:230px;max-width:380px;">
+        <label>Article Details Proxy (Apps Script) <span class="saved-tag" id="proxy-saved"></span></label>
+        <input type="text" id="ga-proxy" placeholder="https://script.google.com/macros/s/…/exec" oninput="saveGA()" autocomplete="off">
+        <div style="font-size:10px;color:var(--ink4);margin-top:3px;font-family:var(--mono);">Leave blank to call the Forbes API directly</div>
+      </div>
+
       <!-- Actions -->
       <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:1px;">
         <button class="btn btn-primary" id="btn-fetch" onclick="startFetch()">
@@ -630,6 +637,10 @@ td.r-total { font-family:var(--mono); font-size:12px; text-align:right; padding-
 let articles = [];
 let sortSt = {};
 let dataSource = 'sitemap';
+let detailFailCount = 0;
+
+// Default Apps Script proxy (used until you save a different one in the field)
+const DEFAULT_PROXY = 'https://script.google.com/macros/s/AKfycbwmIU0gze4ROz2_kSD4yWfZbMe9aW_hJYJfyg2atKcxXnZBjfVaDoU-jneLjySy05J1yw/exec';
 
 // ══════════════════════════════════════════
 // UTILS
@@ -673,17 +684,21 @@ function setSource(src){
 }
 
 // ══════════════════════════════════════════
-// PERSIST GA4 CREDS
+// PERSIST GA4 CREDS + PROXY URL
 // ══════════════════════════════════════════
 function saveGA(){
-  const p=$('ga-prop').value.trim(), t=$('ga-token').value.trim();
+  const p=$('ga-prop').value.trim(), t=$('ga-token').value.trim(), x=$('ga-proxy').value.trim();
   if(p){ localStorage.setItem('fi_ga_prop',p); $('prop-saved').textContent='✓ saved'; } else { $('prop-saved').textContent=''; }
   if(t){ localStorage.setItem('fi_ga_token',t); $('token-saved').textContent='✓ saved'; } else { $('token-saved').textContent=''; }
+  if(x){ localStorage.setItem('fi_proxy',x); $('proxy-saved').textContent='✓ saved'; } else { localStorage.setItem('fi_proxy',''); $('proxy-saved').textContent=''; }
 }
 function loadGA(){
   const p=localStorage.getItem('fi_ga_prop')||'', t=localStorage.getItem('fi_ga_token')||'';
+  const stored=localStorage.getItem('fi_proxy');
+  const x=(stored===null)?DEFAULT_PROXY:stored;   // null = never set; '' = deliberately cleared
   if(p){ $('ga-prop').value=p; $('prop-saved').textContent='✓ saved'; }
   if(t){ $('ga-token').value=t; $('token-saved').textContent='✓ saved'; }
+  if(x){ $('ga-proxy').value=x; $('proxy-saved').textContent='✓ saved'; }
 }
 
 // ══════════════════════════════════════════
@@ -777,6 +792,8 @@ async function fetchSitemap(monthStr,fromDate,toDate){
 
 // ══════════════════════════════════════════
 // ARTICLE DETAIL API — Headline / Section / Author
+// Uses the Apps Script proxy when set (avoids browser CORS block),
+// otherwise calls the Forbes API directly.
 // ══════════════════════════════════════════
 const DETAIL_API = 'https://api.forbesindia.com/nodeapi/v1/frb/get-article';
 
@@ -802,32 +819,95 @@ function getSectionFromDetail(art){
   }
   return '';
 }
+function detailFromApi(d){
+  return{
+    headline:d.display_headline||d.headline||'',
+    section:getSectionFromDetail(d),
+    author:getAuthorsFromDetail(d).join(', ')
+  };
+}
 
 async function fetchArticleDetails(articleIds){
   const map={};
   const ids=[...new Set(articleIds.filter(Boolean))];
+  detailFailCount=0;
   if(!ids.length) return map;
-  dbg('Fetching article details (headline/section/author): '+ids.length+' IDs');
-  const CONCUR=6; let done=0;
-  async function fetchOne(id){
-    try{
-      const res=await fetch(DETAIL_API+'?article_id='+id);
-      if(!res.ok){ dbg('Detail API '+id+' err:'+res.status); done++; return; }
-      const json=await res.json();
-      const d=json.data||json;
-      const headline=d.display_headline||d.headline||'';
-      const section=getSectionFromDetail(d);
-      const author=getAuthorsFromDetail(d).join(', ');
-      map[id]={headline,section,author};
-    }catch(e){ dbg('Detail fetchOne err '+id+': '+e.message); }
-    done++;
+  const proxy=($('ga-proxy').value||'').trim();
+  let done=0;
+
+  if(proxy){
+    // ── via Apps Script proxy: 40 IDs per request, 2 requests at a time
+    dbg('Fetching article details via proxy: '+ids.length+' IDs');
+    const BATCH=40, CONCUR=2;
+    const batches=[];
+    for(let i=0;i<ids.length;i+=BATCH) batches.push(ids.slice(i,i+BATCH));
+    async function runBatch(b){
+      try{
+        const res=await fetch(proxy+(proxy.includes('?')?'&':'?')+'ids='+b.join(','));
+        const txt=await res.text();
+        let json;
+        try{ json=JSON.parse(txt); }
+        catch(e){ dbg('Proxy returned non-JSON: '+txt.slice(0,120)); detailFailCount+=b.length; done+=b.length; return; }
+        b.forEach(id=>{
+          const r=json[id];
+          if(r&&r.ok&&r.data){ map[id]=detailFromApi(r.data); }
+          else{ detailFailCount++; dbg('Proxy lookup failed for '+id+': '+JSON.stringify(r||{})); }
+        });
+      }catch(e){ dbg('Proxy batch err: '+e.message); detailFailCount+=b.length; }
+      done+=b.length;
+      setProg(30+Math.round((Math.min(done,ids.length)/ids.length)*30),'Article details: '+Math.min(done,ids.length)+'/'+ids.length+'...');
+    }
+    for(let i=0;i<batches.length;i+=CONCUR){
+      await Promise.all(batches.slice(i,i+CONCUR).map(runBatch));
+    }
+  } else {
+    // ── direct calls (needs the API to allow this page's origin)
+    dbg('Fetching article details directly: '+ids.length+' IDs');
+    const CONCUR=4;
+    async function fetchOne(id,attempt){
+      attempt=attempt||1;
+      try{
+        const res=await fetch(DETAIL_API+'?article_id='+id);
+        const txt=await res.text();
+        if(!res.ok||!txt.trim()){
+          if(attempt<2){ await new Promise(r=>setTimeout(r,500)); return fetchOne(id,2); }
+          dbg('Detail '+id+': HTTP '+res.status+', empty body'); detailFailCount++; return;
+        }
+        let json; try{ json=JSON.parse(txt); }catch(e){ dbg('Detail '+id+' non-JSON'); detailFailCount++; return; }
+        map[id]=detailFromApi(json.data||json);
+      }catch(e){ dbg('Detail fetchOne err '+id+': '+e.message); detailFailCount++; }
+    }
+    for(let i=0;i<ids.length;i+=CONCUR){
+      await Promise.all(ids.slice(i,i+CONCUR).map(id=>fetchOne(id)));
+      done=Math.min(i+CONCUR,ids.length);
+      setProg(30+Math.round((done/ids.length)*30),'Article details: '+done+'/'+ids.length+'...');
+    }
   }
-  for(let i=0;i<ids.length;i+=CONCUR){
-    await Promise.all(ids.slice(i,i+CONCUR).map(id=>fetchOne(id)));
-    setProg(30+Math.round((done/ids.length)*30),'Article details: '+done+'/'+ids.length+'...');
-  }
-  dbg('Details done: '+Object.keys(map).length+'/'+ids.length+' resolved');
+  dbg('Details done: '+Object.keys(map).length+'/'+ids.length+' resolved, '+detailFailCount+' failed');
   return map;
+}
+
+// Merge API details into articles; fall back to a headline built from the URL slug
+function applyDetails(detailMap){
+  articles.forEach(a=>{
+    const id=a.articleId||extractId(a.url);
+    const d=id?detailMap[id]:null;
+    if(d){
+      if(!a.headline&&d.headline) a.headline=d.headline;
+      if(!a.section&&d.section) a.section=d.section;
+      if(!a.author&&d.author) a.author=d.author;
+    }
+    if(!a.headline){ try{ a.headline=slugToHeadline(new URL(a.url).pathname); }catch(e){} }
+  });
+}
+
+// Build the yellow warning banner from whatever went wrong in this run
+function reportWarnings(){
+  const msgs=[];
+  if(detailFailCount>0) msgs.push(detailFailCount+' article lookups failed — headlines were built from URLs and authors are blank for those. Check the Article Details Proxy field and the Debug log.');
+  const noPVs=articles.filter(a=>!a.pvs).length;
+  if(noPVs>0) msgs.push(noPVs+' articles returned 0 views — check your date range matches when the articles were published.');
+  if(msgs.length) showAlert(msgs.join('  ·  '),'warn'); else hideAlert();
 }
 
 // ══════════════════════════════════════════
@@ -931,15 +1011,7 @@ async function startFetch(){
     setProg(30,'Fetching headlines, sections & authors…');
     const detailIds=urlItems.map(u=>u.articleId||extractId(u.url)).filter(Boolean);
     const detailMap=await fetchArticleDetails(detailIds);
-    articles.forEach(a=>{
-      const id=a.articleId||extractId(a.url);
-      const d=id?detailMap[id]:null;
-      if(d){
-        if(!a.headline&&d.headline) a.headline=d.headline;
-        if(!a.section&&d.section) a.section=d.section;
-        if(!a.author&&d.author) a.author=d.author;
-      }
-    });
+    applyDetails(detailMap);
 
     setProg(60,'Fetching GA4 page views…');
     const sd=dataSource==='sitemap'?$('date-from').value:$('manual-from').value;
@@ -950,8 +1022,7 @@ async function startFetch(){
     setProg(100); setTimeout(()=>setProg(0),600);
     setStatus('Done — '+articles.length+' articles','ok');
     $('last-updated').textContent='Updated '+new Date().toLocaleTimeString('en-IN');
-    const noPVs=articles.filter(a=>!a.pvs).length;
-    if(noPVs>0) showAlert(noPVs+' articles returned 0 views — check your date range matches when the articles were published.','warn');
+    reportWarnings();
     renderAll();
   }catch(e){
     dbg('FATAL: '+e.message); setStatus('Error','err');
@@ -1521,7 +1592,7 @@ async function processUploadedSitemaps(){
   const missing=blockedMonths.filter(m=>!uploadedXmls[m]);
   if(missing.length>0){ $('upload-feedback').textContent='⚠ Still missing: '+missing.join(', '); $('upload-feedback').style.color='var(--red)'; return; }
   $('upload-modal').style.display='none';
-  setStatus('Processing sitemaps…','busy');
+  setStatus('Processing sitemaps…','busy'); hideAlert();
   let urlItems=[];
   for(const month of blockedMonths){
     const xml=uploadedXmls[month];
@@ -1543,19 +1614,11 @@ async function processUploadedSitemaps(){
       section:ex.section||'',subsection:ex.subsection||u.subsection||'',
       headline:ex.headline||'',author:ex.author||'',pvs:0,articleId:u.articleId};
   });
-  // Fetch headlines/sections/authors from the article detail API
+  // Fetch headlines/sections/authors (via proxy if set)
   setProg(30,'Fetching headlines, sections & authors…');
   const detailIds=urlItems.map(u=>u.articleId||extractId(u.url)).filter(Boolean);
   const detailMap=await fetchArticleDetails(detailIds);
-  articles.forEach(a=>{
-    const id=a.articleId||extractId(a.url);
-    const d=id?detailMap[id]:null;
-    if(d){
-      if(!a.headline&&d.headline) a.headline=d.headline;
-      if(!a.section&&d.section) a.section=d.section;
-      if(!a.author&&d.author) a.author=d.author;
-    }
-  });
+  applyDetails(detailMap);
   // Now fetch GA4 PVs
   const prop=$('ga-prop').value.trim(), token=$('ga-token').value.trim();
   if(prop&&token){
@@ -1569,6 +1632,7 @@ async function processUploadedSitemaps(){
   setProg(100); setTimeout(()=>setProg(0),600);
   setStatus('Done — '+articles.length+' articles','ok');
   $('last-updated').textContent='Updated '+new Date().toLocaleTimeString('en-IN');
+  reportWarnings();
   renderAll();
   pendingUploadState=null;
 }
