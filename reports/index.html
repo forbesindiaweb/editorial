@@ -657,7 +657,14 @@ function fmtDur(s){ const ss=Math.round(s||0); return Math.floor(ss/60)+'m '+ss%
 function fmtPct(v){ return(parseFloat(v)*100).toFixed(1)+'%'; }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmtDate(s){ if(!s)return '—'; const d=new Date(s); if(isNaN(d))return s; return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
-function extractId(url){ const m=String(url).match(/\/(\d{6,8})\//); return m?m[1]:null; }
+function urlSegs(url){ try{ return new URL(url,'https://www.forbesindia.com').pathname.split('/').filter(Boolean); }catch(e){ return []; } }
+// Article ID = last 6-8 digit path segment. Works for /life/some-story-article/3000296 and old /slug/2994582/1.
+// Gallery pagination URLs (…-photogallery/1, /2) carry no ID and return null.
+function extractId(url){ const p=urlSegs(url); for(let i=p.length-1;i>=0;i--){ if(/^\d{6,8}$/.test(p[i])) return p[i]; } return null; }
+// Story slug = last non-numeric path segment (shared by a story's /ID page and its gallery pages /1, /2)
+function extractSlug(url){ const p=urlSegs(url); for(let i=p.length-1;i>=0;i--){ if(!/^\d+$/.test(p[i])) return p[i]; } return ''; }
+function artSlug(a){ return a.slug||extractSlug(a.url); }
+function artKey(a){ return a.articleId||extractId(a.url)||artSlug(a); }
 function extractSections(url){ try{ const p=new URL(url).pathname.split('/').filter(Boolean); return{section:p[1]||'',subsection:p[2]||''}; }catch{ return{section:'',subsection:''}; }}
 function getNow(){ const n=new Date(),y=n.getFullYear(),m=String(n.getMonth()+1).padStart(2,'0'),d=String(n.getDate()).padStart(2,'0'); return{y,m,d,iso:`${y}-${m}-${d}`}; }
 
@@ -733,6 +740,7 @@ function slugToHeadline(urlPath){
     if(!storySlug) storySlug = seg; // fallback: take it anyway
   }
   if(!storySlug) return '';
+  storySlug = storySlug.replace(/-(article|photogallery|video|podcast)$/,'');
   const words = storySlug.split('-').filter(Boolean);
   return words.map((w, i) => {
     const lo = w.toLowerCase();
@@ -769,10 +777,14 @@ function parseSitemapXml(xml, fromDate, toDate){
     const secs = extractSections(fullUrl);
     out.push({url:fullUrl,lastmod:lm,
       subsection:slugToSection(secs.subsection),
-      articleId:extractId(fullUrl)});
+      articleId:extractId(fullUrl),
+      slug:extractSlug(fullUrl)});
   });
-  dbg('  parsed: kept='+out.length+' skBC='+skBC+' skDt='+skDt);
-  return out;
+  // Drop gallery pagination pages (…-photogallery/1, /2) when the gallery's main ID page is in the list
+  const withId=new Set(out.filter(o=>o.articleId).map(o=>o.slug));
+  const kept=out.filter(o=>o.articleId||!/^\d{1,3}$/.test(urlSegs(o.url).slice(-1)[0]||'')||!withId.has(o.slug));
+  dbg('  parsed: kept='+kept.length+' skBC='+skBC+' skDt='+skDt+' galleryPages='+(out.length-kept.length));
+  return kept;
 }
 
 async function fetchSitemap(monthStr,fromDate,toDate){
@@ -905,6 +917,7 @@ function applyDetails(detailMap){
 function reportWarnings(){
   const msgs=[];
   if(detailFailCount>0) msgs.push(detailFailCount+' article lookups failed — headlines were built from URLs and authors are blank for those. Check the Article Details Proxy field and the Debug log.');
+  if(ga4FailCount>0) msgs.push(ga4FailCount+' GA4 calls were rejected (expired token or quota) — those articles show 0 views. Refresh the token or wait a while, then run again.');
   const noPVs=articles.filter(a=>!a.pvs).length;
   if(noPVs>0) msgs.push(noPVs+' articles returned 0 views — check your date range matches when the articles were published.');
   if(msgs.length) showAlert(msgs.join('  ·  '),'warn'); else hideAlert();
@@ -916,38 +929,50 @@ function reportWarnings(){
 function ga4Hdr(){ return{'Authorization':'Bearer '+$('ga-token').value.trim(),'Content-Type':'application/json'}; }
 function ga4Base(){ return'https://analyticsdata.googleapis.com/v1beta/properties/'+$('ga-prop').value.trim(); }
 
-async function fetchPVs(articleIds,startDate,endDate){
+let ga4FailCount=0;
+// items: [{key,id,slug}] — views are matched on the story slug so gallery pages (/1, /2) count too
+async function fetchPVs(items,startDate,endDate){
   const map={};
-  const ids=articleIds.filter(Boolean);
-  if(!ids.length) return map;
-  dbg('Fetching PVs: '+ids.length+' IDs, '+startDate+' → '+endDate);
-  const CONCUR=5; let done=0;
-  async function fetchOne(id){
-    try{
+  ga4FailCount=0;
+  if(!items.length) return map;
+  dbg('Fetching PVs: '+items.length+' articles, '+startDate+' → '+endDate);
+  const CONCUR=4; let done=0;
+  async function callOne(it){
+    const needle=it.slug?('/'+it.slug+'/'):('/'+it.id);
+    for(let attempt=1;attempt<=3;attempt++){
       const res=await fetch(ga4Base()+':runReport',{method:'POST',headers:ga4Hdr(),body:JSON.stringify({
         dateRanges:[{startDate,endDate}],
         dimensions:[{name:'pagePath'}],
         metrics:[{name:'screenPageViews'}],
-        dimensionFilter:{filter:{fieldName:'pagePath',stringFilter:{matchType:'CONTAINS',value:'/'+id+'/'}}},
+        dimensionFilter:{filter:{fieldName:'pagePath',stringFilter:{matchType:'CONTAINS',value:needle}}},
         orderBys:[{metric:{metricName:'screenPageViews'},desc:true}],
         limit:500
       })});
-      if(!res.ok){ dbg('GA4 '+id+' err:'+res.status); done++; return; }
-      const d=await res.json();
-      let total=0;
-      (d.rows||[]).forEach(r=>{ total+=parseInt(r.metricValues[0].value,10)||0; });
-      if(total>0){
-        map[id]=total;
-        if((d.rows||[]).length>1) dbg('ID '+id+': '+(d.rows.length)+' paths → '+total+' views');
+      if((res.status===429||res.status>=500)&&attempt<3){ await new Promise(r=>setTimeout(r,1500*attempt)); continue; }
+      return res;
+    }
+  }
+  async function fetchOne(it){
+    try{
+      const res=await callOne(it);
+      if(!res.ok){ dbg('GA4 '+it.key+' err:'+res.status); ga4FailCount++; }
+      else{
+        const d=await res.json();
+        let total=0;
+        (d.rows||[]).forEach(r=>{ total+=parseInt(r.metricValues[0].value,10)||0; });
+        if(total>0){
+          map[it.key]=total;
+          if((d.rows||[]).length>1) dbg('ID '+it.key+': '+(d.rows.length)+' paths → '+total+' views');
+        }
       }
-    }catch(e){ dbg('fetchOne err '+id+': '+e.message); }
+    }catch(e){ dbg('fetchOne err '+it.key+': '+e.message); ga4FailCount++; }
     done++;
   }
-  for(let i=0;i<ids.length;i+=CONCUR){
-    await Promise.all(ids.slice(i,i+CONCUR).map(id=>fetchOne(id)));
-    setProg(60+Math.round((done/ids.length)*40),'GA4 views: '+done+'/'+ids.length+'...');
+  for(let i=0;i<items.length;i+=CONCUR){
+    await Promise.all(items.slice(i,i+CONCUR).map(it=>fetchOne(it)));
+    setProg(60+Math.round((done/items.length)*40),'GA4 views: '+done+'/'+items.length+'...');
   }
-  dbg('PVs done: '+Object.keys(map).length+'/'+ids.length+' have views');
+  dbg('PVs done: '+Object.keys(map).length+'/'+items.length+' have views, '+ga4FailCount+' GA4 calls failed');
   return map;
 }
 
@@ -999,7 +1024,7 @@ async function startFetch(){
           section:ex.section||'',
           subsection:ex.subsection||u.subsection||'',
           headline:ex.headline||'',
-          author:ex.author||'',pvs:0,articleId:u.articleId};
+          author:ex.author||'',pvs:0,articleId:u.articleId,slug:u.slug};
       });
     } else {
       if(!articles.length){ toast('⚠ No URLs in table. Paste data first.'); $('btn-fetch').disabled=false; return; }
@@ -1016,9 +1041,9 @@ async function startFetch(){
     setProg(60,'Fetching GA4 page views…');
     const sd=dataSource==='sitemap'?$('date-from').value:$('manual-from').value;
     const ed=dataSource==='sitemap'?$('date-to').value:$('manual-to').value;
-    const ids=urlItems.map(u=>u.articleId).filter(Boolean);
-    const pvMap=await fetchPVs(ids,sd,ed);
-    articles.forEach(a=>{ const id=a.articleId||extractId(a.url); if(id) a.pvs=pvMap[id]||0; });
+    const pvItems=articles.map(a=>({key:artKey(a),id:a.articleId||extractId(a.url),slug:artSlug(a)})).filter(x=>x.key);
+    const pvMap=await fetchPVs(pvItems,sd,ed);
+    articles.forEach(a=>{ a.pvs=pvMap[artKey(a)]||0; });
     setProg(100); setTimeout(()=>setProg(0),600);
     setStatus('Done — '+articles.length+' articles','ok');
     $('last-updated').textContent='Updated '+new Date().toLocaleTimeString('en-IN');
@@ -1391,7 +1416,7 @@ function importPaste(){
     const fullUrl=url.startsWith('http')?url:'https://www.forbesindia.com'+url;
     let art=articles.find(a=>a.url===fullUrl);
     const isNew=!art;
-    if(!art){ art={sno:articles.length+1,url:fullUrl,lastmod:'',date:'',section:'',subsection:'',headline:'',author:'',pvs:0,articleId:extractId(fullUrl),...extractSections(fullUrl)}; articles.push(art); }
+    if(!art){ art={sno:articles.length+1,url:fullUrl,lastmod:'',date:'',section:'',subsection:'',headline:'',author:'',pvs:0,articleId:extractId(fullUrl),slug:extractSlug(fullUrl),...extractSections(fullUrl)}; articles.push(art); }
     if(cols[1]?.trim()) art.date=cols[1].trim();
     if(cols[2]?.trim()) art.section=cols[2].trim();
     if(cols[3]?.trim()) art.subsection=cols[3].trim();
@@ -1496,7 +1521,7 @@ async function testGA4(){
     const res=await fetch('https://analyticsdata.googleapis.com/v1beta/properties/'+prop+':runReport',{
       method:'POST',
       headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-      body:JSON.stringify({dateRanges:[{startDate:sd,endDate:ed}],dimensions:[{name:'pagePath'}],metrics:[{name:'screenPageViews'}],dimensionFilter:{filter:{fieldName:'pagePath',stringFilter:{matchType:'CONTAINS',value:'/'+id+'/'}}},orderBys:[{metric:{metricName:'screenPageViews'},desc:true}],limit:20})
+      body:JSON.stringify({dateRanges:[{startDate:sd,endDate:ed}],dimensions:[{name:'pagePath'}],metrics:[{name:'screenPageViews'}],dimensionFilter:{filter:{fieldName:'pagePath',stringFilter:{matchType:'CONTAINS',value:'/'+id}}},orderBys:[{metric:{metricName:'screenPageViews'},desc:true}],limit:20})
     });
     const d=await res.json();
     if(!res.ok){ dbg('ERROR: '+JSON.stringify(d.error||d)); return; }
@@ -1612,7 +1637,7 @@ async function processUploadedSitemaps(){
     const ex=existMap[u.url]||{};
     return{sno:i+1,url:u.url,lastmod:u.lastmod||'',date:ex.date||u.lastmod||'',
       section:ex.section||'',subsection:ex.subsection||u.subsection||'',
-      headline:ex.headline||'',author:ex.author||'',pvs:0,articleId:u.articleId};
+      headline:ex.headline||'',author:ex.author||'',pvs:0,articleId:u.articleId,slug:u.slug};
   });
   // Fetch headlines/sections/authors (via proxy if set)
   setProg(30,'Fetching headlines, sections & authors…');
@@ -1625,9 +1650,9 @@ async function processUploadedSitemaps(){
     setProg(60,'Fetching GA4 views for '+urlItems.length+' articles…');
     const sd=fromDate.toISOString().slice(0,10);
     const ed=new Date(toDate.getTime()-1).toISOString().slice(0,10);
-    const ids=urlItems.map(u=>u.articleId).filter(Boolean);
-    const pvMap=await fetchPVs(ids,sd,ed);
-    articles.forEach(a=>{ const id=a.articleId||extractId(a.url); if(id) a.pvs=pvMap[id]||0; });
+    const pvItems=articles.map(a=>({key:artKey(a),id:a.articleId||extractId(a.url),slug:artSlug(a)})).filter(x=>x.key);
+    const pvMap=await fetchPVs(pvItems,sd,ed);
+    articles.forEach(a=>{ a.pvs=pvMap[artKey(a)]||0; });
   }
   setProg(100); setTimeout(()=>setProg(0),600);
   setStatus('Done — '+articles.length+' articles','ok');
